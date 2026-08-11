@@ -1,0 +1,341 @@
+{
+  "meta": {
+    "id": "okf-visual",
+    "title": "OKFビジュアルガイド",
+    "subtitle": "図解で分かる Open Knowledge Format",
+    "author": "Yuya Fujita",
+    "date": "2026-08",
+    "theme": "accenture-purple",
+    "layout": "default"
+  },
+  "slides": [
+    {
+      "type": "title",
+      "title": "OKFビジュアルガイド",
+      "subtitle": "図解で分かる Open Knowledge Format",
+      "meta": "社内勉強会 / 2026-08",
+      "notes": "知識の散在という課題から、OKFの仕様と実践方法までを図解で紹介します。"
+    },
+    {
+      "type": "section",
+      "number": "01",
+      "title": "OKFとは何か",
+      "subtitle": "知識の散在を、共通形式でつなぐ",
+      "notes": "まず、AIが組織の知識を読めない原因とOKFの正体を確認します。"
+    },
+    {
+      "type": "image",
+      "title": "課題：コンテキスト断片化",
+      "path": "assets/fig-01-fragmentation.png",
+      "caption": "知識が Wiki・共有ドライブ・頭の中に散在し、AIがまとめて読めない",
+      "notes": "知識の散在がAI活用のボトルネックになっていることを説明します。"
+    },
+    {
+      "type": "bullets",
+      "title": "OKFの正体",
+      "lead": "Google Cloud が2026年6月12日に公開したオープン仕様",
+      "bullets": [
+        "Markdown + YAML フロントマターで知識を書く共通形式",
+        {
+          "text": "プラットフォームではなくフォーマット",
+          "children": [
+            "SDK不要・ベンダー非依存",
+            "Gitで管理できるテキスト"
+          ]
+        },
+        "人間もAIも読み書きできる",
+        "Karpathy氏の先行的な取り組みをGoogleが仕様化したものと紹介されている"
+      ],
+      "notes": "新しいプラットフォームではなく、知識の書き方をそろえる仕様だと強調します。"
+    },
+    {
+      "type": "image",
+      "title": "OKFのイメージ：共通の「知識の書き方」",
+      "path": "assets/fig-02-common-format.png",
+      "caption": "バラバラな知識を Markdown + YAML フロントマターの共通形式でそろえる",
+      "notes": "形式がそろうことで、人間とAIの双方が同じ知識を扱えるようになります。"
+    },
+    {
+      "type": "table",
+      "title": "設計の3原則",
+      "columns": [
+        "原則",
+        "要点"
+      ],
+      "rows": [
+        [
+          "制限の最小化",
+          "必須は type のみ。type の値と構成は書き手が決める"
+        ],
+        [
+          "書き手と読み手の独立",
+          "人の知識をAIが読み、AI生成の知識を別のAIが読める"
+        ],
+        [
+          "プラットフォーム非依存",
+          "ファイルだけで成立する"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 78,
+          "cell_size": 18,
+          "col_widths": [
+            3,
+            7
+          ]
+        }
+      },
+      "notes": "仕様が書き手を縛らず、読む側とも独立している点を説明します。"
+    },
+    {
+      "type": "section",
+      "number": "02",
+      "title": "仕様の要点",
+      "subtitle": "v0.1の骨格と、v0.2の信頼性レイヤー",
+      "notes": "ここから、覚えるべき骨格とv0.2で追加された語彙を見ていきます。"
+    },
+    {
+      "type": "image",
+      "title": "バンドル＝ファイルの木構造",
+      "path": "assets/fig-03-bundle-tree.png",
+      "caption": "ファイルパスがID。index.md が目次と段階的開示の入口になる",
+      "notes": "バンドルはファイルの木構造で、関係は相対パスのMarkdownリンクで表します。"
+    },
+    {
+      "type": "bullets",
+      "title": "覚えることは4つだけ",
+      "lead": "v0.1の骨格＋寛容な消費モデル",
+      "bullets": [
+        "1コンセプト＝1ファイル。ファイルパスがID",
+        "frontmatter の必須は type のみ。description はAIが開くかの判断材料",
+        {
+          "text": "予約ファイルは2つ",
+          "children": [
+            "index.md＝目次・段階的開示の入口",
+            "log.md＝変更履歴"
+          ]
+        },
+        "関係は相対パスのMarkdownリンクで表現",
+        {
+          "text": "＋ 未知のtypeや壊れたリンクがあっても読み続ける",
+          "bold": true
+        }
+      ],
+      "style": {
+        "body": {
+          "size": 21,
+          "gap": 10
+        }
+      },
+      "notes": "4つの骨格に加えて、未知のtypeや壊れたリンクがあっても読み続ける寛容な消費モデルがあります。"
+    },
+    {
+      "type": "image",
+      "title": "v0.2：知識に根拠を付ける",
+      "path": "assets/fig-04-trust-signals.png",
+      "caption": "出所・信頼性・鮮度・状態・検算の5観点を、知識と一緒に持つ",
+      "notes": "v0.1公開から約6週間で、知識を判断するための語彙が追加されました。"
+    },
+    {
+      "type": "table",
+      "title": "v0.2の5フィールド",
+      "lead": "必須は type のみのまま",
+      "columns": [
+        "観点",
+        "フィールド",
+        "記録すること"
+      ],
+      "rows": [
+        [
+          "出所",
+          "sources",
+          "author・usage_count・last_modified"
+        ],
+        [
+          "信頼性",
+          "generated・verified",
+          "作成者と確認者を分離"
+        ],
+        [
+          "鮮度",
+          "stale_after",
+          "陳腐化日を絶対日付で指定"
+        ],
+        [
+          "状態",
+          "status",
+          "draft・stable・deprecated"
+        ],
+        [
+          "検算",
+          "type: Attested Computation",
+          "計算式を固定し、実行結果を検算"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 64,
+          "cell_size": 16,
+          "col_widths": [
+            2,
+            3,
+            5
+          ]
+        }
+      },
+      "notes": "追加されたのは判断材料となる語彙であり、必須フィールドはtypeだけです。"
+    },
+    {
+      "type": "image",
+      "title": "人間とAIの二重チェック",
+      "path": "assets/fig-05-human-ai-check.png",
+      "caption": "generated＝作成、verified＝確認。なし・機械のみ・humanありの3段階で判定",
+      "notes": "AIはproducer/version、人間はhuman:id、自動処理はprocess:idとして記録します。"
+    },
+    {
+      "type": "bullets",
+      "title": "Attested Computation",
+      "lead": "AIには宣言済みパラメータへの値入力だけを許す",
+      "bullets": [
+        "会社の計算式をファイルとして固定",
+        "実行結果を「レシート」として返す",
+        {
+          "text": "LLMを使わない決定論的なattesterが2点を検査",
+          "children": [
+            "実行式は公認の式と一致するか",
+            "表示値はレシートと一致するか"
+          ]
+        },
+        "不一致なら表示しない",
+        "verifiedによる定義の確認と、実行結果の検算の両方が必要"
+      ],
+      "style": {
+        "body": {
+          "size": 21,
+          "gap": 10
+        }
+      },
+      "notes": "verifiedは定義の確認、attesterによる検算は実行結果の確認であり、別の仕組みです。"
+    },
+    {
+      "type": "section",
+      "number": "03",
+      "title": "エコシステム",
+      "subtitle": "競合ではなく補完",
+      "notes": "OKFと周辺標準の役割の違いを整理します。"
+    },
+    {
+      "type": "image",
+      "title": "エコシステムの地図",
+      "path": "assets/fig-06-ecosystem-map.png",
+      "caption": "MCP＝接続、OKF＝知識の中身、llms.txt＝知識の場所",
+      "notes": "同じレイヤーの競合ではなく、それぞれ異なる役割を担います。"
+    },
+    {
+      "type": "table",
+      "title": "他標準との関係",
+      "columns": [
+        "標準",
+        "役割",
+        "OKFとの関係"
+      ],
+      "rows": [
+        [
+          "MCP",
+          "エージェントとツールの動的接続",
+          "接続と知識の中身で分担"
+        ],
+        [
+          "llms.txt",
+          "LLMに知識の場所を示す",
+          "指す先をOKFで書ける"
+        ],
+        [
+          "AGENTS.md・CLAUDE.md",
+          "リポジトリ運用ルール",
+          "そのパターンを一般化・標準化"
+        ],
+        [
+          "OSI",
+          "BIメトリクスの共通定義（40社超）",
+          "数字の定義と知識の受け渡しで分担（解説動画の見解）"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 68,
+          "cell_size": 15,
+          "col_widths": [
+            2.4,
+            3.3,
+            4.3
+          ]
+        }
+      },
+      "notes": "OSIとの住み分けは解説動画の見解です。GoogleはSPEC.md、BigQuery用拡充エージェント、ビジュアライザー、サンプルバンドル3種をGitHubで公開しています。"
+    },
+    {
+      "type": "section",
+      "number": "04",
+      "title": "実践",
+      "subtitle": "先行事例と、小さく始める運用",
+      "notes": "実際の運用例から、導入時のコツと注意点を確認します。"
+    },
+    {
+      "type": "image",
+      "title": "「OKF brain」を育てる",
+      "path": "assets/fig-07-okf-brain.png",
+      "caption": "Marie Haynes氏の実例：URLを渡す→実行計画→人間が承認→書き込み",
+      "notes": "知識は毎日GitHubへバックアップされ、分析手順のplaybook化にも使われています。"
+    },
+    {
+      "type": "two_column",
+      "title": "運用のコツと注意点",
+      "left": {
+        "heading": "運用のコツ",
+        "bullets": [
+          "FAQなど1テーマから小さく始める",
+          "整理はAI、人間は確認",
+          "骨組みを作ってから肉付け",
+          "運用ルール（CLAUDE.md）と知識（OKF）を分離"
+        ]
+      },
+      "right": {
+        "heading": "注意点",
+        "bullets": [
+          "AIの整理結果は必ず目視確認",
+          "typeを増やしすぎない",
+          "出所不明はプロンプトインジェクションのリスク。素性を確認",
+          "機密データの共有範囲を確認"
+        ]
+      },
+      "style": {
+        "col_body": {
+          "size": 18,
+          "gap": 14
+        }
+      },
+      "notes": "小さく始めること、人間の確認を残すこと、出所と共有範囲を確かめることが重要です。"
+    },
+    {
+      "type": "image",
+      "title": "小さく始めて育てる",
+      "path": "assets/fig-08-grow-small.png",
+      "caption": "1テーマから始め、整理はAI、人間は確認。知識を少しずつ育てる",
+      "notes": "FAQやオンボーディング資料など、範囲の明確な1テーマが出発点になります。"
+    },
+    {
+      "type": "closing",
+      "title": "まとめ",
+      "bullets": [
+        "知識の散在（コンテキスト断片化）がAI活用のボトルネック",
+        "OKFはMarkdown＋frontmatterの知識フォーマット。プラットフォームではない",
+        "v0.1は4つの骨格、v0.2は出所・信頼性・鮮度・状態・検算を追加",
+        "承認フロー・スモールスタート・バックアップ・出所確認から学ぶ"
+      ],
+      "message": "次回：自分の担当領域を1ファイル OKF 化するハンズオン",
+      "notes": "次回は自分の担当領域から1テーマを選び、実際に1ファイルをOKF化します。"
+    }
+  ]
+}

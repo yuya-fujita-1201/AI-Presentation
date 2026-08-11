@@ -1,0 +1,195 @@
+{
+  "meta": {
+    "id": "okf-introduction",
+    "title": "OKF入門",
+    "subtitle": "Open Knowledge Format — AIとヒトが共有する「知識の書き方」の標準",
+    "author": "Yuya Fujita",
+    "date": "2026-08",
+    "theme": "default"
+  },
+  "slides": [
+    {
+      "type": "title",
+      "title": "OKF入門",
+      "subtitle": "Open Knowledge Format — AIとヒトが共有する「知識の書き方」の標準",
+      "meta": "社内勉強会 / 2026-08",
+      "notes": "今日のゴール：OKFが何で、なぜ出てきて、明日からどう使えるかを持ち帰ってもらう。所要20〜30分想定。"
+    },
+    {
+      "type": "section",
+      "number": "01",
+      "title": "なぜ今 OKF なのか",
+      "notes": "まず課題感の共有から。仕様の話はその後。"
+    },
+    {
+      "type": "bullets",
+      "title": "課題：組織の知識は散らばっている",
+      "lead": "AIエージェントに組織の知識を渡したいのに、渡せる形になっていない",
+      "bullets": [
+        {
+          "text": "ナレッジの置き場所がバラバラ",
+          "children": [
+            "Wiki・共有ドライブ・メタデータカタログ（独自API）",
+            "コードコメント、ドキュメント文字列",
+            "エンジニアの頭の中（暗黙知）"
+          ]
+        },
+        "この状態は「コンテキスト断片化」と呼ばれる",
+        "RAG やエージェントの回答精度は「知識の置き方」で大きく決まる"
+      ],
+      "notes": "自社の例に置き換えて話す。『あの仕様どこだっけ』が起きている場所を挙げてもらうと盛り上がる。"
+    },
+    {
+      "type": "bullets",
+      "title": "OKF とは",
+      "lead": "Google Cloud が 2026年6月に公開したオープン仕様（v0.1 ドラフト）",
+      "bullets": [
+        "組織の知識を「Markdown + YAML フロントマター」で表現する共通形式",
+        "人間も AI エージェントも、読めるし書ける",
+        {
+          "text": "「プラットフォームではなくフォーマット」",
+          "children": [
+            "SDK 不要。特定のクラウド・DB・LLM に依存しない",
+            "Git でバージョン管理できる、ただのテキストファイル"
+          ]
+        },
+        "本質は既存の Markdown・フォルダ・リンクの使い方の工夫 → 導入障壁が低い"
+      ],
+      "notes": "『新しいツールを買う話ではない』ことを強調する。書き方の約束事だけ。"
+    },
+    {
+      "type": "section",
+      "number": "02",
+      "title": "仕様のポイント",
+      "subtitle": "覚えることは驚くほど少ない"
+    },
+    {
+      "type": "code",
+      "title": "ファイルの基本形：フロントマター + 本文",
+      "lead": "1ファイル = 1コンセプト。必須フィールドは type だけ",
+      "language": "yaml",
+      "code": "---\ntype: BigQuery Table          # ★唯一の必須フィールド\ntitle: Orders\ndescription: One row per completed customer order.\nresource: https://console.cloud.google.com/bigquery?p=acme&d=sales&t=orders\ntags: [sales, revenue]\ntimestamp: 2026-05-28T14:30:00Z\n---\n\n# Schema\n| Column      | Type   | Description                        |\n| order_id    | STRING | Globally unique order identifier.  |\n| customer_id | STRING | FK to [customers](./customers.md)  |\n\n# Joins\nJoined with [customers](./customers.md) on customer_id.",
+      "notes": "Google公式サンプル（salesバンドル）より。frontmatterと本文の二部構成であること、リンクが相対パスであることを指差しで説明。"
+    },
+    {
+      "type": "table",
+      "title": "フロントマターのフィールド",
+      "columns": ["フィールド", "必須", "役割"],
+      "rows": [
+        ["type", "✅ 必須", "ファイルの種類。値は自由（Concept, Table, Video など）"],
+        ["title / description", "推奨", "タイトルと一行説明。AIが「開くべきファイルか」を判断する手がかり"],
+        ["tags", "推奨", "タグの配列。横断検索の精度を上げる"],
+        ["timestamp", "推奨", "更新日時（ISO 8601 形式）"],
+        ["resource", "推奨", "実体への URL（DBコンソール、動画、チケットなど）"],
+        ["カスタム項目", "自由", "owner, review_status など自由に追加してよい"]
+      ],
+      "notes": "descriptionが実質いちばん働き者。エージェントはこれを見てファイルを開くか決める。"
+    },
+    {
+      "type": "bullets",
+      "title": "ディレクトリ構造：ファイルパスが ID になる",
+      "bullets": [
+        "バンドル = Markdown ファイルのディレクトリツリー",
+        "1コンセプト = 1ファイル。ファイルパスがそのままコンセプトの ID（例: tables/orders.md）",
+        "コンセプト間の関係は普通の Markdown リンクで表現（相対パス推奨）",
+        {
+          "text": "予約ファイルは 2 つだけ",
+          "children": [
+            "index.md — ディレクトリの内容一覧（ナビゲーションの入り口）",
+            "log.md — 変更履歴"
+          ]
+        },
+        "index.md → description → 必要なファイルだけ開く、と段階的に読める"
+      ],
+      "notes": "Webサイトの情報設計と同じ発想、と言うと伝わりやすい。絶対パスはビジュアライザーがエッジ化しない既知問題があるので相対パス。"
+    },
+    {
+      "type": "table",
+      "title": "設計の 3 原則",
+      "columns": ["原則", "内容"],
+      "rows": [
+        ["制限の最小化", "必須は type のみ。type の値やセクション構成は書き手が決める"],
+        ["書き手と読み手の独立", "人が書いた知識を AI が読める。AI が生成した知識を別の AI がクエリできる"],
+        ["プラットフォーム非依存", "特定のクラウド・DB・LLM・SDK に依存しない。ファイルだけで成立する"]
+      ]
+    },
+    {
+      "type": "bullets",
+      "title": "寛容な消費モデル：不完全でも読む",
+      "lead": "「知識は段階的に蓄積される」前提の設計",
+      "bullets": [
+        "未知の type・未知のフィールドを拒否しない",
+        "壊れたリンクがあっても処理を止めない",
+        "→ 完璧に整備してから公開するのではなく、書きながら育てる運用ができる",
+        "根拠は本文の「# Citations」セクションで明示する慣例（v0.2 では根拠の記述が強化の方向）"
+      ],
+      "notes": "準拠条件は3つだけ：全ファイルにfrontmatter／全frontmatterに非空type／予約ファイルが規定構造。"
+    },
+    {
+      "type": "section",
+      "number": "03",
+      "title": "エコシステムと実践"
+    },
+    {
+      "type": "table",
+      "title": "他の標準との関係：競合ではなく補完",
+      "columns": ["標準", "役割", "OKF との関係"],
+      "rows": [
+        ["MCP", "エージェントとツール・データの動的接続", "MCP は「接続」、OKF は「知識の中身の書き方」"],
+        ["llms.txt", "サイトが LLM 向けに知識の場所を示す", "llms.txt が指す先の知識を OKF で書ける"],
+        ["AGENTS.md / CLAUDE.md", "リポジトリ運用ルールをエージェントに伝える", "この「Markdownで知識を渡す」パターンを一般化・標準化したのが OKF"]
+      ],
+      "notes": "MCPと混同されがちなので、レイヤーが違う（接続 vs 中身）ことをはっきり言う。"
+    },
+    {
+      "type": "bullets",
+      "title": "実践で分かっていること",
+      "bullets": [
+        {
+          "text": "Google のリファレンス実装が公開済み（GitHub: GoogleCloudPlatform/knowledge-catalog）",
+          "children": [
+            "BigQuery をスキャンして OKF ドラフトを自動生成するエージェント",
+            "バンドルをグラフ表示する静的 HTML ビジュアライザー、サンプルバンドル3種"
+          ]
+        },
+        "Obsidian でも運用できる（index.md + 概要 + リンクを張るだけ）",
+        "実証：OKF 化したフォルダを Claude Code に渡すと、メタデータだけで「読むべきファイル」を自律選別した",
+        "コツ：ナレッジ全体を OKF 化せず特定フォルダに絞る → トークン効率と検索精度を両立"
+      ],
+      "notes": "Claude Codeの実証はnote記事（sutero氏）より。補足的な4ファイルは必要時のみ参照と判断した、という話。"
+    },
+    {
+      "type": "bullets",
+      "title": "このプロジェクトでの使い方",
+      "lead": "この勉強会リポジトリ自体が OKF の実例になっている",
+      "bullets": [
+        {
+          "text": "knowledge/ が OKF バンドル",
+          "children": [
+            "okf/ — テーマ別のコンセプトファイル",
+            "sources/ — 集めた資料の台帳（1ソース = 1ファイル、resource に URL）"
+          ]
+        },
+        "新しい勉強会ネタはまず sources/ に登録 → テーマとして育ったら専用ディレクトリに昇華",
+        "スライドは decks/*/deck.json で管理 → コマンド1つで HTML / PowerPoint にビルド"
+      ],
+      "notes": "実物を見せる：knowledge/okf/overview.md を開いてfrontmatterを見せ、index.mdからのリンクをたどる。"
+    },
+    {
+      "type": "quote",
+      "text": "OKF は「知識の書き方」の共通言語。必須は type ひとつ、今日から始められる。"
+    },
+    {
+      "type": "closing",
+      "title": "まとめ",
+      "bullets": [
+        "課題：組織の知識は散在し、AI に渡せる形になっていない（コンテキスト断片化）",
+        "OKF = Markdown + YAML フロントマターの知識フォーマット。プラットフォームではなくフォーマット",
+        "必須は type のみ。index.md / log.md と相対リンクだけ覚えれば書き始められる",
+        "まずはこのリポジトリの knowledge/ を一緒に育てていきましょう"
+      ],
+      "message": "次回候補：自分の担当領域のナレッジを 1 つ OKF 化してみるハンズオン",
+      "notes": "質疑応答。『どこから始めれば？』には『自分が一番よく聞かれることを1ファイル書く』と答える。"
+    }
+  ]
+}

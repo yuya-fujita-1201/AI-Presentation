@@ -1,0 +1,6 @@
+decks/*/build/
+__pycache__/
+.DS_Store
+tmax/
+automation/logs/
+automation/state/*.lock
