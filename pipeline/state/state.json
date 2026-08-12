@@ -14,14 +14,14 @@
   },
   "phase": "research_ledger",
   "generation": 1,
-  "active_run_id": "081220294c",
-  "input_commit": "546e0aa72b61",
+  "active_run_id": "0812224532",
+  "input_commit": "794c38a808fe",
   "phase_started_at": "2026-08-12T20:29:58+09:00",
   "phase_attempts": 0,
   "run_counts": {
     "research_scan": 1,
     "research_fetch": 2,
-    "research_ledger": 1
+    "research_ledger": 2
   },
   "scan_fallback_done": false,
   "video_shortfall": false,
@@ -44,10 +44,10 @@
       "last_scores": null
     }
   },
-  "push_pending": false,
+  "push_pending": true,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-12T12:56:15+09:00",
-  "last_started_at": "2026-08-12T20:29:58+09:00",
+  "last_started_at": "2026-08-12T22:45:02+09:00",
   "last_successful_transition_at": "2026-08-12T15:17:30+09:00",
   "consecutive_external": 0,
   "stuck": null,
