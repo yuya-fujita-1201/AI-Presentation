@@ -13,8 +13,37 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[00:00]",
+          "text": "AIを使いこなすとはプロンプトをうまく打つことでなく、2026年版はループエンジニアリングをやることだ",
+          "impact": "normal"
+        },
+        {
+          "ts": "[04:00]",
+          "text": "AIとの関わりはプロンプト→コンテキスト→ハーネス→ループの4段階と言われている",
+          "impact": "high"
+        },
+        {
+          "ts": "[09:00]",
+          "text": "ループエンジニアリングにはハーネスエンジニアリングまでの土台が前提になる",
+          "impact": "normal"
+        },
+        {
+          "ts": "[10:00]",
+          "text": "OpenAIのピーター・バーガー氏とAnthropicのボリス・チェルニー氏が、直接プロンプトを打つのをやめてループを設計すべきと発言している",
+          "impact": "normal"
+        },
+        {
+          "ts": "[11:00]",
+          "text": "アンドリュー・ンー氏はループが速さの異なる3種の入れ子構造になっていると整理している",
+          "impact": "normal"
+        }
+      ],
+      "summary": "AIとの関わり方がプロンプト→コンテキスト→ハーネス→ループの4段階に進化し、人間がループの外に出て監督する体制への移行を解説する動画"
     },
     {
       "id": "t1EtbULiF4Q",
@@ -28,8 +57,37 @@
       "trust": "expert",
       "score": 8,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[00:00]",
+          "text": "Opus5は多くのベンチマークでFable5(最上位モデル)を超えている",
+          "impact": "high"
+        },
+        {
+          "ts": "[01:00]",
+          "text": "Opus5はFable5の半分の値段で利用できる",
+          "impact": "high"
+        },
+        {
+          "ts": "[13:00]",
+          "text": "Fable5は今年1月まで、Opus5は5月まで学習しており直近情報を知っている",
+          "impact": "high"
+        },
+        {
+          "ts": "[17:00]",
+          "text": "Opus5を使う際は検証ステップの指示は不要で、入れると過剰検証でトークンを浪費する",
+          "impact": "normal"
+        },
+        {
+          "ts": "[19:00]",
+          "text": "Anthropic社内でシステムプロンプトを80%除外しても精度への悪影響はほぼなかった",
+          "impact": "high"
+        }
+      ],
+      "summary": "Claude Opus5の性能・価格をFable5やGPT5.6と比較しつつ、コンテキストエンジニアリングやプロンプト設計の新ベストプラクティスを紹介する動画"
     },
     {
       "id": "8-AntQFFJA4",
@@ -43,8 +101,42 @@
       "trust": "expert",
       "score": 8,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[01:00]",
+          "text": "Opus5はFable5とほぼ同じ賢さで価格は半分",
+          "impact": "high"
+        },
+        {
+          "ts": "[02:00]",
+          "text": "1度に読み込める量は100万トークン",
+          "impact": "high"
+        },
+        {
+          "ts": "[08:00]",
+          "text": "エージェント系ベンチマーク5種目全てでOpus5がFable5に勝利、業務ワークフローは約9ポイント上",
+          "impact": "high"
+        },
+        {
+          "ts": "[12:00]",
+          "text": "Opus5は入力5ドル・出力25ドルでFable5(入力10ドル・出力50ドル)の半額",
+          "impact": "high"
+        },
+        {
+          "ts": "[21:00]",
+          "text": "検証ステップの指示は捨てていい、過剰検証がトークンを消費するため",
+          "impact": "normal"
+        },
+        {
+          "ts": "[22:00]",
+          "text": "システムプロンプトを8割削除しても精度は落ちない(Anthropic社内検証)",
+          "impact": "high"
+        }
+      ],
+      "summary": "Claude Opus5の性能・価格をFable5・GPT5.6と22パターンの実演比較で検証しつつ、公式ベストプラクティスに基づくプロンプト設計のコツを紹介する動画"
     },
     {
       "id": "8VNLFKCQFa8",
