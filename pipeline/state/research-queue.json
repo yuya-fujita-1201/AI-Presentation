@@ -13,7 +13,7 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -43,7 +43,8 @@
           "impact": "normal"
         }
       ],
-      "summary": "AIとの関わり方がプロンプト→コンテキスト→ハーネス→ループの4段階に進化し、人間がループの外に出て監督する体制への移行を解説する動画"
+      "summary": "AIとの関わり方がプロンプト→コンテキスト→ハーネス→ループの4段階に進化し、人間がループの外に出て監督する体制への移行を解説する動画",
+      "ledger_path": "knowledge/sources/video-pe-loop-engineering-overview.md"
     },
     {
       "id": "t1EtbULiF4Q",
@@ -57,7 +58,7 @@
       "trust": "expert",
       "score": 8,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+2 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -87,7 +88,8 @@
           "impact": "high"
         }
       ],
-      "summary": "Claude Opus5の性能・価格をFable5やGPT5.6と比較しつつ、コンテキストエンジニアリングやプロンプト設計の新ベストプラクティスを紹介する動画"
+      "summary": "Claude Opus5の性能・価格をFable5やGPT5.6と比較しつつ、コンテキストエンジニアリングやプロンプト設計の新ベストプラクティスを紹介する動画",
+      "ledger_path": "knowledge/sources/video-pe-opus-5-prompt-tips.md"
     },
     {
       "id": "8-AntQFFJA4",

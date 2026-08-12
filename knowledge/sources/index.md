@@ -37,3 +37,8 @@
 - [video-ge-gaodalie-forget-loop.md](./video-ge-gaodalie-forget-loop.md) — "FORGET Loop Engineering. Graph Engineering is about THIS"（Gao Dalie）。プロンプト/ループ/グラフの3層と「経路を人間が設計する」視点
 - [video-ge-caleb-8min-explainer.md](./video-ge-caleb-8min-explainer.md) — "Graph Engineering explained in 8min.."（Caleb Writes Code）。オイラーのグラフ理論から、ノードが賢くなりボトルネックがエッジへ移った歴史
 - [video-ge-techplay-3min-intro.md](./video-ge-techplay-3min-intro.md) — 「SNSで話題の『グラフエンジニアリング』の正体は？」（TECH PLAY、3分）。ノード/エッジ/状態の3要素、データ可視化との混同の訂正
+
+## 動画（プロンプトエンジニアリング）
+
+- [video-pe-loop-engineering-overview.md](./video-pe-loop-engineering-overview.md) — 「【ゆる解説】ループエンジニアリングって何？」（安野貴博の自由研究）。プロンプト・コンテキスト・ハーネス・ループの4段階とHuman in the LoopからHuman on the Loopへの移行、アンドリュー・ン氏の3種の入れ子ループ論
+- [video-pe-opus-5-prompt-tips.md](./video-pe-opus-5-prompt-tips.md) — 「Claude最新！新モデルOpus 5が予想以上に凄かったので解説」（にゃんたのAIチャンネル）。Fable5・GPT5.6とのベンチマーク/コスト比較、Opus5向けプロンプトの書き方とシステムプロンプト削減の知見
