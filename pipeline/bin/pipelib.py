@@ -1573,6 +1573,8 @@ def _cycle_locked(state, runid):
         if state["phase"] != prev_phase:
             state["phase_started_at"] = None
             state["last_successful_transition_at"] = now_iso()
+        save_queue(queue)
+        save_state(state)  # state/queueは成果物と同一コミットに含める（T-MAX R4 P3）
         paths = list(COMMIT_PATHS.get(phase, []))
         if phase in ("deck", "improve_d"):
             paths.append(theme["theme"]["deck_dir"])
