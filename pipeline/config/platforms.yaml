@@ -1,0 +1,9 @@
+# origin正規化ルール（テーマ非依存・全テーマ共通）
+# 記事origin = web:<eTLD+1>。ただし下記プラットフォームは投稿者単位 web:<domain>/<author-path>
+platform_domains:
+  - zenn.dev
+  - qiita.com
+  - note.com
+  - medium.com
+# 動画origin = youtube:<channel_id>（ハンドル名でなくID・改名耐性）
+# 論文origin = arxiv:<id> または doi:<id>

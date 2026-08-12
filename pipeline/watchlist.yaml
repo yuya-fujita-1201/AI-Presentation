@@ -1,0 +1,15 @@
+# 優先YouTubeチャンネル（ユーザー提供 2026-08-12）
+# trust: official +3 / expert +2 / curated +1 / unknown +0（scan採点に使用）
+# unknownには識別用の項番 no を振る（ユーザー指示 2026-08-12）
+channels:
+  - {handle: "@claude",        name: "Claude (Anthropic公式)", trust: official, lang: en}
+  - {handle: "@安野貴博",       name: "安野貴博",               trust: expert,   lang: ja}
+  - {handle: "@chronoit",      name: "chronoit",              trust: expert,   lang: ja}
+  - {handle: "@aivtuber2866",  name: "aivtuber2866",          trust: expert,   lang: ja}
+  - {handle: "@keitoaiweb",    name: "keitoaiweb",            trust: expert,   lang: ja}
+  - {handle: "@_runteq_",      name: "RUNTEQ",                trust: curated,  lang: ja}
+  - {handle: "@taiki007",      name: "taiki007",              trust: unknown,  lang: ja, no: "001"}
+  - {handle: "@TECHWORLD111",  name: "TECHWORLD111",          trust: unknown,  lang: ja, no: "002"}
+  - {handle: "@neko_Ypapa",    name: "neko_Ypapa",            trust: unknown,  lang: ja, no: "003"}
+# ユーザーが動画URLを直接指定する場合はここに追記（採点免除で直接fetchへ）
+adhoc_videos: []

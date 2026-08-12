@@ -2,5 +2,9 @@ decks/*/build/
 __pycache__/
 .DS_Store
 tmax/
-automation/logs/
-automation/state/*.lock
+pipeline/logs/
+pipeline/cache/
+pipeline/staging/
+pipeline/lock/
+pipeline/state/outbox/
+pipeline/PAUSE

@@ -1,0 +1,37 @@
+theme:
+  id: pe
+  slug: ai-eng-01-prompt-engineering
+  title: プロンプトエンジニアリング
+  series_index: 1
+  knowledge_dir: knowledge/prompt-engineering
+  deck_dir: decks/ai-eng-01-prompt-engineering
+keywords:            # 通常scan用（英日）
+  ja: ["プロンプトエンジニアリング 入門", "プロンプト 書き方 コツ",
+       "プロンプトエンジニアリング とは", "生成AI プロンプト 基本",
+       "Claude プロンプト 使い方"]
+  en: ["prompt engineering tutorial", "prompt engineering best practices",
+       "how to write better prompts", "claude prompt engineering"]
+keywords_fallback:   # 候補3本未満時の第2セット再scan用
+  ja: ["ChatGPT プロンプト 初心者", "AI 指示 出し方", "プロンプト テクニック 解説"]
+  en: ["prompt engineering for beginners", "ai prompting tips"]
+match_vocab:         # テーマ適合判定語彙（機械粗フィルタ＋LLM採点の共通根拠）
+  ja: [プロンプト, 指示文, システムプロンプト, 出力形式, 役割設定]
+  en: [prompt, prompting, "system prompt", few-shot]
+beginner_vocab: [入門, 初心者, とは, 基本, 解説, 使い方,
+                 beginner, basics, tutorial, introduction]
+required_concepts:   # 適合票(a): うち2つ以上が異なる字幕区間に出現すること
+  - {id: role-instruction, label: 役割・指示の明確化, hints: [役割, 指示, 明確に]}
+  - {id: context-provision, label: 文脈・前提の提供, hints: [文脈, 前提, 背景, コンテキスト]}
+  - {id: output-format, label: 出力形式の指定, hints: [出力形式, フォーマット, 表形式]}
+  - {id: few-shot, label: 例示（few-shot）, hints: [例を示す, few-shot, お手本]}
+  - {id: iteration, label: 反復改善, hints: [改善, 修正して, 反復, やり直し]}
+  - {id: constraints, label: 制約・条件付け, hints: [制約, 条件, 禁止, しないで]}
+subtopics:           # research_web 1ラン=1サブトピック
+  - {id: official-guides, goal: Anthropic公式プロンプトガイドの一次情報台帳化,
+     queries: ["Anthropic prompt engineering documentation", "Claude prompting guide"]}
+  - {id: principles-survey, goal: 体系・原則の整理（サーベイ・原典）,
+     queries: ["prompt engineering survey", "プロンプトエンジニアリング 体系 原則"]}
+  - {id: jp-practice, goal: 日本語圏の実務事例・初心者向け解説の代表例,
+     queries: ["プロンプトエンジニアリング 実務 事例", "プロンプト 業務活用"]}
+primary_domains:     # これに一致した場合のみ source_tier: primary
+  [docs.anthropic.com, www.anthropic.com, platform.openai.com, ai.google.dev, arxiv.org]
