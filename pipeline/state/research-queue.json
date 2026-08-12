@@ -203,7 +203,7 @@
       "trust": "curated",
       "score": 7,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+1 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -238,7 +238,8 @@
           "impact": "normal"
         }
       ],
-      "summary": "プロンプトエンジニアリングからハーネス・ループエンジニアリングへの進化と、実装済みのマルチエージェント開発フローを対談形式で解説する動画"
+      "summary": "プロンプトエンジニアリングからハーネス・ループエンジニアリングへの進化と、実装済みのマルチエージェント開発フローを対談形式で解説する動画",
+      "ledger_path": "knowledge/sources/video-pe-loop-engineering-5plus1-parts.md"
     },
     {
       "id": "eYm6b1UrOZ8",
