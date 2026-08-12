@@ -4,27 +4,48 @@
     "id": "pe",
     "slug": "ai-eng-01-prompt-engineering",
     "title": "プロンプトエンジニアリング",
-    "series": ["pe", "ce", "he", "le"],
+    "series": [
+      "pe",
+      "ce",
+      "he",
+      "le"
+    ],
     "series_index": 0
   },
   "phase": "research_scan",
   "generation": 1,
-  "active_run_id": null,
-  "input_commit": null,
-  "phase_started_at": null,
+  "active_run_id": "08121251d7",
+  "input_commit": "eb9a1b5f2ce5",
+  "phase_started_at": "2026-08-12T12:51:13+09:00",
   "phase_attempts": 0,
-  "run_counts": {},
+  "run_counts": {
+    "research_scan": 1
+  },
   "scan_fallback_done": false,
   "video_shortfall": false,
   "web_rerun_done": false,
   "grade": {
-    "knowledge": {"iter": 0, "repair_count": 0, "pass_streak": 0, "retry_used": false, "last_unmet": null, "last_scores": null},
-    "deck":      {"iter": 0, "repair_count": 0, "pass_streak": 0, "retry_used": false, "last_unmet": null, "last_scores": null}
+    "knowledge": {
+      "iter": 0,
+      "repair_count": 0,
+      "pass_streak": 0,
+      "retry_used": false,
+      "last_unmet": null,
+      "last_scores": null
+    },
+    "deck": {
+      "iter": 0,
+      "repair_count": 0,
+      "pass_streak": 0,
+      "retry_used": false,
+      "last_unmet": null,
+      "last_scores": null
+    }
   },
   "push_pending": false,
   "last_result": null,
   "last_scan_at": null,
-  "last_started_at": null,
+  "last_started_at": "2026-08-12T12:51:13+09:00",
   "last_successful_transition_at": null,
   "consecutive_external": 0,
   "stuck": null,
