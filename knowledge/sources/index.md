@@ -42,6 +42,8 @@
 
 - [article-pe-claude-prompting-best-practices.md](./article-pe-claude-prompting-best-practices.md) — Anthropic公式「Prompting best practices」。明確で直接的な指示・文脈の追加・few-shot例の設計・XMLタグによる構造化の4原則を解説
 - [article-pe-claude-opus-5-prompting.md](./article-pe-claude-opus-5-prompting.md) — Anthropic公式「Prompting Claude Opus 5」。Opus 4.8比の性能差分（agentic coding・コードレビュー・effort設定・vision・長文脈・オフィス業務・マルチエージェント調整）に基づくプロンプト設計パターンを解説
+- [article-pe-prompt-report.md](./article-pe-prompt-report.md) — arXiv「The Prompt Report」（Schulhoff et al.）。PRISMAベースの系統的レビューで58技法・33用語を分類し、多言語・マルチモーダル・エージェント・評価・安全性まで扱う包括的サーベイ
+- [article-pe-pe-survey-sahoo.md](./article-pe-pe-survey-sahoo.md) — arXiv「A Systematic Survey of Prompt Engineering in Large Language Models」（Sahoo et al.）。41種類以上の技法をアプリケーション領域別に分類、Zero-Shot/Few-Shot Promptingの位置づけを解説
 
 ## 動画（プロンプトエンジニアリング）
 

@@ -557,8 +557,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "principles-survey",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/principles-survey"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/principles-survey",
+        "ledger_path": "knowledge/sources/article-pe-prompt-report.md"
       },
       {
         "url": "https://arxiv.org/abs/2402.07927",
@@ -575,8 +576,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "principles-survey",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/principles-survey"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/principles-survey",
+        "ledger_path": "knowledge/sources/article-pe-pe-survey-sahoo.md"
       },
       {
         "url": "https://biz.kddi.com/content/column/smartwork/what-is-prompt/",
