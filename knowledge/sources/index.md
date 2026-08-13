@@ -38,6 +38,11 @@
 - [video-ge-caleb-8min-explainer.md](./video-ge-caleb-8min-explainer.md) — "Graph Engineering explained in 8min.."（Caleb Writes Code）。オイラーのグラフ理論から、ノードが賢くなりボトルネックがエッジへ移った歴史
 - [video-ge-techplay-3min-intro.md](./video-ge-techplay-3min-intro.md) — 「SNSで話題の『グラフエンジニアリング』の正体は？」（TECH PLAY、3分）。ノード/エッジ/状態の3要素、データ可視化との混同の訂正
 
+## 記事（プロンプトエンジニアリング）
+
+- [article-pe-claude-prompting-best-practices.md](./article-pe-claude-prompting-best-practices.md) — Anthropic公式「Prompting best practices」。明確で直接的な指示・文脈の追加・few-shot例の設計・XMLタグによる構造化の4原則を解説
+- [article-pe-claude-opus-5-prompting.md](./article-pe-claude-opus-5-prompting.md) — Anthropic公式「Prompting Claude Opus 5」。Opus 4.8比の性能差分（agentic coding・コードレビュー・effort設定・vision・長文脈・オフィス業務・マルチエージェント調整）に基づくプロンプト設計パターンを解説
+
 ## 動画（プロンプトエンジニアリング）
 
 - [video-pe-loop-engineering-overview.md](./video-pe-loop-engineering-overview.md) — 「【ゆる解説】ループエンジニアリングって何？」（安野貴博の自由研究）。プロンプト・コンテキスト・ハーネス・ループの4段階とHuman in the LoopからHuman on the Loopへの移行、アンドリュー・ン氏の3種の入れ子ループ論

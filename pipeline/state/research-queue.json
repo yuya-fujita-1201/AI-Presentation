@@ -519,8 +519,9 @@
         "source_tier": "secondary",
         "origin": "web:claude.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-pe-claude-prompting-best-practices.md"
       },
       {
         "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5",
@@ -537,8 +538,9 @@
         "source_tier": "secondary",
         "origin": "web:claude.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-pe-claude-opus-5-prompting.md"
       },
       {
         "url": "https://arxiv.org/abs/2406.06608",
