@@ -54,5 +54,5 @@ Claude Opus 5はサブエージェントのチームを適切に調整でき、�
 
 # 活用先
 
-- [../prompt-engineering/modern-model-prompting.md](../prompt-engineering/modern-model-prompting.md) — コードレビュープロンプトで「重要度の高い問題だけ報告して」と指示すると報告件数が減りうるという過剰指示の実害、vision回避策の再検証の推奨、effort設定の運用指針（highから始めてevalで調整、low/mediumをコストとレイテンシの制御手段に、xhighまで引き上げる場面）、100万トークンのコンテキストウィンドウと全域での一貫性、既存プロンプトがそのまま動作すること、完全な仕様を最初に与えると最高性能を発揮すること、スタイル指定は明示すべきことの根拠
+- [../prompt-engineering/modern-model-prompting.md](../prompt-engineering/modern-model-prompting.md) — コードレビュープロンプトで「重要度の高い問題だけ報告して」と指示すると報告件数が減りうるという過剰指示の実害、高速な一次パスと時間をかけた二次パスの2段構えレビュー運用、vision回避策の再検証の推奨とtool useが最も効くという指針、effort設定の運用指針（highから始めてevalで調整、low/mediumをコストとレイテンシの制御手段に、xhighまで引き上げる場面）、100万トークンのコンテキストウィンドウと全域での一貫性、既存プロンプトがそのまま動作すること、完全な仕様を最初に与えると最高性能を発揮すること、スタイル指定は明示すべきこと、オフィス・文書業務（スプレッドシート・スライドデック生成）の根拠
 - [../prompt-engineering/loop-engineering.md](../prompt-engineering/loop-engineering.md) — サブエージェントのチーム調整とwriter-verifierパターン（作る役と検証する役の分離）が公式に言及されていること、コスト面からサブエージェントへの委譲に上限を設けるべきという推奨の根拠
