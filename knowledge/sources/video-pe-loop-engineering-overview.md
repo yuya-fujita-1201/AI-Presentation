@@ -73,4 +73,6 @@ HITLからHOTLへ移行する過程には4つの段階があると言われて�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../prompt-engineering/loop-engineering.md](../prompt-engineering/loop-engineering.md) — Human in the Loop から Human on the Loop への移行という中心概念、ループの定義（螺旋状に繰り返される流れ）、OpenAI／Anthropicの開発者による「ループを書け」という発言の紹介、アンドリュー・ン氏による3種の入れ子ループと「情報量の差を人間が埋めている」という仮説の根拠
+- [../prompt-engineering/five-engineering-stages.md](../prompt-engineering/five-engineering-stages.md) — プロンプト→コンテキスト→ハーネス→ループという4段階の整理（5段階説との差異の論拠）、ハーネスの具体例（テストが通らなければ進めない仕組み、AGENTS.md／CLAUDE.md、リンター、エスカレーション機構）の根拠
+- [../prompt-engineering/why-context-matters.md](../prompt-engineering/why-context-matters.md) — コンテキスト段階の定義（参照情報全体の設計）、コンテキストウィンドウに上限があること（100万トークン＝単行本10冊分という紹介）、渡す情報の実例（仕様書・コーディング規約・関連ファイル・過去のやり取り）の根拠

@@ -51,3 +51,4 @@ generated:
 # 活用先
 
 - [../prompt-engineering/prompt-anatomy.md](../prompt-engineering/prompt-anatomy.md) — プロンプトの定義（テキスト・画像・音声等から構成されうる生成AIへの入力）と、変数を含む関数としての「プロンプトテンプレート」の定式化の根拠
+- [../prompt-engineering/taxonomy-and-landscape.md](../prompt-engineering/taxonomy-and-landscape.md) — PRISMAに基づく58技法・33用語の分類体系、3つのスコープ限定（prefix / hard / task-agnostic）が実務者の射程と一致するという読み方、エージェント・評価・安全性への範囲拡張、MMLUとfrantic hopelessnessの2ケーススタディの根拠

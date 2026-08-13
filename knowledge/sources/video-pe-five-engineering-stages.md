@@ -88,4 +88,6 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../prompt-engineering/five-engineering-stages.md](../prompt-engineering/five-engineering-stages.md) — 5つのエンジニアリングは目的が共通でスコープだけが違うという整理、5層それぞれの定義と人間の仕事への例え、ハーネスの4要素（道具・制限・権限・ルール）、グラフの分業とモデル使い分け、入れ子構造という結論、症状別の使い分け目安の根拠
+- [../prompt-engineering/why-context-matters.md](../prompt-engineering/why-context-matters.md) — コンテキストエンジニアリングの定義（何をいつどれだけ読ませるか）、情報は多すぎても少なすぎてもダメという指摘、渡す資料の実例（NG表現リスト・口調プロファイル・CLAUDE.md）の根拠
+- [../prompt-engineering/loop-engineering.md](../prompt-engineering/loop-engineering.md) — AIは自分の生成物への採点が甘くなるため別のAIに検証させると精度が向上するという指摘、ループのコストと時間に関する注意点の根拠

@@ -49,3 +49,5 @@ generated:
 # 活用先
 
 - [../prompt-engineering/what-is-prompt-engineering.md](../prompt-engineering/what-is-prompt-engineering.md) — プロンプトエンジニアリングの学術的な定義（モデルパラメータを更新せずプロンプトのみで挙動を引き出す）と、再学習・ファインチューニングを要する従来パラダイムとの違いの根拠
+- [../prompt-engineering/core-techniques.md](../prompt-engineering/core-techniques.md) — zero-shot promptingの定義（ラベル付きデータなしに事前知識で予測を生成）、few-shot promptingの定義と限界（追加トークンのコスト、例の選択・構成が挙動に与える影響、頻出単語バイアス）の根拠
+- [../prompt-engineering/taxonomy-and-landscape.md](../prompt-engineering/taxonomy-and-landscape.md) — 41種類以上をアプリケーション領域別に分類するタキソノミーの構成（手法詳細・モデル・データセット・強みと限界）と、基礎的手法からchain of codeまでのスペクトルという地図の骨格の根拠

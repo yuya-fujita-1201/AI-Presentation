@@ -56,3 +56,4 @@ generated:
 
 - [../prompt-engineering/what-is-prompt-engineering.md](../prompt-engineering/what-is-prompt-engineering.md) — AWSによる定義と「入力設計術」という言い換え、LLMの挙動が確率的であるため設計しないと意図しない回答が返る確率が上がるという指摘、ToDoリスト例の3つの問題点の根拠
 - [../prompt-engineering/prompt-anatomy.md](../prompt-engineering/prompt-anatomy.md) — Instruction/Context/Input Data/Output Indicatorの4要素構成、3つの記法フォーマット（角括弧・シャープ・Markdown）、記載時のコツ（依頼調・要点先出し・肯定表現など）の根拠
+- [../prompt-engineering/core-techniques.md](../prompt-engineering/core-techniques.md) — Zero-shot Promptingの実務上の書き方（タスクだけを与えるため構造化は不要）、ロールプレイ（役割設定）の形式と効果、記載時のコツの箇条書きの根拠

@@ -60,3 +60,4 @@ generated:
 
 - [../prompt-engineering/what-is-prompt-engineering.md](../prompt-engineering/what-is-prompt-engineering.md) — 「プロンプト」の定義と語源（促す・CLIの入力記号）、厳密な構文から曖昧な自然言語への転換、「おすすめの本」の比較例、KDDI AI-Chatの効果と人間による最終確認の必要性の根拠
 - [../prompt-engineering/prompt-anatomy.md](../prompt-engineering/prompt-anatomy.md) — 命令・補完・実演という3類型と、タスクの型によってプロンプトの構成要素が変わることの根拠
+- [../prompt-engineering/core-techniques.md](../prompt-engineering/core-techniques.md) — 「実演」＝few-shotの対応関係（映画分類の例）、「補完」の仕組みと用途（春の公園の例）、曖昧な指示が望むイメージから離れた回答を招くという指摘の根拠
