@@ -367,6 +367,12 @@ def git_porcelain():
 def enforce_allowlist(phase, runid, theme, pre_entries):
     allowed = allowlist_for(phase, theme)
     always_ok = ["pipeline/state/state.json", "pipeline/state/research-queue.json"]
+    # 本流パイプラインの保護領域のみを取り締まる。他レーン（Codexたたき台・人間の並行作業）の
+    # 作業中ファイルを巻き戻さない（2026-08-14 02:17 の誤爆=友軍撃ちの再発防止）
+    slug = theme["theme"]["slug"]
+    protected = ["knowledge/", "pipeline/state/", "tools/", "templates/", "pipeline/prompts/",
+                 theme["theme"]["deck_dir"].rstrip("/") + "/", f"docs/codex-brief-{slug}.md",
+                 "rubric-"]
     pre_set = {p for _, p in pre_entries}
     violations = []
     for st, path in git_porcelain():
@@ -378,6 +384,9 @@ def enforce_allowlist(phase, runid, theme, pre_entries):
             continue
         if path in pre_set:
             continue  # ラン開始前から存在した差分は今回のランの責任でない
+        if not any(path.startswith(root) for root in protected):
+            run_log(runid, f"対象外レーンの変化を検知（放置）: {st} {path}")
+            continue
         violations.append((st, path))
         qdir = os.path.join(STAGING, "quarantine", runid)
         os.makedirs(qdir, exist_ok=True)
@@ -1181,10 +1190,12 @@ def prework_draft(state, queue, theme, runid):
     if os.path.exists(draft_f):
         n_blocks = len(re.findall(r"^## SLIDE ", open(draft_f).read(), re.M))
     runmeta_save(runid, {"draft_f": draft_f})
+    fb = os.path.join(PIPE, "themes", f"{state['theme']['id']}-feedback.md")
     v = theme_vars(theme)
     v.update({"DRAFT_FILE": os.path.relpath(draft_f, ROOT),
               "KNOWLEDGE_LIST_FILE": _write_list_file(runid, "kfiles.txt", ledgers),
               "CURRENT_BLOCKS": n_blocks,
+              "FEEDBACK_FILE": os.path.relpath(fb, ROOT) if os.path.exists(fb) else "（なし）",
               "SLIDES_MIN": CFG["draft_targets"]["slides_min"],
               "SLIDES_MAX": CFG["draft_targets"]["slides_max"]})
     return {"mode": "llm", "vars": v}
