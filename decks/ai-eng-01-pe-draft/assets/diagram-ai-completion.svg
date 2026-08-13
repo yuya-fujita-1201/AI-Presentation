@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="860" viewBox="0 0 1140 860">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+  </defs>
+
+  <!-- ============ レーン1: 書きかけの文章でも ============ -->
+  <g>
+    <circle cx="62" cy="62" r="24" fill="#FFFFFF" stroke="#F0B498" stroke-width="3"/>
+    <text x="62" y="71" text-anchor="middle" class="h" font-size="24" fill="#7C3527">文</text>
+    <text x="104" y="72" class="h" font-size="32">書きかけの文章でも</text>
+  </g>
+
+  <!-- 書きかけカード -->
+  <rect x="40" y="100" width="380" height="196" rx="28" fill="#FFF2E8" stroke="#EDC9B4" stroke-width="3"/>
+  <text x="66" y="138" class="m" font-size="22">入力した文</text>
+  <text x="66" y="185" font-size="26">春の公園では桜が満開で、</text>
+  <text x="66" y="222" font-size="26">子どもたちは…</text>
+
+  <!-- 矢印1 -->
+  <line x1="430" y1="198" x2="492" y2="198" stroke="#B44A32" stroke-width="5" stroke-linecap="round"/>
+  <path d="M492,182 L492,214 L518,198 Z" fill="#B44A32"/>
+
+  <!-- AIチップ1 -->
+  <circle cx="584" cy="198" r="64" fill="#7C3527"/>
+  <text x="584" y="213" text-anchor="middle" class="h w" font-size="38">AI</text>
+  <text x="584" y="294" text-anchor="middle" class="m" font-size="22">続きを予測</text>
+
+  <!-- 矢印2 -->
+  <line x1="660" y1="198" x2="698" y2="198" stroke="#B44A32" stroke-width="5" stroke-linecap="round"/>
+  <path d="M698,180 L698,216 L724,198 Z" fill="#B44A32"/>
+
+  <!-- 続き候補カード（3枚をずらして重ねる） -->
+  <g>
+    <!-- 案C（一番奥） -->
+    <rect x="740" y="104" width="230" height="170" rx="22" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
+    <circle cx="767" cy="124" r="18" fill="#FFFFFF" stroke="#B44A32" stroke-width="2.5"/>
+    <text x="767" y="131" text-anchor="middle" class="h" font-size="22" fill="#7C3527">C</text>
+
+    <!-- 案B（真ん中） -->
+    <rect x="794" y="144" width="230" height="170" rx="22" fill="#FADFD5" stroke="#D98C72" stroke-width="3"/>
+    <circle cx="821" cy="164" r="18" fill="#FFFFFF" stroke="#B44A32" stroke-width="2.5"/>
+    <text x="821" y="171" text-anchor="middle" class="h" font-size="22" fill="#7C3527">B</text>
+
+    <!-- 案A（一番手前） -->
+    <rect x="848" y="184" width="230" height="170" rx="22" fill="#FFFFFF" stroke="#B44A32" stroke-width="3.5"/>
+    <circle cx="890" cy="224" r="19" fill="#FFFFFF" stroke="#B44A32" stroke-width="2.5"/>
+    <text x="890" y="232" text-anchor="middle" class="h" font-size="23" fill="#7C3527">A</text>
+    <text x="963" y="300" text-anchor="middle" class="h" font-size="27">続きの案</text>
+  </g>
+
+  <!-- ============ 区切り線 ============ -->
+  <line x1="40" y1="383" x2="1100" y2="383" stroke="#E5A692" stroke-width="2"/>
+
+  <!-- ============ レーン2: 言葉足らずの頼みでも ============ -->
+  <g>
+    <circle cx="62" cy="436" r="24" fill="#FFFFFF" stroke="#F0B498" stroke-width="3"/>
+    <text x="62" y="446" text-anchor="middle" class="h" font-size="26" fill="#7C3527">?</text>
+    <text x="104" y="446" class="h" font-size="32">言葉足らずの頼みでも</text>
+  </g>
+
+  <!-- 曖昧カード -->
+  <rect x="40" y="476" width="320" height="176" rx="28" fill="#FFF2E8" stroke="#EDC9B4" stroke-width="3"/>
+  <text x="66" y="514" class="m" font-size="22">入力した頼み</text>
+  <text x="200" y="576" text-anchor="middle" class="h" font-size="28">これ、まとめといて</text>
+
+  <!-- 矢印1b -->
+  <line x1="372" y1="564" x2="434" y2="564" stroke="#B44A32" stroke-width="5" stroke-linecap="round"/>
+  <path d="M434,548 L434,580 L460,564 Z" fill="#B44A32"/>
+
+  <!-- AIチップ2 -->
+  <circle cx="524" cy="564" r="64" fill="#7C3527"/>
+  <text x="524" y="579" text-anchor="middle" class="h w" font-size="38">AI</text>
+  <text x="524" y="660" text-anchor="middle" class="m" font-size="22">意図を推測</text>
+
+  <!-- 矢印2b -->
+  <line x1="600" y1="564" x2="658" y2="564" stroke="#B44A32" stroke-width="5" stroke-linecap="round"/>
+  <path d="M658,548 L658,580 L684,564 Z" fill="#B44A32"/>
+
+  <!-- 推測カード（吹き出し風） -->
+  <rect x="684" y="482" width="400" height="164" rx="40" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+  <text x="884" y="526" text-anchor="middle" class="m" font-size="22">AIの推測</text>
+  <text x="884" y="590" text-anchor="middle" class="h" font-size="29">（たぶん要約かな？）</text>
+
+  <!-- ============ 下部メッセージバンド ============ -->
+  <rect x="20" y="730" width="1100" height="86" rx="28" fill="#B44A32"/>
+  <text x="570" y="783" text-anchor="middle" class="h w" font-size="29">便利。でも推測はズレることもある — だから頼み方が効いてくる</text>
+</svg>

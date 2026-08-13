@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="860" viewBox="0 0 1140 860">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M2 14L8 2l6 12z" fill="#B44A32"/>
+    </marker>
+  </defs>
+
+  <!-- 上段: 4つの部品チップ -->
+  <g>
+    <rect x="40" y="44" width="247" height="180" rx="24" fill="#FFF2E8" stroke="#EDC9B4" stroke-width="3"/>
+    <circle cx="74" cy="78" r="20" fill="#FFFFFF" stroke="#EDC9B4" stroke-width="3"/>
+    <text x="74" y="86" text-anchor="middle" class="h" font-size="24" fill="#7C3527">1</text>
+    <text x="108" y="86" class="h" font-size="28">作業</text>
+    <text x="64" y="128" class="m" font-size="20">（何をする）</text>
+    <line x1="64" y1="144" x2="263" y2="144" stroke="#EDC9B4" stroke-width="2"/>
+    <text x="64" y="176" class="m" font-size="19">例：要約・修正</text>
+  </g>
+  <g>
+    <rect x="311" y="44" width="247" height="180" rx="24" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
+    <circle cx="345" cy="78" r="20" fill="#FFFFFF" stroke="#E5A692" stroke-width="3"/>
+    <text x="345" y="86" text-anchor="middle" class="h" font-size="24" fill="#7C3527">2</text>
+    <text x="379" y="86" class="h" font-size="28">材料</text>
+    <text x="335" y="128" class="m" font-size="20">（何を読む）</text>
+    <line x1="335" y1="144" x2="534" y2="144" stroke="#E5A692" stroke-width="2"/>
+    <text x="335" y="176" class="m" font-size="19">例：メモや資料</text>
+  </g>
+  <g>
+    <rect x="582" y="44" width="247" height="180" rx="24" fill="#F6E6CF" stroke="#DCB26B" stroke-width="3"/>
+    <circle cx="616" cy="78" r="20" fill="#FFFFFF" stroke="#DCB26B" stroke-width="3"/>
+    <text x="616" y="86" text-anchor="middle" class="h" font-size="24" fill="#7C3527">3</text>
+    <text x="650" y="86" class="h" font-size="28">形式</text>
+    <text x="606" y="128" class="m" font-size="20">（どう返す）</text>
+    <line x1="606" y1="144" x2="805" y2="144" stroke="#DCB26B" stroke-width="2"/>
+    <text x="606" y="176" class="m" font-size="19">例：箇条書き・表</text>
+  </g>
+  <g>
+    <rect x="853" y="44" width="247" height="180" rx="24" fill="#FADFD5" stroke="#D98C72" stroke-width="3"/>
+    <circle cx="887" cy="78" r="20" fill="#FFFFFF" stroke="#D98C72" stroke-width="3"/>
+    <text x="887" y="86" text-anchor="middle" class="h" font-size="24" fill="#7C3527">4</text>
+    <text x="921" y="86" class="h" font-size="28">条件</text>
+    <text x="877" y="128" class="m" font-size="20">（何を守る）</text>
+    <line x1="877" y1="144" x2="1076" y2="144" stroke="#D98C72" stroke-width="2"/>
+    <text x="877" y="176" class="m" font-size="19">例：文字数など</text>
+  </g>
+
+  <!-- 収束する矢印: 4チップ → 書類カード -->
+  <path d="M163.5,224 Q314,265 465,308" stroke="#B44A32" stroke-width="4" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M434.5,224 Q484,265 535,308" stroke="#B44A32" stroke-width="4" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M705.5,224 Q655,265 605,308" stroke="#B44A32" stroke-width="4" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M976.5,224 Q826,265 675,308" stroke="#B44A32" stroke-width="4" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <!-- 中段: 組み立てたプロンプト（書類カード） -->
+  <g>
+    <rect x="260" y="310" width="620" height="250" rx="30" fill="#7C3527"/>
+    <!-- 書類アイコン -->
+    <rect x="300" y="336" width="26" height="32" rx="4" fill="#FFF9F3"/>
+    <path d="M319 336 L326 343 L319 343 Z" fill="#D98C72"/>
+    <line x1="306" y1="349" x2="320" y2="349" stroke="#B44A32" stroke-width="2"/>
+    <line x1="306" y1="356" x2="320" y2="356" stroke="#B44A32" stroke-width="2"/>
+    <line x1="306" y1="363" x2="316" y2="363" stroke="#B44A32" stroke-width="2"/>
+    <text x="340" y="362" class="h w" font-size="34">組み立てたプロンプト</text>
+
+    <rect x="300" y="398" width="14" height="14" rx="3" fill="#EDC9B4"/>
+    <text x="326" y="410"><tspan class="h" font-size="24" fill="#F0B498">#</tspan><tspan class="h w" font-size="24" dx="8">やること</tspan></text>
+
+    <rect x="300" y="436" width="14" height="14" rx="3" fill="#E5A692"/>
+    <text x="326" y="448"><tspan class="h" font-size="24" fill="#F0B498">#</tspan><tspan class="h w" font-size="24" dx="8">材料</tspan></text>
+
+    <rect x="300" y="474" width="14" height="14" rx="3" fill="#DCB26B"/>
+    <text x="326" y="486"><tspan class="h" font-size="24" fill="#F0B498">#</tspan><tspan class="h w" font-size="24" dx="8">返し方</tspan></text>
+
+    <rect x="300" y="512" width="14" height="14" rx="3" fill="#D98C72"/>
+    <text x="326" y="524"><tspan class="h" font-size="24" fill="#F0B498">#</tspan><tspan class="h w" font-size="24" dx="8">守ること</tspan></text>
+  </g>
+
+  <!-- 下段: 書類カード → AI → 的 -->
+  <path d="M570,566 L570,603" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect x="519" y="598" width="8" height="12" fill="#B44A32"/>
+    <rect x="613" y="598" width="8" height="12" fill="#B44A32"/>
+    <rect x="485" y="610" width="170" height="140" rx="24" fill="#B44A32"/>
+    <rect x="519" y="750" width="8" height="12" fill="#B44A32"/>
+    <rect x="613" y="750" width="8" height="12" fill="#B44A32"/>
+    <text x="570" y="698" text-anchor="middle" class="h w" font-size="44">AI</text>
+  </g>
+
+  <path d="M661,680 L706,680" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <g>
+    <circle cx="782" cy="680" r="64" fill="#FADFD5" stroke="#D98C72" stroke-width="3"/>
+    <circle cx="782" cy="680" r="41" fill="#FFF9F3" stroke="#D98C72" stroke-width="2"/>
+    <circle cx="782" cy="680" r="19" fill="#B44A32"/>
+  </g>
+
+  <text x="570" y="790" text-anchor="middle" class="h" font-size="28" fill="#7C3527">欲しい答えに近づく</text>
+
+  <!-- 最下部の補足 -->
+  <text x="570" y="832" text-anchor="middle" class="m" font-size="23">魔法の言い回しの暗記ではなく、入力の設計</text>
+</svg>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="860" viewBox="0 0 1140 860">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="ar" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M2 1 L10 6 L2 11 Z" fill="#B44A32"/>
+    </marker>
+  </defs>
+
+  <!-- 上段: 守ることなし -->
+  <g>
+    <text x="36" y="46" class="h" font-size="30" fill="#A63D32">× 「守ること」なし</text>
+    <!-- 依頼カード -->
+    <rect x="36" y="72" width="380" height="200" rx="24" fill="#FADFD5"/>
+    <text x="68" y="118" class="h" font-size="25">依頼</text>
+    <text x="68" y="164" font-size="24">会議メモを</text>
+    <text x="68" y="200" font-size="24">表にまとめて</text>
+    <text x="68" y="248" class="m" font-size="21">（条件なし）</text>
+    <!-- 矢印 -->
+    <path d="M436 172 H 512" stroke="#B44A32" stroke-width="5" fill="none" marker-end="url(#ar)" stroke-linecap="round"/>
+    <!-- 出力表 -->
+    <rect x="536" y="72" width="568" height="200" rx="24" fill="#FFFFFF" stroke="#E8BBAA" stroke-width="3"/>
+    <rect x="564" y="100" width="512" height="42" rx="8" fill="#A63D32"/>
+    <text x="606" y="129" class="w h" font-size="21">タスク</text>
+    <text x="784" y="129" class="w h" font-size="21">担当</text>
+    <text x="948" y="129" class="w h" font-size="21">期限</text>
+    <text x="576" y="176" font-size="21">告知文を確認する</text>
+    <text x="772" y="176" font-size="21" fill="#A63D32" class="h">佐藤さん？</text>
+    <text x="936" y="176" font-size="21" fill="#A63D32" class="h">9月20日？</text>
+    <text x="576" y="216" class="m" font-size="20">↑ メモにない名前と日付を、それっぽく補ってしまった</text>
+    <rect x="536" y="288" width="470" height="48" rx="24" fill="#A63D32"/>
+    <text x="771" y="320" text-anchor="middle" class="w h" font-size="23">気づきにくい「作られた情報」が混ざる</text>
+  </g>
+
+  <!-- 区切り -->
+  <path d="M36 386 H 1104" stroke="#E8BBAA" stroke-width="3" stroke-dasharray="10 10"/>
+
+  <!-- 下段: 守ることあり -->
+  <g>
+    <text x="36" y="446" class="h" font-size="30" fill="#247F7A">○ 「守ること」あり</text>
+    <!-- 依頼カード -->
+    <rect x="36" y="472" width="380" height="264" rx="24" fill="#FFF2E8" stroke="#247F7A" stroke-width="3"/>
+    <text x="68" y="518" class="h" font-size="25">依頼</text>
+    <text x="68" y="562" font-size="24">会議メモを表にまとめて</text>
+    <rect x="60" y="588" width="332" height="120" rx="16" fill="#F6E6CF"/>
+    <text x="84" y="626" class="h" font-size="22" fill="#7C3527">守ること＋理由</text>
+    <text x="84" y="660" font-size="20">メモにない担当・期限は</text>
+    <text x="84" y="690" font-size="20">「未確認」。誤情報は危ないから</text>
+    <!-- 矢印 -->
+    <path d="M436 600 H 512" stroke="#B44A32" stroke-width="5" fill="none" marker-end="url(#ar)" stroke-linecap="round"/>
+    <!-- 出力表 -->
+    <rect x="536" y="472" width="568" height="200" rx="24" fill="#FFFFFF" stroke="#247F7A" stroke-width="3"/>
+    <rect x="564" y="500" width="512" height="42" rx="8" fill="#7C3527"/>
+    <text x="606" y="529" class="w h" font-size="21">タスク</text>
+    <text x="784" y="529" class="w h" font-size="21">担当</text>
+    <text x="948" y="529" class="w h" font-size="21">期限</text>
+    <text x="576" y="576" font-size="21">告知文を確認する</text>
+    <text x="776" y="576" font-size="21" fill="#247F7A" class="h">未確認</text>
+    <text x="940" y="576" font-size="21" fill="#247F7A" class="h">未確認</text>
+    <text x="576" y="616" class="m" font-size="20">↑ 分からない所が正直に「未確認」と残る</text>
+    <rect x="536" y="688" width="470" height="48" rx="24" fill="#247F7A"/>
+    <text x="771" y="720" text-anchor="middle" class="w h" font-size="23">確認すべき場所がひと目で分かる</text>
+  </g>
+
+  <!-- 最下部メッセージ -->
+  <rect x="120" y="784" width="900" height="56" rx="28" fill="#7C3527"/>
+  <text x="570" y="821" text-anchor="middle" class="w h" font-size="25">条件は理由とセットで。AIが勝手に補う範囲が減る</text>
+</svg>

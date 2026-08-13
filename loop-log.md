@@ -195,3 +195,24 @@
   - python-pptx 再パースで deck.json / PPTX とも35枚、`has_notes_slide` 全False、`ppt/notesSlides/` パーツ0
   - markitdown 抽出成功、placeholder語句スキャン0件
 - 変更禁止範囲は未編集。`decks/okf-visual/deck.json` は 2026-08-06 20:05:10 JST のまま。親リポジトリでは `presentation/` 全体が未追跡のため、`git status` ではファイル単位の差分証明は不可
+
+---
+
+# ai-eng-01-pe-draft v2改訂 品質ループ（2026-08-14）
+
+- ブランチ: `loop/pe-draft-v2`（ベースライン: b1676a4 = 改訂前スナップショット）
+- バックアップ: `decks/.backups/ai-eng-01-pe-draft-v2-20260814/`（build含む全量コピー）
+- 機械ゲート: ①`python3 tools/build_deck.py decks/ai-eng-01-pe-draft` 成功 ②`unzip -t` エラーなし ③python-pptx `Presentation()` 再パース成功＋スライド数一致 ④全スライド `has_notes_slide == False`
+- 採点: rubric.md（7項目、目標は全項目8以上）。採点は別エージェント（maker≠grader）
+
+## 周回0（ベースライン相当 = 多角レビュー）
+
+- ワークフロー `pe-draft-v2-review`（6レビュアー+critic、計7エージェント）で改訂前デッキをレビュー。
+- 主な結果: SVG明朝体フォールバック6箇所 / two_column・code下半分空白の系統的パターン / Before・After表記ゆれ7枚 / 「未確認」技法・許可確認が台帳外 / 出典の追跡性不足 / 章再編で壊れる前方参照（お手本の偏り→few-shot依存 等）/ 日常編テンプレの見出し語彙が5要素と不一致。
+- 判断: ユーザーレビュー指示（章再編・8/9マージ・5つの箱→5つの要素 等）と統合し、deck.json全面改訂＋SVG11点新規制作で対応。
+
+## 周回1（大規模改訂）
+
+- 変更: deck.json 47枚→46枚へ全面改訂（01基本→02 5要素→03直し方→04日常→05仕事→付録・まとめ）。SVG11点新規（layers-focus共通階層図ほか）+既存SVG2点のフォントバグ修正。上記レビュー指摘を反映。
+- ゲート: （実行待ち）
+- 採点: （実行待ち）
