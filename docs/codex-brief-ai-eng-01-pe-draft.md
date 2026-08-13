@@ -27,12 +27,9 @@
 - `video-pe-loop-engineering-overview.md` — 「プロンプトを書くな」の文脈（プロンプトの先の世界）
 - `video-pe-loop-engineering-5plus1-parts.md` — ループEG解説（同上の補強）
 
-**Web検証済みソース 7件**（記事台帳は未整備。必要ならURLを直接参照してよい。ローカルに原文抜粋キャッシュあり: `pipeline/cache/web/*/candidates.json`）:
+**記事ソース台帳 7本**（2026-08-13 16:05 全件整備完了。`knowledge/sources/article-pe-*.md` — arXivサーベイ2本[primary]・Anthropic公式ガイド2本・日本語入門解説3本。動画台帳と同形式で要点整理・引用付き）:
 
-- [primary] https://arxiv.org/abs/2406.06608 — The Prompt Report（体系サーベイ）
-- [primary] https://arxiv.org/abs/2402.07927 — Prompt Engineering survey
-- [official] https://platform.claude.com/docs/en/build-with-claude/... — Prompting best practices / Prompting Claude Opus 5（2本）
-- [jp] KDDI・Qiita・SIOS の入門解説（3本。URL は `pipeline/state/research-queue.json` の web.candidates 参照）
+- `ls knowledge/sources/article-pe-*.md` で一覧できる。**原文URLに当たり直す必要はなく、台帳だけから作ってよい**
 
 ## 4. 作るもの
 
