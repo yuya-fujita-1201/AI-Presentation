@@ -595,8 +595,9 @@
         "source_tier": "secondary",
         "origin": "web:kddi.com",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-pe-kddi-prompt-basics.md"
       },
       {
         "url": "https://qiita.com/kissy24/items/1dce568e4a22ef5ada8a",
@@ -613,8 +614,9 @@
         "source_tier": "secondary",
         "origin": "web:qiita.com/kissy24",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-pe-qiita-kissy24-methods.md"
       },
       {
         "url": "https://tech-lab.sios.jp/archives/41500",

@@ -44,6 +44,8 @@
 - [article-pe-claude-opus-5-prompting.md](./article-pe-claude-opus-5-prompting.md) — Anthropic公式「Prompting Claude Opus 5」。Opus 4.8比の性能差分（agentic coding・コードレビュー・effort設定・vision・長文脈・オフィス業務・マルチエージェント調整）に基づくプロンプト設計パターンを解説
 - [article-pe-prompt-report.md](./article-pe-prompt-report.md) — arXiv「The Prompt Report」（Schulhoff et al.）。PRISMAベースの系統的レビューで58技法・33用語を分類し、多言語・マルチモーダル・エージェント・評価・安全性まで扱う包括的サーベイ
 - [article-pe-pe-survey-sahoo.md](./article-pe-pe-survey-sahoo.md) — arXiv「A Systematic Survey of Prompt Engineering in Large Language Models」（Sahoo et al.）。41種類以上の技法をアプリケーション領域別に分類、Zero-Shot/Few-Shot Promptingの位置づけを解説
+- [article-pe-kddi-prompt-basics.md](./article-pe-kddi-prompt-basics.md) — KDDI株式会社「プロンプトとは？種類や作成方法、具体的なプロンプト例を紹介」。プロンプトの語源とAI時代の意味の広がり、命令・補完・実演の3類型、業務効率化やコンテンツ作成での活用シーンを解説
+- [article-pe-qiita-kissy24-methods.md](./article-pe-qiita-kissy24-methods.md) — Qiita「【生成AI】サクッと学ぶプロンプトエンジニアリング手法」（kissy24）。Instruction/Context/Input Data/Output Indicatorの4要素構成、3種類の記載フォーマット、ロールプレイやZero-shot Promptingを解説
 
 ## 動画（プロンプトエンジニアリング）
 
