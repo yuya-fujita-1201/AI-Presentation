@@ -50,6 +50,7 @@ XMLタグは、指示・文脈・例・変数入力が混在する複雑なプ�
 
 # 活用先
 
-- [../prompt-engineering/prompt-anatomy.md](../prompt-engineering/prompt-anatomy.md) — XMLタグによる構造化（専用タグ・一貫した命名・ネスト）、具体的な出力フォーマット指定と箇条書きの推奨、「最小限の文脈しか持たない同僚」というゴールデンルールと「優秀だが新しく入社した社員」という捉え方の根拠
-- [../prompt-engineering/core-techniques.md](../prompt-engineering/core-techniques.md) — 「明確で直接的な指示」という土台の原則、few-shot例が満たすべき3条件（Relevant/Diverse/Structured）と3〜5個という推奨個数、AI自身に例を評価・生成させる使い方の根拠
+- [../prompt-engineering/prompt-anatomy.md](../prompt-engineering/prompt-anatomy.md) — XMLタグによる構造化（専用タグ・一貫した命名・ネスト）の根拠
+- [../prompt-engineering/core-techniques.md](../prompt-engineering/core-techniques.md) — 「明確で直接的な指示」という土台の原則、「最小限の文脈しか持たない同僚」というゴールデンルールと「優秀だが新しく入社した社員」という捉え方、具体的な出力フォーマット指定と箇条書きの推奨、few-shot例が満たすべき3条件（Relevant/Diverse/Structured）と3〜5個という推奨個数、AI自身に例を評価・生成させる使い方の根拠
 - [../prompt-engineering/why-context-matters.md](../prompt-engineering/why-context-matters.md) — 指示に「なぜその挙動が重要なのか」を添えると目標をより正確に理解するという主張と、省略記号／音声合成エンジンの具体例の根拠
+- [../prompt-engineering/modern-model-prompting.md](../prompt-engineering/modern-model-prompting.md) — 本ドキュメントの「明確で直接的な指示」などのベストプラクティスがFable 5を含む現行の全Claudeモデルに共通して適用できる手法だと位置づけられている根拠
