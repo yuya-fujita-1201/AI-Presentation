@@ -27,6 +27,11 @@ s["phase_attempts"] = 0
 s["phase_started_at"] = None
 s["consecutive_external"] = 0
 s["generation"] = s.get("generation", 1) + 1
+# 人間介入後の採点フェーズは改善ループを新規に開始する（repair/streakをリセット）
+if phase in ("grade_k", "improve_k"):
+    s["grade"]["knowledge"].update({"repair_count": 0, "pass_streak": 0, "retry_used": False, "last_unmet": None, "last_scores": None})
+if phase in ("grade_d", "improve_d"):
+    s["grade"]["deck"].update({"repair_count": 0, "pass_streak": 0, "retry_used": False, "last_unmet": None, "last_scores": None})
 if accept == "--accept":
     s["manual_override"] = True
 json.dump(s, open(f, "w"), ensure_ascii=False, indent=2)
