@@ -35,8 +35,8 @@
         "lead": { "y": 122, "h": 54, "size": 18, "color": "muted", "line_height": 1.42 },
         "left": { "x": 72, "y": 190, "w": 548, "h": 458, "fill": "surface_sand", "radius": 0, "pad": 28 },
         "right": { "x": 660, "y": 190, "w": 548, "h": 458, "fill": "surface_peach", "radius": 0, "pad": 28 },
-        "col_heading": { "size": 24, "color": "primary", "bold": true, "gap_below": 18 },
-        "col_body": { "size": 20, "child_size": 16, "gap": 16, "child_gap": 8, "line_height": 1.48, "color": "text", "child_color": "muted", "marker_color": "accent", "indent": 26 }
+        "col_heading": { "size": 24, "color": "primary", "bold": true, "gap_below": 22 },
+        "col_body": { "size": 21, "child_size": 17, "gap": 20, "child_gap": 10, "line_height": 1.52, "color": "text", "child_color": "muted", "marker_color": "accent", "indent": 26 }
       },
       "table": {
         "eyebrow": { "x": 72, "y": 12, "w": 1136, "h": 20, "size": 14, "color": "accent", "bold": true },
@@ -50,7 +50,7 @@
         "title": { "y": 44, "h": 54, "size": 32, "color": "primary" },
         "rule": { "x": 72, "y": 105, "w": 1136, "h": 2, "fill": "accent", "radius": 0 },
         "lead": { "y": 122, "h": 54, "size": 18, "color": "muted", "line_height": 1.42 },
-        "code": { "y": 190, "h": 458, "fill": "code_bg", "color": "code_text", "size": 17, "min_size": 12, "radius": 0, "pad": 26, "line_height": 1.35 }
+        "code": { "y": 190, "h": 458, "fill": "code_bg", "color": "code_text", "size": 18, "min_size": 12, "radius": 0, "pad": 26, "line_height": 1.42 }
       },
       "image": {
         "eyebrow": { "x": 72, "y": 12, "w": 1136, "h": 20, "size": 14, "color": "accent", "bold": true },
@@ -309,7 +309,7 @@
       "type": "section",
       "number": "03",
       "title": "うまくいかないときの直し方",
-      "subtitle": "一発で100点を目指さない。作って、確かめて、直す ── ここでは考え方を押さえ、4章・5章の実例で使います",
+      "subtitle": "5つの要素で頼んでも、一発で100点は出ません。作って、確かめて、直す ── ここでは考え方を押さえ、4章・5章の実例で使います",
       "notes": "期待と違う答えが返ってきたときの直し方です。一発で完璧を目指さず、どこが違ったかを言葉にして直します。ここでは考え方を押さえ、後の日常編・仕事編の実例で実際に使います。"
     },
     {
@@ -473,7 +473,7 @@
       "type": "section",
       "number": "05",
       "title": "仕事で使う",
-      "subtitle": "事例集②：AIの回答を「次の人が使える形」まで整える ── メールや議事録のほか、コードやログの整理にも同じ型が使える",
+      "subtitle": "事例集②：日常で試した型を、そのまま仕事へ ── AIの回答を「次の人が使える形」まで整える。コードやログの整理にも同じ型が使える",
       "notes": "仕事の例では、AIの回答を読んで終わりではなく、次の人が使える形まで決めます。ここではメール・議事録・分類を扱いますが、エラーログの整理や仕様書の下書きなど、エンジニアの仕事にも同じ5つの要素がそのまま使えます。"
     },
     {
@@ -487,7 +487,7 @@
         { "text": "録音や共有の許可があるか", "bold": true, "children": ["会議の録音・アップロードは、先にルールと同意を確認する"] },
         { "text": "迷ったら入れずに、担当者に確認しましょう", "bold": true, "color": "accent" }
       ],
-      "style": { "body": { "size": 24, "child_size": 18, "gap": 22, "child_gap": 9, "y": 200 } },
+      "style": { "body": { "size": 24, "child_size": 18, "gap": 30, "child_gap": 10, "y": 205 } },
       "notes": "仕事の情報をAIへ入れる前に、会社が許可したAIか、個人情報や機密情報がないか、録音や共有の許可があるかを確認します。これは台帳の技法とは別の、一般的な情報の取り扱いの注意です。詳細は自社のルールに従ってください。"
     },
     {
@@ -534,7 +534,7 @@
       "lead": "議事録は読みやすい要約で終わらせず、決定事項・担当者・期限を分けます。欠席者も次の行動を判断できる形が目標です。",
       "left": {
         "heading": "悪い例｜何を残すか決めていない",
-        "bullets": ["議事録をまとめて", { "text": "この依頼では分からないこと", "bold": true, "children": ["何を残すか", "次に誰が動くか"] }, { "text": "返ってくる答え", "bold": true, "children": ["読みやすいが、行動につながらない要約"] }]
+        "bullets": ["議事録をまとめて", { "text": "この依頼では分からないこと", "bold": true, "children": ["何を残すか", "次に誰が動くか", "決まらなかった話をどう扱うか"] }, { "text": "返ってくる答え", "bold": true, "children": ["読みやすいが、行動につながらない要約"] }]
       },
       "right": {
         "heading": "良い例｜残す項目を指定する",
@@ -562,7 +562,7 @@
         { "text": "仕事への置き換え", "bold": true, "children": ["顧客の声を「課題／要望」へ分類する", "エラーログを「バグ／設定ミス／仕様」へ分類するのも同じ型"] }
       ],
       "path": "assets/diagram-fewshot.svg",
-      "notes": "言葉だけで判断基準を説明しにくいときは、完成例を見せます。業務では顧客の声の分類のほか、エラーログの分類などエンジニアの仕事にも置き換えられます。"
+      "notes": "言葉だけで判断基準を説明しにくいときは、完成例を見せます。例なし（zero-shot）・例あり（few-shot）という技法の整理は、arXivの2本のサーベイ（The Prompt Report、Sahoo et al.）でも代表的なプロンプト技法として体系化されているものです。業務では顧客の声の分類のほか、エラーログの分類などエンジニアの仕事にも置き換えられます。"
     },
     {
       "type": "code",
@@ -585,7 +585,7 @@
         ["区切る", "指示と例を混ぜない", "見出しや「お手本ここから」"],
         ["数", "公式ガイドは3〜5例を推奨", "まず少数で試して比べる"]
       ],
-      "style": { "table": { "col_widths": [2, 3, 5], "row_h": 82, "cell_size": 16 } },
+      "style": { "table": { "col_widths": [2, 3, 5], "row_h": 94, "cell_size": 17, "header_size": 18 } },
       "notes": "Anthropic公式は3〜5例を勧めています。数より、実際に近いか、偏りがないか、指示と区切れているかを見ます。3章で見た「お手本のズレ」を防ぐ選び方です。"
     },
     {
