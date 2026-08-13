@@ -30,7 +30,8 @@ sys.exit(0)
 PYEOF
 rc=$?; [ $rc -ne 0 ] && exit $rc
 
-# preview全枚生成→枚数一致
+# preview全枚生成→枚数一致（旧版の残骸PNGを先に掃除して偽の枚数不一致を防ぐ）
+rm -f "$DECK_DIR"/build/preview/slide-*.png
 $PY tools/preview_deck.py "$DECK_DIR" >/dev/null || exit 15
 N_JSON=$($PY -c "import json,sys;print(len(json.load(open('$DECK_DIR/deck.json'))['slides']))")
 N_PNG=$(ls "$DECK_DIR"/build/preview/slide-*.png 2>/dev/null | wc -l | tr -d ' ')
