@@ -46,4 +46,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../prompt-engineering/what-is-prompt-engineering.md](../prompt-engineering/what-is-prompt-engineering.md) — NRIによる定義、生成AIが「プロンプトの続き」を予測する性質（織田信長の例）、ダイエット相談の比較例、およびRAG・Fine-tuningより先にプロンプトエンジニアリングから始めるべきというOpenAIセッションの紹介の根拠

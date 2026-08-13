@@ -58,4 +58,5 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../prompt-engineering/what-is-prompt-engineering.md](../prompt-engineering/what-is-prompt-engineering.md) — 「プロンプト」の定義と語源（促す・CLIの入力記号）、厳密な構文から曖昧な自然言語への転換、「おすすめの本」の比較例、KDDI AI-Chatの効果と人間による最終確認の必要性の根拠
+- [../prompt-engineering/prompt-anatomy.md](../prompt-engineering/prompt-anatomy.md) — 命令・補完・実演という3類型と、タスクの型によってプロンプトの構成要素が変わることの根拠

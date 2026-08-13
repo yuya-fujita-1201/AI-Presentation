@@ -50,4 +50,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../prompt-engineering/prompt-anatomy.md](../prompt-engineering/prompt-anatomy.md) — プロンプトの定義（テキスト・画像・音声等から構成されうる生成AIへの入力）と、変数を含む関数としての「プロンプトテンプレート」の定式化の根拠

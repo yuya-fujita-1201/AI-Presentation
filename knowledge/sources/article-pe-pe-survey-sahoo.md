@@ -48,4 +48,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../prompt-engineering/what-is-prompt-engineering.md](../prompt-engineering/what-is-prompt-engineering.md) — プロンプトエンジニアリングの学術的な定義（モデルパラメータを更新せずプロンプトのみで挙動を引き出す）と、再学習・ファインチューニングを要する従来パラダイムとの違いの根拠
