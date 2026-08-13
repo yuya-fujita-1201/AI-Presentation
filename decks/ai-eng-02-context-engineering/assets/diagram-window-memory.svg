@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <path d="M330 166H370M330 586H370M682 366H738M838 550V480" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <rect x="50" y="92" width="280" height="148" rx="26" fill="#FCE9DC" stroke="#7C3527" stroke-width="4"/>
+  <text x="190" y="151" text-anchor="middle" class="h" font-size="31">会話履歴</text>
+  <text x="190" y="197" text-anchor="middle" class="m" font-size="22">過去のやり取り</text>
+
+  <rect x="50" y="512" width="280" height="148" rx="26" fill="#E1F2F0" stroke="#247F7A" stroke-width="4"/>
+  <text x="190" y="571" text-anchor="middle" class="h" font-size="31">保存メモリ</text>
+  <text x="190" y="617" text-anchor="middle" class="m" font-size="22">必要時に取得</text>
+
+  <rect x="382" y="210" width="300" height="312" rx="28" fill="#FFFFFF" stroke="#247F7A" stroke-width="6"/>
+  <rect x="404" y="232" width="256" height="64" rx="18" fill="#247F7A"/>
+  <text x="532" y="272" text-anchor="middle" class="h w" font-size="22" fill="#FFFFFF">コンテキストウィンドウ</text>
+  <text x="532" y="337" text-anchor="middle" class="h" font-size="26">今、モデルが読む範囲</text>
+  <rect x="424" y="372" width="96" height="54" rx="16" fill="#FADFD5"/>
+  <text x="472" y="407" text-anchor="middle" class="h" font-size="22">指示</text>
+  <rect x="532" y="372" width="108" height="54" rx="16" fill="#FCE9DC"/>
+  <text x="586" y="407" text-anchor="middle" class="h" font-size="22">履歴</text>
+  <rect x="462" y="442" width="140" height="54" rx="16" fill="#E1F2F0"/>
+  <text x="532" y="477" text-anchor="middle" class="h" font-size="22">取得メモリ</text>
+
+  <circle cx="838" cy="366" r="92" fill="#7C3527"/>
+  <text x="838" y="358" text-anchor="middle" class="h w" font-size="28" fill="#FFFFFF">AI</text>
+  <text x="838" y="398" text-anchor="middle" class="h w" font-size="28" fill="#FFFFFF">モデル</text>
+
+  <rect x="714" y="550" width="248" height="118" rx="24" fill="#F6E6CF" stroke="#C17A27" stroke-width="4"/>
+  <text x="838" y="598" text-anchor="middle" class="h" font-size="28">学習済み知識</text>
+  <text x="838" y="636" text-anchor="middle" class="m" font-size="21">学習時に形成</text>
+
+  <text x="512" y="724" text-anchor="middle" class="m" font-size="23">履歴・メモリ・学習済み知識は、同じものではない</text>
+</svg>

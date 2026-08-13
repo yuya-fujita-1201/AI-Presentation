@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#7C3527"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <text x="512" y="82" text-anchor="middle" class="h" font-size="38">状況は4つに分けて渡す</text>
+  <path d="M122 356H902" stroke="#7C3527" stroke-width="7" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <g>
+    <circle cx="176" cy="356" r="58" fill="#FCE9DC" stroke="#7C3527" stroke-width="5"/>
+    <text x="176" y="346" text-anchor="middle" class="h" font-size="24">1</text>
+    <text x="176" y="383" text-anchor="middle" class="h" font-size="27">経緯</text>
+    <text x="176" y="474" text-anchor="middle" class="m" font-size="22">なぜ始まったか</text>
+  </g>
+  <g>
+    <circle cx="392" cy="356" r="58" fill="#E1F2F0" stroke="#247F7A" stroke-width="5"/>
+    <text x="392" y="346" text-anchor="middle" class="h" font-size="24" fill="#247F7A">2</text>
+    <text x="392" y="383" text-anchor="middle" class="h" font-size="27">現在地</text>
+    <text x="392" y="474" text-anchor="middle" class="m" font-size="22">どこまで進んだか</text>
+  </g>
+  <g>
+    <circle cx="608" cy="356" r="58" fill="#F6E6CF" stroke="#C17A27" stroke-width="5"/>
+    <text x="608" y="346" text-anchor="middle" class="h" font-size="24" fill="#C17A27">3</text>
+    <text x="608" y="383" text-anchor="middle" class="h" font-size="27">確定</text>
+    <text x="608" y="474" text-anchor="middle" class="m" font-size="22">誰が何を決めたか</text>
+  </g>
+  <g>
+    <circle cx="824" cy="356" r="58" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/>
+    <text x="824" y="346" text-anchor="middle" class="h" font-size="24" fill="#B44A32">4</text>
+    <text x="824" y="383" text-anchor="middle" class="h" font-size="27">未確認</text>
+    <text x="824" y="474" text-anchor="middle" class="m" font-size="22">何が分からないか</text>
+  </g>
+
+  <rect x="142" y="594" width="740" height="104" rx="28" fill="#7C3527"/>
+  <text x="512" y="658" text-anchor="middle" class="h w" font-size="31" fill="#FFFFFF">過去・現在・確定・未確認を混ぜない</text>
+</svg>

@@ -1,5 +1,65 @@
 # loop-log — グラフエンジニアリング ナレッジ+デッキ 品質ループ
 
+## ai-eng-02-context-engineering（2026-08-14）
+
+対象: `knowledge/context-engineering/`、公式一次資料台帳12件、`decks/ai-eng-02-context-engineering/`。
+
+### 準備とグラフ
+
+- 専用worktree: `/Users/yuyafujita/Projects/presentation-worktrees/ai-eng-02-context-engineering`
+- ブランチ: `loop/ai-eng-02-context-engineering`
+- ベースSHA: `aac9134365b2702391a7ab7cae9797e585e6ba3c`
+- 既存PE制作中worktreeと `pipeline/state/state.json` は変更しない
+- Wave A: 公式一次資料のcurator、初心者学習architect、contrarianを独立に実行。Integratorだけが構成と共通indexを統合
+- Wave B: source台帳、OKFコンセプト、SVG資産を固有ファイルに分けて制作。`deck.json` はIntegratorのみが所有
+- Wave C: 機械ゲート後、makerと別の採点者が完全版rubric本文を提出。最低点1項目だけを主対象に改善する
+
+### 合格条件
+
+- rubric: `rubric-context-engineering.md` の10項目がすべて8/10以上
+- 上限: 全体5周、同一項目3修正、未達ベクトルが2周停滞で停止
+- 機械ゲート: OKF検証、JSON不変条件、build、unzip、PPTX再パース・枚数一致、notesなし、preview枚数一致
+- 目視: makerが全PNG、独立graderが全PNG。SVG使用ページはHTML/PPTX両経路で確認
+- 自動マージなし。branchをpushしDraft PRとしてレビュー依頼する
+
+### 周回0：調査・設計
+
+- 公式一次資料12件を選定。定義、長文の位置効果と反証、RAG原著、十分性、外部memory、tool context、Prompt cache、prompt injection、data controlsをカバー
+- 本編30枚＋通常発表対象外の付録21枚＝51枚で固定。本編は約35分、残りを質疑に使う。付録のPE/CE境界とCE/Harness境界を独立スライドにしたため、当初49枚案から2枚増えた
+- 01から `warm-terracotta`、eyebrow、左右比較、差し替え式テンプレート、最後の人確認、説明する図を継承。同一図の連続再利用はしない
+- 事実安全: PEとCEの重なり、window≠memory、RAG/Memory/Compaction/cacheの分離、Lost in the Middle非普遍化、製品数値非一般化、外部資料の未信頼性をハード条件化
+- rubricを10項目で作成。完全版レポートだけを正として採点し、通知要約だけでは判定しない
+
+### 周回1：独立採点と最低項目の特定
+
+- **完全版grader**: 97/100。項目1〜8は各10、項目9は9、項目10は8。51枚のPNG全数実見、51/51 notes、PPTX 51枚・notes slide 0、blocker 0
+- **事実・出典grader（より厳格な限定監査）**: 項目10「出典追跡とノート」7/10で未達。項目4「留保と一般化」は8/10で回帰なし
+- **ビジュアルgrader**: 項目9は9/10。high 0、medium 0、lowのみ（gold badgeの文字コントラスト、付録導入の孤立改行、出典表の小さい文字）
+- 実在確認した項目10の問題: S48〜50の主張とスライド番号の対応ずれ、12台帳に原文見出し・節のlocatorがない、Microsoft教材が可変main URL、McKinnon研究の年月と適用範囲が過精密
+
+### 周回2：出典追跡とビジュアルの改善
+
+- CE-S01〜CE-S12を採番し、全12台帳に重複しない「原文の根拠箇所」を追加。sources index、台帳、原文locatorの経路をS45 notesに明記
+- S48〜50を主張単位で組み直し、公式資料が直接支える内容と「本教材の整理」を分離。tool contextの対応を `9, 40` に修正
+- Microsoft教材を固定commit URLへ変更。McKinnon (2025) はGemini 2.5 Flash単一・simple factoid Q&Aの限定的対照として記述し、Lost in the Middleの普遍的反証にはしない
+- gold badgeの文字を暗色化、S31副題を1行化、S48〜50の表文字を14pxへ拡大
+- **事実・出典再採点**: 項目10は8/10、項目4は10/10で回帰なし。合格
+- **ビジュアル再採点**: 修正11枚を1280×720原寸で再実見。項目9は10/10、high 0、medium 0、low 0。合格
+- 非ブロッキング残件は、S28/S37/S44/S45の教材上の運用処方をさらに細粒度のclaim-level provenanceへ分ける余地のみ。現状でも一次資料への過剰帰属はなく、graderは8点到達を確認
+
+### 最終ゲートと停止判定
+
+- `tools/validate_okf.py knowledge`: errors 0、warnings 0
+- CE台帳: 12ファイル、CE-S01〜CE-S12一意、全ファイルで原文locatorが1節、コンセプトとの双方向リンク不一致0
+- デッキ: 51枚、notes欠落0、参照資産23件の欠落0、SVG 14件がXML valid
+- `pipeline/bin/gate_deck.sh`: build成功、`unzip -t`エラーなし、python-pptx再パース51枚一致、`has_notes_slide` 0、ZIP内notesSlide 0、preview 51枚一致
+- preview: 51枚すべて1280×720。makerと独立graderが全数実見し、最終修正11枚は別graderが再実見
+- `git diff --check`: エラーなし
+- makerとgraderを分離し、rubric全10項目が8/10以上に到達したため、上限5周を待たず第2周で停止。自動マージは行わない
+- Git handoff: `loop/ai-eng-02-context-engineering` をpushし、Draft PR #2（https://github.com/yuya-fujita-1201/AI-Presentation/pull/2）を作成。base=`main`、state=`OPEN`、mergeStateStatus=`CLEAN`、autoMergeRequest=`null` をAPIで確認
+
+---
+
 ## セットアップ（2026-08-09 03:35 JST）
 
 - **対象1**: `knowledge/graph-engineering/`（コンセプト群）+ `knowledge/sources/video-ge-*.md`（11ファイル）→ 採点表 `rubric-knowledge.md`
