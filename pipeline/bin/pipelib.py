@@ -1173,7 +1173,7 @@ def apply_improve(kind, state, queue, theme, runid, outbox):
         if rc != 0:
             return False, "validate_okf失敗"
     else:
-        ok, why = _deck_gates(state, theme, runid)
+        ok, why = _deck_gates(state, theme, runid, check_text=False)
         if not ok:
             return False, why
     g["repair_count"] += 1
@@ -1236,17 +1236,20 @@ def prework_deck(state, queue, theme, runid):
     return {"mode": "llm", "vars": v}
 
 
-def _deck_gates(state, theme, runid):
+def _deck_gates(state, theme, runid, check_text=True):
     ddir = theme["theme"]["deck_dir"]
     rc, out = run_gate("gate_deck", ["/bin/bash", os.path.join(BIN, "gate_deck.sh"), ddir], runid, timeout=900)
     if rc != 0:
         return False, f"gate_deck失敗(exit {rc})"
-    rc, out = run_gate("check_deck_text",
-                       ["/opt/homebrew/bin/python3", os.path.join(BIN, "check_deck_text.py"),
-                        os.path.join(STAGING, "draft", "draft.md"),
-                        os.path.join(ddir, "deck.json")], runid)
-    if rc != 0:
-        return False, f"check_deck_text失敗: {out[:200]}"
+    # 文言不変ゲートは draft→deck 変換時のみ。improve_d はfindingsに基づく文言修正が正当なため
+    # draft.md との全文一致は要求しない（2026-08-14 07:06 の誤検出対応）
+    if check_text:
+        rc, out = run_gate("check_deck_text",
+                           ["/opt/homebrew/bin/python3", os.path.join(BIN, "check_deck_text.py"),
+                            os.path.join(STAGING, "draft", "draft.md"),
+                            os.path.join(ddir, "deck.json")], runid)
+        if rc != 0:
+            return False, f"check_deck_text失敗: {out[:200]}"
     return True, ""
 
 
