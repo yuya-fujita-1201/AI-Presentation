@@ -1181,10 +1181,12 @@ def prework_draft(state, queue, theme, runid):
     if os.path.exists(draft_f):
         n_blocks = len(re.findall(r"^## SLIDE ", open(draft_f).read(), re.M))
     runmeta_save(runid, {"draft_f": draft_f})
+    fb = os.path.join(PIPE, "themes", f"{state['theme']['id']}-feedback.md")
     v = theme_vars(theme)
     v.update({"DRAFT_FILE": os.path.relpath(draft_f, ROOT),
               "KNOWLEDGE_LIST_FILE": _write_list_file(runid, "kfiles.txt", ledgers),
               "CURRENT_BLOCKS": n_blocks,
+              "FEEDBACK_FILE": os.path.relpath(fb, ROOT) if os.path.exists(fb) else "（なし）",
               "SLIDES_MIN": CFG["draft_targets"]["slides_min"],
               "SLIDES_MAX": CFG["draft_targets"]["slides_max"]})
     return {"mode": "llm", "vars": v}
