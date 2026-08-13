@@ -56,6 +56,7 @@
 - preview: 51枚すべて1280×720。makerと独立graderが全数実見し、最終修正11枚は別graderが再実見
 - `git diff --check`: エラーなし
 - makerとgraderを分離し、rubric全10項目が8/10以上に到達したため、上限5周を待たず第2周で停止。自動マージは行わない
+- Git handoff: `loop/ai-eng-02-context-engineering` をpushし、Draft PR #2（https://github.com/yuya-fujita-1201/AI-Presentation/pull/2）を作成。base=`main`、state=`OPEN`、mergeStateStatus=`CLEAN`、autoMergeRequest=`null` をAPIで確認
 
 ---
 
