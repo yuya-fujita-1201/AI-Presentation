@@ -1,0 +1,13 @@
+warm-02-five-layers.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-43731206-90b5-4940-bbf1-b19f2be41496.png
+warm-03-toolbox.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-37365bec-2d1f-4abf-bd68-1957ba25f1b3.png
+warm-04-iteration.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-d2907146-c129-4a24-a092-a25b5df410b6.png
+warm-05-routing.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-abe9497b-35d9-4b28-a724-61691e75f2a2.png
+warm-06-failures.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-228a9bb0-41ab-4ee6-aba8-c7e5d8a5d140.png
+warm-07-multimodal.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-551fff64-044f-40f5-96ed-c31a8ef73757.png
+warm-08-branches.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-95c8c6b3-2cc1-417e-aac0-c7d3c23c3db1.png
+warm-09-instruction.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-ca0540d8-1eb5-4847-a304-8afd5ef3df2a.png
+warm-10-context.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-e836d381-1e6f-4f2b-bcd0-ba80c1b2ddfb.png
+warm-11-output.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-1ec9bb9f-abf5-4e1c-b42f-8773e768bd15.png
+warm-12-constraints.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-51f801b4-a413-4d4b-be64-90e5f739af47.png
+warm-13-writing.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-4dbf54ee-c353-4ef8-9642-6ef2d010b887.png
+warm-14-examples.png=/Users/yuyafujita/.codex/generated_images/019ffa8f-a2ca-79a1-8be8-7a1f28bacb2c/exec-e7f51658-e20e-4e01-b968-78aa427d865f.png
