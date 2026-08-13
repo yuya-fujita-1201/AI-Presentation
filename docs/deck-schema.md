@@ -44,13 +44,16 @@
 | `id` | ✅ | デッキ ID（フォルダ名と一致。出力ファイル名になる） |
 | `title` | ✅ | デッキタイトル（フッターにも表示） |
 | `subtitle` / `author` / `date` | | 補足情報 |
-| `theme` | | テーマ名（省略時 `default`）。`accenture-purple` あり |
+| `theme` | | テーマ名（省略時 `default`）。`templates/themes/` から選択（`accenture-purple` / `feiler-bright` / `cytra-wine` など） |
 | `layout` | | レイアウト名（省略時 `default`） |
 | `layout_overrides` | | デッキ全体のレイアウト調整（タイプ名 → 領域 → プロパティ） |
+| `brand` | | 全スライド右上に表示する短いブランド表記（例: `FEILER`）。アクセント色・太字・右寄せ |
 
 ## slides — スライドタイプ一覧
 
 全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）。
+
+`bullets` / `two_column` / `table` / `code` / `image` / `image_text` では `eyebrow`（タイトル上の小さなサブタイトル。15px・アクセント色・太字）も指定できる。章や系列の目印に使う（使い方は [デッキデザイン文法](../knowledge/slide-system/deck-design-grammar.md) を参照）。ページ番号を消したい/変えたいスライドは `style.footer_r.text` に表示文字列を指定する（空文字は不可。既定はページ番号）。
 
 ### `title` — 表紙
 ```json
@@ -89,6 +92,12 @@
   "style": { "table": { "row_h": 64, "cell_size": 16, "col_widths": [3, 3, 6] } } }
 ```
 領域: `table`（`col_widths` は比率の配列。`header_h` / `row_h` で行の高さ、`header_size` / `cell_size` でフォント）
+
+行単位の背景色は `style.table.row_fills` で指定する（キーは 0 始まりの行番号の文字列、値はテーマトークン or hex）。指定のない行は従来どおり交互色。意味のある行（例: AI 関連の行）に「しるし」を付ける用途に使う:
+```json
+{ "type": "table", "...": "...",
+  "style": { "table": { "row_fills": { "3": "#EAF1F8" } } } }
+```
 
 ### `code` — コード / 設定例
 ```json

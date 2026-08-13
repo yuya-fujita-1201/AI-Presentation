@@ -235,7 +235,7 @@ def footer_html(st, deck, theme, page, total):
     if "footer_l" in st:
         out += div(st["footer_l"], theme, esc(deck["meta"].get("title", "")))
     if "footer_r" in st:
-        out += div(st["footer_r"], theme, f"{page} / {total}")
+        out += div(st["footer_r"], theme, esc(st["footer_r"].get("text") or f"{page} / {total}"))
     return out
 
 
@@ -245,6 +245,8 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
     parts = []
 
     def chrome():
+        if slide.get("eyebrow") and "eyebrow" in st:
+            parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"])))
         parts.append(div(st["title"], theme, esc(slide.get("title", ""))))
         parts.append(rect(st["rule"], theme))
         if slide.get("lead") and "lead" in st:
@@ -318,8 +320,12 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                 f'{cells_pad}box-sizing:border-box;">{esc(c)}</th>'
             )
         html.append("</tr></thead><tbody>")
+        row_fills = tr.get("row_fills", {})
         for i, row in enumerate(slide.get("rows", [])):
-            bg = col(theme, tr["row_alt_fill"]) if i % 2 else col(theme, "background")
+            if str(i) in row_fills:
+                bg = col(theme, row_fills[str(i)])
+            else:
+                bg = col(theme, tr["row_alt_fill"]) if i % 2 else col(theme, "background")
             html.append("<tr>")
             for cell in row:
                 html.append(
@@ -351,6 +357,8 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             parts.append(div(st["attribution"], theme, "— " + esc(slide["attribution"])))
 
     elif t == "image":
+        if slide.get("eyebrow") and "eyebrow" in st:
+            parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"])))
         if slide.get("title"):
             parts.append(div(st["title"], theme, esc(slide["title"])))
             parts.append(rect(st["rule"], theme))
@@ -369,6 +377,8 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
     elif t == "image_text":
         if slide.get("image_side") == "left":
             st = flip_regions(st, ("body", "img", "caption"))
+        if slide.get("eyebrow") and "eyebrow" in st:
+            parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"])))
         parts.append(div(st["title"], theme, esc(slide.get("title", ""))))
         parts.append(rect(st["rule"], theme))
         if slide.get("punch"):
@@ -497,6 +507,10 @@ def build_html(deck, theme, layout, deck_dir: Path, out_path: Path):
     for i, slide in enumerate(slides):
         st = resolve_style(layout, deck, slide)
         body = html_slide_body(slide, st, deck, theme, deck_dir, i + 1, total)
+        if deck.get("meta", {}).get("brand"):
+            brand_r = {"x": 1080, "y": 43, "w": 140, "h": 34,
+                       "size": 23, "color": "accent", "bold": True, "align": "right"}
+            body += div(brand_r, theme, esc(deck["meta"]["brand"]))
         notes_attr = f' data-notes="{esc(slide["notes"])}"' if slide.get("notes") else ""
         bg = slide_bg(slide, st, theme)
         rendered.append(
@@ -624,9 +638,11 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         if "footer_l" in st:
             text_region(slide, st["footer_l"], deck["meta"].get("title", ""))
         if "footer_r" in st:
-            text_region(slide, st["footer_r"], f"{page} / {total}")
+            text_region(slide, st["footer_r"], st["footer_r"].get("text") or f"{page} / {total}")
 
     def chrome(slide, data, st, page, total):
+        if data.get("eyebrow") and "eyebrow" in st:
+            text_region(slide, st["eyebrow"], data["eyebrow"])
         text_region(slide, st["title"], data.get("title", ""))
         rect_region(slide, st["rule"])
         if data.get("lead") and "lead" in st:
@@ -704,11 +720,15 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             cell.margin_right = IN(tr["pad_x"])
             p = cell.text_frame.paragraphs[0]
             set_run(p.add_run(), str(name), tr["header_size"], C(tr["header_color"]), bold=True)
+        row_fills = tr.get("row_fills", {})
         for i, row in enumerate(rows):
             for j, val in enumerate(row):
                 cell = table.cell(i + 1, j)
                 cell.fill.solid()
-                cell.fill.fore_color.rgb = C(tr["row_alt_fill"]) if i % 2 else C("background")
+                if str(i) in row_fills:
+                    cell.fill.fore_color.rgb = C(row_fills[str(i)])
+                else:
+                    cell.fill.fore_color.rgb = C(tr["row_alt_fill"]) if i % 2 else C("background")
                 cell.vertical_anchor = MSO_ANCHOR.MIDDLE
                 cell.margin_left = IN(tr["pad_x"])
                 cell.margin_right = IN(tr["pad_x"])
@@ -737,6 +757,8 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             text_region(slide, st["attribution"], "— " + data["attribution"])
 
     def s_image(slide, data, st, page, total):
+        if data.get("eyebrow") and "eyebrow" in st:
+            text_region(slide, st["eyebrow"], data["eyebrow"])
         if data.get("title"):
             text_region(slide, st["title"], data["title"])
             rect_region(slide, st["rule"])
@@ -755,6 +777,8 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
     def s_image_text(slide, data, st, page, total):
         if data.get("image_side") == "left":
             st = flip_regions(st, ("body", "img", "caption"))
+        if data.get("eyebrow") and "eyebrow" in st:
+            text_region(slide, st["eyebrow"], data["eyebrow"])
         text_region(slide, st["title"], data.get("title", ""))
         rect_region(slide, st["rule"])
         if data.get("punch"):
@@ -796,6 +820,10 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         if "bg" not in st:
             add_rect(slide, 0, 0, CANVAS_W, CANVAS_H, C("background"))
         builders[data["type"]](slide, data, st, i + 1, total)
+        if deck.get("meta", {}).get("brand"):
+            brand_r = {"x": 1080, "y": 43, "w": 140, "h": 34,
+                       "size": 23, "color": "accent", "bold": True, "align": "right"}
+            text_region(slide, brand_r, deck["meta"]["brand"])
         # 注意: notes は意図的に PPTX へ出力しない（Keynote 互換性問題のため）
 
     prs.save(str(out_path))

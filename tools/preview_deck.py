@@ -46,6 +46,12 @@ def main():
             page.goto(f"{url}#{n}")
             page.reload()
             page.wait_for_timeout(250)
+            page.evaluate("""() => {
+              const hud = document.getElementById('hud');
+              const notes = document.getElementById('notes');
+              if (hud) hud.style.display = 'none';
+              if (notes) notes.style.display = 'none';
+            }""")
             out = out_dir / f"slide-{n:02d}.png"
             page.screenshot(path=str(out))
             print(f"PNG: {out}")

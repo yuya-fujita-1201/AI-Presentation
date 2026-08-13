@@ -1,0 +1,24 @@
+{
+  "name": "cytra-wine",
+  "colors": {
+    "background": "#FFFFFF",
+    "surface": "#F7EEF0",
+    "text": "#262220",
+    "muted": "#7A716B",
+    "primary": "#842638",
+    "accent": "#A63A50",
+    "on_primary": "#FFFFFF",
+    "on_primary_soft": "#F4E8EA",
+    "on_primary_muted": "#D9A9B2",
+    "code_bg": "#2A1418",
+    "code_text": "#F2E4E7",
+    "table_header_bg": "#842638",
+    "table_header_text": "#FFFFFF",
+    "table_row_alt": "#F7EEF0"
+  },
+  "fonts": {
+    "heading": "Hiragino Sans",
+    "body": "Hiragino Sans",
+    "code": "Menlo"
+  }
+}
