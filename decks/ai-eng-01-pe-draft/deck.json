@@ -302,7 +302,7 @@
       "title": "そのまま使える5要素テンプレート",
       "lead": "見出しをコピーして、AIが迷いそうな欄だけを埋めます。返ってきた答えは、事実・抜け・表現を確認してから使います。",
       "language": "markdown",
-      "code": "# やること\n（AIにしてほしい作業。動詞で始める）\n\n# なぜ\n（この答えを何に使うか。1文でよい）\n\n# 材料\n（AIに読ませる内容。ここから／ここまでで区切る）\n\n# 返し方\n（箇条書き／表／列名／順番）\n\n# 守ること\n（必ず守る条件と、その理由）",
+      "code": "# やること\n［してほしい作業。動詞で始める］\n\n# なぜ\n［この答えを何に使うか。1文でよい］\n\n# 材料\n［AIに読ませる内容。ここから／ここまでで区切る］\n\n# 返し方\n［箇条書き／表／列名／順番］\n\n# 守ること\n［必ず守る条件と、その理由］",
       "notes": "この5つの見出しをコピーして、必要な欄だけ埋めてください。最初は、やることと返し方の2つだけでも構いません。返ってきた答えを確認してから使うのを忘れずに。"
     },
     {
@@ -324,7 +324,7 @@
         { "text": "対話で近づけるのが前提。あなたの頼み方の失敗ではない", "bold": true, "color": "accent" }
       ],
       "path": "assets/diagram-dialog-fix.svg",
-      "notes": "AIが一発で完璧な成果物を出すのは難しい。これはAIの能力の問題ではなく、人間同士でも意図を正確に伝えるのは難しいのと同じです。「もう一回」ではなく、どの部分をどう直してほしいかを1つずつ伝えます。この繰り返しの考え方は、次回以降の「確認の繰り返し（ループ）」につながる入り口でもあります。"
+      "notes": "AIが一発で完璧な成果物を出すのは難しいものです。これはAIの能力だけの問題ではなく、人間同士でも意図を正確に伝えるのは難しいのと同じです。「もう一回」ではなく、どの部分をどう直してほしいかを1つずつ伝えます。この「作る→確認→直す」の繰り返しは、ループエンジニアリング解説動画2本（video-pe-loop-engineering-overview.md／-5plus1-parts.md）が扱う「確認の繰り返し（ループ）」につながる入り口でもあります。"
     },
     {
       "type": "image_text",
@@ -338,7 +338,7 @@
         { "text": "古い制約：昔のAI向けのルールが残っている", "bold": true, "children": ["設定ファイルなどの古い指示が邪魔をする → AIが新しくなったら見直す"] }
       ],
       "path": "assets/diagram-failure-types.svg",
-      "notes": "失敗を1つの原因で見ないことが大切です。指示が曖昧、情報の詰め込みすぎ、お手本のズレ、古い制約の4種類に分けると、対処を選べます。この4分類は複数資料の知見を本講義向けに整理したものです。"
+      "notes": "失敗を1つの原因で見ないことが大切です。指示が曖昧、情報の詰め込みすぎ、お手本のズレ、古い制約の4種類に分けると、対処を選べます。この4分類は複数資料の知見を本講義向けに整理したものです。「古い制約」の見直しは、Anthropic公式のOpus 5向けガイド（article-pe-claude-opus-5-prompting.md）が旧モデル向け回避策の再検証を勧めていることに基づきます。"
     },
     {
       "type": "two_column",
@@ -353,7 +353,7 @@
         "heading": "外して、AIに任せるもの",
         "bullets": ["同じ内容の繰り返し", "目的と関係ない背景", "細かすぎる禁止事項", "昔のAI向けの回避策", { "text": "新しいAIでは、細かい指示の羅列がむしろ逆効果だったという報告もある（特定場面での検証）", "bold": true }]
       },
-      "notes": "AnthropicのOpus 5向けの解説では、旧モデル向けに書き溜めた細かいルールや回避策を減らしても精度がほぼ落ちなかった、むしろ逆効果になり得ると報告されています。これはシステムプロンプトなど特定の場面の知見なので、すべてに一般化はせず、AIが新しくなったときに自分の課題で比べ直すのが安全です。"
+      "notes": "Opus 5解説動画2本とAnthropic公式のOpus 5向けガイドでは、旧モデル向けに書き溜めた細かいルールや回避策を減らしても精度がほぼ落ちなかった、むしろ逆効果になり得ると報告されています。これはシステムプロンプトなど特定の場面の知見なので、すべてに一般化はせず、AIが新しくなったときに自分の課題で比べ直すのが安全です。"
     },
     {
       "type": "image_text",
@@ -548,7 +548,7 @@
       "title": "議事録の5要素テンプレート",
       "lead": "欠席者が読んで、次の行動が分かる形にします。",
       "language": "markdown",
-      "code": "# やること\n会議メモから、次に必要な情報を抜き出す\n\n# なぜ\n欠席者への共有と、次回会議の準備に使う\n\n# 材料\n＜ここに会議メモを貼る＞\n\n# 返し方\n表：決定事項／担当者／期限／未決事項\n\n# 守ること\n記録にない情報は「未確認」と書く\n\n# 人が確認\n元の会議メモと見比べ、決定事項・担当者・期限に\n誤りや抜けがないか確かめる",
+      "code": "# やること\n会議メモから、次に必要な情報を抜き出す\n\n# なぜ\n欠席者への共有と、次回会議の準備に使う\n\n# 材料\n＜ここから会議メモ＞\n［会議メモを貼る］\n＜ここまで会議メモ＞\n\n# 返し方\n表：決定事項／担当者／期限／未決事項\n\n# 守ること\n記録にない情報は「未確認」と書く\n\n# 返ってきたら人が確認\n元の会議メモと見比べ、決定事項・担当者・期限に\n誤りや抜けがないか確かめる",
       "notes": "KDDI記事とAnthropic公式をもとにした教材用作例です。実際に試す前に、会議メモをAIへ入れてよいか確認してください。"
     },
     {
@@ -617,8 +617,8 @@
       "title": "出典：動画5本・記事7本",
       "lead": "指定台帳のみを参照。主な考え方と出典の対応は次のとおりです。",
       "bullets": [
-        { "text": "動画（5本）", "bold": true, "children": ["5つの設計の整理 ── AI活用5段階ガイド（video-pe-five-engineering-stages.md）", "「プロンプトの先」の世界とループ ── ループエンジニアリング解説2本（video-pe-loop-engineering-overview.md／video-pe-loop-engineering-5plus1-parts.md）", "長すぎる指示の逆効果・新モデルの知見 ── Claude Opus 5解説2本（video-pe-opus-5-prompt-tips.md／video-pe-opus-5-benchmark-tips.md）"] },
-        { "text": "記事・論文（7本）", "bold": true, "children": ["明確な指示・新入社員の比喩・3〜5例・区切りの構造化 ── Anthropic公式2本（article-pe-claude-prompting-best-practices.md／article-pe-claude-opus-5-prompting.md）", "続きを予測する仕組み・補完・本選びやメールの例 ── KDDI／SIOS入門記事（article-pe-kddi-prompt-basics.md／article-pe-sios-prompt-engineering-intro.md）", "4要素の構成・出力形式・役割設定 ── Qiita解説（article-pe-qiita-kissy24-methods.md）", "プロンプト技法の体系化 ── arXivサーベイ2本（article-pe-prompt-report.md／article-pe-pe-survey-sahoo.md）"] },
+        { "text": "動画（5本）", "bold": true, "children": ["5つの設計の整理 ── AI活用5段階ガイド（video-pe-five-engineering-stages.md）", "「作る→確認→直す」の繰り返し・対話で直す前提 ── ループエンジニアリング解説2本（video-pe-loop-engineering-overview.md／video-pe-loop-engineering-5plus1-parts.md）", "長すぎる指示の逆効果・新モデルの知見 ── Claude Opus 5解説2本（video-pe-opus-5-prompt-tips.md／video-pe-opus-5-benchmark-tips.md）"] },
+        { "text": "記事・論文（7本）", "bold": true, "children": ["明確な指示・新入社員の比喩・3〜5例・区切りの構造化・古い回避策の再検証 ── Anthropic公式2本（article-pe-claude-prompting-best-practices.md／article-pe-claude-opus-5-prompting.md）", "続きを予測する仕組み・補完・本選びやメールの例 ── KDDI／SIOS入門記事（article-pe-kddi-prompt-basics.md／article-pe-sios-prompt-engineering-intro.md）", "4要素の構成・出力形式・役割設定 ── Qiita解説（article-pe-qiita-kissy24-methods.md）", "プロンプト技法の体系化 ── arXivサーベイ2本（article-pe-prompt-report.md／article-pe-pe-survey-sahoo.md）"] },
         { "text": "「未確認」と書かせるルール、許可・社内ルールの注意、役員向け議事録などの具体例は、台帳外の教材用作例・一般的注意", "bold": true, "color": "accent" }
       ],
       "style": { "body": { "size": 19, "child_size": 14, "gap": 12, "child_gap": 6, "line_height": 1.4, "y": 182, "h": 480 } },
