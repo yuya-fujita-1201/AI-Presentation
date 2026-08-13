@@ -8,7 +8,7 @@
 
 - [what-is-prompt-engineering.md](./what-is-prompt-engineering.md) — プロンプトエンジニアリングとは何か。定義・語源と、出力の質が指示の出し方で変わる理由
 - [prompt-anatomy.md](./prompt-anatomy.md) — プロンプトの構造。一文ではなく要素の組み合わせとして分解し、記法・テンプレート化まで
-- [core-techniques.md](./core-techniques.md) — 基本技法。明確で直接的な指示・zero-shot・few-shot／実演・ロールプレイと、それぞれの限界
+- [core-techniques.md](./core-techniques.md) — 基本技法。明確で直接的な指示・zero-shot・few-shot／実演・ロールプレイ・補完と、それぞれの限界
 - [why-context-matters.md](./why-context-matters.md) — なぜ文脈が効くのか。理由まで伝える効果、渡す情報の適量、コンテキストウィンドウという上限
 - [taxonomy-and-landscape.md](./taxonomy-and-landscape.md) — 技法体系の全体像。41技法・58技法を扱う2つの学術サーベイが描く地図と、その使い方
 - [five-engineering-stages.md](./five-engineering-stages.md) — 5つのエンジニアリング。プロンプト／コンテキスト／ハーネス／ループ／グラフの位置関係と入れ子構造
