@@ -11,7 +11,7 @@
 
   <!-- 上段: 守ることなし -->
   <g>
-    <text x="36" y="46" class="h" font-size="30" fill="#A63D32">× 「守ること」なし</text>
+    <text x="36" y="46" class="h" font-size="30" fill="#A63D32">× 悪い例｜「守ること」なし</text>
     <!-- 依頼カード -->
     <rect x="36" y="72" width="380" height="200" rx="24" fill="#FADFD5"/>
     <text x="68" y="118" class="h" font-size="25">依頼</text>
@@ -39,7 +39,7 @@
 
   <!-- 下段: 守ることあり -->
   <g>
-    <text x="36" y="446" class="h" font-size="30" fill="#247F7A">○ 「守ること」あり</text>
+    <text x="36" y="446" class="h" font-size="30" fill="#247F7A">○ 良い例｜「守ること」あり</text>
     <!-- 依頼カード -->
     <rect x="36" y="472" width="380" height="264" rx="24" fill="#FFF2E8" stroke="#247F7A" stroke-width="3"/>
     <text x="68" y="518" class="h" font-size="25">依頼</text>

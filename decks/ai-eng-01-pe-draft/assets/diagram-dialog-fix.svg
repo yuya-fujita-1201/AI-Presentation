@@ -41,8 +41,8 @@
     <circle cx="1074" cy="291" r="26" fill="#FFFFFF" stroke="#EDC9B4" stroke-width="3"/>
     <text x="1074" y="299" text-anchor="middle" class="h m" font-size="22">人</text>
 
-    <rect x="460" y="206" width="80" height="32" rx="16" fill="#A63D32"/>
-    <text x="500" y="228" text-anchor="middle" class="h w" font-size="22">NG</text>
+    <rect x="452" y="206" width="96" height="32" rx="16" fill="#A63D32"/>
+    <text x="500" y="228" text-anchor="middle" class="h w" font-size="20">悪い例</text>
 
     <circle cx="502" cy="264" r="20" fill="#FFFFFF" stroke="#A63D32" stroke-width="5"/>
     <line x1="492" y1="254" x2="512" y2="274" stroke="#A63D32" stroke-width="5" stroke-linecap="round"/>
@@ -62,8 +62,8 @@
     <circle cx="1074" cy="448" r="26" fill="#FFFFFF" stroke="#EDC9B4" stroke-width="3"/>
     <text x="1074" y="456" text-anchor="middle" class="h m" font-size="22">人</text>
 
-    <rect x="460" y="370" width="80" height="32" rx="16" fill="#247F7A"/>
-    <text x="500" y="392" text-anchor="middle" class="h w" font-size="22">OK</text>
+    <rect x="452" y="370" width="96" height="32" rx="16" fill="#247F7A"/>
+    <text x="500" y="392" text-anchor="middle" class="h w" font-size="20">良い例</text>
 
     <circle cx="502" cy="427" r="19" fill="#FFFFFF" stroke="#247F7A" stroke-width="5"/>
 
