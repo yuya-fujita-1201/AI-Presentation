@@ -119,8 +119,9 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3(Agent) 初心者+2(とは) 新しさ+2 trust+2(expert) 再生+0",
-      "status": "selected",
-      "reject_reason": null
+      "status": "rejected",
+      "reject_reason": "vote_failed",
+      "subs": "auto"
     },
     {
       "id": "8VNLFKCQFa8",
@@ -134,8 +135,37 @@
       "trust": "expert",
       "score": 8,
       "score_detail": "適合+3(Harness) 初心者+0 新しさ+2 trust+2(expert) 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[11:00]",
+          "text": "ハーネスエンジニアリングとはAIが動く環境を丸ごと設計していくためのやり方である",
+          "impact": "high"
+        },
+        {
+          "ts": "[12:00]",
+          "text": "ハーネスエンジニアリングは道具・制限・権限・ルールの4要素で作業環境を整える考え方である",
+          "impact": "high"
+        },
+        {
+          "ts": "[14:00]",
+          "text": "Claude Codeはファイル読み書きやコマンド実行等の権限を渡せ、削除や外部送信など危ない操作には承認フローが挟まれる",
+          "impact": "normal"
+        },
+        {
+          "ts": "[17:00]",
+          "text": "ループエンジニアリングとは実行・検証・改善を繰り返すやり方で、ループを回すほど回答の質が上がるという研究結果がある",
+          "impact": "high"
+        },
+        {
+          "ts": "[24:00]",
+          "text": "グラフエンジニアリングとは構造軸の設計であり、分けて任せて後から束ねて仕上げる考え方である",
+          "impact": "high"
+        }
+      ],
+      "summary": "AIのまるまるエンジニアリング5種を体系的に解説する動画で、ハーネスエンジニアリングを道具・制限・権限・ルールでAIの作業環境を設計する考え方として詳述しており、必須概念5項目(tools/permissions/sandbox/stop-points/config)が異なる区間で明確に出現"
     },
     {
       "id": "ARWho4QGG9g",
@@ -149,7 +179,7 @@
       "trust": "unknown",
       "score": 8,
       "score_detail": "適合+3(エージェント) 初心者+2(ゼロ知識から) 新しさ+2 trust+0(unknown) 再生+1",
-      "status": "candidate",
+      "status": "selected",
       "reject_reason": null
     },
     {
