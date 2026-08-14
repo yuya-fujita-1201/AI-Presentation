@@ -13,28 +13,29 @@
   <text x="512" y="132" text-anchor="middle" class="m" font-size="23">＝ AIが答えを作るときに見ている情報ぜんぶ</text>
 
   <!-- 左：あなたが渡す（プロンプト） -->
-  <rect x="84" y="176" width="392" height="404" rx="22" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/>
-  <rect x="104" y="196" width="352" height="52" rx="14" fill="#B44A32"/>
-  <text x="280" y="231" text-anchor="middle" class="h w" font-size="25" fill="#FFFFFF">あなたが都度渡す</text>
-  <text x="280" y="304" text-anchor="middle" class="h" font-size="31" fill="#B44A32">プロンプト</text>
-  <text x="280" y="342" text-anchor="middle" class="m" font-size="21">（AIに渡す入力の総称）</text>
-  <text x="280" y="398" text-anchor="middle" font-size="24">質問・指示</text>
-  <text x="280" y="442" text-anchor="middle" font-size="24">材料（資料の貼り付け）</text>
-  <text x="280" y="486" text-anchor="middle" font-size="24">画像・録音・ファイル</text>
-  <text x="280" y="546" text-anchor="middle" class="m" font-size="20">シリーズ01で学んだ範囲</text>
+  <rect x="64" y="176" width="316" height="404" rx="22" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/>
+  <rect x="84" y="196" width="276" height="52" rx="14" fill="#B44A32"/>
+  <text x="222" y="231" text-anchor="middle" class="h w" font-size="24" fill="#FFFFFF">あなたが都度渡す</text>
+  <text x="222" y="302" text-anchor="middle" class="h" font-size="31" fill="#B44A32">プロンプト</text>
+  <text x="222" y="338" text-anchor="middle" class="m" font-size="20">（あなたの問いかけ）</text>
+  <text x="222" y="398" text-anchor="middle" font-size="23">質問・指示</text>
+  <text x="222" y="440" text-anchor="middle" font-size="23">貼り付けた資料</text>
+  <text x="222" y="482" text-anchor="middle" font-size="23">画像・ファイル</text>
+  <text x="222" y="552" text-anchor="middle" class="m" font-size="19">シリーズ01で学んだ範囲</text>
 
   <!-- 右：システムが裏で足す -->
-  <rect x="524" y="176" width="416" height="404" rx="22" fill="#FFFFFF" stroke="#247F7A" stroke-width="5"/>
-  <rect x="544" y="196" width="376" height="52" rx="14" fill="#247F7A"/>
-  <text x="732" y="231" text-anchor="middle" class="h w" font-size="25" fill="#FFFFFF">システムが裏で足す</text>
-  <text x="732" y="298" text-anchor="middle" font-size="24">システム指示（役割の設定）</text>
-  <text x="732" y="344" text-anchor="middle" font-size="24">これまでの会話履歴</text>
-  <text x="732" y="390" text-anchor="middle" font-size="24">ルールファイル・メモリ</text>
-  <text x="732" y="436" text-anchor="middle" font-size="24">検索で取り込んだ資料</text>
-  <text x="732" y="482" text-anchor="middle" font-size="24">ツールの実行結果</text>
-  <text x="732" y="546" text-anchor="middle" class="m" font-size="20">頼まなくても自動で入る</text>
+  <rect x="412" y="176" width="548" height="404" rx="22" fill="#FFFFFF" stroke="#247F7A" stroke-width="5"/>
+  <rect x="432" y="196" width="508" height="52" rx="14" fill="#247F7A"/>
+  <text x="686" y="231" text-anchor="middle" class="h w" font-size="24" fill="#FFFFFF">頼まなくても自動で入る（裏で足される）</text>
+  <text x="686" y="292" text-anchor="middle" font-size="23">システム指示（役割の設定）</text>
+  <text x="686" y="334" text-anchor="middle" font-size="23">設定ファイル（CLAUDE.md など）</text>
+  <text x="686" y="376" text-anchor="middle" font-size="23">これまでの会話履歴</text>
+  <text x="686" y="418" text-anchor="middle" font-size="23">メモリ（保存された前提）</text>
+  <text x="686" y="460" text-anchor="middle" font-size="23">プロジェクト内に置いた資料</text>
+  <text x="686" y="502" text-anchor="middle" font-size="23">検索結果・ツールの実行結果</text>
+  <text x="686" y="552" text-anchor="middle" class="m" font-size="19">エージェントでは、こちらが大きくなる</text>
 
   <!-- 下部メッセージ -->
-  <rect x="128" y="656" width="768" height="76" rx="24" fill="#7C3527"/>
-  <text x="512" y="704" text-anchor="middle" class="h w" font-size="29" fill="#FFFFFF">あなたのプロンプトは、コンテキストの一部</text>
+  <rect x="112" y="656" width="800" height="76" rx="24" fill="#7C3527"/>
+  <text x="512" y="704" text-anchor="middle" class="h w" font-size="28" fill="#FFFFFF">プロンプトは、コンテキストの一部でしかない</text>
 </svg>
