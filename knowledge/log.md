@@ -1,5 +1,9 @@
 # 変更履歴
 
+## 2026-08-14（ce ナレッジの品質判定・manual_override受理）
+
+- **Note**: context-engineering の11コンセプトを採点 8/6/7/6/6（①事実正確性8・②網羅性6・③構成7・④リンク6・⑤文章品質6）のまま manual_override で受理し、テーマを he へ進めた。網羅性と独立裏取りに既知の弱みが残る**参考ナレッジ**の位置づけ（02の発表資料本体は `decks/ai-eng-02-context-engineering/` 側で別途品質担保済み）
+
 ## 2026-08-14（採点指摘の修正・improve_k run:0814155936）
 
 - **Fix**: findings-k.json 15件中13件をfixed、1件をdeferred(out_of_scope)、1件をdeferred(needs_research)として処理。①`context-components.md`にGoogle ADKの中核主張「作業コンテキストは呼び出しごとに再構築される一時ビューであり保存された全状態ではない」を新段落で追加②`security-and-trust-boundaries.md`のOpenAIデータ制御の記述を「学習利用・安全監視ログ・application state」の3点別々確認の箇条書きへ展開③`context-layers-and-intervention.md`にMCP（Model Context Protocol）を第4層の説明として追加、あわせて第5層にfew-shot個数目安（1〜3個）、第1〜2層に制約の肯定形明示という入門動画のコツを追記④`what-is-context-engineering.md`にコンテキストエンジニアリングという呼称の出自（Karpathy・Tobi Lütke、cloco記事帰属）を追加⑤`retrieval-memory-compaction-cache.md`のRAG節に、ウィンドウ拡大でも更新頻度・権限・出所追跡は解決しないという反論段落を追加⑥`context-components.md`冒頭に3動画共通の「記憶リセットされる新人」比喩を追加⑦`what-is-context-engineering.md`の5層一覧再掲（five-engineering-scopes.mdとの重複）を1文+リンクに圧縮⑧`context-layers-and-intervention.md`の「Compress を製品機能として使う」節（compaction製品仕様）を`retrieval-memory-compaction-cache.md`の新設「製品機能としてのコンパクション」節へ移動し1文の参照に置換、連動して`article-ce-compaction.md`の活用先リンク先も付け替え⑨`context-rot-and-editing.md`の「次に読む」先頭に`practical-context-packs.md`を追加⑩`article-ce-anthropic-effective-context-engineering.md`の活用先を実体に合わせて修正（retrieval側の「構造化ノート・サブエージェント」という過大な記述を「圧縮の役割」に絞り、実際にこの一次資料を引用している`context-layers-and-intervention.md`の行を新設）⑪claude-code/pipeline-opus生成の3ファイル（`context-layers-and-intervention.md`・`context-rot-and-editing.md`・`five-engineering-scopes.md`）の冒頭を会話的な呼びかけ調から断定調の定義文へ書き換え、決定的でない太字強調を計10箇所前後削減⑫`video-pe-five-engineering-stages.md`にsource_id（CE-S21）と「適用範囲と留保」節を追加。ただしfix_hintが前提とする「他の動画ソースはsource_tierを持つ」は事実確認の結果誤りだった（CE系動画4本を含むバンドル内の全動画ソースがsource_tierを欠く）ため、新たな不整合を生まないようsource_tierは追加せず、この点をevidenceに明記。2件（f8: 「5層」同名衝突の完全解消、f14: sources 21件のテンプレート統一）は、前者が`what-is-context-engineering.md`・`long-horizon-and-tools.md`など当findingの`where`に含まれないファイルへの改名波及を要するため、後者が4本の二次記事へ「原文の根拠箇所」を追加するには原文への再アクセスが必要なため、いずれもdeferred。OKF検証はCHECK行を参照
@@ -126,4 +130,3 @@
 - バンドル初版を作成
 - okf/ に OKF の概要・設計原則・ファイル形式・ディレクトリ構造・エコシステム・実践Tips の 6 コンセプトを追加
 - sources/ に初期資料 11 件（YouTube 動画 6 本、記事 5 本）を登録
-- 2026-08-14: context-engineering 11コンセプトを追加（採点8/6/7/6/6でmanual_override受理。網羅性・独立裏取りに既知の弱み——02デッキ本体はユーザーレーンで別途品質担保済みのため参考ナレッジ扱い）
