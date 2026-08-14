@@ -640,7 +640,7 @@
       "type": "image_text",
       "eyebrow": "01｜3つの設計の位置づけ",
       "title": "プロンプトは依頼、コンテキストは判断材料、ハーネスは仕事の環境",
-      "punch": "ハーネスは上位互換ではありません。プロンプトとコンテキストを内包しつつ、実行・制御・検証まで広げます。",
+      "punch": "ハーネスは上位互換ではなく、プロンプトとコンテキストを内包し実行・制御・検証へ広げる設計。",
       "bullets": [
         {
           "text": "プロンプト",
@@ -1069,7 +1069,7 @@
       "type": "image_text",
       "eyebrow": "02｜Step 4 ガードレール",
       "title": "『やらないで』ではなく、強制主体の違う層を重ねる",
-      "punch": "権限ルール、サンドボックス、人の承認、本番分離、バックアップを、被害の上限に合わせて組み合わせます。",
+      "punch": "権限ルール、サンドボックス、人の承認、本番分離、バックアップを被害の上限に合わせて組む設計。",
       "bullets": [
         {
           "text": "権限ルール",
@@ -1166,7 +1166,10 @@
         {
           "text": "コンパクションだけに依存しない",
           "bold": true,
-          "color": "teal"
+          "color": "teal",
+          "children": [
+            "コンパクション＝会話履歴の自動要約"
+          ]
         }
       ],
       "path": "assets/diagram-long-running-handoff.svg",
@@ -1479,6 +1482,7 @@
           "text": "Outcome",
           "bold": true,
           "children": [
+            "＝作業が残した最終状態",
             "予約がDBにある、画面が直った、PPTXが再パースできる"
           ]
         },
@@ -1486,19 +1490,24 @@
           "text": "Trace",
           "bold": true,
           "children": [
+            "＝実行の経過記録",
             "何を読み、何を呼び、どこで失敗し、誰が介入したか"
           ]
         },
         {
           "text": "決定的graderを優先",
           "children": [
+            "grader＝合否を判定する仕組み",
             "テスト、schema、件数、checksum、API状態"
           ]
         },
         {
           "text": "主観品質はrubric＋複数trial＋独立評価",
           "bold": true,
-          "color": "teal"
+          "color": "teal",
+          "children": [
+            "rubric＝採点基準、trial＝試行回数"
+          ]
         }
       ],
       "path": "assets/diagram-evaluator-outcome.svg",
@@ -1982,7 +1991,7 @@
         ],
         [
           "研究状態",
-          "2026-05-13提出、16ページのarXiv v1",
+          "2026年5月提出のarXiv v1",
           "確立した業界標準とは断定しない"
         ]
       ],
