@@ -17,8 +17,4 @@ AIエージェントが動く「環境そのもの」を設計対象にする考
 
 ## 読む順番
 
-初めての人は what-is-harness-engineering → why-harness-matters で「何を・なぜ設計するのか」を押さえ、harness-responsibilities-and-ladder で設計対象の全体像と成熟段階の枠組みを掴む。
-
-そのうえで4要素を tools-and-mcp（道具）→ permissions-design（権限）→ settings-scopes-and-governance（配布と統制）→ sandbox-and-isolation（制限）→ project-memory-and-rules（ルール）の順にたどると、「できることを与える」→「危険なことを塞ぐ」→「塞ぎ方を組織に配る」→「塞ぎ切れなかった場合に備える」→「前提知識を渡す」という流れで理解できる。
-
-権限まわりの3本（permissions-design / settings-scopes-and-governance / sandbox-and-isolation）は相互に前提を共有しているため、この順で続けて読むことを勧める。
+what-is-harness-engineering → why-harness-matters → harness-responsibilities-and-ladder → tools-and-mcp → permissions-design → settings-scopes-and-governance → sandbox-and-isolation → project-memory-and-rules の順に読み進めるとよい。理由づけは[what-is-harness-engineering.mdの「読む順番の提案」](./what-is-harness-engineering.md#読む順番の提案)を参照。

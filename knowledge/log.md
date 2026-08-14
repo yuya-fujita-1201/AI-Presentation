@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-14（harness-engineeringバンドル 採点指摘の修正 improve_k run:08142233fa）
+
+- **Update**: 採点で未達だった指摘（findings-k.json 5件、from_run: 0814222564）をharness-engineering/配下で修正
+  - `sandbox-and-isolation.md`: L51とL53で「microVMは独自カーネルを持つためホストに影響しない」が同一主張として反復していたため、L53の要約段落を削除しL51に統合。L74「筆者自身の運用は次のように紹介されている。」が単独1文で導入のみだったため削除し、続く段落と1つに畳んだ
+  - `sandbox-and-isolation.md`: 「筆者が最も使い込んでいるツール」というぼかし表記と、同ファイル後半の「Claude Codeの/sandbox等」という実名表記が同一ファイル内で揺れていたため、前半もClaude Codeと明記
+  - `why-harness-matters.md` / `harness-responsibilities-and-ladder.md`: 論文の「問いの立て直し」（「基盤モデルがパッチを生成できるか」から「モデル・ハーネス・環境からなるシステムが...」への立て直し）がほぼ同文で二重掲載されていたため、why側を初出として残しresponsibilities側は1文に圧縮してwhyへリンク委譲
+  - `what-is-harness-engineering.md`: 「本バンドルの中盤4本が4要素に対応」という記述が、同ファイルの地図表（中盤は5本、権限が2本立て）と数が合わなかったため、「中盤5本（権限は2本立て）」に修正しsettingsが配布・統制面を担う旨を追記
+  - `index.md` / `what-is-harness-engineering.md`: 読む順番の理由づけ（4要素の流れの説明、権限3本セットで読む理由）が両ファイルでほぼ同内容で二重化していたため、詳細な理由づけをwhat-is側に一本化し、index.md側は1行の順序提示＋リンクに圧縮
+- **Verify**: `tools/validate_okf.py knowledge` → errors: 0, warnings: 0
+
 ## 2026-08-14（harness-engineeringバンドル 採点指摘の修正 improve_k run:08142218a0）
 
 - **Update**: 採点で未達だった指摘（findings-k.json 7件、from_run: 081422098f）をharness-engineering/配下・関連sourcesで修正
