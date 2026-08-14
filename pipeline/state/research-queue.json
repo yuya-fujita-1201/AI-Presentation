@@ -547,7 +547,28 @@
     }
   ],
   "web": {
-    "subtopics_done": [],
-    "candidates": []
+    "subtopics_done": [
+      "official-guides"
+    ],
+    "candidates": [
+      {
+        "url": "https://platform.claude.com/docs/en/build-with-claude/compaction",
+        "title": "Compaction",
+        "publisher": "Anthropic",
+        "retrieved": "2026-08-14",
+        "extract": "## Overview\n\nCompaction extends the effective context length for long-running conversations and tasks by automatically summarizing older context when approaching the context window limit. It also keeps the active context small: as a conversation grows, response quality degrades, so compaction replaces older content with a concise summary.\n\nThis is ideal for:\n* Chat-based, multi-turn conversations where you want users to use one chat for a long period of time\n* Task-oriented prompts that require a lot of follow-up work (often tool use) that might exceed the context window\n\n## Compatibility\n\nStatus: Beta. Beta header: compact-2026-01-12. ZDR: eligible (excludes Covered Models). Supported models: claude-fable-5, claude-mythos-5, claude-mythos-preview, claude-opus-5, claude-opus-4-8, claude-opus-4-7, claude-opus-4-6, claude-sonnet-5, claude-sonnet-4-6. Platforms: Claude API (beta), Claude Platform on AWS (beta), Amazon Bedrock (beta), Google Cloud (beta), Microsoft Foundry (beta).\n\n## How Compaction Works\n\nWhen compaction is enabled, Claude automatically summarizes your conversation when it reaches the configured token threshold. The API: 1. Detects when input tokens reach your specified trigger threshold. 2. Generates a summary of the current conversation. 3. Creates a compaction block containing the summary. 4. Continues the response with the compacted context.\n\nOn subsequent requests, append the response to your messages. The API automatically drops all content blocks prior to the compaction block, continuing the conversation from the summary.\n\n## Basic Usage\n\nEnable compaction by adding the compact_20260112 strategy to context_management.edits in your Messages API request.\n\nresponse = client.beta.messages.create(\n    betas=[\"compact-2026-01-12\"],\n    model=\"claude-opus-5\",\n    max_tokens=4096,\n    messages=messages,\n    context_management={\"edits\": [{\"type\": \"compact_20260112\"}]},\n)\n\n## Parameters\n\ntype (string, Required): Must be \"compact_20260112\". trigger (object, default {\"type\": \"input_tokens\", \"value\": 150000}): When to trigger compaction. input_tokens is the only supported trigger type. value must be at least 50,000 tokens. pause_after_compaction (boolean, default false): Whether to pause after generating the compaction summary. instructions (string, default null): Custom summarization prompt. Completely replaces the default prompt when provided.",
+        "quote": "Compaction extends the effective context length for long-running conversations and tasks by automatically summarizing older context when approaching the context window limit.",
+        "claims": [
+          "Anthropicは、compaction機能が会話の入力トークンが指定閾値（デフォルト15万）に達すると自動的に要約を生成し、要約以前のコンテンツブロックを破棄して会話を継続すると説明している。",
+          "Anthropicは、compactionを有効化するにはMessages APIリクエストのcontext_management.editsにcompact_20260112戦略を追加すると説明している。",
+          "Anthropicは、compactionが長時間のチャットベース会話や、ツール使用を伴いコンテキストウィンドウを超えうるタスク指向プロンプトに適していると説明している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:claude.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      }
+    ]
   }
 }
