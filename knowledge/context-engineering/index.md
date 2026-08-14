@@ -34,9 +34,9 @@
 
 ## 推奨する読み順
 
-初学者は、`what-is-context-engineering` → `context-components` → `selection-and-sufficiency` → `context-rot-and-editing` → `practical-context-packs` の順で読む。ここまでで、普段のチャットや文書作成に使える。用語の氾濫に戸惑っている場合は、先頭に `five-engineering-scopes` を置いて全体像から入ってもよい。
+初学者は、[what-is-context-engineering](./what-is-context-engineering.md) → [context-components](./context-components.md) → [selection-and-sufficiency](./selection-and-sufficiency.md) → [context-rot-and-editing](./context-rot-and-editing.md) → [practical-context-packs](./practical-context-packs.md) の順で読む。ここまでで、普段のチャットや文書作成に使える。用語の氾濫に戸惑っている場合は、先頭に [five-engineering-scopes](./five-engineering-scopes.md) を置いて全体像から入ってもよい。
 
-システム設計まで扱う場合は、その後に `context-window-and-attention` → `context-layers-and-intervention` → `retrieval-memory-compaction-cache` → `long-horizon-and-tools` → `security-and-trust-boundaries` へ進む。安全の章は最後に置いているが、安全確認は実装の最後に足す工程ではない。各章へ戻りながら適用する。
+システム設計まで扱う場合は、その後に [context-window-and-attention](./context-window-and-attention.md) → [context-layers-and-intervention](./context-layers-and-intervention.md) → [retrieval-memory-compaction-cache](./retrieval-memory-compaction-cache.md) → [long-horizon-and-tools](./long-horizon-and-tools.md) → [security-and-trust-boundaries](./security-and-trust-boundaries.md) へ進む。安全の章は最後に置いているが、安全確認は実装の最後に足す工程ではない。各章へ戻りながら適用する。
 
 ## 教材上の整理と非標準性
 

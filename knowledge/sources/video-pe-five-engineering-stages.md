@@ -92,4 +92,3 @@ generated:
 - [../prompt-engineering/why-context-matters.md](../prompt-engineering/why-context-matters.md) — コンテキストエンジニアリングの定義（何をいつどれだけ読ませるか）、情報は多すぎても少なすぎてもダメという指摘、渡す資料の実例（NG表現リスト・口調プロファイル・CLAUDE.md）の根拠
 - [../prompt-engineering/loop-engineering.md](../prompt-engineering/loop-engineering.md) — AIは自分の生成物への採点が甘くなるため別のAIに検証させると精度が向上するという指摘、ループのコストと時間に関する注意点の根拠
 - [../context-engineering/five-engineering-scopes.md](../context-engineering/five-engineering-scopes.md) — 5つのエンジニアリングは目的が共通でスコープだけが違うという整理、各スコープと人間の仕事への例え、入れ子構造という結論、症状別の使い分け目安の根拠
-- [../context-engineering/what-is-context-engineering.md](../context-engineering/what-is-context-engineering.md) — 5層地図が複数の解説者に共有された整理であることの傍証

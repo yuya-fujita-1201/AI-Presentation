@@ -24,7 +24,7 @@ generated:
 - **ツール情報** — ツール名、説明、引数、返ってきた結果やエラー。定義と結果の両方がコンテキストを消費する（[Anthropic: Manage tool context](../sources/docs-ce-anthropic-manage-tool-context.md)）。
 - **状態・記憶** — 進捗、以前の決定、利用者の継続的な好み、作業ログ。
 
-Anthropicの整理でも、コンテキストにはシステム指示、ツール、外部データ、メッセージ履歴などが含まれ、作業の進行に応じてその組み合わせが変わる（[Effective context engineering](../sources/article-ce-anthropic-effective-context-engineering.md)）。Microsoftの初心者向け教材も、instructions、knowledge、tools、history、preferencesをコンテキストの種類として整理している（[Microsoft: Context Engineering for AI Agents](../sources/course-ce-microsoft-context-engineering.md)）。GoogleのAgent Development Kitも、セッション、状態、メモリ、アーティファクトなどを別の役割として扱う。実装名は製品ごとに異なるが、**今の入力、継続状態、外部保存物を分ける**という考え方は移植できる（[Google ADK: Context architecture](../sources/article-ce-google-adk-context-architecture.md)）。
+Anthropicの整理でも、コンテキストにはシステム指示、ツール、外部データ、メッセージ履歴などが含まれ、作業の進行に応じてその組み合わせが変わる（[Effective context engineering](../sources/article-ce-anthropic-effective-context-engineering.md)）。Microsoftの初心者向け教材も、instructions、knowledge、tools、history、preferencesをコンテキストの種類として整理している（[Microsoft: Context Engineering for AI Agents](../sources/course-ce-microsoft-context-engineering.md)）。GoogleのAgent Development Kitも、セッション、メモリ、アーティファクト、作業コンテキストなどを別の役割として扱う。実装名は製品ごとに異なるが、**今の入力、継続状態、外部保存物を分ける**という考え方は移植できる（[Google ADK: Context architecture](../sources/article-ce-google-adk-context-architecture.md)）。
 
 これらは同じ信頼度ではない。確定仕様と検索結果、利用者の発言とAI自身の前回要約、最新データと古いメモを混ぜると、矛盾したときに判断できない。内容だけでなく、**出所・更新日時・確定状態**を添える必要がある。
 
