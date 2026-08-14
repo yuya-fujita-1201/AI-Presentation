@@ -1,9 +1,9 @@
 {
   "schema": "state-v1",
   "theme": {
-    "id": "pe",
-    "slug": "ai-eng-01-prompt-engineering",
-    "title": "プロンプトエンジニアリング",
+    "id": "ce",
+    "slug": "ai-eng-02-context-engineering",
+    "title": "コンテキストエンジニアリング",
     "series": [
       "pe",
       "ce",
@@ -12,67 +12,39 @@
     ],
     "series_index": 0
   },
-  "phase": "brief",
-  "generation": 4,
-  "active_run_id": "08141054f9",
-  "input_commit": "d5662716a601",
+  "phase": "research_scan",
+  "generation": 5,
+  "active_run_id": "081411250a",
+  "input_commit": "b7185df8bf2c",
   "phase_started_at": null,
   "phase_attempts": 0,
-  "run_counts": {
-    "research_scan": 1,
-    "research_fetch": 2,
-    "research_ledger": 3,
-    "research_web": 4,
-    "web_ledger": 4,
-    "knowledge": 3,
-    "grade_k": 8,
-    "improve_k": 6,
-    "draft": 1,
-    "deck": 1,
-    "grade_d": 7,
-    "improve_d": 5
-  },
+  "run_counts": {},
   "scan_fallback_done": false,
   "video_shortfall": false,
   "web_rerun_done": false,
   "grade": {
     "knowledge": {
-      "iter": 8,
-      "repair_count": 3,
+      "iter": 0,
+      "repair_count": 0,
       "pass_streak": 0,
       "retry_used": false,
-      "last_unmet": [
-        5
-      ],
-      "last_scores": {
-        "1": 8,
-        "2": 8,
-        "3": 8,
-        "4": 8,
-        "5": 7
-      }
+      "last_unmet": null,
+      "last_scores": null
     },
     "deck": {
-      "iter": 7,
-      "repair_count": 1,
-      "pass_streak": 2,
+      "iter": 0,
+      "repair_count": 0,
+      "pass_streak": 0,
       "retry_used": false,
-      "last_unmet": [],
-      "last_scores": {
-        "1": 8,
-        "2": 8,
-        "3": 9,
-        "4": 8,
-        "5": 9,
-        "6": 9
-      }
+      "last_unmet": null,
+      "last_scores": null
     }
   },
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-12T12:56:15+09:00",
-  "last_started_at": "2026-08-14T10:54:55+09:00",
-  "last_successful_transition_at": "2026-08-14T11:04:49+09:00",
+  "last_started_at": "2026-08-14T11:25:12+09:00",
+  "last_successful_transition_at": "2026-08-14T11:30:37+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
@@ -84,5 +56,6 @@
     "to": "grade_d",
     "was_stuck": "repair_exhausted"
   },
-  "last_notification_success_at": "2026-08-14T11:04:49+09:00"
+  "last_notification_success_at": "2026-08-14T11:30:37+09:00",
+  "_use_fallback": false
 }
