@@ -568,8 +568,9 @@
         "source_tier": "secondary",
         "origin": "web:claude.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-ce-compaction.md"
       },
       {
         "url": "https://dev.to/thousand_miles_ai/the-lost-in-the-middle-problem-why-llms-ignore-the-middle-of-your-context-window-3al2",
@@ -586,8 +587,9 @@
         "source_tier": "secondary",
         "origin": "web:dev.to",
         "subtopic": "concepts-survey",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/concepts-survey"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/concepts-survey",
+        "ledger_path": "knowledge/sources/article-ce-lost-in-the-middle.md"
       },
       {
         "url": "https://www.softbank.jp/business/content/blog/202509/what-is-context-engineering",

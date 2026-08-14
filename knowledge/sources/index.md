@@ -62,3 +62,8 @@
 - [video-ce-context-rot-and-jit.md](./video-ce-context-rot-and-jit.md) — コンテキスト劣化(context rot)とJIT検索。Anthropic公式警告の解説動画
 - [video-ce-context-4-elements.md](./video-ce-context-4-elements.md) — 「AI仕事術・実践｜コンテキストとは何か」（工藤あい　AI導入・AI駆動　バーニングトライブ）。コンテキストを「AIの目の前に置かれている情報の全部」と定義し、目的・前提・材料・見本の4点セットと仕組み化の実務型を解説
 - [video-ce-harness-context-setup.md](./video-ce-harness-context-setup.md) — 「AIの性能は7割が"環境構築"で決まる」（チャエン【AI研究所】Byデジライズ）。プロンプト→コンテキスト→ハーネスの縦3段階とループ・グラフの横軸、コンテキストウィンドウ拡大とRAGの位置づけ、Claude Codeでのフォルダ・MCP実践を解説
+
+## 記事（コンテキストエンジニアリング）
+
+- [article-ce-compaction.md](./article-ce-compaction.md) — Anthropic公式ドキュメント「Compaction」。コンテキストウィンドウの上限に近づくと古いコンテキストを自動要約するcompaction機能の用途・動作の仕組み・パラメータ仕様を解説
+- [article-ce-lost-in-the-middle.md](./article-ce-lost-in-the-middle.md) — DEV Community記事。コンテキスト内の位置によってLLMの正答率がU字型に変化する「lost in the middle」現象を、2023年のStanford等の論文と2025年のMIT研究による2つのアーキテクチャ的原因から解説

@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（さらに続き4）
+
+- **Creation**: sources/ に記事2本を article-ce-*.md として登録（コンテキストエンジニアリングテーマ、web_ledger工程 run:081413220d）。article-ce-compaction.md（Anthropic公式ドキュメント「Compaction」、コンテキストウィンドウ上限に近づくと古いコンテキストを自動要約する機能の用途・動作の仕組み・パラメータ仕様を解説）、article-ce-lost-in-the-middle.md（DEV Community記事、コンテキスト内の位置によってLLMの正答率がU字型に変化する「lost in the middle」現象を2023年のStanford等の論文と2025年のMIT研究による2つのアーキテクチャ的原因（因果的アテンションマスキング・位置エンコーディング減衰）から解説）
+- **Update**: sources/index.md に「記事（コンテキストエンジニアリング）」節を新設し上記2件を追加
+
 ## 2026-08-14（さらに続き3）
 
 - **Creation**: sources/ に動画2本を登録（コンテキストエンジニアリングテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:08141255bc）。video-ce-context-4-elements.md（工藤あい　AI導入・AI駆動　バーニングトライブ、コンテキストの定義と目的・前提・材料・見本の4点セット・仕組み化を解説）、video-ce-harness-context-setup.md（チャエン【AI研究所】Byデジライズ、プロンプト→コンテキスト→ハーネスの縦3段階とループ・グラフの横軸、コンテキストウィンドウ拡大とRAGの位置づけを解説）
