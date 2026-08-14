@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（CEデッキ第2章再構成の根拠登録）
+
+- **Creation**: sources/ に公式ドキュメント2本を登録（CEデッキ第2章「AIが読み込む情報の詳細」の根拠）。docs-ce-cursor-rules.md（CE-S21、Cursor公式Rules──毎回モデルコンテキスト先頭へ含まれる仕組みと500行以内推奨）、docs-ce-anthropic-skill-authoring.md（CE-S22、Anthropic公式スキル作成指針──メタデータのみ常時読み込みの段階的開示とSKILL.md本文500行以内・分割推奨）
+- **Update**: sources/index.md の一次資料節に CE-S21・CE-S22 を追加
+
 ## 2026-08-14（さらに続き6・context-engineering コンセプト追加）
 
 - **Update**: context-engineering/ にコンセプト3本を追加（`five-engineering-scopes` 5つのエンジニアリングのスコープ差と入れ子構造、`context-rot-and-editing` 情報を足すほど劣化する理由と「足すより編集する」判断、`context-layers-and-intervention` 介入点としての5層とWrite/Select/Compress/Isolate）。これによりCE系台帳21件すべてがコンセプトから被引用となった

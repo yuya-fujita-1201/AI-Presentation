@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B44A32"/>
+    </marker>
+    <marker id="arrG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B98A2F"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 左：肥大化したルールファイル -->
+  <text x="196" y="56" text-anchor="middle" class="h" font-size="22" fill="#B44A32">なんでも書いた本文</text>
+  <rect x="72" y="76" width="248" height="420" rx="16" fill="#FADFD5" stroke="#B44A32" stroke-width="4"/>
+  <rect x="96" y="100" width="120" height="26" rx="13" fill="#B44A32"/>
+  <text x="156" y="119" text-anchor="middle" class="h w" font-size="15" fill="#FFFFFF">1,200行</text>
+  <g fill="#C9A99B">
+    <rect x="96" y="150" width="200" height="8" rx="4"/>
+    <rect x="96" y="172" width="184" height="8" rx="4"/>
+    <rect x="96" y="194" width="196" height="8" rx="4"/>
+    <rect x="96" y="216" width="172" height="8" rx="4"/>
+    <rect x="96" y="260" width="192" height="8" rx="4"/>
+    <rect x="96" y="282" width="200" height="8" rx="4"/>
+    <rect x="96" y="304" width="168" height="8" rx="4"/>
+    <rect x="96" y="326" width="188" height="8" rx="4"/>
+    <rect x="96" y="370" width="196" height="8" rx="4"/>
+    <rect x="96" y="392" width="176" height="8" rx="4"/>
+    <rect x="96" y="414" width="192" height="8" rx="4"/>
+    <rect x="96" y="436" width="160" height="8" rx="4"/>
+  </g>
+  <rect x="96" y="238" width="176" height="8" rx="4" fill="#B44A32"/>
+  <rect x="96" y="348" width="184" height="8" rx="4" fill="#B44A32"/>
+  <text x="196" y="530" text-anchor="middle" class="m" font-size="17">大事な約束（赤）が埋もれる</text>
+  <text x="196" y="558" text-anchor="middle" class="m" font-size="17">毎回ぜんぶ読み込まれる</text>
+
+  <!-- 中央矢印 -->
+  <line x1="330" y1="286" x2="416" y2="286" stroke="#B44A32" stroke-width="5" marker-end="url(#arrR)"/>
+  <text x="376" y="264" text-anchor="middle" class="h" font-size="18" fill="#B44A32">詳細を外へ</text>
+
+  <!-- 右：スリムな本文 -->
+  <text x="560" y="56" text-anchor="middle" class="h" font-size="22" fill="#247F7A">本文は、約束と入口だけ</text>
+  <rect x="436" y="76" width="248" height="280" rx="16" fill="#DDEFEA" stroke="#247F7A" stroke-width="4"/>
+  <rect x="460" y="100" width="130" height="26" rx="13" fill="#247F7A"/>
+  <text x="525" y="119" text-anchor="middle" class="h w" font-size="15" fill="#FFFFFF">〜500行</text>
+  <rect x="460" y="150" width="176" height="8" rx="4" fill="#247F7A"/>
+  <rect x="460" y="172" width="184" height="8" rx="4" fill="#247F7A"/>
+  <rect x="460" y="194" width="160" height="8" rx="4" fill="#247F7A"/>
+  <rect x="460" y="236" width="200" height="30" rx="8" fill="#FFFFFF" stroke="#B98A2F" stroke-width="2"/>
+  <text x="472" y="257" class="m" font-size="14">→ 詳細はこのファイルへ</text>
+  <rect x="460" y="286" width="200" height="30" rx="8" fill="#FFFFFF" stroke="#B98A2F" stroke-width="2"/>
+  <text x="472" y="307" class="m" font-size="14">→ 手順はスキルへ</text>
+  <text x="560" y="392" text-anchor="middle" class="m" font-size="17">毎回読むのはここだけ</text>
+
+  <!-- 右外：切り出し先 -->
+  <rect x="760" y="96" width="216" height="112" rx="16" fill="#F6EAD9" stroke="#B98A2F" stroke-width="3" stroke-dasharray="10 7"/>
+  <text x="868" y="140" text-anchor="middle" class="h" font-size="19" fill="#B98A2F">詳細仕様のファイル</text>
+  <text x="868" y="172" text-anchor="middle" class="m" font-size="15">リンクで飛ばして参照</text>
+  <rect x="760" y="248" width="216" height="112" rx="16" fill="#F6EAD9" stroke="#B98A2F" stroke-width="3" stroke-dasharray="10 7"/>
+  <text x="868" y="292" text-anchor="middle" class="h" font-size="19" fill="#B98A2F">スキル（手順書）</text>
+  <text x="868" y="324" text-anchor="middle" class="m" font-size="15">条件が合う時だけ読む</text>
+
+  <line x1="666" y1="251" x2="750" y2="164" stroke="#B98A2F" stroke-width="4" stroke-dasharray="4 7" marker-end="url(#arrG)"/>
+  <line x1="666" y1="301" x2="750" y2="300" stroke="#B98A2F" stroke-width="4" stroke-dasharray="4 7" marker-end="url(#arrG)"/>
+
+  <!-- 補足 -->
+  <text x="524" y="452" text-anchor="middle" class="m" font-size="17">行が増えるほど、1行あたりの重みは下がる。</text>
+  <text x="524" y="480" text-anchor="middle" class="m" font-size="17">「全部書く」より「入口を書く」</text>
+
+  <!-- 下部メッセージ -->
+  <rect x="72" y="632" width="880" height="96" rx="24" fill="#7C3527"/>
+  <text x="512" y="672" text-anchor="middle" class="h w" font-size="26" fill="#FFFFFF">毎回読む本文は薄く。詳細はリンク先やスキルへ</text>
+  <text x="512" y="708" text-anchor="middle" font-size="20" fill="#F6C9B8">本文500行以内が公式ドキュメントの目安（Cursor／Anthropic）</text>
+</svg>
