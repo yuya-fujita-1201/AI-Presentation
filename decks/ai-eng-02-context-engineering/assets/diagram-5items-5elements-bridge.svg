@@ -43,7 +43,7 @@
   <!-- CEで新登場 -->
   <rect x="624" y="404" width="304" height="88" rx="16" fill="#DDEFEA" stroke="#247F7A" stroke-width="4" stroke-dasharray="12 8"/>
   <text x="776" y="441" text-anchor="middle" class="h" font-size="24" fill="#247F7A">読み手・状況</text>
-  <text x="776" y="474" text-anchor="middle" class="m" font-size="19">CEで新しく増える観点</text>
+  <text x="776" y="474" text-anchor="middle" class="m" font-size="19">独立させた点検観点</text>
 
   <!-- 下部メッセージ -->
   <rect x="88" y="556" width="848" height="150" rx="24" fill="#7C3527"/>
