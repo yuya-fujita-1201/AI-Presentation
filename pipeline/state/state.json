@@ -12,18 +12,18 @@
     ],
     "series_index": 0
   },
-  "phase": "web_ledger",
+  "phase": "knowledge",
   "generation": 5,
-  "active_run_id": "081413220d",
-  "input_commit": "af5efcc45f0e",
-  "phase_started_at": "2026-08-14T13:22:11+09:00",
+  "active_run_id": "081413588c",
+  "input_commit": "dbd25fe2d6fc",
+  "phase_started_at": null,
   "phase_attempts": 0,
   "run_counts": {
     "research_scan": 1,
     "research_fetch": 2,
     "research_ledger": 6,
     "research_web": 4,
-    "web_ledger": 1
+    "web_ledger": 2
   },
   "scan_fallback_done": false,
   "video_shortfall": false,
@@ -49,8 +49,8 @@
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-14T12:03:04+09:00",
-  "last_started_at": "2026-08-14T13:22:11+09:00",
-  "last_successful_transition_at": "2026-08-14T13:21:58+09:00",
+  "last_started_at": "2026-08-14T13:58:00+09:00",
+  "last_successful_transition_at": "2026-08-14T14:05:02+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
@@ -62,6 +62,6 @@
     "to": "grade_d",
     "was_stuck": "repair_exhausted"
   },
-  "last_notification_success_at": "2026-08-14T11:30:37+09:00",
+  "last_notification_success_at": "2026-08-14T14:05:02+09:00",
   "_use_fallback": false
 }

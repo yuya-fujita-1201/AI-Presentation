@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（さらに続き5）
+
+- **Creation**: sources/ に記事2本を article-ce-*.md として登録（コンテキストエンジニアリングテーマ、web_ledger工程 run:081413588c）。article-ce-softbank-what-is-context-engineering.md（ソフトバンク株式会社ビジネスブログ、コンテキストエンジニアリングの定義・会話履歴の忘却問題・プロンプトエンジニアリングとの違い・システムプロンプト/要約/外部保管の実践テクニックを解説）、article-ce-cloco-context-engineering-claude.md（cloco Blog、Karpathy・Tobi Lütkeの言及とQodo調査データを紹介しつつAnthropicのWrite/Select/Compress/Isolateの4戦略とClaude CodeのCLAUDE.md整備・Arize AI調査を解説）
+- **Update**: sources/index.md の「記事（コンテキストエンジニアリング）」節に上記2件を追加
+
 ## 2026-08-14（コンテキストエンジニアリング・デッキ初版）
 
 - **Creation**: context-engineering/ を新設。定義とPromptとの重なり、推論時の構成要素、5項目、必要性・十分性・信頼性・鮮度、window/history/memory/trainingの区別、RAG・外部メモリ・圧縮・Prompt cache、長期タスクとtool context、prompt injection・データ境界、コピー可能なcontext packを8コンセプトに分離

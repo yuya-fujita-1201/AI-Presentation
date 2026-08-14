@@ -606,8 +606,9 @@
         "source_tier": "secondary",
         "origin": "web:softbank.jp",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-ce-softbank-what-is-context-engineering.md"
       },
       {
         "url": "https://cloco.co.jp/blog/context-engineering-claude",
@@ -624,8 +625,9 @@
         "source_tier": "secondary",
         "origin": "web:co.jp",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-ce-cloco-context-engineering-claude.md"
       }
     ]
   }
