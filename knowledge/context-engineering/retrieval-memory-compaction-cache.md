@@ -63,6 +63,8 @@ RAG（Retrieval-Augmented Generation）は、外部の知識源から情報を�
 
 ただし圧縮は損失を伴う。微妙な例外、反対意見、数値定義が落ちうる。Anthropicも、長期作業でコンパクションを使う際は重要な情報の取りこぼしに注意し、まず再現率を確保してから不要情報を削る考え方を示している（[Effective context engineering](../sources/article-ce-anthropic-effective-context-engineering.md)）。重要判断では原文へのリンクを残す。
 
+ここで扱うのはコンパクションの**役割**（何をする機構か）である。Claude Codeにおける自動コンパクションの**製品機能としての仕様**（トリガー閾値、Betaステータスなど）は[コンテキストの層と介入点](./context-layers-and-intervention.md)の「Compress を製品機能として使う」節にまとめている。
+
 ## プロンプトキャッシュ
 
 プロンプトキャッシュは、同一または一致する入力部分の処理を再利用する最適化である。安定した指示や大きな共通資料を入力の前方へ置き、変化する依頼を後ろへ置く設計が対象になりうる（[OpenAI: Prompt caching](../sources/docs-ce-openai-prompt-caching.md)）。

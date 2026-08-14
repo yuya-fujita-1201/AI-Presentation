@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（採点指摘の修正・improve_k run:0814142720）
+
+- **Fix**: findings-k.json 12件すべてをfixedとして修正。①cloco記事のWrite/Select/Compress/Isolate帰属がAnthropic一次資料の節構成と一致しない点を明記（`context-layers-and-intervention.md`）②動画の「見本」実務主張を`context-components.md`に新設節として追加し`practical-context-packs.md`テンプレートにも見本欄を追加③「不十分な追加情報が誤った確信につながる」というGoogle Research一次知見を`context-rot-and-editing.md`に追加④Isolateの副作用・システム指示の粒度（ゴルディロックスゾーン）・Microsoftの3段階設計手順を`context-layers-and-intervention.md`と`practical-context-packs.md`に追記⑤「5層」という同一呼称が指す2つの別物（five-engineering-scopesの5スコープとcontext-layersの5層）を`index.md`・`context-layers-and-intervention.md`で明示的に区別⑥初学者ルート終点`practical-context-packs.md`の前方参照2段落を「システム設計まで進む場合の補足」節に分離⑦`what-is-context-engineering.md`の重複節を`five-engineering-scopes.md`へ集約⑧コンパクションの役割/製品仕様、U字カーブの機構説明、5層分類の3箇所に逆リンクを追加⑨claude-code生成の台帳8件（article-ce-cloco/compaction/lost-in-the-middle/softbank、video-ce-context-4-elements/context-layers-intro/context-rot-and-jit/harness-context-setup）に「適用範囲と留保」節とsource_id（CE-S13〜CE-S20）を付与⑩`context-layers-and-intervention.md`・`five-engineering-scopes.md`の「〜としているとしている」二重伝聞を解消。1件（article-ce-compaction.mdのtype/source_tier/origin不整合、CE-S14）はメタデータのみ修正しファイル名変更は許可パス外のため見送り。1件（Microsoft教材との対応、CE-S02関連）は④の修正に含めて解消。OKF検証 errors:0 / warnings:0
+- **Note**: findings 12件の内訳はfixed 12件、deferredなし。詳細は outbox（`pipeline/state/outbox/result-0814142720.json`）参照
+
 ## 2026-08-14（さらに続き6・context-engineering コンセプト追加）
 
 - **Update**: context-engineering/ にコンセプト3本を追加（`five-engineering-scopes` 5つのエンジニアリングのスコープ差と入れ子構造、`context-rot-and-editing` 情報を足すほど劣化する理由と「足すより編集する」判断、`context-layers-and-intervention` 介入点としての5層とWrite/Select/Compress/Isolate）。これによりCE系台帳21件すべてがコンセプトから被引用となった

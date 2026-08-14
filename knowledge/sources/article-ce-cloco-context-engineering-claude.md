@@ -2,6 +2,7 @@
 type: Article
 title: プロンプトエンジニアリングは終わった？2026年に必須の「コンテキストエンジニアリング」とは
 description: Anthropicのエンジニアリングブログが示すWrite/Select/Compress/Isolateの4戦略と、Claude CodeのCLAUDE.mdを実践の入り口として解説する記事
+source_id: CE-S13
 site: cloco Blog
 published: unknown
 retrieved: 2026-08-14
@@ -53,6 +54,11 @@ Isolateについては、複雑なタスクを一つのエージェントに任�
 同記事は、Claude Codeの`CLAUDE.md`整備をコンテキストエンジニアリングの実践的な入り口として挙げている。`CLAUDE.md`はClaude Codeが自動的に読み込む設定ファイルで、プロジェクトのルール・規約・禁止事項を記述しておくことで、AIがセッションをまたいでプロジェクトのコンテキストを把握した状態で作業できると説明している。
 
 Arize AIによる調査では、CLAUDE.mdを最適化することでエージェントのタスク精度が+10.87%向上し、コード生成品質も+5.19%改善したという結果が報告されていると紹介している。同記事は、AIが参照できる情報が「検証可能な形式」で記述されていることがこのGood例が機能する理由であり、技術スタック・必須ルール・禁止事項がそれぞれ分離されていることでAIがプロジェクトの文脈を正確に把握できると説明している。`CLAUDE.md`を単なるメモではなくチームの「一流の成果物」として扱って定期的にレビューする、その習慣が長期的なエージェントの品質維持につながると結んでいる。
+
+# 適用範囲と留保
+
+- 同記事はブログ記事（secondary）であり、Arize AI調査（+10.87%/+5.19%）とQodo調査（65%/16%、33%、54%）はいずれも同記事が引用する第三者データである。母集団・測定条件・再現性は本教材では検証していない。
+- 「Anthropicのエンジニアリングブログが示す考え方」としてWrite/Select/Compress/Isolateの4戦略を紹介しているが、この帰属は同記事自身の整理である。一次資料[Effective context engineering for AI agents](./article-ce-anthropic-effective-context-engineering.md)の原文根拠箇所（Compaction／Structured note-taking／Sub-agent architectures）にはこの4戦略の名称そのものは登場せず、4戦略はcloco記事による整理として扱う。
 
 # 活用先
 

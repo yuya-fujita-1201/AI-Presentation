@@ -1,14 +1,15 @@
 ---
-type: Article
+type: Documentation
 title: Compaction
 description: Anthropic公式ドキュメント。長時間の会話やタスクにおいて、コンテキストウィンドウの上限に近づくと古いコンテキストを自動的に要約するcompaction機能を解説している。有効化方法・動作の仕組み・パラメータ仕様を扱う。
-site: Anthropic
+source_id: CE-S14
+site: Claude Platform Docs
 published: unknown
 retrieved: 2026-08-14
 resource: https://platform.claude.com/docs/en/build-with-claude/compaction
-origin: "web:claude.com"
-source_tier: secondary
-tags: [context-engineering, article]
+origin: "web:platform.claude.com"
+source_tier: primary
+tags: [context-engineering, compaction, agents]
 generated:
   by: claude-code/pipeline-sonnet
   at: "2026-08-14T00:00:00+09:00"
@@ -58,6 +59,12 @@ response = client.beta.messages.create(
 - `trigger`（object、デフォルトは`{"type": "input_tokens", "value": 150000}`）: compactionを発動させるタイミングを指定する。`input_tokens`が唯一サポートされているトリガー種別であり、`value`は最低でも50,000トークン以上でなければならないとしている。
 - `pause_after_compaction`（boolean、デフォルト`false`）: 要約を生成した後に処理を一時停止するかどうかを指定する。
 - `instructions`（string、デフォルト`null`）: カスタムの要約プロンプト。指定した場合、デフォルトのプロンプトを完全に置き換えるとしている。
+
+# 適用範囲と留保
+
+- ドキュメントが明記する数値・対応モデル・対応プラットフォームは執筆時点（Beta）のものであり、随時変更されうる。固定値として一般化しない。
+- Betaヘッダー`compact-2026-01-12`や戦略名`compact_20260112`はAPIのバージョン文字列であり、将来のリリースで名称・既定値が変わりうる。利用時は必ず現在の公式ドキュメントで確認する。
+- 本ドキュメントはcompactionという製品機能の仕様を扱っており、コンテキストロットや圧縮という現象・戦略そのものの一般的な説明ではない。現象側の説明は他資料（動画、Anthropic公式解説記事）に依る。
 
 # 活用先
 

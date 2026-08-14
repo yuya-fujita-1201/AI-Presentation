@@ -72,6 +72,7 @@ Google Researchに掲載されたMcKinnon (2025) の短い報告では、Gemini 
 
 ## 次に読む
 
+- [コンテキストロットと「足すより編集する」](./context-rot-and-editing.md) — U字カーブが起きる機構側の説明（因果的アテンションマスキング、位置エンコーディングの減衰）と、実務での削る判断
 - [検索・記憶・圧縮・キャッシュ](./retrieval-memory-compaction-cache.md) — ウィンドウ外の情報をどう扱うか
 - [長期タスクとツール文脈](./long-horizon-and-tools.md) — 作業が長くなったときの段階的な開示と状態管理
 - [選別と十分性](./selection-and-sufficiency.md) — 入れる情報を4つの観点で選ぶ

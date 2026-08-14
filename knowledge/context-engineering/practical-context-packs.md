@@ -23,6 +23,7 @@ generated:
 やること:
 完了条件:
 出力形式:
+見本（期待する出力例 / 避けたい例）:
 
 ## 目的と読み手
 目的:
@@ -109,7 +110,7 @@ AIへ渡さない情報:
 6. **小さく試す** — 代表例で出力し、抜け、ノイズ、誤解、根拠の追跡可能性を見る。
 7. **失敗から更新する** — 毎回追記せず、原因に効く情報だけを追加・修正する。
 
-Microsoftの学習教材も、コンテキストエンジニアリングを指示、知識、ツール、状態などの情報設計として段階的に学ぶ構成を採っている。製品固有の実装へ入る前に、構成要素と評価を分ける参考になる（[Microsoft Learn: Context engineering](../sources/course-ce-microsoft-context-engineering.md)）。
+Microsoftの学習教材も、コンテキストエンジニアリングを指示、知識、ツール、状態などの情報設計として段階的に学ぶ構成を採っている。製品固有の実装へ入る前に、構成要素と評価を分ける参考になる（[Microsoft Learn: Context engineering](../sources/course-ce-microsoft-context-engineering.md)）。同教材の設計手順は**完了状態を定義し、必要な情報の所在を地図化し、取得経路をパイプラインとして作る**という3段階で説明されており、これは上の手順1（仕事を一文で定義する）・2〜4（情報の所在と出所を確認する）・6〜7（試して更新する）にそれぞれ対応する。実装戦略としては、スクラッチパッド、セッションをまたぐメモリ、要約・トリミングによる圧縮、マルチエージェント分離、サンドボックス、実行時状態を挙げている。
 
 ## AIに不足を尋ねさせる
 
@@ -144,11 +145,15 @@ Microsoftの学習教材も、コンテキストエンジニアリングを指�
 - 関係のない資料を削っても品質が維持されるか。
 - 新しい版へ更新したとき、古い判断が残らないか。
 
-長文に関しては、関連箇所の位置、資料数、ノイズ量を変えた比較も行う。「Lost in the Middle」の位置効果は限定条件で得られた結果である（[Liu et al.](../sources/paper-ce-lost-in-the-middle.md)）。一方、McKinnon (2025) はGemini 2.5 Flash単一モデルの単純factoid QAで同じ位置低下を観測しなかったが、原研究とはモデルと課題が異なる限定的な対照である（[Retrieval Quality at Context Limit](../sources/paper-ce-google-retrieval-quality-context-limit.md)）。研究名から結論を先取りせず、自分たちのモデルと課題で反証可能に測る。
-
-RAGを使う場合は、検索に失敗したのか、取得文書が答えに不十分だったのか、文書は十分だが生成で使えなかったのかを分ける（[Google Research: Sufficient Context](../sources/article-ce-google-sufficient-context-rag.md)）。
-
 失敗したら、まず「指示」「不足情報」「情報過多」「信頼性」「鮮度」「ツール・権限」「検証」のどこに原因があるか分ける。すべてをプロンプトの長文化で解決しない。
+
+## システム設計まで進む場合の補足
+
+ここから先は、[推奨する読み順](./index.md)で「システム設計まで扱う場合」に進んだ読者向けの補足である。初学者ルートはここで読み終えてよい。
+
+長文に関しては、関連箇所の位置、資料数、ノイズ量を変えた比較も行う。「Lost in the Middle」の位置効果は限定条件で得られた結果である（[Liu et al.](../sources/paper-ce-lost-in-the-middle.md)）。一方、McKinnon (2025) はGemini 2.5 Flash単一モデルの単純factoid QAで同じ位置低下を観測しなかったが、原研究とはモデルと課題が異なる限定的な対照である（[Retrieval Quality at Context Limit](../sources/paper-ce-google-retrieval-quality-context-limit.md)）。研究名から結論を先取りせず、自分たちのモデルと課題で反証可能に測る。両研究の詳細は[コンテキストウィンドウと注意配分](./context-window-and-attention.md)で扱う。
+
+RAGを使う場合は、検索に失敗したのか、取得文書が答えに不十分だったのか、文書は十分だが生成で使えなかったのかを分ける（[Google Research: Sufficient Context](../sources/article-ce-google-sufficient-context-rag.md)）。RAGの役割そのものは[検索・メモリ・圧縮・キャッシュ](./retrieval-memory-compaction-cache.md)で扱う。
 
 ## 次に読む
 

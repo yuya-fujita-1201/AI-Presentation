@@ -23,7 +23,7 @@
 
 ### 3. 層と長期運用の部品
 
-- [context-layers-and-intervention.md](./context-layers-and-intervention.md) — 介入点としての5層、症状別の直し方、Write/Select/Compress/Isolateと圧縮機能
+- [context-layers-and-intervention.md](./context-layers-and-intervention.md) — 介入点としての5層（システムプロンプト〜会話履歴。「0. 全体地図」の5層地図とは別の切り口）、症状別の直し方、Write/Select/Compress/Isolateと圧縮機能
 - [retrieval-memory-compaction-cache.md](./retrieval-memory-compaction-cache.md) — RAG、外部メモリ、コンパクション、Prompt cacheの役割と「しないこと」
 - [long-horizon-and-tools.md](./long-horizon-and-tools.md) — 段階的開示、ツール定義・結果、状態ファイル、セッション間の引き継ぎ
 
@@ -42,7 +42,7 @@
 
 本バンドルで使う次の整理は、初心者が判断しやすくするための教材上のフレームであり、業界標準規格ではない。
 
-- AI活用をプロンプト／コンテキスト／ハーネス／ループ／グラフに分ける5層地図
+- AI活用をプロンプト／コンテキスト／ハーネス／ループ／グラフに分ける5層地図（**同じ「5層」という呼称を、コンテキストをシステムプロンプト〜会話履歴に分ける[context-layers-and-intervention.md](./context-layers-and-intervention.md)の5層でも使っているが、両者は別の切り口である。前者はコンテキストエンジニアリングを含む活動全体の外側からの分類、後者はコンテキストという1つの層を内側からさらに分解したもの**）
 - 依頼の前提を目的／読み手／状況／制約／既存資産で確認する5項目
 - 情報を必要性／十分性／信頼性／鮮度で選ぶ4観点
 - コンテキストパックという実践上の呼び名とテンプレート
