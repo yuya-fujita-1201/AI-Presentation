@@ -1,0 +1,36 @@
+theme:
+  id: he
+  slug: ai-eng-03-harness-engineering
+  title: ハーネスエンジニアリング
+  series_index: 3
+  knowledge_dir: knowledge/harness-engineering
+  deck_dir: decks/ai-eng-03-harness-engineering
+keywords:
+  ja: ["ハーネスエンジニアリング", "AIエージェント 環境 構築", "Claude Code 使い方 設定",
+       "AIエージェント 安全 権限", "AI ツール実行 とは"]
+  en: ["AI agent harness", "agent harness engineering", "AI agent sandbox permissions",
+       "agentic coding environment setup"]
+keywords_fallback:
+  ja: ["AIエージェント 入門 仕組み", "MCP とは 解説", "AI 自動化 安全"]
+  en: ["what is an AI agent harness", "tool use LLM explained"]
+match_vocab:
+  ja: [ハーネス, エージェント, 権限, 環境, ツール, サンドボックス, MCP]
+  en: [harness, agent, sandbox, permission, "tool use", MCP]
+beginner_vocab: [入門, 初心者, とは, 基本, 解説, 使い方,
+                 beginner, basics, tutorial, introduction, explained]
+required_concepts:
+  - {id: tools, label: AIに道具（ツール）を与える, hints: [ツール, 道具, 実行, コマンド]}
+  - {id: permissions, label: 権限と境界の設計, hints: [権限, 許可, 制限, 境界]}
+  - {id: sandbox, label: 安全な実行環境（サンドボックス）, hints: [サンドボックス, 安全, 隔離, 環境]}
+  - {id: stop-points, label: 人間の確認ポイント, hints: [確認, 承認, 止める, 人間]}
+  - {id: config, label: 設定・ルールファイルによる制御, hints: [設定, ルール, ファイル, CLAUDE]}
+  - {id: observability, label: ログと観測（何をしたか見えるように）, hints: [ログ, 記録, 監視, 観測]}
+subtopics:
+  - {id: official-guides, goal: Claude Code・エージェント公式ドキュメントの一次情報台帳化,
+     queries: ["Claude Code documentation settings permissions", "Anthropic agent tool use documentation"]}
+  - {id: concepts-survey, goal: ハーネス概念の整理・エージェント環境設計の原典,
+     queries: ["agent harness engineering concept", "AI agent safety sandbox design"]}
+  - {id: jp-practice, goal: 日本語圏の実務解説の代表例,
+     queries: ["Claude Code 権限 設定 解説", "AIエージェント 安全 運用"]}
+primary_domains:
+  [docs.anthropic.com, www.anthropic.com, code.claude.com, platform.openai.com, arxiv.org]

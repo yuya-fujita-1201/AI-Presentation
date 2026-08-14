@@ -1,0 +1,37 @@
+theme:
+  id: ce
+  slug: ai-eng-02-context-engineering
+  title: コンテキストエンジニアリング
+  series_index: 2
+  knowledge_dir: knowledge/context-engineering
+  deck_dir: decks/ai-eng-02-context-engineering
+keywords:
+  ja: ["コンテキストエンジニアリング 入門", "コンテキストエンジニアリング とは",
+       "AI コンテキスト 渡し方", "LLM コンテキストウィンドウ 解説",
+       "RAG とは 初心者"]
+  en: ["context engineering tutorial", "context engineering explained",
+       "LLM context window explained", "context engineering vs prompt engineering"]
+keywords_fallback:
+  ja: ["生成AI 資料 読み込ませ方", "AI 長文 要約 コツ", "ナレッジベース AI 活用"]
+  en: ["RAG basics for beginners", "managing LLM context"]
+match_vocab:
+  ja: [コンテキスト, 文脈, 資料, RAG, 読み込, ウィンドウ]
+  en: [context, "context window", RAG, retrieval, grounding]
+beginner_vocab: [入門, 初心者, とは, 基本, 解説, 使い方,
+                 beginner, basics, tutorial, introduction, explained]
+required_concepts:
+  - {id: context-window, label: コンテキストウィンドウ（文脈の器と上限）, hints: [コンテキストウィンドウ, 上限, トークン]}
+  - {id: selection, label: 何を渡し何を渡さないかの選択, hints: [選ぶ, 絞る, 必要な情報, 取捨]}
+  - {id: structure, label: 渡す情報の構造化・区切り, hints: [構造, 区切り, タグ, 整理]}
+  - {id: retrieval, label: 必要時に取りに行く（RAG・検索）, hints: [RAG, 検索, 取得, retrieval]}
+  - {id: memory, label: 記憶・会話の持ち越し, hints: [記憶, メモリ, 履歴, 持ち越し]}
+  - {id: degradation, label: 詰め込みすぎによる劣化, hints: [劣化, 埋もれ, 薄まる, lost]}
+subtopics:
+  - {id: official-guides, goal: Anthropic公式のコンテキスト関連ドキュメントの一次情報台帳化,
+     queries: ["Anthropic context windows documentation", "Claude long context best practices"]}
+  - {id: concepts-survey, goal: コンテキストエンジニアリングの概念整理・原典,
+     queries: ["context engineering definition", "lost in the middle LLM context"]}
+  - {id: jp-practice, goal: 日本語圏の実務解説の代表例,
+     queries: ["コンテキストエンジニアリング 解説", "RAG 社内文書 活用 入門"]}
+primary_domains:
+  [docs.anthropic.com, www.anthropic.com, platform.openai.com, ai.google.dev, arxiv.org]

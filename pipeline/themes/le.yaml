@@ -1,0 +1,40 @@
+theme:
+  id: le
+  slug: ai-eng-04-loop-engineering
+  title: ループエンジニアリング
+  series_index: 4
+  knowledge_dir: knowledge/loop-engineering
+  deck_dir: decks/ai-eng-04-loop-engineering
+keywords:
+  ja: ["ループエンジニアリング", "AI 自己改善 ループ", "AIエージェント 検証 繰り返し",
+       "Human in the Loop とは", "AI レビュー 自動化"]
+  en: ["loop engineering AI", "self-improvement loop LLM", "human in the loop AI explained",
+       "AI agent feedback loop"]
+keywords_fallback:
+  ja: ["AI 品質 チェック 自動", "AIエージェント 反復 改善", "LLM 評価 ループ"]
+  en: ["evaluator optimizer loop LLM", "AI verification loop"]
+match_vocab:
+  ja: [ループ, 繰り返し, 検証, 自己改善, 反復, レビュー]
+  en: [loop, iteration, "human in the loop", feedback, verifier]
+beginner_vocab: [入門, 初心者, とは, 基本, 解説, 使い方,
+                 beginner, basics, tutorial, introduction, explained]
+required_concepts:
+  - {id: loop-cycle, label: 実行→検証→改善のサイクル, hints: [実行, 検証, 改善, 繰り返]}
+  - {id: maker-checker, label: 作る役と確かめる役の分離, hints: [検証役, レビュー, 分離, チェック]}
+  - {id: rubric, label: 採点基準・合格条件の設計, hints: [採点, 基準, 合格, ルーブリック]}
+  - {id: stop-conditions, label: 止まる条件（上限・停滞検知）, hints: [上限, 停止, 止める, 回数]}
+  - {id: hitl-hotl, label: Human in the Loop から on the Loop へ, hints: [Human, 人間, 監視, 承認]}
+  - {id: cost, label: ループのコストと収穫逓減, hints: [コスト, トークン, 効率, 逓減]}
+extra_sources:
+  - knowledge/sources/video-pe-loop-engineering-overview.md
+  - knowledge/sources/video-pe-loop-engineering-5plus1-parts.md
+  - knowledge/sources/video-pe-five-engineering-stages.md
+subtopics:
+  - {id: official-guides, goal: エージェントワークフロー・評価ループの公式/一次情報台帳化,
+     queries: ["Anthropic building effective agents", "evaluator optimizer workflow LLM"]}
+  - {id: concepts-survey, goal: ループ設計の概念整理・原典,
+     queries: ["loop engineering AI concept", "self-refinement LLM survey"]}
+  - {id: jp-practice, goal: 日本語圏の実務解説の代表例,
+     queries: ["ループエンジニアリング 解説", "AI 自動レビュー 実践"]}
+primary_domains:
+  [docs.anthropic.com, www.anthropic.com, platform.openai.com, ai.google.dev, arxiv.org]

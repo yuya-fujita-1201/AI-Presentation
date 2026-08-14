@@ -162,6 +162,52 @@ def load_watchlist():
         return yaml.safe_load(f)
 
 
+def scope_of(theme_id):
+    return CFG.get("theme_scope", {}).get(theme_id, "full")
+
+
+def advance_theme(state, queue, note):
+    """テーマ完了時の遷移。次テーマがあればstate/queueを初期化して自走継続、無ければ完走PAUSE"""
+    series = state["theme"]["series"]
+    cur = state["theme"]["id"]
+    idx = series.index(cur) if cur in series else -1
+    nxt = None
+    for cand in series[idx + 1:]:
+        if scope_of(cand) != "skip":
+            nxt = cand
+            break
+    if nxt is None:
+        state["phase"] = "done"
+        with open(PAUSE, "w") as f:
+            f.write(f"シリーズ完走により自動一時停止 {now_iso()}\n")
+        notify(state, "pipeline: シリーズ完走 🎉", f"{note}。全テーマ完了・PAUSE（体制振り返り待ち）")
+        log_activity(f"🏁 シリーズ完走: {note}")
+        return
+    th = yaml.safe_load(open(os.path.join(PIPE, "themes", f"{nxt}.yaml")))["theme"]
+    state["theme"].update({"id": nxt, "slug": th["slug"], "title": th["title"]})
+    state["phase"] = "research_scan"
+    state["phase_attempts"] = 0
+    state["run_counts"] = {}
+    state["scan_fallback_done"] = False
+    state["video_shortfall"] = False
+    state["web_rerun_done"] = False
+    state["_use_fallback"] = False
+    for k in ("knowledge", "deck"):
+        state["grade"][k] = {"iter": 0, "repair_count": 0, "pass_streak": 0,
+                             "retry_used": False, "last_unmet": None, "last_scores": None}
+    state["generation"] = state.get("generation", 1) + 1
+    queue["videos"] = []
+    queue["web"] = {"subtopics_done": [], "candidates": []}
+    for f_ in (os.path.join(STAGING, "knowledge", "plan.json"),
+               os.path.join(STAGING, "draft", "draft.md")):
+        try:
+            os.remove(f_)
+        except FileNotFoundError:
+            pass
+    notify(state, "pipeline: 次テーマへ", f"{note} → {th['title']}（{nxt}）のresearch開始")
+    log_activity(f"🎯 テーマ遷移: {cur} → {nxt}（scope: {scope_of(nxt)}）")
+
+
 def set_stuck(state, reason, note=""):
     state["stuck"] = {"reason": reason, "at": now_iso(), "note": note[:500]}
     ok = notify(state, f"pipeline STUCK: {reason}",
@@ -977,6 +1023,9 @@ def apply_web_ledger(state, queue, theme, runid, outbox):
 def prework_knowledge(state, queue, theme, runid):
     ledgers = sorted(globmod.glob(os.path.join(ROOT, "knowledge/sources/*-%s-*.md" % state["theme"]["id"])))
     ledgers = [os.path.relpath(p, ROOT) for p in ledgers]
+    for extra in theme.get("extra_sources", []):
+        if os.path.exists(os.path.join(ROOT, extra)) and extra not in ledgers:
+            ledgers.append(extra)
     plan_f = os.path.join(STAGING, "knowledge", "plan.json")
     os.makedirs(os.path.dirname(plan_f), exist_ok=True)
     plan = read_json(plan_f, None)
@@ -1048,6 +1097,9 @@ def prework_grade(kind, state, queue, theme, runid):
         files = sorted(globmod.glob(os.path.join(ROOT, theme["theme"]["knowledge_dir"], "*.md")))
         files += sorted(globmod.glob(os.path.join(ROOT, f"knowledge/sources/*-{tid}-*.md")))
         files = [os.path.relpath(p, ROOT) for p in files]
+        for extra in theme.get("extra_sources", []):
+            if os.path.exists(os.path.join(ROOT, extra)) and extra not in files:
+                files.append(extra)
         denom = len(files)
         list_file = _write_list_file(runid, "grade-files.txt", files)
     else:
@@ -1103,10 +1155,15 @@ def apply_grade(kind, state, queue, theme, runid, outbox):
     if not unmet:
         g["pass_streak"] += 1
         if g["pass_streak"] >= CFG["confirm_grades_required"]:
+            g["last_unmet"], g["last_scores"] = [], smap
+            if kind == "k" and scope_of(state["theme"]["id"]) == "knowledge":
+                notify(state, "pipeline: grade_k 合格（knowledge-onlyテーマ完了）",
+                       f"{state['theme']['id']}: {scores_str}（{g['pass_streak']}連続）")
+                advance_theme(state, queue, f"{state['theme']['id']} ナレッジ完成（{scores_str}）")
+                return True, f"採点 {scores_str} 合格確定 → テーマ完了"
             state["phase"] = "draft" if kind == "k" else "brief"
             notify(state, f"pipeline: grade_{kind} 合格",
                    f"{state['theme']['id']}: {scores_str}（確認採点含む{g['pass_streak']}連続） → {state['phase']}へ")
-            g["last_unmet"], g["last_scores"] = [], smap
             return True, f"採点 {scores_str} 合格確定"
         g["last_unmet"], g["last_scores"] = [], smap
         return True, f"採点 {scores_str} 初回合格 → 確認採点へ"
@@ -1288,12 +1345,10 @@ def apply_brief(state, queue, theme, runid, outbox):
     if re.search(r"notes_slide|スピーカーノート.*(入れ|追加|書き込)", text):
         revert_paths([brief_path], runid)
         return False, "PPTXノート操作の記述が混入"
-    state["phase"] = "done"
-    with open(PAUSE, "w") as f:
-        f.write(f"第1弾 {state['theme']['id']} 完了により自動一時停止 {now_iso()}\n")
-    notify(state, "pipeline: 第1弾 brief発行 🎉",
-           f"{brief_path} 発行。デッキ={theme['theme']['deck_dir']}。パイプラインはPAUSE（体制振り返り待ち）")
-    return True, f"brief発行 → done・PAUSE設置"
+    notify(state, f"pipeline: {state['theme']['id']} brief発行 🎉",
+           f"{brief_path} 発行。デッキ={theme['theme']['deck_dir']}")
+    advance_theme(state, queue, f"{state['theme']['id']} brief発行・テーマ完走")
+    return True, "brief発行 → テーマ完了"
 
 
 PREWORK = {

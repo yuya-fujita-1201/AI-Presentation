@@ -75,5 +75,11 @@
     "image_text_ratio_min": 0.4
   },
   "digest_hour": 22,
-  "scan_recent_days": 180
+  "scan_recent_days": 180,
+  "theme_scope": {
+    "pe": "full",
+    "ce": "knowledge",
+    "he": "full",
+    "le": "full"
+  }
 }
