@@ -52,4 +52,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../context-engineering/context-layers-and-intervention.md](../context-engineering/context-layers-and-intervention.md) — 会話履歴は保持量に限界があり古い情報から捨てられるという指摘、重要情報が履歴から落ちうる例、実践テクニックとしての要約と外部保管(Compress/Writeに相当)の根拠

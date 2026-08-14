@@ -62,4 +62,4 @@ LLMは人間の記憶を模倣するように設計されたわけではない�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../context-engineering/context-rot-and-editing.md](../context-engineering/context-rot-and-editing.md) — 位置によるU字型の正答率カーブ、因果的アテンションマスキングと位置エンコーディング減衰という2つのアーキテクチャ的原因の説明の根拠(二次情報としての帰属付き)

@@ -85,4 +85,5 @@ IT系情報を発信するYouTubeチャンネル「SHOWTECH」が、Anthropic公
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../context-engineering/context-rot-and-editing.md](../context-engineering/context-rot-and-editing.md) — コンテキストロットという呼称、トークン数の2乗で関係量が増えるという説明、性能がなだらかに落ちるという強調、「情報は足すより編集する」という結論の根拠
+- [../context-engineering/context-layers-and-intervention.md](../context-engineering/context-layers-and-intervention.md) — Claude Codeの`/compact`による圧縮操作の言及(聞き取り)

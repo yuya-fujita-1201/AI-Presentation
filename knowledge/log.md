@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-14（さらに続き6・context-engineering コンセプト追加）
+
+- **Update**: context-engineering/ にコンセプト3本を追加（`five-engineering-scopes` 5つのエンジニアリングのスコープ差と入れ子構造、`context-rot-and-editing` 情報を足すほど劣化する理由と「足すより編集する」判断、`context-layers-and-intervention` 介入点としての5層とWrite/Select/Compress/Isolate）。これによりCE系台帳21件すべてがコンセプトから被引用となった
+- **Update**: `what-is-context-engineering.md` の5層地図の節に出典2件を追加（出典1件のみだった状態を解消）。あわせて index.md の学習の地図・推奨読み順・根拠の記述を更新
+- **Update**: 上記3本が参照する台帳10件の「活用先」を追記し、コンセプト⇄台帳の双方向リンクを片方向0件まで揃えた（OKF検証 errors:0 / warnings:0）
+
 ## 2026-08-14（さらに続き5）
 
 - **Creation**: sources/ に記事2本を article-ce-*.md として登録（コンテキストエンジニアリングテーマ、web_ledger工程 run:081413588c）。article-ce-softbank-what-is-context-engineering.md（ソフトバンク株式会社ビジネスブログ、コンテキストエンジニアリングの定義・会話履歴の忘却問題・プロンプトエンジニアリングとの違い・システムプロンプト/要約/外部保管の実践テクニックを解説）、article-ce-cloco-context-engineering-claude.md（cloco Blog、Karpathy・Tobi Lütkeの言及とQodo調査データを紹介しつつAnthropicのWrite/Select/Compress/Isolateの4戦略とClaude CodeのCLAUDE.md整備・Arize AI調査を解説）

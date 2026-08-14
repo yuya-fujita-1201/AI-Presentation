@@ -61,4 +61,4 @@ response = client.beta.messages.create(
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../context-engineering/context-layers-and-intervention.md](../context-engineering/context-layers-and-intervention.md) — compactionの目的と4ステップの動作、compactionブロック以前の破棄、Beta段階であることとトリガー閾値(既定150,000/最低50,000トークン)というパラメータ仕様の根拠

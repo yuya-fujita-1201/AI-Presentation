@@ -75,4 +75,4 @@ AI導入支援を行うチャンネル「工藤あい　AI導入・AI駆動　�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../context-engineering/context-rot-and-editing.md](../context-engineering/context-rot-and-editing.md) — コンテキストウィンドウを机の広さに例える説明、置けることと見ることは別という指摘、「とりあえず全部貼る」への批判、話が散らかったら新しいチャットへ決まった結論だけを持っていくという対処の根拠

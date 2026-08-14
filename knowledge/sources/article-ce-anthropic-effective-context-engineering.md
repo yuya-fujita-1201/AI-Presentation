@@ -55,3 +55,4 @@ Anthropicが、プロンプトエンジニアリングを「指示の書き方�
 - [../context-engineering/context-window-and-attention.md](../context-engineering/context-window-and-attention.md) — 有限な注意予算と、容量を最大まで埋めない設計原則
 - [../context-engineering/retrieval-memory-compaction-cache.md](../context-engineering/retrieval-memory-compaction-cache.md) — 圧縮、構造化ノート、サブエージェント分離の役割差
 - [../context-engineering/long-horizon-and-tools.md](../context-engineering/long-horizon-and-tools.md) — 長期タスクでの段階的開示と必要時取得
+- [../context-engineering/context-rot-and-editing.md](../context-engineering/context-rot-and-editing.md) — 有限なattention budgetという捉え方と、それが内部注意量の共通指標ではないという留保、渡す量を増やすことが単調に品質を上げるわけではないという設計原則の根拠

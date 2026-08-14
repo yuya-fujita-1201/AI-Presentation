@@ -2,9 +2,13 @@
 
 チャット型AIを使ったことはあるが、エージェント的な活用には慣れていない新入社員・IT職・SEを主な読者とする。コンテキストエンジニアリングを「長いプロンプトを書くこと」ではなく、**AIがある時点で仕事をするために参照する情報を、選び、配置し、更新する設計**として扱う。
 
-本ディレクトリは、2026-08-14に確認した公式一次資料・原著12件（[sources台帳](../sources/index.md)）を中核にする。製品固有の窓長、料金、キャッシュTTL、保持日数などは変わるため、固定値として一般化しない。
+本ディレクトリは、2026-08-14に確認した[sources台帳](../sources/index.md)21件を根拠にする。内訳は公式ドキュメント・原著論文と、二次記事・解説動画である。**定義・数値・仕様に関わる主張は公式資料と原著を根拠にし、解説動画（auto字幕）由来の主張は帰属を明示して断定を避ける**方針で書いている。製品固有の窓長、料金、キャッシュTTL、保持日数などは変わるため、固定値として一般化しない。
 
 ## 学習の地図
+
+### 0. 全体地図
+
+- [five-engineering-scopes.md](./five-engineering-scopes.md) — プロンプト／コンテキスト／ハーネス／ループ／グラフのスコープ差と入れ子関係、症状別の切り分け
 
 ### 1. 定義と材料
 
@@ -15,9 +19,11 @@
 
 - [selection-and-sufficiency.md](./selection-and-sufficiency.md) — 必要性・十分性・信頼性・鮮度による選別、競合情報、選別記録
 - [context-window-and-attention.md](./context-window-and-attention.md) — ウィンドウ、履歴、外部メモリ、学習済み知識の区別。長文研究の結果と留保
+- [context-rot-and-editing.md](./context-rot-and-editing.md) — 足すほど薄まる理由（注意の有限性・位置バイアス）と、「足すより編集する」判断
 
-### 3. 長期運用の部品
+### 3. 層と長期運用の部品
 
+- [context-layers-and-intervention.md](./context-layers-and-intervention.md) — 介入点としての5層、症状別の直し方、Write/Select/Compress/Isolateと圧縮機能
 - [retrieval-memory-compaction-cache.md](./retrieval-memory-compaction-cache.md) — RAG、外部メモリ、コンパクション、Prompt cacheの役割と「しないこと」
 - [long-horizon-and-tools.md](./long-horizon-and-tools.md) — 段階的開示、ツール定義・結果、状態ファイル、セッション間の引き継ぎ
 
@@ -28,9 +34,9 @@
 
 ## 推奨する読み順
 
-初学者は、`what-is-context-engineering` → `context-components` → `selection-and-sufficiency` → `practical-context-packs` の順で読む。ここまでで、普段のチャットや文書作成に使える。
+初学者は、`what-is-context-engineering` → `context-components` → `selection-and-sufficiency` → `context-rot-and-editing` → `practical-context-packs` の順で読む。ここまでで、普段のチャットや文書作成に使える。用語の氾濫に戸惑っている場合は、先頭に `five-engineering-scopes` を置いて全体像から入ってもよい。
 
-システム設計まで扱う場合は、その後に `context-window-and-attention` → `retrieval-memory-compaction-cache` → `long-horizon-and-tools` → `security-and-trust-boundaries` へ進む。安全の章は最後に置いているが、安全確認は実装の最後に足す工程ではない。各章へ戻りながら適用する。
+システム設計まで扱う場合は、その後に `context-window-and-attention` → `context-layers-and-intervention` → `retrieval-memory-compaction-cache` → `long-horizon-and-tools` → `security-and-trust-boundaries` へ進む。安全の章は最後に置いているが、安全確認は実装の最後に足す工程ではない。各章へ戻りながら適用する。
 
 ## 教材上の整理と非標準性
 

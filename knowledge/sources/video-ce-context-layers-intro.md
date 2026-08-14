@@ -83,4 +83,6 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../context-engineering/context-layers-and-intervention.md](../context-engineering/context-layers-and-intervention.md) — コンテキストを5層(システムプロンプト/プロジェクトメモリ/RAG/ツール呼び出し/会話履歴)の介入点として捉える整理、上位層ほど広く効くという対比、症状別にどの層を直すかの使い分け、CLAUDE.mdの構造化と放置の落とし穴の根拠
+- [../context-engineering/five-engineering-scopes.md](../context-engineering/five-engineering-scopes.md) — コンテキストエンジニアリングをプロンプトエンジニアリングの上位概念とし、プロンプトをコンテキストの一部と位置づける整理の根拠
+- [../context-engineering/what-is-context-engineering.md](../context-engineering/what-is-context-engineering.md) — 5層地図が複数の解説者に共有された整理であることの傍証

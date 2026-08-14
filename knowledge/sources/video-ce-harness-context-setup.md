@@ -91,4 +91,5 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../context-engineering/five-engineering-scopes.md](../context-engineering/five-engineering-scopes.md) — 縦3段階(プロンプト→コンテキスト→ハーネス)＋横2軸(ループ・グラフ)という整理、呼称は発信者により揺れるという留保、プロンプトエンジニアリングは廃れず複数ある工夫の1つという位置づけの根拠
+- [../context-engineering/context-layers-and-intervention.md](../context-engineering/context-layers-and-intervention.md) — ルールを1枚に集約せず用途別に分けて必要な分だけ読ませる方が性能が上がるという指摘、Claude Codeが起動フォルダ内のファイルを優先的に読み込むという仕様の言及(聞き取り)の根拠

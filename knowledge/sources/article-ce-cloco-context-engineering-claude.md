@@ -56,4 +56,4 @@ Arize AIによる調査では、CLAUDE.mdを最適化することでエージェ
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../context-engineering/context-layers-and-intervention.md](../context-engineering/context-layers-and-intervention.md) — Write/Select/Compress/Isolateの4戦略とその内容、CLAUDE.md整備を実践の入り口とする位置づけ、Arize AI調査(+10.87%/+5.19%)とQodo調査(65%/16%)の引用、自動圧縮があっても重要情報はファイルに書き出す方が確実という指摘の根拠
