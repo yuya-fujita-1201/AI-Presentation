@@ -42,4 +42,4 @@ Anthropic公式のClaude Code Docsは、Agent SDKの入門文書として「Agen
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../harness-engineering/what-is-harness-engineering.md](../harness-engineering/what-is-harness-engineering.md) — ハーネスの実装例としての機能群（組み込みツール・Hooks・Subagents・MCP・Permissions・Sessions・Skills/memory・Plugins）の根拠

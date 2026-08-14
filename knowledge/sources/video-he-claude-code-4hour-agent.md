@@ -73,4 +73,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../harness-engineering/why-harness-matters.md](../harness-engineering/why-harness-matters.md) — チャット型AIとAIエージェントの違い、ローカルファイルを直接読めるかどうかという環境差がAIにできる仕事を変えるという指摘の根拠（auto字幕）

@@ -54,4 +54,5 @@ arXivは、"AI Harness Engineering: A Runtime Substrate for Foundation-Model Sof
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../harness-engineering/what-is-harness-engineering.md](../harness-engineering/what-is-harness-engineering.md) — ハーネスの形式的定義（runtime substrate）、C_system = F(C_model, C_harness, C_environment, T) の式、「監査可能な行動への変換」という役割規定の根拠
+- [../harness-engineering/why-harness-matters.md](../harness-engineering/why-harness-matters.md) — 能力ギャップの症状一覧、モデル能力不足説への反論、人間が提供しているランタイム支援の内訳、暗黙的・アクセス不能・不安定という指摘、問いの立て直しの根拠

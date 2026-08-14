@@ -10,7 +10,7 @@ generated:
 
 # コンテキストの構成要素
 
-チャット画面で利用者が入力した文章だけがコンテキストではない。AIが1回の応答を生成するとき、複数の情報源が一つの入力として組み合わされる。
+チャット画面で利用者が入力した文章だけがコンテキストではない。AIが1回の応答を生成するとき、複数の情報源が一つの入力として組み合わされる。3つの動画がそれぞれ独立に、この状態を**「毎朝記憶がリセットされる新人」**に近い比喩で説明している。何も渡さなければ、AIは自社の事情も前回の会話も知らない状態から始まる（[コンテキストとは何か](../sources/video-ce-context-4-elements.md)、[AIの性能は7割が環境構築で決まる](../sources/video-ce-harness-context-setup.md)、[全部貼るのをやめろ](../sources/video-ce-context-rot-and-jit.md)、いずれもauto字幕からの聞き取り）。
 
 ## 推論時に入りうる情報
 
@@ -25,6 +25,8 @@ generated:
 - **状態・記憶** — 進捗、以前の決定、利用者の継続的な好み、作業ログ。
 
 Anthropicの整理でも、コンテキストにはシステム指示、ツール、外部データ、メッセージ履歴などが含まれ、作業の進行に応じてその組み合わせが変わる（[Effective context engineering](../sources/article-ce-anthropic-effective-context-engineering.md)）。Microsoftの初心者向け教材も、instructions、knowledge、tools、history、preferencesをコンテキストの種類として整理している（[Microsoft: Context Engineering for AI Agents](../sources/course-ce-microsoft-context-engineering.md)）。GoogleのAgent Development Kitも、セッション、メモリ、アーティファクト、作業コンテキストなどを別の役割として扱う。実装名は製品ごとに異なるが、**今の入力、継続状態、外部保存物を分ける**という考え方は移植できる（[Google ADK: Context architecture](../sources/article-ce-google-adk-context-architecture.md)）。
+
+ここで区別すべきなのは、**保存されている情報のすべて**と、**AIが今回の呼び出しで実際に見る情報**が同じではないという点である。Google ADKの設計では、セッションやメモリに保存された全状態と、モデルへ渡す作業コンテキストを別物として扱う。作業コンテキストは、呼び出しのたびに必要な情報を選び直して組み立てる一時的な表示（compiled view）であり、保存された全状態がそのまま渡されるわけではない（[Google ADK: Context architecture](../sources/article-ce-google-adk-context-architecture.md)）。上の一覧が挙げる各要素も、常に全量が渡されるのではなく、この組み立て作業を経て今回の入力に含まれる。
 
 これらは同じ信頼度ではない。確定仕様と検索結果、利用者の発言とAI自身の前回要約、最新データと古いメモを混ぜると、矛盾したときに判断できない。内容だけでなく、**出所・更新日時・確定状態**を添える必要がある。
 

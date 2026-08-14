@@ -58,4 +58,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../harness-engineering/why-harness-matters.md](../harness-engineering/why-harness-matters.md) — 「コンテキスト汚染」、300行以下・150〜200指示という目安、コンテキストウィンドウをワーキングメモリになぞらえる説明の根拠
