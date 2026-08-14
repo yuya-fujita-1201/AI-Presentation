@@ -12,10 +12,10 @@
     ],
     "series_index": 0
   },
-  "phase": "grade_d",
-  "generation": 3,
-  "active_run_id": "081408590e",
-  "input_commit": "cb7328bdbcdc",
+  "phase": "improve_d",
+  "generation": 4,
+  "active_run_id": "081410017c",
+  "input_commit": "98a3482b014a",
   "phase_started_at": null,
   "phase_attempts": 0,
   "run_counts": {
@@ -29,7 +29,7 @@
     "improve_k": 6,
     "draft": 1,
     "deck": 1,
-    "grade_d": 3,
+    "grade_d": 5,
     "improve_d": 4
   },
   "scan_fallback_done": false,
@@ -53,20 +53,19 @@
       }
     },
     "deck": {
-      "iter": 3,
-      "repair_count": 3,
+      "iter": 5,
+      "repair_count": 0,
       "pass_streak": 0,
       "retry_used": false,
       "last_unmet": [
-        1,
-        5
+        1
       ],
       "last_scores": {
         "1": 7,
         "2": 8,
         "3": 8,
         "4": 8,
-        "5": 7,
+        "5": 8,
         "6": 9
       }
     }
@@ -74,18 +73,18 @@
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-12T12:56:15+09:00",
-  "last_started_at": "2026-08-14T08:59:14+09:00",
-  "last_successful_transition_at": "2026-08-14T09:03:59+09:00",
+  "last_started_at": "2026-08-14T10:01:03+09:00",
+  "last_successful_transition_at": "2026-08-14T10:07:58+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
   "notify_failed_count": 0,
   "manual_override": true,
   "manual_reset": {
-    "at": "2026-08-14T05:26:04+09:00",
-    "from": "grade_k",
-    "to": "draft",
-    "was_stuck": "stagnation"
+    "at": "2026-08-14T10:01:03+09:00",
+    "from": "grade_d",
+    "to": "grade_d",
+    "was_stuck": "repair_exhausted"
   },
-  "last_notification_success_at": "2026-08-14T05:07:29+09:00"
+  "last_notification_success_at": "2026-08-14T09:31:03+09:00"
 }
