@@ -59,8 +59,9 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3(MCP) 初心者+2(解説) 新しさ+1 trust+2(expert) 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "needs_human",
+      "reject_reason": null,
+      "subs": "auto"
     },
     {
       "id": "SZ2Qy8xcDYY",
@@ -74,8 +75,37 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3(MCP) 初心者+2(解説) 新しさ+2 trust+2(expert) 再生+0",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[01:00]",
+          "text": "WebMCPはAIがECサイトを操作するためのツール（メニュー）をサイト側が用意する仕組みである",
+          "impact": "normal"
+        },
+        {
+          "ts": "[04:00]",
+          "text": "WebMCPとはサイトにおけるAI専用の窓口であり、AIが来たら操作可能なメニュー表を渡す仕組みである",
+          "impact": "high"
+        },
+        {
+          "ts": "[07:00]",
+          "text": "WebMCP導入により処理時間が約8割カットされる",
+          "impact": "high"
+        },
+        {
+          "ts": "[07:00]",
+          "text": "WebMCP導入により操作の正確さが1〜2割アップする",
+          "impact": "high"
+        },
+        {
+          "ts": "[09:00]",
+          "text": "AIが操作を準備し、最後に人間が画面で確認して承認すれば実行されるというフローを設定できる",
+          "impact": "normal"
+        }
+      ],
+      "summary": "クラウドフレアのWebMCPを解説。AIにサイト操作用ツールメニューを提供し、人間の承認フローや設定手順、導入効果（処理時間8割減・正確さ向上）を具体的に説明"
     },
     {
       "id": "rVWmPYQrlGA",
@@ -89,7 +119,7 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3(Agent) 初心者+2(とは) 新しさ+2 trust+2(expert) 再生+0",
-      "status": "candidate",
+      "status": "selected",
       "reject_reason": null
     },
     {
@@ -104,7 +134,7 @@
       "trust": "expert",
       "score": 8,
       "score_detail": "適合+3(Harness) 初心者+0 新しさ+2 trust+2(expert) 再生+1",
-      "status": "candidate",
+      "status": "selected",
       "reject_reason": null
     },
     {
