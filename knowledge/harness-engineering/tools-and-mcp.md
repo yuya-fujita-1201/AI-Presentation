@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: 道具の設計——組み込みツール・MCP・WebMCP・スキル
-description: ハーネスの4要素のうち「道具」を扱う。エージェントに何を実行させ何に接続させるかを、組み込みツール／MCP／WebMCP／スキルの4層で整理し、道具を増やすことが同時に事故の面積を増やすという設計上の緊張を示す
+description: ハーネスの4要素（keitoaiweb動画由来の整理）のうち「道具」を扱う。エージェントに何を実行させ何に接続させるかを、組み込みツール／MCP／WebMCP／スキルの4層で整理し、道具を増やすことが同時に事故の面積を増やすという設計上の緊張を示す
 tags: [harness-engineering, tools, mcp, webmcp, skills, claude-code, agent-sdk]
 generated:
   by: claude-code/pipeline-opus
@@ -10,7 +10,7 @@ generated:
 
 # 道具の設計——組み込みツール・MCP・WebMCP・スキル
 
-ここからハーネスの4要素の具体に降りる。最初は「道具」——**エージェントに何を実行させ、何に接続させるか**である。[11責務](./harness-responsibilities-and-ladder.md)でいえばツールアクセスにあたる。
+ここからハーネスの4要素の具体に降りる。4要素は[keitoaiweb動画](../sources/video-pe-five-engineering-stages.md)による整理であり、業界標準の分類ではない（auto字幕からの聞き取り。詳細は[what-is-harness-engineering.md](./what-is-harness-engineering.md)を参照）。最初は「道具」——**エージェントに何を実行させ、何に接続させるか**である。[11責務](./harness-responsibilities-and-ladder.md)でいえばツールアクセスにあたる。
 
 チャット型AIしか使ったことがないと、AIの性能はモデルの賢さで決まると感じやすい。しかし業務でAIに何ができるかを実際に左右するのは、**そのAIが手として何を持っているか**である。どれだけ賢くても、社内の見積書ファイルを開けなければ見積書は直せない。この章では道具を4つの層に分けて整理する。
 
@@ -23,7 +23,12 @@ generated:
 
 ## 道具をどこで動かすか——4つの実装形態
 
-4層の道具そのものに入る前に、その道具を「どこで」動かすかという選択にも触れておく。[Anthropic公式の「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md)は、Claude Code CLI・Agent SDK・Client SDK・Managed Agentsという4つの選択肢を用途別に整理している。ターミナルでの対話利用や一度限りのタスク実行にはCLI、ツールループを自前実装せずにエージェントを組み込みたいならAgent SDK（Claude Codeを支えるのと同じツール群・エージェントループ・コンテキスト管理を、自分自身のプロセス内でPython/TypeScriptライブラリとして提供）、APIを直接叩きながら自前でツールループを書きたいならClient SDK（Claude CodeではなくAnthropic APIへの直接アクセス）、そして**自前でサンドボックスやセッションインフラを管理せず長時間・非同期のエージェントを動かしたいならManaged Agents**（Anthropicがエージェントとサンドボックスをホストするrest API。Agent SDKとは別製品）を選ぶ、という整理である。
+4層の道具そのものに入る前に、その道具を「どこで」動かすかという選択にも触れておく。[Anthropic公式の「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md)は、Claude Code CLI・Agent SDK・Client SDK・Managed Agentsという4つの選択肢を用途別に整理している。
+
+- **Claude Code CLI**: ターミナルでの対話利用や一度限りのタスク実行に向く
+- **Agent SDK**: ツールループを自前実装せずにエージェントを組み込みたい場合に使う。Claude Codeを支えるのと同じツール群・エージェントループ・コンテキスト管理を、自分自身のプロセス内でPython/TypeScriptライブラリとして提供する
+- **Client SDK**: APIを直接叩きながら自前でツールループを書きたい場合に使う。Claude CodeではなくAnthropic APIへの直接アクセスにあたる
+- **Managed Agents**: 自前でサンドボックスやセッションインフラを管理せず長時間・非同期のエージェントを動かしたい場合に使う。Anthropicがエージェントとサンドボックスをホストする**REST API**で、Agent SDKとは別製品である
 
 Managed Agentsが担う「サンドボックスのホスト」は[サンドボックスと隔離](./sandbox-and-isolation.md)、「長時間・非同期」を支える必要があるのは[タスク状態](./harness-responsibilities-and-ladder.md)の議論とそれぞれ接続している。自前で隔離環境やセッション管理を構築・維持する代わりに、その責務ごとAnthropic側に委ねる選択肢がある、と読める。
 
@@ -37,9 +42,9 @@ Managed Agentsが担う「サンドボックスのホスト」は[サンドボ�
 
 **自ら手順を計画し、ファイルを読み・コマンドを実行し・コードを編集するツールを呼び出してタスクを完了させるアプリケーション**、というのが定義である。ここで注目したいのは、定義の中に最初からツールが組み込まれていることだ。ツールを呼べないものはこの定義ではエージェントではない。同文書はAgent SDKの提供機能として、ファイルの読み取り・書き込み・編集、コマンド実行、Web検索を行う「Built-in tools（組み込みツール）」を挙げている。
 
-なぜこの基本セットがそれほど効くのか。[PIVOTの体験企画動画](../sources/video-he-claude-code-4hour-agent.md)は、Claude Codeが一気に注目を集めた最大の理由は**パソコンの中に住み込んだ上でファイルを探し出せる点**にあるとしている。同動画はさらに、ホワイトカラーの仕事はWord・PDF・Excel・CSV・パワーポイント・画像・動画・設定ファイルなど結局のところほとんどがファイルの編集であり、ファイル操作能力の高いAIこそが最強のAIになり得ると説明している（いずれもauto字幕からの聞き取り）。
+なぜこの基本セットがそれほど効くのか。[PIVOTの体験企画動画](../sources/video-he-claude-code-4hour-agent.md)は、Claude Codeが一気に注目を集めた最大の理由は**パソコンの中に住み込んだ上でファイルを探し出せる点**にあるとしている。同動画はさらに、ホワイトカラーの仕事はWord・PDF・Excel・CSV・パワーポイント・画像・動画・設定ファイルなど結局のところほとんどがファイルの編集であり、ファイル操作能力の高いAIこそが最強のAIになり得ると説明している（いずれもauto字幕からの聞き取り）。同動画は、人間が日本語で「フォルダーを作って」と依頼すると裏側で `mkdir` コマンドが実行される、という形でその仕組みを解説している。
 
-同動画は、人間が日本語で「フォルダーを作って」と依頼すると裏側で `mkdir` コマンドが実行される、という形でその仕組みを解説している。またクラウド上のチャット型AIとの違いとして、それらはパソコンのファイルの中身を直接読みに行けないため資料のアップロードが都度必要になり、ローカルデータを踏まえたビューアー作成のような操作もできないと指摘している。つまり**同じモデルでも、手の届く範囲が違えばできる仕事が違う**。これは[why-harness-matters.md](./why-harness-matters.md)で見た「環境が公開している内容（C_environment）」の話そのものである。
+クラウド型チャットAIとの環境差——パソコンのファイルの中身を直接読みに行けるかどうかで、できる仕事が変わるという話——は[why-harness-matters.md](./why-harness-matters.md)で詳しく扱った。組み込みツールという「手」の有無こそが、その差を生む出発点である。
 
 ## 層2: MCP——外部サービスにつなぐ
 
@@ -95,3 +100,4 @@ MCPが「エージェント側から外部につなぐ」仕組みだとする�
 - [Anthropic公式「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md) — エージェントの定義（自ら手順を計画しツールを呼ぶ）、組み込みツールの内訳、MCPによる外部ツール・データソース接続という位置づけ、CLI/Agent SDK/Client SDK/Managed Agentsの使い分けと「Agent harness design」ブログ案内の根拠
 - [解説動画「話題の『WebMCP』を解説！」](../sources/video-he-webmcp-cloudflare-guide.md) — WebMCPをAI専用の窓口とする説明、従来のブラウザ操作の課題、Cloudflareでの導入手順、運営者側のアクセス把握、人間の最終承認フロー、スキルのMCP化と社内共有の応用（いずれもauto字幕。効果の数値は出典未確認として扱う）
 - [PIVOT体験企画動画「4時間でAIエージェントを構築」](../sources/video-he-claude-code-4hour-agent.md) — ファイル操作能力が効く理由、MCPによるGoogleカレンダー連携の実演、チャット型AIとの環境差、スキル＝AIへの業務マニュアルという説明、「AIに任せすぎない」という切り分けの指摘（いずれもauto字幕）
+- [keitoaiweb動画「5つのエンジニアリング徹底解説」](../sources/video-pe-five-engineering-stages.md) — ハーネスの4要素のうち「道具（何を実行し何と接続するか）」という整理の根拠（auto字幕）

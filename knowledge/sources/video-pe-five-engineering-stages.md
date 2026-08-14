@@ -101,6 +101,7 @@ generated:
 - [../prompt-engineering/loop-engineering.md](../prompt-engineering/loop-engineering.md) — AIは自分の生成物への採点が甘くなるため別のAIに検証させると精度が向上するという指摘、ループのコストと時間に関する注意点の根拠
 - [../context-engineering/five-engineering-scopes.md](../context-engineering/five-engineering-scopes.md) — 5つのエンジニアリングは目的が共通でスコープだけが違うという整理、各スコープと人間の仕事への例え、入れ子構造という結論、症状別の使い分け目安の根拠
 - [../harness-engineering/what-is-harness-engineering.md](../harness-engineering/what-is-harness-engineering.md) — ハーネスの4要素（道具・制限・権限・ルール）、馬具という語源の比喩、5段階のスコープ差と「手作業の事故が怖いならハーネス」という症状別の使い分け目安の根拠
+- [../harness-engineering/tools-and-mcp.md](../harness-engineering/tools-and-mcp.md) — ハーネスの4要素のうち「道具（何を実行し何と接続するか）」という整理の根拠（auto字幕）
 - [../harness-engineering/permissions-design.md](../harness-engineering/permissions-design.md) — 「手作業の事故が怖い」ならハーネスを見直すという症状別の使い分け目安、権限（フルオートか承認フローを挟むか）を4要素の1つとする整理の根拠（auto字幕）
 - [../harness-engineering/sandbox-and-isolation.md](../harness-engineering/sandbox-and-isolation.md) — ハーネスの4要素のうち「制限（触れてはいけない領域）」という整理の根拠（auto字幕）
 - [../harness-engineering/project-memory-and-rules.md](../harness-engineering/project-memory-and-rules.md) — ハーネスの4要素のうち「ルール（毎回読み込むべきコンテキスト）」という整理、CLAUDE.md・メモリの自動読み込みを実例として挙げていることの根拠（auto字幕）

@@ -58,5 +58,5 @@ generated:
 
 # 活用先
 
-- [../harness-engineering/why-harness-matters.md](../harness-engineering/why-harness-matters.md) — 「コンテキスト汚染」、300行以下・150〜200指示という目安、コンテキストウィンドウをワーキングメモリになぞらえる説明の根拠
-- [../harness-engineering/project-memory-and-rules.md](../harness-engineering/project-memory-and-rules.md) — コンテキスト汚染と3つの失敗パターン、300行以下・150〜200指示という目安の引用、`/init`生成を避けるべき理由、コードスタイルはLint/Formatter/hooksで機械強制すべきという主張、有効に機能する3要素（一行説明・頻出コマンド・トリガー＋アクションの罠）と良し悪しの対比例、段階的開示の引用、先頭末尾の重み付けとIMPORTANTによる強調、短期記憶と長期記憶の対比・継続メンテ、モノレポの親子探索と`claude.local.md`/`~/.claude`の使い分けの根拠
+- [../harness-engineering/why-harness-matters.md](../harness-engineering/why-harness-matters.md) — 「コンテキスト汚染」の根拠
+- [../harness-engineering/project-memory-and-rules.md](../harness-engineering/project-memory-and-rules.md) — コンテキスト汚染と3つの失敗パターン、300行以下・150〜200指示という目安の引用、コンテキストウィンドウをワーキングメモリになぞらえる比喩、`/init`生成を避けるべき理由、コードスタイルはLint/Formatter/hooksで機械強制すべきという主張、有効に機能する3要素（一行説明・頻出コマンド・トリガー＋アクションの罠）と良し悪しの対比例、段階的開示の引用、先頭末尾の重み付けとIMPORTANTによる強調、短期記憶と長期記憶の対比・継続メンテ、モノレポの親子探索と`claude.local.md`/`~/.claude`の使い分けの根拠

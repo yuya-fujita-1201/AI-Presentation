@@ -1,5 +1,16 @@
 # 変更履歴
 
+## 2026-08-14（harness-engineeringバンドル 採点指摘の修正 improve_k run:08142218a0）
+
+- **Update**: 採点で未達だった指摘（findings-k.json 7件、from_run: 081422098f）をharness-engineering/配下・関連sourcesで修正
+  - `sandbox-and-isolation.md` / `project-memory-and-rules.md`: 「> 引用:」形式だが実際は「〜と筆者は説明している」という三人称要約だった4箇所（sandbox 53,75行目 / project-memory 51,86行目）を、地の文＋「（同記事の要約）」表記に変更。原文（Zenn記事）が再取得できないための代替対応
+  - `tools-and-mcp.md`: 冒頭に「4要素はkeitoaiweb動画による整理であり業界標準ではない」という出所文を追加し、frontmatter descriptionにも「keitoaiweb動画由来の整理」を明記。Citationsに同動画を追加し `video-pe-five-engineering-stages.md` の活用先とを双方向リンク化
+  - `why-harness-matters.md` / `article-he-claude-md-best-practices.md`（sources）: Citations・活用先が本文に登場しない「300行・150〜200指示・ワーキングメモリの比喩」を根拠として列挙していた問題を修正。whyファイル側は本文が扱う「コンテキスト汚染」のみに絞り、当該数値・比喩は本文に実在する `project-memory-and-rules.md` 側のCitations・活用先に明記して一本化
+  - `project-memory-and-rules.md`: 3層対比表（CLAUDE.md／Lint等／denyルール）の性質セル2行が前回改訂で「→ permissions-design.mdの対比表を参照」というプレースホルダのみになっていたため、参照先の実際の文言（確率的なお願い／機械的な禁止）を書き戻し、掘り下げリンクは残す形に修正
+  - `tools-and-mcp.md`: why-harness-matters.md 50-52行目と重複していたPIVOT動画由来の「クラウド型はローカルを読めない／環境差でできる仕事が変わる」の説明を、参照リンク付きの1〜2文に圧縮
+  - `tools-and-mcp.md`: 「道具をどこで動かすか」節の4選択肢（CLI/Agent SDK/Client SDK/Managed Agents）を詰め込んでいた一文を箇条書きに分割し、原典表記に合わせ「rest API」を「REST API」に修正
+- **Verify**: `tools/validate_okf.py knowledge` → errors: 0, warnings: 0
+
 ## 2026-08-14（harness-engineeringバンドル 採点指摘の修正 improve_k run:0814220412）
 
 - **Update**: 採点で未達だった指摘（findings-k.json 5件）をharness-engineering/配下で修正

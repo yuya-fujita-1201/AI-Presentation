@@ -48,7 +48,7 @@ CLAUDE.md運用のベストプラクティスを整理した[Zennの記事](../s
 
 では書くべきは何か。同記事の主張は明確である。
 
-> 引用: 「CLAUDE.mdにはコードスタイルではなく『プロジェクト固有の知識・罠・運用ルール』を書くべきだと筆者は主張している」
+筆者は、CLAUDE.mdにはコードスタイルではなく「プロジェクト固有の知識・罠・運用ルール」を書くべきだと主張している（同記事の要約）。
 
 インデントは2スペース、シングルクオートを使う、import順序はこう——といったフォーマット・スタイルの指示は、**Lint・Formatter・Git hooks（pre-commit / post_tool_useなど）で機械的に強制する方が確実**だと同記事は指摘する。
 
@@ -56,9 +56,9 @@ CLAUDE.md運用のベストプラクティスを整理した[Zennの記事](../s
 
 | 手段 | 性質 | 向いている内容 |
 |---|---|---|
-| **CLAUDE.md に書く** | → [権限の設計](./permissions-design.md)の対比表を参照 | プロジェクト固有の知識・罠・運用ルール |
+| **CLAUDE.md に書く** | 確率的なお願い（詳細は[権限の設計](./permissions-design.md)の対比表を参照） | プロジェクト固有の知識・罠・運用ルール |
 | **Lint / Formatter / hooks** | 機械的な強制。書式や構文の逸脱を自動で直す・止める | コードスタイル、フォーマット |
-| **deny ルール** | → [権限の設計](./permissions-design.md)の対比表を参照 | 絶対に起きてはいけない操作 |
+| **deny ルール** | 機械的な禁止（詳細は[権限の設計](./permissions-design.md)の対比表を参照） | 絶対に起きてはいけない操作 |
 
 CLAUDE.mdに書くべきなのは、**機械が判定できない、しかしこのプロジェクトを知らないと踏む地雷**である。
 
@@ -83,7 +83,7 @@ CLAUDE.mdに書くべきなのは、**機械が判定できない、しかしこ
 
 CLAUDE.mdにすべてを書ききる必要はない、と同記事は述べる。
 
-> 引用: 「詳細情報は別ファイルに分離し、CLAUDE.mdには場所だけ案内する『段階的開示』の設計が推奨されると筆者は述べている」
+筆者は、詳細情報は別ファイルに分離し、CLAUDE.mdには場所だけ案内する「段階的開示」の設計が推奨されると述べている（同記事の要約）。
 
 DBスキーマは `docs/schema.md`、APIドキュメントは `docs/api.md`、複雑なドメインルールは `docs/domain-rules.md` のように詳細を別ファイルへ分け、CLAUDE.mdにはその場所と概要だけを書いてタスクに応じて追加のファイルを開かせる——これが progressive disclosure（段階的開示）である。
 
@@ -125,7 +125,7 @@ CLAUDE.mdを書くという行為は、単なる指示書の作成ではない�
 
 # Citations
 
-- [Zenn「【Claude Code】CLAUDE.md運用のベストプラクティス」](../sources/article-he-claude-md-best-practices.md) — コンテキスト汚染と3つの失敗パターン、300行以下・150〜200指示という目安の引用、`/init` 生成を避けるべき理由、コードスタイルはLint/Formatter/hooksで機械強制すべきという主張、有効に機能する3要素（一行説明・頻出コマンド・トリガー＋アクションの罠）と良し悪しの対比例、段階的開示の引用、先頭末尾の重み付けとIMPORTANTによる強調、短期記憶と長期記憶の対比・継続メンテ、モノレポの親子探索と `claude.local.md` / `~/.claude` の使い分けの根拠（Zennの個人記事であり一次文書ではない）
+- [Zenn「【Claude Code】CLAUDE.md運用のベストプラクティス」](../sources/article-he-claude-md-best-practices.md) — コンテキスト汚染と3つの失敗パターン、300行以下・150〜200指示という目安の引用、コンテキストウィンドウをワーキングメモリになぞらえる比喩、`/init` 生成を避けるべき理由、コードスタイルはLint/Formatter/hooksで機械強制すべきという主張、有効に機能する3要素（一行説明・頻出コマンド・トリガー＋アクションの罠）と良し悪しの対比例、段階的開示の引用、先頭末尾の重み付けとIMPORTANTによる強調、短期記憶と長期記憶の対比・継続メンテ、モノレポの親子探索と `claude.local.md` / `~/.claude` の使い分けの根拠（Zennの個人記事であり一次文書ではない）
 - [arXiv「AI Harness Engineering」](../sources/article-he-harness-engineering-paper.md) — ハーネス定義に project memory が含まれること（定義の引用）、人間が社会化・ドキュメント・経験で得た支援はモデルの呼び出しに自由には利用可能でなく明示的に公開・構造化・トレースされる必要があるという指摘、そうでなければ即興か人間依存になるという主張、監査可能な行動への変換という位置づけの根拠
 - [Anthropic公式「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md) — 「Skills, commands, and memory」がプロジェクトの `.claude/` とホームディレクトリの `~/.claude/` から自動的に読み込まれることの根拠
 - [keitoaiweb動画「5つのエンジニアリング徹底解説」](../sources/video-pe-five-engineering-stages.md) — ハーネスの4要素のうち「ルール（毎回読み込むべきコンテキスト）」という整理、CLAUDE.md・メモリの自動読み込みを実例として挙げていることの根拠（auto字幕）

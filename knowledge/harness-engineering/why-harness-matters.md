@@ -67,4 +67,4 @@ generated:
 
 - [arXiv論文「AI Harness Engineering: A Runtime Substrate for Foundation-Model Software Agents」](../sources/article-he-harness-engineering-paper.md) — 能力ギャップの症状一覧、モデル能力不足説への反論、人間が提供しているランタイム支援の内訳、暗黙的・アクセス不能・不安定という指摘、問いの立て直しの根拠
 - [PIVOT動画「4時間でMC野嶋専用のAIエージェントを構築」](../sources/video-he-claude-code-4hour-agent.md) — チャット型AIとエージェントの違い、ファイルを直接読めるかどうかという環境差の根拠（auto字幕）
-- [Zenn「CLAUDE.md運用のベストプラクティス」](../sources/article-he-claude-md-best-practices.md) — コンテキスト汚染、300行/150〜200指示という目安、ワーキングメモリの比喩の根拠
+- [Zenn「CLAUDE.md運用のベストプラクティス」](../sources/article-he-claude-md-best-practices.md) — コンテキスト汚染の根拠。300行/150〜200指示という目安とワーキングメモリの比喩は[project-memory-and-rules.md](./project-memory-and-rules.md)で扱う
