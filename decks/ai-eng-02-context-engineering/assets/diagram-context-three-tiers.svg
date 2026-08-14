@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B44A32"/>
+    </marker>
+    <marker id="arrT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#247F7A"/>
+    </marker>
+    <marker id="arrG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B98A2F"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- ① 都度渡す -->
+  <rect x="40" y="64" width="440" height="150" rx="22" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/>
+  <text x="260" y="110" text-anchor="middle" class="h" font-size="24" fill="#B44A32">①都度渡す</text>
+  <text x="260" y="150" text-anchor="middle" class="h" font-size="26">プロンプト</text>
+  <text x="260" y="184" text-anchor="middle" class="m" font-size="18">毎回あなたが書く。書かなければ読まれない</text>
+
+  <!-- ② 条件付きで発動 -->
+  <rect x="40" y="256" width="440" height="176" rx="22" fill="#F6EAD9" stroke="#B98A2F" stroke-width="4" stroke-dasharray="12 8"/>
+  <text x="260" y="302" text-anchor="middle" class="h" font-size="24" fill="#B98A2F">②条件付きで発動</text>
+  <text x="260" y="342" text-anchor="middle" class="h" font-size="26">スキル（Skills）</text>
+  <text x="260" y="376" text-anchor="middle" class="m" font-size="18">指示した時・条件に合う作業の時だけ読む</text>
+  <text x="260" y="404" text-anchor="middle" class="m" font-size="16">検索・ツールでの取得も同じ仲間</text>
+
+  <!-- ③ 必ず読む -->
+  <rect x="40" y="474" width="440" height="150" rx="22" fill="#DDEFEA" stroke="#247F7A" stroke-width="4"/>
+  <text x="260" y="520" text-anchor="middle" class="h" font-size="24" fill="#247F7A">③必ず読む</text>
+  <text x="260" y="560" text-anchor="middle" class="h" font-size="26">ルールファイル・メモリ</text>
+  <text x="260" y="594" text-anchor="middle" class="m" font-size="17">CLAUDE.md 等。指示しなくても毎回自動で入る</text>
+
+  <!-- 右: AI -->
+  <rect x="728" y="262" width="232" height="140" rx="26" fill="#FFFFFF" stroke="#7C3527" stroke-width="6"/>
+  <text x="844" y="348" text-anchor="middle" class="h" font-size="44" fill="#7C3527">AI</text>
+  <text x="844" y="440" text-anchor="middle" class="m" font-size="18">3段階を束ねて判断する</text>
+
+  <!-- 矢印 -->
+  <line x1="486" y1="139" x2="718" y2="298" stroke="#B44A32" stroke-width="5" marker-end="url(#arrR)"/>
+  <line x1="486" y1="344" x2="718" y2="336" stroke="#B98A2F" stroke-width="5" stroke-dasharray="4 7" marker-end="url(#arrG)"/>
+  <line x1="486" y1="549" x2="718" y2="376" stroke="#247F7A" stroke-width="5" marker-end="url(#arrT)"/>
+
+  <!-- 下部メッセージ -->
+  <rect x="72" y="648" width="880" height="88" rx="24" fill="#7C3527"/>
+  <text x="512" y="686" text-anchor="middle" class="h w" font-size="26" fill="#FFFFFF">前提情報は「①都度・②条件付き・③必ず」の3段階</text>
+  <text x="512" y="722" text-anchor="middle" font-size="21" fill="#F6C9B8">話題のスキルも、AIが参照しにいく前提情報の1つ（②）</text>
+</svg>
