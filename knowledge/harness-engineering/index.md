@@ -11,9 +11,9 @@ AIエージェントが動く「環境そのもの」を設計対象にする考
 - [harness-responsibilities-and-ladder.md](./harness-responsibilities-and-ladder.md) — ハーネスの11責務とH0〜H3ラダー。「成果物ではなく証拠を評価する」トレースベース評価と、Agent SDKの機能との対応
 - [tools-and-mcp.md](./tools-and-mcp.md) — 道具の設計。組み込みツール／MCP／WebMCP／スキルの4層と、道具を増やすことが事故の面積を増やすという緊張
 - [permissions-design.md](./permissions-design.md) — 権限の設計。deny→ask→allowの評価順序と、「守らせるのはAIではなくソフトウェア」という原則
-- [settings-scopes-and-governance.md](./settings-scopes-and-governance.md) — 設定の4スコープ（Managed/User/Project/Local）と優先順位。「どの層に何を書くか」を統制設計として読む
-- [sandbox-and-isolation.md](./sandbox-and-isolation.md) — 制限の最終防壁。OSネイティブ／コンテナ／microVMの3分類と、権限設計との役割分担、最小権限の原則
-- [project-memory-and-rules.md](./project-memory-and-rules.md) — ルールの設計。CLAUDE.mdを長期記憶として捉え、コンテキスト汚染を避ける段階的開示と継続メンテ
+- [settings-scopes-and-governance.md](./settings-scopes-and-governance.md) — 設定の4スコープ、単一値の優先順位、配列・Permission・security keyの個別合成規則。「どの層に何を書くか」を統制設計として読む
+- [sandbox-and-isolation.md](./sandbox-and-isolation.md) — 制限の最終防壁。OS／process sandbox・通常OCIコンテナ・gVisor等のsandboxed runtime・VM／microVMの境界と、権限設計との役割分担、最小権限の原則
+- [project-memory-and-rules.md](./project-memory-and-rules.md) — CLAUDE.md／Rules／Skills／Hooksの内容と読込・制御機構を分け、AGENTS.md互換、段階的開示、継続メンテを整理
 
 ## 読む順番
 

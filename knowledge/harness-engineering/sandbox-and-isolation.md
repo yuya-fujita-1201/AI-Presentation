@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: サンドボックスと隔離——「実行させない」の次にある「届かせない」
-description: 権限設定だけでは防ぎきれないプロンプトインジェクションや設定の突破に備える最終防壁として、OSネイティブ・コンテナ・microVMという3段階のサンドボックスを整理し、権限設計との役割分担と最小権限の原則を示す
+description: 権限設定だけでは防ぎきれないプロンプトインジェクションや設定の突破に備える最終防壁として、OS／process sandbox・通常OCIコンテナ・gVisor等のsandboxed runtime・VM／microVMを分け、権限設計との役割分担と最小権限の原則を示す
 tags: [harness-engineering, sandbox, security, claude-code, isolation]
 generated:
   by: claude-code/pipeline-opus
@@ -32,23 +32,28 @@ generated:
 
 **攻撃の成否を問わない**のがポイントである。権限設計が「危険な操作を試みさせない」ための仕組みだとすれば、サンドボックスは「試みられても目的地に到達させない」ための仕組みである。
 
-## 分離レベルによる3分類
+## 実装境界による4分類
 
-筆者は、サンドボックスを分離のレベルで大きく3つに分類している。
+[サンドボックス技術の解説記事](../sources/article-he-sandbox-technology.md)は、OSネイティブ・コンテナ・microVMという3分類を提示し、gVisorをコンテナの例として紹介している。配布・運用の互換性という意味ではgVisorの`runsc`はOCI runtimeだが、分離の仕組みまで通常のnamespace／cgroups型コンテナと同一にすると誤解が生じる。[gVisor公式文書](../sources/docs-he-gvisor-overview.md)は、userspace application kernelがsystem callを仲介する方式を、通常のLinux隔離機構の単純なwrapperとも一般的なVMとも異なるものとして説明する。
+
+そこで本バンドルでは、実装境界を次の4つに分ける。これは排他的な強度順位ではなく、実際の構成では複数層を重ねる。
 
 | 分類 | 仕組み | 具体例 | 弱点 |
 |---|---|---|---|
-| **OSネイティブ** | ホストOSのカーネル機能でプロセスのアクセス可能リソースを制限 | Seatbelt（macOS）、Landlock＋seccomp / bubblewrap（Linux） | ホストカーネルを共有。カーネル自体の脆弱性には対応できない |
-| **コンテナ** | Linuxのnamespaceとcgroupsでファイルシステム・ネットワーク・PID空間を隔離 | gVisor（claude.aiのWeb版のコード実行に採用） | ホストカーネル共有は同じ。エスケープ事例あり |
-| **microVM** | 軽量・高速起動の完全な仮想マシン。**独自のカーネルを持つ** | Apple Virtualization Framework、Docker Sandbox | （相対的に重い） |
+| **OS／process sandbox** | ホストOSの機構でプロセスのファイル・通信等を制限 | Seatbelt（macOS）、Landlock＋seccomp、bubblewrap（Linux） | 許可されたsystem callはホストカーネルで処理される |
+| **通常のOCIコンテナ** | namespaces・cgroups等でファイルシステム・ネットワーク・PID空間を隔離 | runc等 | 許可されたhost-kernel system call surfaceを直接利用する |
+| **Sandboxed OCI runtime** | userspace application kernelがsystem callを仲介 | gVisor／runsc | OCI互換だが、通常コンテナと同じ境界ではない |
+| **VM／microVM** | ゲストカーネルを持つ仮想マシン | Firecracker、Apple Virtualization Framework等 | 分離を強くしやすい一方、相対的に運用が重い |
 
 **1つ目のOSネイティブサンドボックス。** Appleが提供するカーネルレベルの機構Seatbeltは、SBPL（Sandbox Profile Language）というプロファイルでファイルアクセスやネットワーク通信を制御する。オーバーヘッドはほぼゼロで、**制限はプロセスとその子プロセスすべてに適用される**と筆者は説明する。Linuxでは、Landlock（カーネル5.13以降）がファイルシステムの境界を、seccompがネットワーク通信の境界を担う。またLinuxのnamespace機能を使ったツールbubblewrap（Flatpakのバックエンドとしても知られる）をClaude CodeがLinuxで採用しているという。
 
 ここで筆者が挙げる対比が示唆的である。bubblewrapはマウントポイントを明示的に指定する方式で、**指定されていないパスはそもそもファイルシステム上に存在しない**。Seatbeltがアクセスを拒否するのに対し、bubblewrapはそもそも見えない、という違いがある。`--unshare-net` でネットワーク名前空間も分離すれば外部通信を完全に遮断できるとしている。起動オーバーヘッドがほぼゼロなためローカル開発に適する一方、ホストカーネルを共有するためカーネル自体の脆弱性には対応できない。
 
-**2つ目のコンテナベースの隔離。** Googleが開発したユーザ空間カーネルgVisorは、コンテナ内のシステムコールをホストカーネルに直接渡さず「Sentry」プロセスが仲介する仕組みで、claude.aiのWebバージョンでのコード実行に採用されていると筆者は紹介する。ただしコンテナベースの隔離も**ホストカーネルを共有している点は同じ**であり、カーネルの脆弱性を突いてコンテナからホストへエスケープする事例が過去に複数報告されている。例としてCVE-2020-14386では、Linuxカーネルの `AF_PACKET` 処理のバグを突いてコンテナ内からホストのroot権限を奪取できたという。
+**2つ目の通常のOCIコンテナ。** namespacesとcgroups等で環境を分ける。許可されたsystem callはホストカーネルが直接処理するため、host kernel surfaceが信頼境界に残る。解説記事が例示するCVE-2020-14386は、この種類のコンテナでホストカーネル脆弱性が問題になり得ることを示す例である。
 
-**3つ目のmicroVM。** 従来のVMよりはるかに軽量で高速に起動する完全な仮想マシンである。前述のエスケープ脆弱性はいずれもホストカーネルを直接利用することが原因だが、**microVMは独自のカーネルを持つためゲストカーネルに同じバグがあってもホストには影響しない**と筆者は説明する。
+**3つ目のsandboxed OCI runtime。** Googleが開発したgVisorは、`runsc`としてOCI runtimeのインターフェースを提供しつつ、userspace application kernelがアプリケーションのsystem callを仲介する。したがって「OCIコンテナとして動かせる」ことと「通常コンテナと同じ分離方式」であることは分けて説明する。VMと同じゲストカーネル境界ではないが、host kernelへ直接公開するsystem call surfaceを減らす。
+
+**4つ目のVM／microVM。** 従来のVMより軽量・高速な実装を含む仮想マシンで、ゲストカーネルを持つ。解説記事は、通常コンテナのようにアプリケーションがhost kernelを直接利用する境界と比べ、ゲスト側のカーネルとホストを分けられる点を強みとして説明する。
 
 具体例として、AppleがmacOS向けに提供するネイティブの仮想化フレームワークをClaude Coworkが採用してVMをローカルに起動しその中でエージェントを動かしているという（Docker DesktopもmacOS上ではこの技術を使用している）。また2025年にDocker社がリリースしたエージェント専用のサンドボックス機能「Docker Sandbox」は内部的にmicroVMベースの隔離を提供し、通常のDockerコンテナより強い隔離が得られるとしている。サンドボックス内でさらにDockerコンテナを起動できる（Docker in Docker）点も強みで、独立したDocker Daemonが動く仕組みだという。
 
@@ -66,7 +71,7 @@ generated:
 
 **「うっかり許可」に耐えるか。** OSネイティブサンドボックスは高速でオーバーヘッドもほぼゼロだが設定に依存し、エージェントがコマンド実行を求めてきた際に**ユーザーが内容を十分に確認せず許可してしまえば**制限外のリソースにアクセスされる可能性が残る。一方コンテナやVMベースの隔離ではマウントされていないファイルはそもそもファイルシステム上に存在せず、エージェントがいくら頑張ろうがホスト側の `~/.ssh/` や `~/.aws/` には到達できない。**うっかり許可しても絶対に読めないという性質は、OSネイティブサンドボックスにはない強みだ**と筆者は述べている。承認疲れは現実に起きる以上、これは重要な観点である。
 
-**攻撃面の広さ。** コンテナはホストカーネルを共有しているため300以上あるLinuxのsyscallすべてが潜在的な攻撃面になるのに対し、VMではゲストからホストへの接点がハイパーバイザーのインターフェースに限定され攻撃面が狭くなる。カーネルのゼロデイなどへの対策が必要かどうかで選定するのがよいという。
+**攻撃面の広さ。** 通常のLinuxコンテナでは、許可されたsystem callをホストカーネルが直接処理する。一方gVisorはuserspace application kernelで仲介し、VMではゲストからホストへの接点がハイパーバイザーのインターフェースに限定される。名称だけで強度を決めず、実際にどの境界へ何が公開されるかを確認する。
 
 筆者自身は、日常のローカル開発ではOSネイティブサンドボックス（Claude Codeの/sandbox等）で十分だが、エージェントを自律的に長時間走らせる場合はmicroVMベースの隔離を使うと述べている（同記事の要約）。**目を離している時間の長さが分岐点**である。手元で対話しながら使う間は軽い隔離で足り、自律的に長く走らせるなら完全に分離してしまう——という判断だと筆者は説明している。
 
@@ -89,7 +94,7 @@ generated:
 
 - 権限設定はあくまで**アプリケーション層の制御**であり、設定の改変や実装のバグで突破されうる。その下に置く最終防壁がサンドボックス
 - サンドボックスは攻撃の成否を問わない。**プロンプトインジェクションが成功しても、読めない・つながらない**なら被害は出ない
-- 分類は3段階。**OSネイティブ**（Seatbelt / bubblewrap、軽いがホストカーネル共有）、**コンテナ**（gVisor等、エスケープ事例あり）、**microVM**（独自カーネルを持つ）
+- 実装境界は、**OS／process sandbox**、**通常のOCIコンテナ**、**gVisor等のsandboxed OCI runtime**、**VM／microVM**を分ける。単純な強度順位ではなく、複数層を重ねる
 - 選定軸は「**うっかり許可に耐えるか**」と「**攻撃面の広さ**」。日常のローカル開発はOSネイティブ、長時間の自律実行はmicroVM、というのが記事筆者の運用
 - 隔離はデフォルトで有効とは限らない。**有効にするもの**として扱う
 - 権限とサンドボックスは**強制主体が違う別の層**。bypassPermissionsを使うなら隔離が先
@@ -100,6 +105,7 @@ generated:
 # Citations
 
 - [松尾研究所・渡辺氏「コーディングエージェントのサンドボックス技術を理解する」](../sources/article-he-sandbox-technology.md) — サンドボックスが必要な理由（エージェントが機械的にファイルを読む・アプリケーション層の除外設定はツール側の制御であり突破されうる）、OWASP Top 10 for Agentic Applications 2026の該当項目、プロンプトインジェクションに対する有効性の引用、3分類の内訳と各実装（Seatbelt/SBPL・Landlock・seccomp・bubblewrap・gVisor・CVE-2020-14386・Apple Virtualization Framework・Docker Sandbox）、`/sandbox` の挙動とClaude Desktopとの比較、選定基準（うっかり許可・攻撃面）と筆者の運用、最小権限の原則の根拠（Zennの個人記事であり一次文書ではない）
+- [gVisor公式「What is gVisor?」](../sources/docs-he-gvisor-overview.md) — `runsc`がOCI runtimeであること、userspace application kernelがsystem callを仲介すること、通常のLinux隔離機構とも一般的なVMとも異なる境界を持つことの一次根拠
 - [AI Orchestra「Claude Codeの権限設定と管理者権限」](../sources/article-he-claude-code-permissions-admin.md) — bypassPermissionsモードを隔離環境以外では使わないのが原則であるという指摘、すなわち権限層の防御を外す前提としてサンドボックスが要求されることの根拠
 - [Anthropic公式「Configure permissions」](../sources/article-he-claude-code-permissions.md) — 権限ルールを強制するのはモデルではなくClaude Code自体であること、すなわち権限がアプリケーション層の制御であることの根拠
 - [keitoaiweb動画「5つのエンジニアリング徹底解説」](../sources/video-pe-five-engineering-stages.md) — ハーネスの4要素のうち「制限（触れてはいけない領域）」という整理の根拠（auto字幕）

@@ -1,7 +1,7 @@
 ---
 type: Article
 title: Claude Code settings - Claude Code Docs
-description: Claude Codeの設定を適用するManaged/User/Project/Localの4スコープと、その優先順位・想定用途を解説する公式文書
+description: Claude CodeのManaged/User/Project/Localの4スコープ、単一値の優先順位、配列の結合、Permissionと一部security keyの個別合成規則を解説する公式文書
 site: Anthropic
 published: unknown
 retrieved: 2026-08-14
@@ -44,8 +44,14 @@ Userスコープは`~/.claude/`ディレクトリに置かれ、そのユーザ�
 
 同一の設定が複数のスコープに現れた場合、Claude Codeは優先順位に従って適用すると同文書は述べている。優先順位は上から、(1) Managed(最高。managed settings precedenceの例外を除き他のいかなるスコープにも上書きされない)、(2) コマンドライン引数(一時的なセッション上の上書き)、(3) Local(ProjectとUserの設定を上書き)、(4) Project(User設定を上書き)、(5) User(最低。他に何も指定がない場合にのみ適用される)の順である。
 
-具体例として、ユーザー設定で`spinnerTipsEnabled`を`true`に、プロジェクト設定で`false`に設定した場合、プロジェクト側の値が適用されると説明されている。ただし権限ルールはこの優先順位とは異なりスコープを横断してマージされる方式を取り、一部のセキュリティ関連の設定キーはこの優先順位の例外になるとしている。
+具体例として、ユーザー設定で`spinnerTipsEnabled`を`true`に、プロジェクト設定で`false`に設定した場合、プロジェクト側の値が適用されると説明されている。このように上位値が一つ選ばれる説明は、主に単一値の設定に当てはまる。
+
+## 配列・Permission・security keyの合成
+
+現行文書は、配列型の設定をスコープ横断で原則として結合し、重複を除くと説明する。一方、`fallbackModel`やmanagedの`availableModels`など、keyごとの例外がある。したがって優先順位を「すべての設定が単純上書きされる規則」として一般化しない。
+
+権限ルールは単一値の優先順位とは異なり、スコープを横断してマージされる。一部のsecurity関連keyにも個別の合成規則やmanaged precedenceの例外がある。実装時は、対象keyの現行仕様を確認する必要がある。
 
 # 活用先
 
-- [../harness-engineering/settings-scopes-and-governance.md](../harness-engineering/settings-scopes-and-governance.md) — スコープシステムの採用理由、Managed/User/Project/Localの所在と共有範囲、Managedだけ配信経路が影響範囲を左右すること、優先順位の5段階と`spinnerTipsEnabled`の具体例、各スコープの想定用途、権限ルールがマージ方式でありセキュリティ関連キーが例外になること、Localがgitignoreされること、`/config`と`/config key=value`（v2.1.181以降）の根拠
+- [../harness-engineering/settings-scopes-and-governance.md](../harness-engineering/settings-scopes-and-governance.md) — スコープシステム、Managed/User/Project/Localの共有範囲、単一値の優先順位、配列の原則結合とkey別例外、Permissionのscope横断merge、security keyの個別規則、Localがgitignoreされること、`/config`の根拠

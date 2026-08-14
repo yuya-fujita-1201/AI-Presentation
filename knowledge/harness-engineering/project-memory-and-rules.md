@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: プロジェクトメモリとルールの設計——CLAUDE.mdを「長期記憶」として設計する
-description: ハーネスの4要素の最後「ルール」を、論文の言うプロジェクトメモリ責務として捉え直し、コンテキスト汚染を避ける分量の目安・トリガーとアクションで書く罠の共有・段階的開示・継続メンテという設計指針を整理する
+description: CLAUDE.md・Rules・Skills・Hooksを、モデルが読む内容と、発見・読込・適用範囲・実行制御を担う機構に分けたうえで、コンテキスト汚染を避ける段階的開示と継続メンテの設計指針を整理する
 tags: [harness-engineering, claude-md, project-memory, context-engineering, claude-code]
 generated:
   by: claude-code/pipeline-opus
@@ -13,6 +13,28 @@ generated:
 ハーネスの4要素——道具・制限・権限・ルール——のうち、[道具](./tools-and-mcp.md)・[権限](./permissions-design.md)・[制限](./sandbox-and-isolation.md)を見てきた。最後が**ルール**である。[keitoaiweb動画](../sources/video-pe-five-engineering-stages.md)はこれを「毎回読み込むべきコンテキスト」と説明し、Claude CodeにおけるCLAUDE.mdやメモリの自動読み込みを実例として挙げている（auto字幕からの聞き取り）。
 
 ここまでの3要素が「何ができるか／できないか」を決めるものだったのに対し、ルールは**「何を知った状態で作業を始めるか」**を決める。エージェントを新しくチームに入った人だと思えば、道具はアカウント発行、権限はアクセス権付与、制限は入室できない部屋の設定、そしてルールは**着任初日に渡す引き継ぎ資料**にあたる。
+
+## ファイル単位ではなく、内容と機構を分ける
+
+`CLAUDE.md`やRulesを「コンテキストか、ハーネスか」のどちらか一方へファイル単位で分類すると、境界を説明できない。[Claude Code公式のMemory文書](../sources/docs-he-claude-code-memory.md)は、`CLAUDE.md`とauto memoryをClaudeが読むコンテキストとして扱う一方、技術的に強制したい制約はsettingsや`PreToolUse` Hook等へ置くよう区別している。
+
+本バンドルでは、次の一文を用語契約にする。
+
+> **モデルが読む内容はコンテキスト。その内容を発見・読込し、適用範囲を決め、行動・保存・検証を仲介する仕組みがハーネス。**
+
+| 資産・機能 | コンテキストとしての側面 | ハーネスとしての側面 |
+|---|---|---|
+| `CLAUDE.md`／Rules | 記載された規約・前提・正本の場所 | `CLAUDE.md`の自動発見・階層ロード、Rulesの`paths`条件による適用 |
+| Skill | descriptionと、呼出後にモデルが読む本文 | 発見、関連判定、呼出、許可／禁止ツール |
+| Hook | `additionalContext`や書き換え後にモデルへ返した内容 | eventでの外部コード実行、記録、判定、tool入出力の変更 |
+| settings／Sandbox | 文章を注入する設定があれば、その文章 | 権限、ツール動作、ファイル・通信の機械的な境界 |
+| 進捗・テスト結果 | 読み戻した現在地や失敗理由 | セッション間の保存、再開、実行、記録、合否判定 |
+
+同じ資産が両方の側面を持つことは矛盾ではない。Hook本体はハーネスだが、Hookが`additionalContext`を返せば、その返却内容はコンテキストになる。[Skills公式文書](../sources/docs-he-claude-code-skills.md)と[Hooks公式文書](../sources/docs-he-claude-code-hooks.md)も、内容のライフサイクルと呼出・制御機構を分けて説明している。
+
+### AGENTS.mdは製品ごとに読込方法が異なる
+
+OpenAI／Codexの事例で使われる`AGENTS.md`と、Claude Codeの`CLAUDE.md`を同じ「入口ファイル」の例として比較することはできる。ただしClaude Codeは`AGENTS.md`を直接の自動読込対象にしない。既存の`AGENTS.md`を共有したい場合は、`CLAUDE.md`から`@AGENTS.md`でimportするか、symlinkを使う。ファイル名だけで自動読込を一般化せず、利用製品の発見・読込仕様を確認する。
 
 ## 論文における位置づけ——プロジェクトメモリという責務
 
@@ -101,7 +123,7 @@ DBスキーマは `docs/schema.md`、APIドキュメントは `docs/api.md`、�
 
 ### 置き場所の使い分け
 
-配置についても同記事は具体的である。Claude Codeがプロジェクトルートだけでなく**親・サブディレクトリのCLAUDE.mdも自動で探索する**特性を利用し、モノレポではリポジトリルートに全体共通のルール、各パッケージ配下にそのサービス固有のルール・罠を配置する構成が紹介されている。また個人用の設定はリポジトリにコミットせず `claude.local.md` に書いて `.gitignore` に入れるか、ホームディレクトリの `~/.claude` に書いて全セッションに適用する運用も挙げられている。
+配置についても同記事は具体的である。Claude Codeがプロジェクトルートだけでなく**親・サブディレクトリのCLAUDE.mdも探索する**特性を利用し、モノレポではリポジトリルートに全体共通のルール、各パッケージ配下にそのサービス固有のルール・罠を配置する構成が紹介されている。また個人用の設定はリポジトリにコミットせず `CLAUDE.local.md` に書いて `.gitignore` に入れるか、ホームディレクトリの `~/.claude` に書いて全セッションに適用する運用も挙げられている。実装時は[現行公式文書](../sources/docs-he-claude-code-memory.md)でロード順と適用範囲を確認する。
 
 この「チーム共有か個人用か」「このリポジトリか全体か」という切り分けは、[設定の4スコープ](./settings-scopes-and-governance.md)で見た構造とまったく同じである。**ルールも設定も、同じ2軸で配置を考える**と覚えておけばよい。
 
@@ -114,6 +136,8 @@ CLAUDE.mdを書くという行為は、単なる指示書の作成ではない�
 ## まとめ
 
 - ルール＝毎回読み込ませる前提知識。論文の11責務では**プロジェクトメモリ**にあたり、実装としては `.claude/` と `~/.claude/` から自動読み込みされる
+- `CLAUDE.md`／Rulesの**本文はコンテキスト**、`CLAUDE.md`の自動発見・階層ロードとRulesの条件ロードは**ハーネス**。Skill本文と呼出機構、Hook本体と`additionalContext`も同じ二面性を持つ
+- Claude Codeは`AGENTS.md`を直接自動読込しない。`CLAUDE.md`からのimportまたはsymlinkで連携する
 - 人間が社会化・経験で得る知識は**モデルの呼び出しには自由に利用可能ではない**。明示的に公開・構造化しなければ、エージェントは即興するか人間に頼る
 - 最大の落とし穴は**コンテキスト汚染**。増やすほど守られない指示が増える。記事筆者の目安は300行以下・150〜200指示
 - **コードスタイルは書かない。** 機械で強制できるものはLint・hooksへ、絶対禁止はdenyルールへ。CLAUDE.mdは「機械が判定できないプロジェクト固有の知識・罠」のための場所
@@ -125,7 +149,10 @@ CLAUDE.mdを書くという行為は、単なる指示書の作成ではない�
 
 # Citations
 
-- [Zenn「【Claude Code】CLAUDE.md運用のベストプラクティス」](../sources/article-he-claude-md-best-practices.md) — コンテキスト汚染と3つの失敗パターン、300行以下・150〜200指示という目安の引用、コンテキストウィンドウをワーキングメモリになぞらえる比喩、`/init` 生成を避けるべき理由、コードスタイルはLint/Formatter/hooksで機械強制すべきという主張、有効に機能する3要素（一行説明・頻出コマンド・トリガー＋アクションの罠）と良し悪しの対比例、段階的開示の引用、先頭末尾の重み付けとIMPORTANTによる強調、短期記憶と長期記憶の対比・継続メンテ、モノレポの親子探索と `claude.local.md` / `~/.claude` の使い分けの根拠（Zennの個人記事であり一次文書ではない）
+- [Zenn「【Claude Code】CLAUDE.md運用のベストプラクティス」](../sources/article-he-claude-md-best-practices.md) — コンテキスト汚染と3つの失敗パターン、300行以下・150〜200指示という目安の引用、コンテキストウィンドウをワーキングメモリになぞらえる比喩、`/init` 生成を避けるべき理由、コードスタイルはLint/Formatter/hooksで機械強制すべきという主張、有効に機能する3要素（一行説明・頻出コマンド・トリガー＋アクションの罠）と良し悪しの対比例、段階的開示の引用、先頭末尾の重み付けとIMPORTANTによる強調、短期記憶と長期記憶の対比・継続メンテ、モノレポの親子探索と `CLAUDE.local.md` / `~/.claude` の使い分けの根拠（Zennの個人記事であり一次文書ではない）
 - [arXiv「AI Harness Engineering」](../sources/article-he-harness-engineering-paper.md) — ハーネス定義に project memory が含まれること（定義の引用）、人間が社会化・ドキュメント・経験で得た支援はモデルの呼び出しに自由には利用可能でなく明示的に公開・構造化・トレースされる必要があるという指摘、そうでなければ即興か人間依存になるという主張、監査可能な行動への変換という位置づけの根拠
 - [Anthropic公式「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md) — 「Skills, commands, and memory」がプロジェクトの `.claude/` とホームディレクトリの `~/.claude/` から自動的に読み込まれることの根拠
+- [Anthropic公式「How Claude remembers your project」](../sources/docs-he-claude-code-memory.md) — CLAUDE.md／Rulesの本文と読込機構、AGENTS.mdのimport／symlink、文章による案内とsettings／Hooksによる強制の境界の一次根拠
+- [Anthropic公式「Extend Claude with skills」](../sources/docs-he-claude-code-skills.md) — Skill本文のロードと、発見・関連判定・呼出・allowed／disallowed toolsの一次根拠
+- [Anthropic公式「Automate workflows with hooks」](../sources/docs-he-claude-code-hooks.md) — Hookのevent別役割、decision control、additionalContextの一次根拠
 - [keitoaiweb動画「5つのエンジニアリング徹底解説」](../sources/video-pe-five-engineering-stages.md) — ハーネスの4要素のうち「ルール（毎回読み込むべきコンテキスト）」という整理、CLAUDE.md・メモリの自動読み込みを実例として挙げていることの根拠（auto字幕）

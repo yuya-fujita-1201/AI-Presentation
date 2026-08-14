@@ -1,7 +1,7 @@
 ---
 type: Concept
 title: 設定の4スコープと統制設計——どこに書けば誰に効くのか
-description: Claude CodeのManaged/User/Project/Localという4つの設定スコープと優先順位を整理し、権限ルールだけが別の合成規則に従うことを押さえたうえで、「どの層に何を書くか」を組織の統制設計として読み替える
+description: Claude CodeのManaged/User/Project/Localという4つの設定スコープ、単一値の優先順位、配列・Permission・security keyの個別合成規則を整理し、「どの層に何を書くか」を組織の統制設計として読み替える
 tags: [harness-engineering, claude-code, settings, governance, permissions]
 generated:
   by: claude-code/pipeline-opus
@@ -49,9 +49,11 @@ generated:
 
 注目すべきは**LocalがProjectより強い**ことである。直感に反するかもしれないが、これは「チームの共通設定を、自分のマシン事情に合わせて一時的に外せる」ための設計だと読める。裏を返せば、**Project層に書いた設定はチームメンバーが個人設定で上書きできる**ということでもある。「チームで決めたからProjectに書いた」だけでは、統制としては弱い。
 
-## 例外——権限ルールだけは別のルールで合成される
+## 合成の例外——配列・Permission・security keyを分ける
 
-ここが本ファイルで最も重要な注意点である。公式文書は、上記の優先順位に続けて次の但し書きを置いている。**権限ルールはこの優先順位とは異なり、スコープを横断してマージされる方式を取る**、そして一部のセキュリティ関連の設定キーはこの優先順位の例外になる、と。
+ここが本ファイルで最も重要な注意点である。前節の優先順位は、主に単一値の設定で上位値を選ぶ原則であり、すべてのkeyを単純上書きする規則ではない。公式文書は、配列型の設定を原則としてスコープ横断で結合し重複を除くと説明する一方、`fallbackModel`やmanagedの`availableModels`等にはkey別の例外を設けている。
+
+さらに、**権限ルールはスコープを横断してマージされる方式を取り**、一部のsecurity関連keyはmanaged precedenceを含む個別の合成規則を持つ。
 
 AI Orchestraはこれをより具体的に述べている。同社によれば、permissionsのルールに限っては**denyルールはどの層に書かれていても常に有効**であり、ユーザー設定のdenyをプロジェクト設定のallowで上書きするといったことはできない。
 
@@ -59,8 +61,10 @@ AI Orchestraはこれをより具体的に述べている。同社によれば�
 
 | 対象 | 合成のされ方 |
 |---|---|
-| 一般の設定キー（表示・挙動など） | 優先順位で**勝者が1つ決まる**。上位が下位を上書きする |
+| 単一値の設定キー | 優先順位で**勝者が1つ決まる**。上位が下位を上書きする |
+| 配列型の設定キー | 原則としてスコープ横断で結合・重複除去。ただしkey別の例外あり |
 | 権限ルール | スコープを横断して**マージされる**。denyはどの層にあっても効き続ける |
+| 一部のsecurity key | managed precedence等の個別規則を持つ。対象keyの現行仕様を確認する |
 
 [前のファイル](./permissions-design.md)で見た「denyはallowlist的な例外を持てない」という性質は、**層をまたいでも成立する**わけである。上位層のdenyを下位層のallowで穴埋めすることはできないし、下位層のdenyもまた消えない。禁止は積み上がる一方だと理解しておけばよい。
 
@@ -93,9 +97,9 @@ AI Orchestraは、法人導入では**「どの層に何を書くか」の設計
 ## まとめ
 
 - 設定スコープは**Managed・User・Project・Local**の4種。「どのプロジェクトに効くか」×「誰に効くか」の2軸で整理できる。ただしManagedだけは配信方式が影響範囲を決める
-- 優先順位は **Managed > コマンドライン引数 > Local > Project > User**。Anthropic公式とAI Orchestraが同じ順序を述べている
+- 単一値の優先順位は **Managed > コマンドライン引数 > Local > Project > User**。CLIはスコープではなく、そのセッションでの一時的な上書き
 - **LocalはProjectより強い。** チームで決めた設定は個人設定で上書きされうる。統制として効かせたいならManaged層へ
-- **権限ルールだけは優先順位ではなくマージで合成され、denyはどの層にあっても常に有効。** 禁止は層をまたいで積み上がる
+- 配列は原則として結合・重複除去されるがkey別例外がある。**権限ルールはマージされ、denyはどの層にあっても常に有効。** 一部のsecurity keyにも個別規則がある
 - 「どの層に何を書くか」＝統制設計。外しにくさと、外すべきでなさの度合いを揃える
 - 承認で育てた許可リストはLocal層に溜まりgitignoreされる。チームに配りたい許可はProject層に明示的に書く
 
@@ -103,6 +107,6 @@ AI Orchestraは、法人導入では**「どの層に何を書くか」の設計
 
 # Citations
 
-- [Anthropic公式「Claude Code settings」](../sources/article-he-claude-code-settings.md) — スコープシステムの採用理由、4スコープの所在と共有範囲、Managedの複数配信経路と影響範囲の違い、優先順位の5段階と `spinnerTipsEnabled` の具体例、各スコープの想定用途、権限ルールがマージ方式である旨とセキュリティ関連キーの例外、Localがgitignoreされること、`/config` と `/config key=value`（v2.1.181以降）の根拠
+- [Anthropic公式「Claude Code settings」](../sources/article-he-claude-code-settings.md) — 4スコープの所在と共有範囲、単一値の優先順位、配列の原則結合とkey別例外、Permissionのscope横断merge、一部security keyの個別規則、Localがgitignoreされること、`/config`の根拠
 - [AI Orchestra「Claude Codeの権限設定と管理者権限」](../sources/article-he-claude-code-permissions-admin.md) — 「どの層に何を書くか」がそのまま統制設計になるという位置づけ、優先順位（managed→コマンドライン→local→project→user）、denyルールはどの層でも常に有効でallowで上書きできないこと、`.claude/settings.json` と `~/.claude/settings.json` の適用範囲、日本語依頼で設定ファイルを書かせる運用の根拠（同社は法人導入支援事業者であり一次文書ではない）
 - [Anthropic公式「Configure permissions」](../sources/article-he-claude-code-permissions.md) — 権限設定をバージョン管理にチェックインして共有できること、「Yes, don't ask again」の保存先が `.claude/settings.local.json` であることの根拠

@@ -91,8 +91,12 @@
 
 - [article-he-claude-code-permissions.md](./article-he-claude-code-permissions.md) — Anthropic公式「Configure permissions」。ツール種別ごとの承認要否、deny→ask→allowの評価順序、ツール名指定denyによる完全除去とスコープ指定denyの違い、Ctrl+Eの説明表示機能を解説
 - [article-he-claude-code-permissions-admin.md](./article-he-claude-code-permissions-admin.md) — AI Orchestra。法人導入支援の視点からdeny/ask/allow評価順序とCLAUDE.md記述との違い、sudoとbypassPermissionsモードの2論点、確認プロンプトを減らす4方法、managed settingsを含む設定ファイル4層を解説
-- [article-he-claude-code-settings.md](./article-he-claude-code-settings.md) — Anthropic公式「Claude Code settings」。設定を適用するManaged/User/Project/Localの4スコープと優先順位、各スコープの想定用途を解説
+- [article-he-claude-code-settings.md](./article-he-claude-code-settings.md) — Anthropic公式「Claude Code settings」。4スコープ、単一値の優先順位、配列・Permission・security keyの合成規則を解説
 - [article-he-agent-sdk-overview.md](./article-he-agent-sdk-overview.md) — Anthropic公式「Agent SDK overview」。エージェントの定義、Agent SDK/CLI/Client SDK/Managed Agentsの使い分け、Built-in tools・Hooks・Subagents・MCP等の提供機能を解説
+- [docs-he-claude-code-memory.md](./docs-he-claude-code-memory.md) — Anthropic公式。CLAUDE.md／Rulesの本文と読込機構、AGENTS.md互換、文章による案内と機械的強制の境界
+- [docs-he-claude-code-skills.md](./docs-he-claude-code-skills.md) — Anthropic公式。Skillsの発見・関連判定・呼出時ロードとallowed-tools／disallowed-tools
+- [docs-he-claude-code-hooks.md](./docs-he-claude-code-hooks.md) — Anthropic公式。Hooksのdecision control、additionalContext、記録・判定・入出力変更の役割差
+- [docs-he-gvisor-overview.md](./docs-he-gvisor-overview.md) — gVisor公式。userspace application kernel、OCI runtime runsc、通常コンテナ／VMとの違い
 - [article-he-harness-engineering-paper.md](./article-he-harness-engineering-paper.md) — arXiv「AI Harness Engineering」。SWE能力をモデル・ハーネス・環境から成るシステムの創発的性質として捉え直し、11の責務とH0〜H3ラダー、トレースベース評価プロトコルを提案
 - [article-he-claude-md-best-practices.md](./article-he-claude-md-best-practices.md) — Zenn。CLAUDE.mdの「コンテキスト汚染」を避ける設計指針。300行以内・150〜200指示の目安、プロジェクト概要・頻出コマンド・罠の共有という3要素、段階的開示を解説
 - [article-he-sandbox-technology.md](./article-he-sandbox-technology.md) — Zenn（株式会社松尾研究所）。コーディングエージェントのサンドボックス技術をOSネイティブ（Seatbelt/bubblewrap）・コンテナ（gVisor）・microVMの3分類で解説、Claude Code・Claude Desktopの実装比較

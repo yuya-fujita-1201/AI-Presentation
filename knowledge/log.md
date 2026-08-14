@@ -1,5 +1,12 @@
 # 変更履歴
 
+## 2026-08-15（ハーネス03レビュー対応・公式仕様で補正）
+
+- **Creation**: ハーネス編の概念境界と技術付録を一次資料で補強するため、公式台帳4件を追加（Claude Code Memory／Rules、Skills、Hooks、gVisor）。`sources/index.md`から参照可能にした
+- **Update**: `project-memory-and-rules.md`に「モデルが読む内容＝コンテキスト／発見・読込・適用範囲・行動・保存・検証の機構＝ハーネス」という用語契約を追加。CLAUDE.md／Rules、Skills、Hooksの二面性と、Claude CodeがAGENTS.mdを直接自動読込せずimport／symlinkを使う点を現行公式に合わせた。`claude.local.md`表記は`CLAUDE.local.md`へ補正
+- **Update**: `settings-scopes-and-governance.md`と公式settings台帳を、単一値の優先順位、配列の原則結合、Permissionのscope横断merge、一部security keyの個別規則へ更新
+- **Update**: `sandbox-and-isolation.md`を、OS／process sandbox・通常OCIコンテナ・gVisor等のsandboxed OCI runtime・VM／microVMの4境界へ更新。gVisorを通常コンテナと同じhost-kernel直接利用として扱う記述を公式資料で補正
+
 ## 2026-08-14（he ナレッジ完成・manual_override受理）
 
 - **Add**: harness-engineering に8コンセプト（ハーネスとは/なぜ必要か/責務と段階/ツールとMCP/権限設計/設定スコープ/サンドボックス/プロジェクトメモリ）。ソースは動画2本＋記事7本

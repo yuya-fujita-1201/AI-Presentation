@@ -363,3 +363,58 @@
 - **マージ**: 自動マージ3条件のうち「ユーザーの明示許可」が無いため実施しない。PRを作成して人の判断に委ねる
 - **PR**: https://github.com/yuya-fujita-1201/AI-Presentation/pull/3 （gh はリポジトリ所有者アカウント yuya-fujita-1201 に切替えて作成後、元アカウントへ復帰）
 - **注意**: マージ後に `git checkout main && git pull && rm pipeline/PAUSE` でパイプラインを再開すること
+
+---
+
+# loop-log — AI Engineering 03 GPT Proレビュー対応（2026-08-15）
+
+## セットアップ
+
+- **対象**: `decks/ai-eng-03-harness-engineering/`（57枚、本編40＋付録17）
+- **ブランチ**: `loop/ai-eng-03-gptpro-review`（baseline `83ea64c`）
+- **採点表**: `rubric-ai-eng-03-gptpro-review.md`（6項目×10点、全項目8以上が達成条件）
+- **自動マージ**: `false`。ユーザーの明示許可がないため、達成後もDraft PRまで
+- **独立監査**: 初心者導線、事実・出典、Claude Code／MCP／gVisor仕様を別エージェントで並行確認。makerはroot、graderは別エージェント
+
+## ベースライン
+
+- **独立採点**: 36/60、CONTINUE
+  - 概念境界とシリーズ整合 5
+  - 初心者の理解しやすさ 6
+  - 実務への接続 5
+  - 章構成と問題解決導線 6
+  - 事実・出典・留保 6
+  - 視覚・投影可読性 8
+- **主要指摘**: 「内包しつつ」と入れ子図、強制力だけに寄せた境界、5責務と実体の未接続、トラブル表の後置、公式事例の密集、gVisor誤分類
+
+## 事前の大改訂（ユーザーレビューの必須・推奨事項を統合）
+
+- 第1章を「別々の設計観点 → シリーズ共通の用語契約 → 同じ資産の二面性 → 週次レポート → 5責務 → 具体的実体」へ再構成
+- 旧S9を削除し、付録の3層境界表を本編S9へ昇格。S10はCLAUDE.md／Rulesとsettings／Hooksの対比例へ全面変更
+- 5つの「部品」を「本資料で整理した5つの設計責務」へ修正し、Claude Code上のファイル・設定・検証との対応表を新規追加
+- 第3章は症状別表を章頭へ移動。専門語は「最終状態（Outcome）」「実行履歴（Trace）」「復元点（Checkpoint）」「人が判断する介入点」の順に日本語を先置き
+- 測定指標表を付録へ移し、OpenAI／Anthropic公式事例を2枚へ分割。教材用作例・公式事例・社内境界事例をeyebrowで明示
+- L0〜L3を、日本語の「人が実行／限定して任せる／環境内で完了／継続運用」へ変更
+- Settingsの単一値・配列・Permission・security keyの合成差、MCPの直接stdioとproxy process起動経路、gVisor／runscと通常OCIコンテナの境界を現行公式で補正
+- ImageGenで週次レポートのBefore／After挿絵を1点追加。文字・設定の正確さが必要な境界図はSVGで更新
+- OKF正本も同期更新し、Memory／Rules・Skills・Hooks・gVisorの公式台帳4件を追加。`validate_okf.py knowledge`はerrors 0／warnings 0
+
+## 次のゲート
+
+- 全57枚の機械ゲート、PPTX 3点検証、全プレビュー目視
+- 独立visual QAとrubric再採点
+- 未達項目があれば、以後はrubric 1項目ずつ修正して再評価
+
+## 仕上げと最終判定（2026-08-15）
+
+- 内容監査の追加指摘を反映: Rulesだけに`paths`条件を限定、Claude Codeの実パスを本編へ明記、外部ツール結果からの命令注入をMCP付録へ復元、bare tool denyの例外とgVisor直接locatorを補足
+- Visual QAの投影可読性指摘を反映: 成熟段階図を大見出し4段へ簡素化、MCP表を14pt化、出典3枚を6枚へ分割して14.5pt化、SVGの小さいcream-on-teal文字を白へ補正
+- **最終構成**: 60枚（本編40＋付録20）。通常発表はS1〜40、S41〜60は質疑・参照用
+- **独立rubric**: 36/60 → 53/60。6項目すべて8点以上で`ACHIEVED`
+- **内容監査**: 重大な事実誤りなし、18出典IDの重複・欠落なし、最終`GO`
+- **Visual QA**: 全60枚原寸確認。切れ・重なり・枠外・表崩れ・画像欠落・不自然なcropは0、最終「合格／公開可」
+- **機械ゲート**: `gate_deck OK: 60 slides`、全preview 1280×720、参照asset欠落0、5MiB超0
+- **PPTX**: `unzip -t`エラーなし、python-pptxで60枚再パース、`has_notes_slide`は全枚False
+- **OKF**: `validate_okf.py knowledge` errors 0／warnings 0。Memory／Rules・Skills・Hooks・gVisorの一次資料を台帳へ追加し、関連コンセプトと同期
+- **出典整合**: notesで使用するsource IDと出典表のIDは18件で完全一致
+- **マージ方針**: `auto_merge: false`を維持。ブランチをpushしてDraft PRを作り、人の判断に委ねる

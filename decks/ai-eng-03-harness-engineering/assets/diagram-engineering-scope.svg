@@ -1,1 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6F5C52"/></marker></defs><rect width="1024" height="768" fill="#FFF9F3"/><text x="512" y="58" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="32" font-weight="800" fill="#7C3527">設計対象が、入力から実行システムへ広がる</text><rect x="126" y="116" width="772" height="548" rx="32" fill="#FFF2E8" stroke="#F0B498" stroke-width="3"/><text x="512" y="161" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#247F7A">ハーネス：道具・権限・状態・検証</text><rect x="212" y="194" width="600" height="392" rx="32" fill="#FADFD5" stroke="#F0B498" stroke-width="3"/><text x="512" y="239" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#7C3527">コンテキスト：今回見える情報</text><rect x="306" y="278" width="412" height="224" rx="32" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/><text x="512" y="323" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#7C3527">プロンプト：今回の依頼</text><circle cx="512" cy="401" r="58" fill="#7C3527" stroke="#7C3527" stroke-width="0"/><text x="512" y="410" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="31" font-weight="800" fill="#FFFFFF">AI</text><rect x="40" y="678" width="438" height="54" rx="16" fill="#7C3527" stroke="#7C3527" stroke-width="0"/><text x="259" y="713" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">ループ：時間方向に反復する</text><rect x="546" y="678" width="438" height="54" rx="16" fill="#247F7A" stroke="#247F7A" stroke-width="0"/><text x="765" y="713" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">グラフ：複数役割を接続する</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6F5C52"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <text x="512" y="62" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="32" font-weight="800" fill="#7C3527">3つは上下ではなく、別々の設計観点</text>
+
+  <rect x="55" y="122" width="274" height="210" rx="28" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+  <text x="192" y="178" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#7C3527">プロンプト</text>
+  <text x="192" y="220" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="700" fill="#6F5C52">頼み方</text>
+  <text x="192" y="266" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="18" font-weight="600" fill="#6F5C52">目的・対象・返し方</text>
+  <text x="192" y="298" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="18" font-weight="600" fill="#6F5C52">完了条件</text>
+
+  <rect x="375" y="122" width="274" height="210" rx="28" fill="#FADFD5" stroke="#F0B498" stroke-width="3"/>
+  <text x="512" y="178" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#7C3527">コンテキスト</text>
+  <text x="512" y="220" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="700" fill="#6F5C52">判断材料</text>
+  <text x="512" y="266" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="18" font-weight="600" fill="#6F5C52">文書・履歴・検索結果</text>
+  <text x="512" y="298" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="18" font-weight="600" fill="#6F5C52">今回見える情報</text>
+
+  <rect x="695" y="122" width="274" height="210" rx="28" fill="#247F7A" stroke="#247F7A" stroke-width="3"/>
+  <text x="832" y="178" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#FFFFFF">ハーネス</text>
+  <text x="832" y="220" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="700" fill="#FFFFFF">情報と行動の仲介</text>
+  <text x="832" y="266" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">道具・状態・制御</text>
+  <text x="832" y="298" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="18" font-weight="600" fill="#FFFFFF">検証・記録</text>
+
+  <line x1="192" y1="350" x2="420" y2="438" stroke="#6F5C52" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <line x1="512" y1="350" x2="512" y2="424" stroke="#6F5C52" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <line x1="832" y1="350" x2="604" y2="438" stroke="#247F7A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <rect x="286" y="444" width="452" height="108" rx="30" fill="#FFF2E8" stroke="#F0B498" stroke-width="3"/>
+  <text x="512" y="489" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="800" fill="#7C3527">AIが判断し、行動する</text>
+  <text x="512" y="526" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="20" font-weight="600" fill="#6F5C52">3つの責任が実行時に連携</text>
+  <line x1="512" y1="570" x2="512" y2="618" stroke="#247F7A" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <rect x="212" y="636" width="600" height="76" rx="24" fill="#7C3527"/>
+  <text x="512" y="684" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">失敗したら、直す設計責任へ戻る</text>
+</svg>
