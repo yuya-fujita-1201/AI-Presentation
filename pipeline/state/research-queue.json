@@ -574,8 +574,9 @@
         "source_tier": "primary",
         "origin": "web:claude.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-he-agent-sdk-overview.md"
       },
       {
         "url": "https://arxiv.org/abs/2605.13357",
@@ -592,8 +593,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "concepts-survey",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/concepts-survey"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/concepts-survey",
+        "ledger_path": "knowledge/sources/article-he-harness-engineering-paper.md"
       },
       {
         "url": "https://zenn.dev/imohuke/articles/claude-code-best-practices-2026",

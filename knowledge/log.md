@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（heソース台帳・記事2本 web_ledger run:0814211575）
+
+- **Creation**: sources/ に記事2本を article-he-*.md として登録（ハーネスエンジニアリングテーマ、web_ledger工程 run:0814211575）。article-he-agent-sdk-overview.md（Anthropic公式「Agent SDK overview」、エージェントの定義、Agent SDK/Claude Code CLI/Client SDK/Managed Agentsの4択比較、Built-in tools・Hooks・Subagents・MCP・Permissions・Sessions・Skills/commands/memory・Pluginsの提供機能、サードパーティ開発者への認証方式の注意事項、Quickstart等の次のステップを解説）、article-he-harness-engineering-paper.md（arXiv「AI Harness Engineering: A Runtime Substrate for Foundation-Model Software Agents」、自律的ソフトウェアエンジニアリング能力をモデル単体でなくモデル・ハーネス・環境から成るシステムの創発的性質として捉え直す論旨、C_system=F(C_model,C_harness,C_environment,T)の定式化、ハーネスを構成する11の責務、H0〜H3の4段階ラダーとトレースベース評価プロトコル、問いの立て直しを解説）
+- **Update**: sources/index.md の「記事（ハーネスエンジニアリング）」節に上記2件を追加
+
 ## 2026-08-14（heソース台帳・記事2本 web_ledger run:0814211079）
 
 - **Creation**: sources/ に記事2本を article-he-*.md として登録（ハーネスエンジニアリングテーマ、Anthropic公式Claude Code Docs、web_ledger工程 run:0814211079）。article-he-claude-code-permissions.md（「Configure permissions」、3段階のツール分類と承認要否、deny→ask→allowの評価順序、ツール名指定denyの完全除去とスコープ指定denyの違い、Ctrl+Eの説明表示機能を解説）、article-he-claude-code-settings.md（「Claude Code settings」、Managed/User/Project/Localの4スコープの所在・共有範囲・想定用途・優先順位を解説）
