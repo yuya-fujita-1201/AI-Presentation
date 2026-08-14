@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-14（harness-engineeringバンドル 採点指摘の修正 improve_k run:0814220412）
+
+- **Update**: 採点で未達だった指摘（findings-k.json 5件）をharness-engineering/配下で修正
+  - `tools-and-mcp.md`: 「道具をどこで動かすか——4つの実装形態」節を新設し、article-he-agent-sdk-overview.mdにあるCLI/Agent SDK/Client SDK/Managed Agentsの使い分けと「Agent harness design」ブログ案内をバンドルに反映。Managed Agentsをsandbox-and-isolation.md（サンドボックスのホスト）・harness-responsibilities-and-ladder.md（タスク状態）へ接続
+  - `permissions-design.md`: 「設計の手順」節に、AI Orchestra記事の「確認プロンプトを減らす4つの方法（リスクの低い順）」という骨格と2026年7月時点の注記を追加
+  - `why-harness-matters.md`: project-memory-and-rules.mdと重複していた「300行以下・150〜200指示」の引用と説明を落とし、2〜3文の予告に短縮してリンクへ委譲
+  - `sandbox-and-isolation.md`: 「と筆者はした上でこう述べている」の文法破綻を修正
+  - `project-memory-and-rules.md`: permissions-design.mdと重複していた対比表の2行（CLAUDE.md／denyルール）をpermissions-design.mdへの参照に置き換え
+- **Verify**: `tools/validate_okf.py knowledge` → errors: 0, warnings: 0
+
 ## 2026-08-14（harness-engineering バンドル完成 knowledge run:081421457c）
 
 - **Creation**: harness-engineering/ を新設し8コンセプトを整備（ソース台帳10本を情報源とする。設計と先行5本は先行ランで作成済み、本ラン 081421457c で残り3本を追加して全8本を完成）。本ランで追加したのは `settings-scopes-and-governance.md`（Managed/User/Project/Localの4スコープと優先順位、Managedだけ配信経路が影響範囲を決めること、権限ルールのみ優先順位ではなくマージで合成されdenyが層を問わず有効であること、「どの層に何を書くか」＝統制設計という読み替え、承認で育てた許可リストがLocal層に溜まりgitignoreされること）、`sandbox-and-isolation.md`（アプリケーション層の除外設定はツール側の制御であり突破されうるという限界、OSネイティブ／コンテナ／microVMの3分類と各実装、選定軸としての「うっかり許可への耐性」と「攻撃面の広さ」、権限とサンドボックスの強制主体の違いと「隔離が先、bypassが後」、最小権限の原則）、`project-memory-and-rules.md`（論文の11責務におけるproject memoryとしての位置づけ、コンテキスト汚染と分量の目安、コードスタイルはLint/hooksへ・絶対禁止はdenyへという3層の書き分け、トリガー＋アクションで書く罠の共有、段階的開示、長期記憶として育てる運用）の3本

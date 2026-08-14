@@ -21,6 +21,14 @@ generated:
 | WebMCP | Webサイト側がAI向けの操作口を公開する | サイト運営者 |
 | スキル | 繰り返し作業の手順を定型化する | 使う側（社内の担当者） |
 
+## 道具をどこで動かすか——4つの実装形態
+
+4層の道具そのものに入る前に、その道具を「どこで」動かすかという選択にも触れておく。[Anthropic公式の「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md)は、Claude Code CLI・Agent SDK・Client SDK・Managed Agentsという4つの選択肢を用途別に整理している。ターミナルでの対話利用や一度限りのタスク実行にはCLI、ツールループを自前実装せずにエージェントを組み込みたいならAgent SDK（Claude Codeを支えるのと同じツール群・エージェントループ・コンテキスト管理を、自分自身のプロセス内でPython/TypeScriptライブラリとして提供）、APIを直接叩きながら自前でツールループを書きたいならClient SDK（Claude CodeではなくAnthropic APIへの直接アクセス）、そして**自前でサンドボックスやセッションインフラを管理せず長時間・非同期のエージェントを動かしたいならManaged Agents**（Anthropicがエージェントとサンドボックスをホストするrest API。Agent SDKとは別製品）を選ぶ、という整理である。
+
+Managed Agentsが担う「サンドボックスのホスト」は[サンドボックスと隔離](./sandbox-and-isolation.md)、「長時間・非同期」を支える必要があるのは[タスク状態](./harness-responsibilities-and-ladder.md)の議論とそれぞれ接続している。自前で隔離環境やセッション管理を構築・維持する代わりに、その責務ごとAnthropic側に委ねる選択肢がある、と読める。
+
+同文書はまた、Agent SDKでの構築を始める次のステップとして、Claude Codeチームがサブエージェントをダイナミックワークフローで大規模にオーケストレーションする手法を解説した「Agent harness design」というブログ記事を案内している。
+
 ## 層1: 組み込みツール——手の基本セット
 
 [Anthropic公式の「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md)は、そもそもエージェントを次のように定義している。
@@ -84,6 +92,6 @@ MCPが「エージェント側から外部につなぐ」仕組みだとする�
 
 # Citations
 
-- [Anthropic公式「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md) — エージェントの定義（自ら手順を計画しツールを呼ぶ）、組み込みツールの内訳、MCPによる外部ツール・データソース接続という位置づけの根拠
+- [Anthropic公式「Agent SDK overview」](../sources/article-he-agent-sdk-overview.md) — エージェントの定義（自ら手順を計画しツールを呼ぶ）、組み込みツールの内訳、MCPによる外部ツール・データソース接続という位置づけ、CLI/Agent SDK/Client SDK/Managed Agentsの使い分けと「Agent harness design」ブログ案内の根拠
 - [解説動画「話題の『WebMCP』を解説！」](../sources/video-he-webmcp-cloudflare-guide.md) — WebMCPをAI専用の窓口とする説明、従来のブラウザ操作の課題、Cloudflareでの導入手順、運営者側のアクセス把握、人間の最終承認フロー、スキルのMCP化と社内共有の応用（いずれもauto字幕。効果の数値は出典未確認として扱う）
 - [PIVOT体験企画動画「4時間でAIエージェントを構築」](../sources/video-he-claude-code-4hour-agent.md) — ファイル操作能力が効く理由、MCPによるGoogleカレンダー連携の実演、チャット型AIとの環境差、スキル＝AIへの業務マニュアルという説明、「AIに任せすぎない」という切り分けの指摘（いずれもauto字幕）
