@@ -1,5 +1,13 @@
 # 変更履歴
 
+## 2026-08-14（コンテキストエンジニアリング・デッキ初版）
+
+- **Creation**: context-engineering/ を新設。定義とPromptとの重なり、推論時の構成要素、5項目、必要性・十分性・信頼性・鮮度、window/history/memory/trainingの区別、RAG・外部メモリ・圧縮・Prompt cache、長期タスクとtool context、prompt injection・データ境界、コピー可能なcontext packを8コンセプトに分離
+- **Creation**: sources/ に公式一次資料・原著12件を `*-ce-*` として登録。CE-S01〜CE-S12を一意に採番し、全台帳へ原文の見出し・節を示すlocatorを追加。Microsoft教材は固定commit URL、McKinnon (2025) はGemini 2.5 Flash単一・simple factoid Q&Aの限定的対照として記録
+- **Update**: ルートindexとsources indexにcontext-engineeringの導線を追加。コンセプトから一次資料、台帳から活用先への双方向リンクを整備
+- **Creation**: decks/ai-eng-02-context-engineering/ を新設。本編30枚＋付録21枚の全51枚（初版）
+- **Note**: 上記は 2026-08-14 未明に loop/ai-eng-02-context-engineering ブランチへコミット済みだったが main へ未マージだったため、同日午後の改訂（51→58枚）時に loop/ce-deck-clarity ブランチへ復元した
+
 ## 2026-08-14（さらに続き4）
 
 - **Creation**: sources/ に記事2本を article-ce-*.md として登録（コンテキストエンジニアリングテーマ、web_ledger工程 run:081413220d）。article-ce-compaction.md（Anthropic公式ドキュメント「Compaction」、コンテキストウィンドウ上限に近づくと古いコンテキストを自動要約する機能の用途・動作の仕組み・パラメータ仕様を解説）、article-ce-lost-in-the-middle.md（DEV Community記事、コンテキスト内の位置によってLLMの正答率がU字型に変化する「lost in the middle」現象を2023年のStanford等の論文と2025年のMIT研究による2つのアーキテクチャ的原因（因果的アテンションマスキング・位置エンコーディング減衰）から解説）

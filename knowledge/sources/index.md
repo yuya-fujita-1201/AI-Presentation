@@ -48,6 +48,21 @@
 - [article-pe-qiita-kissy24-methods.md](./article-pe-qiita-kissy24-methods.md) — Qiita「【生成AI】サクッと学ぶプロンプトエンジニアリング手法」（kissy24）。Instruction/Context/Input Data/Output Indicatorの4要素構成、3種類の記載フォーマット、ロールプレイやZero-shot Promptingを解説
 - [article-pe-sios-prompt-engineering-intro.md](./article-pe-sios-prompt-engineering-intro.md) — サイオステクノロジー株式会社「初心者必見！プロンプトエンジニアリング入門ガイド ~基礎編~」。NRIの定義とダイエット相談の具体例、OpenAI社セッションによる重要性の裏付け、プロンプトの続きを予測する性質、Instructions（命令）テクニックの基礎を解説
 
+## 公式資料・原著（コンテキストエンジニアリング）
+
+- **CE-S01** [article-ce-anthropic-effective-context-engineering.md](./article-ce-anthropic-effective-context-engineering.md) — Anthropicによる定義、必要十分な高シグナル情報、段階的開示、圧縮、サブエージェントの整理
+- **CE-S02** [course-ce-microsoft-context-engineering.md](./course-ce-microsoft-context-engineering.md) — Microsoftの初心者向け教材。固定commitでinstructions・knowledge・tools・history・preferencesと管理戦略を確認
+- **CE-S03** [article-ce-google-adk-context-architecture.md](./article-ce-google-adk-context-architecture.md) — Google ADKのworking context、session、memory、artifactを分けた設計モデル
+- **CE-S04** [paper-ce-lost-in-the-middle.md](./paper-ce-lost-in-the-middle.md) — 長文中の位置効果を複数文書QAとキー値検索で調べたTACL採録研究
+- **CE-S05** [paper-ce-google-retrieval-quality-context-limit.md](./paper-ce-google-retrieval-quality-context-limit.md) — McKinnon (2025) がGemini 2.5 Flash単一・単純factoid QAで示した、普遍化への限定的な対照結果
+- **CE-S06** [paper-ce-rag-lewis-2020.md](./paper-ce-rag-lewis-2020.md) — 外部の非パラメトリック記憶と生成を結ぶRAG原著
+- **CE-S07** [article-ce-google-sufficient-context-rag.md](./article-ce-google-sufficient-context-rag.md) — 検索結果の関連性と、回答に必要な情報が揃う十分性を分けるGoogle Research解説
+- **CE-S08** [docs-ce-anthropic-memory-tool.md](./docs-ce-anthropic-memory-tool.md) — セッション外へ保存し、必要時に再投入する外部メモリと安全上の責任
+- **CE-S09** [docs-ce-anthropic-manage-tool-context.md](./docs-ce-anthropic-manage-tool-context.md) — tool定義・結果による肥大化と、検索・集約・編集・cacheの役割差
+- **CE-S10** [docs-ce-openai-prompt-caching.md](./docs-ce-openai-prompt-caching.md) — 同じ入力prefixの計算を再利用するPrompt cache。メモリや圧縮とは異なる
+- **CE-S11** [docs-ce-anthropic-prompt-injection.md](./docs-ce-anthropic-prompt-injection.md) — 外部資料中の悪意ある命令に対する多層防御と継続評価
+- **CE-S12** [docs-ce-openai-data-controls.md](./docs-ce-openai-data-controls.md) — API・機能・第三者接続によって異なる保存、保持、データ境界の確認事項
+
 ## 動画（プロンプトエンジニアリング）
 
 - [video-pe-loop-engineering-overview.md](./video-pe-loop-engineering-overview.md) — 「【ゆる解説】ループエンジニアリングって何？」（安野貴博の自由研究）。プロンプト・コンテキスト・ハーネス・ループの4段階とHuman in the LoopからHuman on the Loopへの移行、アンドリュー・ン氏の3種の入れ子ループ論
