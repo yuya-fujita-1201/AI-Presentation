@@ -273,3 +273,93 @@
 - **rubric 7項目すべて目標8点に到達 → ループ終了（達成）**
 - 機械ゲート最終状態: build成功／unzip -t OK／Presentation()再パース46枚一致／notes_slide 0件（コミット dabf474）
 - Codexクロスチェック: 置換記法・断定表現の2件を反映済み。残タスクは docs/codex-brief-ai-eng-01-pe-draft-v3.md（挿絵1点差し替え+任意1点+最終チェック）
+
+## Codex 挿絵差し替え・最終チェック（2026-08-14 03:04 JST）
+
+- 自動パイプラインとの再衝突を避けるため `pipeline/PAUSE` を設置し、`pipeline/bin/wait-idle.sh` の「アイドル状態」を確認してから作業
+- ImageGen（built-in）で次の2点を生成・反映
+  - `assets/warm-13-writing.png`: 書きかけ1枚 → AIロボット → 選択中を含む候補カード合計3枚。初回は候補が4枚になったため、余分な1枚だけを除く再生成を実施
+  - `assets/warm-15-input-types.png`: 文字／画像と音声／ファイルの3グループがAIロボットへ流れ込む4:3イラストを新規作成し、S5の `path` のみ差し替え
+- 最終ゲート
+  - `/opt/homebrew/bin/python3 tools/build_deck.py decks/ai-eng-01-pe-draft` 成功
+  - `preview_deck.py` で `slide-01.png`〜`slide-46.png` を再生成し、全46枚を実見
+  - `unzip -t` エラーなし／python-pptx再パース46枚一致／`has_notes_slide` 0件
+  - `5つの箱|Before|After` は deck.json に該当なし。SVGの文字指定は Hiragino Sans / Hiragino Kaku Gothic ProN / Noto Sans JP / sans-serif で、明朝体指定なし
+- 変更禁止の本文・構成・style・SVGは未変更。最終目視で以下を検出したが、ブリーフの変更禁止に従い未修正
+  - HTMLプレビュー: S6・S10・S14・S16・S36の長いタイトル左端が欠けて見える。S23リード末尾の「う。」だけが次行へ孤立
+  - LibreOfficeによるPPTX再レンダリング: S16のタイトル左端欠け、S10の図版／ページ番号右端欠け、S36のeyebrow先頭欠けを確認。S6・S14・S23は同症状を再現せず、形式間差あり
+
+## Codexレビュー訂正・別フォルダ修正版（2026-08-14 11:16 JST）
+
+- レビュー対象は `decks/ai-eng-01-pe-draft/`。人間が元版と比較できるよう、現行内容を `decks/ai-eng-01-pe-draft-codex-revised/` へ複製し、以後の改修は複製版だけに実施
+- 03:04の報告にあったS6・S10・S14・S16・S36のタイトル／端部欠けは、複数画像表示時の表示上の切れを実ファイルの欠けと誤認したもの。HTML個別PNGとLibreOffice再レンダリングPPTXを各スライド単独で再確認し、欠けなしと訂正
+- 実際に再現した問題はHTML版S23のリード文末「う。」の孤立改行1件のみ。複製版のS23だけ `style.lead.size` を18pxから17pxへ変更し、本文・構成・SVG図版は変更せず一行に収めた
+- 人間向け成果物を `decks/ai-eng-01-pe-draft-codex-revised/review/` に作成
+  - `slide-23-comparison.png`（修正前後比較）
+  - HTML全46枚コンタクトシート4枚
+  - PPTX全46枚コンタクトシート4枚
+  - `README.md`（対象、修正点、訂正、成果物、検証結果）
+- 修正版の最終検証:
+  - `pipeline/bin/gate_deck.sh decks/ai-eng-01-pe-draft-codex-revised` → `gate_deck OK: 46 slides`
+  - HTML/PPTX全46枚の一覧を実見。要注意スライドは原寸で個別確認し、修正後の切れ・重なり・はみ出し・画像不整合なし
+  - `unzip -t` エラーなし／deck.json 46枚・PPTX 46枚一致／`has_notes_slide` 0件
+  - markitdown抽出848行、placeholder語句0件、`5つの箱|Before|After` 該当なし
+
+---
+
+# loop-log — CEデッキ改訂 品質ループ（2026-08-14）
+
+## セットアップ（2026-08-14 13:45 JST）
+
+- **対象**: `decks/ai-eng-02-context-engineering/`（deck.json → HTML/PPTX）
+- **背景**: ユーザーレビュー「CEって結局何なの？が分からない」→ 4要件（定義ファースト/PE対比/5要素対応/事例章・付録組み込み）
+- **ブランチ**: `loop/ce-deck-clarity`（baseline=初版51枚の復元コミット 19675c1 → 改訂 74bb6c8）
+- **採点表**: `rubric-ce-deck.md`（7項目×10点、目標全項目8以上）
+- **機械ゲート**: `build_deck.py`（HTML+PPTX）→ `unzip -t` → python-pptx `Presentation()` 再パース58枚 → notes_slideなし → `preview_deck.py` PNG生成
+- **注意**: 自律パイプラインが並行稼働していたため `pipeline/PAUSE` を設置（ループ完了後に解除する）。作業中に rubric-ce-deck.md が一度消失（原因未特定・パイプライン並行動作の疑い）→ 再作成しコミット済み
+
+## 事前工程（Workflow 8エージェント）
+
+- レビュー3観点（初心者ペルソナ/要件ギャップ/PE整合）: 指摘38件。核心=「プロンプト」定義がPE(広義)とCE(狭義)で暗黙に矛盾、旧8/9の境界食い違い、PE/CE比較表が付録に封印、5項目↔5要素対応の欠落、要件4テーマの完全欠落
+- 構成案3件競作（忠実型/教育設計型/最小変更型）→ 審査2名（票割れ: C-minimal 88 vs A-faithful 86）→ 統合提言を実装
+- 新規図解4点作成: diagram-context-inclusion / 5items-5elements-bridge / active-vs-auto / workspace-hygiene（全てPlaywrightレンダリングで目視確認済み）
+
+## 改訂実装（74bb6c8）
+
+- 51→58枚（本編36＋付録22）。機械ゲート全通過（unzip OK / 58枚再パース / notes 0 / previewPNG 58枚生成）
+- maker側目視: スライド2,5,6,7,9,10,13,31,32,33,34,35,36,57 確認。orphan折返し2箇所を修正済み
+
+## ループ第1周（開始 13:50 JST）
+
+- 独立採点エージェント grader-ce-r1（general-purpose、maker意図は非開示）起動
+- Codex反証レビュー（codex exec --sandbox read-only、元作者視点で観点A-E）並行起動
+
+### 第1周 採点結果と改善（2026-08-14 14:00 JST）
+
+- **ベースライン採点（grader-ce-r1）**: 合計 60/70。①定義ファースト7 ②PE対比9 ③5要素橋渡し9 ④章構成8 ⑤事例章9 ⑥文章視覚9 ⑦出典9。未達は①のみ
+- **指摘**: slide6で「メモリ」が無説明初出、正式説明（39/43枚目）まで29枚のギャップ
+- **改善**: slide6の該当childrenを2行に分け「ルールファイルやメモリ（＝置いておく約束や、保存された前提。この章の最後で説明）」を追記
+- **機械ゲート**: build → unzip -t → 58枚再パース → notes 0 → preview 6枚目再生成・目視 ✅ → コミット済み
+- 参考指摘（④は8で達成扱い）: 新入社員比喩のタイトルがPEと完全同一でなく「自動では」が追加されている点は、CE文脈の意図的な差分として維持
+
+### Codex反証レビューと第2改善（2026-08-14 14:25 JST）
+
+- **Codex総合判定**: 「修正後に再判定」。方向性は初版より明確に良いが4条件（①概念モデルの限定 ②新設スライドの断定緩和 ③CE-S台帳の復元 ④本編圧縮＋全preview再目視）
+- **重大発見**: 初版完成コミットは loop/ai-eng-02-context-engineering ブランチ（8e466a2、origin push済み）にあり main 未マージ。CE-S01〜S12台帳・knowledge/context-engineering/ 8コンセプトが現ブランチに欠落していた → 8e466a2 から復元（ba8ba39）。OKF validate errors 0
+- **検証**: 私の「復元ベースライン」は 8e466a2 の原本 deck.json と完全一致（diff無し）を確認
+- **反映（fbef174）**: slide6定義スコープ限定／slide7設計活動の区別＋「重なって働く」復活／slide10を3経路化／slide13「独立した点検観点」／環境整備・ルールファイル・RAG・メモリの断定を限定（セッション開始時読込・.cursor/rules・読み戻し・候補）／選別演習→付録42／出典表を意味単位で再監査（CE-S02→6,10・CE-S03から51を教材整理へ・CE-S09→47）／rubric項目2の中立化
+- **部分採用**: 本編32-33枚への圧縮は不採用（PEデッキは同45分枠で本編45枚の前例。本編35枚は系列内で軽量）。具体例2枚の統合・解剖図の独立復活も不採用（PE構成踏襲を優先）
+- **機械ゲート**: build → unzip → 58枚再パース → notes 0 → 全58枚preview再生成 ✅
+
+### 第2周採点（開始 14:30 JST）
+- **第2周採点（grader-ce-r1）**: 合計 61/70。①9 ②9 ③9 ④8 ⑤9 ⑥8 ⑦9 — **全7項目が目標8以上を達成 → ループ終了**
+- 残指摘3件を仕上げコミットで解消: slide10図の3経路化（本文と図の主張ずれ）、slide5 notes番号バグ（置換の章扉誤ヒット）、slide6スコープ注記の可視化。機械ゲート全通過
+- ④の「新入社員比喩タイトルの完全一致」は、CE文脈での「自動では」の追加を意図的な差分として維持（8点で目標達成のため）
+
+## ループ終了（2026-08-14 14:45 JST）
+
+- **最終状態**: 58枚（本編35＋付録23）。スコア推移: 60/70 → 61/70（全項目8+）
+- **ブランチ**: loop/ce-deck-clarity（baseline復元→改訂→採点#1対応→ナレッジ復元→Codex反映→仕上げ の6コミット）
+- **マージ**: 自動マージ3条件のうち「ユーザーの明示許可」が無いため実施しない。PRを作成して人の判断に委ねる
+- **PR**: https://github.com/yuya-fujita-1201/AI-Presentation/pull/3 （gh はリポジトリ所有者アカウント yuya-fujita-1201 に切替えて作成後、元アカウントへ復帰）
+- **注意**: マージ後に `git checkout main && git pull && rm pipeline/PAUSE` でパイプラインを再開すること
