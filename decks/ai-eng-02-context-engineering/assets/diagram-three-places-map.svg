@@ -4,38 +4,43 @@
       text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
       .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
     </style>
-    <marker id="arrA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B44A32"/>
-    </marker>
     <marker id="arrT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
       <path d="M0,0 L9,4.5 L0,9 Z" fill="#247F7A"/>
     </marker>
     <marker id="arrG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
       <path d="M0,0 L9,4.5 L0,9 Z" fill="#C17A27"/>
     </marker>
+    <marker id="arrA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B44A32"/>
+    </marker>
   </defs>
   <rect width="1024" height="740" fill="#FFF9F3"/>
 
-  <!-- 3つの置き場所 -->
-  <rect x="32" y="60" width="280" height="140" rx="24" fill="#FADFD5" stroke="#B44A32" stroke-width="4"/>
-  <text x="172" y="120" text-anchor="middle" class="h" font-size="27" fill="#B44A32">①プロンプト</text>
-  <text x="172" y="160" text-anchor="middle" class="m" font-size="20">都度、その場で書く</text>
+  <!-- ①必ず読む -->
+  <rect x="24" y="56" width="316" height="150" rx="24" fill="#E1F2F0" stroke="#247F7A" stroke-width="4"/>
+  <text x="182" y="104" text-anchor="middle" class="h" font-size="25" fill="#247F7A">①必ず読む</text>
+  <text x="182" y="146" text-anchor="middle" class="m" font-size="18">ルールファイル／メモリ</text>
+  <text x="182" y="176" text-anchor="middle" class="m" font-size="18">設定ファイル</text>
+  <text x="182" y="234" text-anchor="middle" class="m" font-size="17">この章の中心</text>
 
-  <rect x="344" y="60" width="280" height="140" rx="24" fill="#E1F2F0" stroke="#247F7A" stroke-width="4"/>
-  <text x="484" y="120" text-anchor="middle" class="h" font-size="27" fill="#247F7A">②ルールファイル</text>
-  <text x="484" y="160" text-anchor="middle" class="m" font-size="20">必ず読み込まれる</text>
+  <!-- ②条件付きで読む -->
+  <rect x="356" y="56" width="316" height="150" rx="24" fill="#F6E6CF" stroke="#C17A27" stroke-width="4"/>
+  <text x="514" y="104" text-anchor="middle" class="h" font-size="25" fill="#C17A27">②条件付きで読む</text>
+  <text x="514" y="146" text-anchor="middle" class="m" font-size="18">スキル／検索</text>
+  <text x="514" y="176" text-anchor="middle" class="m" font-size="18">外部コネクター</text>
+  <text x="514" y="234" text-anchor="middle" class="m" font-size="17">全体像はここ、詳細は3章</text>
 
-  <rect x="656" y="60" width="336" height="140" rx="24" fill="#F6E6CF" stroke="#C17A27" stroke-width="4"/>
-  <text x="824" y="120" text-anchor="middle" class="h" font-size="27">③条件付きの仕組み</text>
-  <text x="824" y="160" text-anchor="middle" class="m" font-size="20">合致した時だけ読まれる</text>
-
-  <text x="900" y="222" text-anchor="middle" class="m" font-size="17">基礎編では考え方だけ</text>
-  <text x="900" y="246" text-anchor="middle" class="m" font-size="17">詳細は応用編で</text>
+  <!-- ③都度渡す -->
+  <rect x="688" y="56" width="312" height="150" rx="24" fill="#FADFD5" stroke="#B44A32" stroke-width="4"/>
+  <text x="844" y="104" text-anchor="middle" class="h" font-size="25" fill="#B44A32">③都度渡す</text>
+  <text x="844" y="146" text-anchor="middle" class="m" font-size="18">プロンプト</text>
+  <text x="844" y="176" text-anchor="middle" class="m" font-size="18">（シリーズ01の範囲）</text>
+  <text x="844" y="234" text-anchor="middle" class="m" font-size="17">今回は要点だけ</text>
 
   <!-- 3本の矢印（各1パス・各1矢頭） -->
-  <path d="M172 200 C172 340 300 470 400 550" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#arrA)"/>
-  <path d="M484 200 C490 340 505 460 512 550" fill="none" stroke="#247F7A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrT)"/>
-  <path d="M700 200 C650 300 636 440 624 550" fill="none" stroke="#C17A27" stroke-width="5" stroke-linecap="round" marker-end="url(#arrG)"/>
+  <path d="M182 258 C182 380 300 470 400 548" fill="none" stroke="#247F7A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrT)"/>
+  <path d="M514 258 C518 380 512 470 512 548" fill="none" stroke="#C17A27" stroke-width="5" stroke-linecap="round" marker-end="url(#arrG)"/>
+  <path d="M844 258 C800 370 700 470 624 548" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#arrA)"/>
 
   <!-- 共通の到達点 -->
   <rect x="282" y="555" width="460" height="150" rx="28" fill="#7C3527"/>
