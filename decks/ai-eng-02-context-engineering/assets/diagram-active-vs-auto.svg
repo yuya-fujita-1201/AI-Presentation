@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B44A32"/>
+    </marker>
+    <marker id="arrT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#247F7A"/>
+    </marker>
+    <marker id="arrG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B98A2F"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 中央: AI -->
+  <rect x="396" y="266" width="220" height="128" rx="26" fill="#FFFFFF" stroke="#7C3527" stroke-width="6"/>
+  <text x="506" y="346" text-anchor="middle" class="h" font-size="44" fill="#7C3527">AI</text>
+  <text x="506" y="432" text-anchor="middle" class="m" font-size="19">今回の判断材料を束ねて答える</text>
+
+  <!-- 左: あなた（能動・都度） -->
+  <rect x="52" y="242" width="240" height="120" rx="22" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/>
+  <text x="172" y="292" text-anchor="middle" class="h" font-size="27" fill="#B44A32">あなた</text>
+  <text x="172" y="330" text-anchor="middle" font-size="21">プロンプトを書く</text>
+  <line x1="296" y1="314" x2="388" y2="324" stroke="#B44A32" stroke-width="5" marker-end="url(#arrR)"/>
+  <text x="172" y="408" text-anchor="middle" class="h" font-size="22" fill="#B44A32">①能動：都度渡す</text>
+  <text x="172" y="440" text-anchor="middle" class="m" font-size="19">書かなければ入らない</text>
+
+  <!-- 右上: 常設情報（AIが自動参照） -->
+  <rect x="688" y="72" width="296" height="88" rx="18" fill="#DDEFEA" stroke="#247F7A" stroke-width="4"/>
+  <text x="836" y="110" text-anchor="middle" font-size="22">ルールファイル</text>
+  <text x="836" y="142" text-anchor="middle" class="m" font-size="17">CLAUDE.md／.cursor/rules</text>
+  <rect x="688" y="178" width="296" height="88" rx="18" fill="#DDEFEA" stroke="#247F7A" stroke-width="4"/>
+  <text x="836" y="216" text-anchor="middle" font-size="22">メモリ</text>
+  <text x="836" y="248" text-anchor="middle" class="m" font-size="17">保存された前提・好み</text>
+  <rect x="688" y="284" width="296" height="88" rx="18" fill="#DDEFEA" stroke="#247F7A" stroke-width="4"/>
+  <text x="836" y="322" text-anchor="middle" font-size="22">会話履歴</text>
+  <text x="836" y="354" text-anchor="middle" class="m" font-size="17">これまでのやり取り</text>
+  <text x="836" y="410" text-anchor="middle" class="h" font-size="21" fill="#247F7A">②自動：置けば毎回入る</text>
+
+  <!-- 右下: 必要時取得 -->
+  <rect x="688" y="452" width="296" height="88" rx="18" fill="#F6EAD9" stroke="#B98A2F" stroke-width="4" stroke-dasharray="12 8"/>
+  <text x="836" y="490" text-anchor="middle" font-size="22">検索・ツールの結果</text>
+  <text x="836" y="522" text-anchor="middle" class="m" font-size="17">取れるまでは入っていない</text>
+  <text x="836" y="580" text-anchor="middle" class="h" font-size="21" fill="#B98A2F">③必要時：その時だけ取りに行く</text>
+
+  <line x1="680" y1="116" x2="622" y2="286" stroke="#247F7A" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrT)"/>
+  <line x1="680" y1="222" x2="624" y2="312" stroke="#247F7A" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrT)"/>
+  <line x1="680" y1="328" x2="624" y2="340" stroke="#247F7A" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrT)"/>
+  <line x1="680" y1="496" x2="622" y2="386" stroke="#B98A2F" stroke-width="4" stroke-dasharray="4 7" marker-end="url(#arrG)"/>
+
+  <!-- 下部メッセージ -->
+  <rect x="96" y="648" width="832" height="88" rx="24" fill="#7C3527"/>
+  <text x="512" y="686" text-anchor="middle" class="h w" font-size="26" fill="#FFFFFF">コンテキストに入る経路は「書く・置く・取りに行く」の3つ</text>
+  <text x="512" y="722" text-anchor="middle" font-size="21" fill="#F6C9B8">「置いてある」と「今回読まれた」は別。だから置き場所の中身も設計する</text>
+</svg>

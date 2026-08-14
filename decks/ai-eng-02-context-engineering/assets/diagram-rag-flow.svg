@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <text x="512" y="88" text-anchor="middle" class="h" font-size="38">RAGは4段階で文脈を作る</text>
+
+  <path d="M240 348H286M482 348H528M724 348H770" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect x="50" y="202" width="190" height="292" rx="28" fill="#FCE9DC" stroke="#7C3527" stroke-width="4"/>
+    <circle cx="145" cy="258" r="29" fill="#7C3527"/>
+    <text x="145" y="269" text-anchor="middle" class="h w" font-size="28" fill="#FFFFFF">1</text>
+    <circle cx="145" cy="344" r="45" fill="#FFFFFF" stroke="#7C3527" stroke-width="5"/>
+    <path d="M176 375L204 403" stroke="#7C3527" stroke-width="9" stroke-linecap="round"/>
+    <text x="145" y="454" text-anchor="middle" class="h" font-size="31">検索</text>
+  </g>
+
+  <g>
+    <rect x="292" y="202" width="190" height="292" rx="28" fill="#E1F2F0" stroke="#247F7A" stroke-width="4"/>
+    <circle cx="387" cy="258" r="29" fill="#247F7A"/>
+    <text x="387" y="269" text-anchor="middle" class="h w" font-size="28" fill="#FFFFFF">2</text>
+    <path d="M333 316H441L410 353V401L364 420V353Z" fill="#FFFFFF" stroke="#247F7A" stroke-width="5" stroke-linejoin="round"/>
+    <text x="387" y="454" text-anchor="middle" class="h" font-size="31">選別</text>
+  </g>
+
+  <g>
+    <rect x="534" y="202" width="190" height="292" rx="28" fill="#F6E6CF" stroke="#C17A27" stroke-width="4"/>
+    <circle cx="629" cy="258" r="29" fill="#C17A27"/>
+    <text x="629" y="269" text-anchor="middle" class="h" font-size="28" fill="#2B211D">3</text>
+    <rect x="570" y="318" width="118" height="92" rx="16" fill="#FFFFFF" stroke="#C17A27" stroke-width="5"/>
+    <path d="M548 364H578" stroke="#C17A27" stroke-width="7" stroke-linecap="round"/>
+    <path d="M566 349L582 364L566 379Z" fill="#C17A27"/>
+    <text x="629" y="454" text-anchor="middle" class="h" font-size="31">注入</text>
+  </g>
+
+  <g>
+    <rect x="776" y="202" width="190" height="292" rx="28" fill="#FADFD5" stroke="#B44A32" stroke-width="4"/>
+    <circle cx="871" cy="258" r="29" fill="#B44A32"/>
+    <text x="871" y="269" text-anchor="middle" class="h w" font-size="28" fill="#FFFFFF">4</text>
+    <circle cx="871" cy="362" r="54" fill="#7C3527"/>
+    <text x="871" y="373" text-anchor="middle" class="h w" font-size="29" fill="#FFFFFF">AI</text>
+    <text x="871" y="454" text-anchor="middle" class="h" font-size="31">生成</text>
+  </g>
+
+  <rect x="150" y="594" width="724" height="104" rx="28" fill="#7C3527"/>
+  <text x="512" y="659" text-anchor="middle" class="h w" font-size="31" fill="#FFFFFF">検索結果を、そのまま全部入れない</text>
+</svg>
