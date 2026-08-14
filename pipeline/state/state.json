@@ -1,9 +1,9 @@
 {
   "schema": "state-v1",
   "theme": {
-    "id": "ce",
-    "slug": "ai-eng-02-context-engineering",
-    "title": "コンテキストエンジニアリング",
+    "id": "he",
+    "slug": "ai-eng-03-harness-engineering",
+    "title": "ハーネスエンジニアリング",
     "series": [
       "pe",
       "ce",
@@ -12,44 +12,24 @@
     ],
     "series_index": 0
   },
-  "phase": "improve_k",
-  "generation": 5,
-  "active_run_id": "0814151908",
-  "input_commit": "8ffd0ef533a3",
-  "phase_started_at": null,
+  "phase": "research_scan",
+  "generation": 6,
+  "active_run_id": "0814155936",
+  "input_commit": "a3c2451fafc2",
+  "phase_started_at": "2026-08-14T15:59:07+09:00",
   "phase_attempts": 0,
-  "run_counts": {
-    "research_scan": 1,
-    "research_fetch": 2,
-    "research_ledger": 6,
-    "research_web": 4,
-    "web_ledger": 2,
-    "knowledge": 1,
-    "grade_k": 3,
-    "improve_k": 2
-  },
+  "run_counts": {},
   "scan_fallback_done": false,
   "video_shortfall": false,
   "web_rerun_done": false,
   "grade": {
     "knowledge": {
-      "iter": 3,
-      "repair_count": 2,
+      "iter": 0,
+      "repair_count": 0,
       "pass_streak": 0,
       "retry_used": false,
-      "last_unmet": [
-        2,
-        3,
-        4,
-        5
-      ],
-      "last_scores": {
-        "1": 8,
-        "2": 6,
-        "3": 7,
-        "4": 6,
-        "5": 6
-      }
+      "last_unmet": null,
+      "last_scores": null
     },
     "deck": {
       "iter": 0,
@@ -61,9 +41,9 @@
     }
   },
   "push_pending": false,
-  "last_result": "succeeded",
+  "last_result": "gate_failed",
   "last_scan_at": "2026-08-14T12:03:04+09:00",
-  "last_started_at": "2026-08-14T15:19:05+09:00",
+  "last_started_at": "2026-08-14T15:59:07+09:00",
   "last_successful_transition_at": "2026-08-14T15:27:54+09:00",
   "consecutive_external": 0,
   "stuck": null,
@@ -76,6 +56,6 @@
     "to": "grade_d",
     "was_stuck": "repair_exhausted"
   },
-  "last_notification_success_at": "2026-08-14T14:05:02+09:00",
+  "last_notification_success_at": "2026-08-14T16:25:28+09:00",
   "_use_fallback": false
 }
