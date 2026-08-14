@@ -13,8 +13,8 @@
       "trust": "expert",
       "score": 8,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+2 再生+1",
-      "status": "fetched",
-      "reject_reason": null,
+      "status": "rejected",
+      "reject_reason": "duplicate_cross_theme(video-pe-five-engineering-stages.md)",
       "subs": "auto",
       "claims": [
         {
@@ -92,7 +92,7 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+0",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -122,7 +122,8 @@
           "impact": "normal"
         }
       ],
-      "summary": "Anthropic公式のコンテキストエンジニアリング論を基に、コンテキストロット・ジャストインタイム検索・圧縮・サブエージェントの4本柱を専門知識ゼロ向けに解説する動画"
+      "summary": "Anthropic公式のコンテキストエンジニアリング論を基に、コンテキストロット・ジャストインタイム検索・圧縮・サブエージェントの4本柱を専門知識ゼロ向けに解説する動画",
+      "ledger_path": "knowledge/sources/video-ce-context-rot-and-jit.md"
     },
     {
       "id": "_XvthXCOGnc",

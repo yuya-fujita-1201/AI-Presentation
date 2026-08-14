@@ -59,3 +59,4 @@
 ## 動画（コンテキストエンジニアリング）
 
 - [video-ce-context-layers-intro.md](./video-ce-context-layers-intro.md) — 「【ゆっくり解説】コンテキストエンジニアリング入門、AI 出力品質を一段上げる設計術」（ゆっくり探究Lab）。コンテキストをシステムプロンプト・プロジェクトメモリ・検索拡張・ツール呼び出し・会話履歴の5層に整理し、Claude Codeでの実装例と構造化・削減のコツ、3つの落とし穴を解説
+- [video-ce-context-rot-and-jit.md](./video-ce-context-rot-and-jit.md) — コンテキスト劣化(context rot)とJIT検索。Anthropic公式警告の解説動画

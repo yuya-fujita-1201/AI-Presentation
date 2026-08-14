@@ -26,6 +26,8 @@ required_concepts:
   - {id: retrieval, label: 必要時に取りに行く（RAG・検索）, hints: [RAG, 検索, 取得, retrieval]}
   - {id: memory, label: 記憶・会話の持ち越し, hints: [記憶, メモリ, 履歴, 持ち越し]}
   - {id: degradation, label: 詰め込みすぎによる劣化, hints: [劣化, 埋もれ, 薄まる, lost]}
+extra_sources:
+  - knowledge/sources/video-pe-five-engineering-stages.md
 subtopics:
   - {id: official-guides, goal: Anthropic公式のコンテキスト関連ドキュメントの一次情報台帳化,
      queries: ["Anthropic context windows documentation", "Claude long context best practices"]}
