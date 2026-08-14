@@ -85,3 +85,4 @@
 - [article-ce-softbank-what-is-context-engineering.md](./article-ce-softbank-what-is-context-engineering.md) — ソフトバンク株式会社ビジネスブログ。コンテキストエンジニアリングの定義、会話履歴の忘却問題、プロンプトエンジニアリングとの違い、システムプロンプト・要約・外部保管という実践テクニックを解説
 - [article-ce-cloco-context-engineering-claude.md](./article-ce-cloco-context-engineering-claude.md) — cloco Blog。KarpathyやTobi Lütkeの言及を紹介しつつ、AnthropicのWrite/Select/Compress/Isolateの4戦略とClaude CodeのCLAUDE.md整備を実践の入り口として解説
 - [video-he-webmcp-cloudflare-guide.md](./video-he-webmcp-cloudflare-guide.md) — WebMCPの解説。AIエージェントにツール（道具）を与える仕組みとハーネス層の実際
+- [video-he-claude-code-4hour-agent.md](./video-he-claude-code-4hour-agent.md) — 「【Claude Code活用法】4時間でMC野嶋専用のAIエージェントを構築」（PIVOT）。環境構築からスキル作成、業務効率化AIエージェント完成までの体験企画。「スキル＝AIへの業務マニュアル」「AIに任せすぎない」設計の実例

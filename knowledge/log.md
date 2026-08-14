@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（heソース台帳・研究フェーズ run:08142019a0）
+
+- **Creation**: sources/ に動画台帳を1本追加。`video-he-claude-code-4hour-agent.md`（PIVOT公式チャンネル「【Claude Code活用法】4時間でMC野嶋専用のAIエージェントを構築」、43分53秒）。環境構築・クロードコード基礎操作・悩みのヒアリングを踏まえたスキル作成・完成エージェントのデモという流れを、「スキル＝AIへの業務マニュアル」「AIに任せすぎない」というハーネスエンジニアリング関連の要点を軸に整理した
+- **Update**: sources/index.md の既存`video-he-webmcp-cloudflare-guide.md`行（「記事（コンテキストエンジニアリング）」節末尾に配置済み）の直後に上記1行を追記
+
 ## 2026-08-14（ce ナレッジの品質判定・manual_override受理）
 
 - **Note**: context-engineering の11コンセプトを採点 8/6/7/6/6（①事実正確性8・②網羅性6・③構成7・④リンク6・⑤文章品質6）のまま manual_override で受理し、テーマを he へ進めた。網羅性と独立裏取りに既知の弱みが残る**参考ナレッジ**の位置づけ（02の発表資料本体は `decks/ai-eng-02-context-engineering/` 側で別途品質担保済み）
