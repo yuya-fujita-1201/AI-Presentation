@@ -93,3 +93,5 @@
 - [article-he-claude-code-settings.md](./article-he-claude-code-settings.md) — Anthropic公式「Claude Code settings」。設定を適用するManaged/User/Project/Localの4スコープと優先順位、各スコープの想定用途を解説
 - [article-he-agent-sdk-overview.md](./article-he-agent-sdk-overview.md) — Anthropic公式「Agent SDK overview」。エージェントの定義、Agent SDK/CLI/Client SDK/Managed Agentsの使い分け、Built-in tools・Hooks・Subagents・MCP等の提供機能を解説
 - [article-he-harness-engineering-paper.md](./article-he-harness-engineering-paper.md) — arXiv「AI Harness Engineering」。SWE能力をモデル・ハーネス・環境から成るシステムの創発的性質として捉え直し、11の責務とH0〜H3ラダー、トレースベース評価プロトコルを提案
+- [article-he-claude-md-best-practices.md](./article-he-claude-md-best-practices.md) — Zenn。CLAUDE.mdの「コンテキスト汚染」を避ける設計指針。300行以内・150〜200指示の目安、プロジェクト概要・頻出コマンド・罠の共有という3要素、段階的開示を解説
+- [article-he-sandbox-technology.md](./article-he-sandbox-technology.md) — Zenn（株式会社松尾研究所）。コーディングエージェントのサンドボックス技術をOSネイティブ（Seatbelt/bubblewrap）・コンテナ（gVisor）・microVMの3分類で解説、Claude Code・Claude Desktopの実装比較

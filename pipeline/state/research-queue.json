@@ -612,8 +612,9 @@
         "source_tier": "secondary",
         "origin": "web:zenn.dev/imohuke",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-he-claude-md-best-practices.md"
       },
       {
         "url": "https://zenn.dev/mkj/articles/3ec9d2d39f446b",
@@ -630,8 +631,9 @@
         "source_tier": "secondary",
         "origin": "web:zenn.dev/mkj",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-he-sandbox-technology.md"
       },
       {
         "url": "https://www.ai-orchestra.ai/claude-code-training/columns/claude-code-permissions",

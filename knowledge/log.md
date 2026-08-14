@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（heソース台帳・記事2本 web_ledger run:08142122e9）
+
+- **Creation**: sources/ に記事2本を article-he-*.md として登録（ハーネスエンジニアリングテーマ、Zenn記事2本、web_ledger工程 run:08142122e9）。article-he-claude-md-best-practices.md（Zenn「【Claude Code】CLAUDE.md運用のベストプラクティス：失敗しないための7つの原則」、300行以内・指示150〜200個程度というLLMの処理限界に基づく目安、フォーマット・スタイル指示はLint/Formatter/Git hooksに委ねスタイルではなく知識・罠・運用ルールを書くという方針、プロジェクト一行説明・頻出コマンド・トリガー&アクション型の罠共有という3要素、詳細情報を別ファイルへ分離する段階的開示、CLAUDE.mdの文脈が無視されうる前提とLLMの先頭末尾重み付け特性、短期記憶/長期記憶の比喩とモノレポでの親子CLAUDE.md構成を解説）、article-he-sandbox-technology.md（Zenn/株式会社松尾研究所「コーディングエージェントのサンドボックス技術を理解する」、プロンプトインジェクションによる機密ファイル流出をアプリケーション層の除外設定だけでは防ぎきれない理由、OWASP Top 10 for Agentic Applications 2026、OSネイティブ（Seatbelt/Landlock+seccomp/bubblewrap）・コンテナ（gVisor、CVE-2020-14386）・microVM（Apple Virtualization Framework、Docker Sandbox）の3分類、Claude Code `/sandbox`とClaude Desktopの実装比較、最小権限の原則に基づく筆者の使い分けを解説）
+- **Update**: sources/index.md の「記事（ハーネスエンジニアリング）」節に上記2件を追加
+
 ## 2026-08-14（heソース台帳・記事2本 web_ledger run:0814211575）
 
 - **Creation**: sources/ に記事2本を article-he-*.md として登録（ハーネスエンジニアリングテーマ、web_ledger工程 run:0814211575）。article-he-agent-sdk-overview.md（Anthropic公式「Agent SDK overview」、エージェントの定義、Agent SDK/Claude Code CLI/Client SDK/Managed Agentsの4択比較、Built-in tools・Hooks・Subagents・MCP・Permissions・Sessions・Skills/commands/memory・Pluginsの提供機能、サードパーティ開発者への認証方式の注意事項、Quickstart等の次のステップを解説）、article-he-harness-engineering-paper.md（arXiv「AI Harness Engineering: A Runtime Substrate for Foundation-Model Software Agents」、自律的ソフトウェアエンジニアリング能力をモデル単体でなくモデル・ハーネス・環境から成るシステムの創発的性質として捉え直す論旨、C_system=F(C_model,C_harness,C_environment,T)の定式化、ハーネスを構成する11の責務、H0〜H3の4段階ラダーとトレースベース評価プロトコル、問いの立て直しを解説）
