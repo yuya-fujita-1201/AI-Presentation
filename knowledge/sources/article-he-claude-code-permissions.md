@@ -50,4 +50,4 @@ denyルールはツール名だけを指定するかパターンでスコープ�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../harness-engineering/permissions-design.md](../harness-engineering/permissions-design.md) — ツール3分類と承認要否、Allow/Ask/Denyの評価順序（deny→ask→allow）と具体性が順序を変えないこと、denyがallowlist的例外を持てないこと、ツール名指定denyとスコープ指定denyの挙動差、「Yes, don't ask again」の保存先と永続化範囲（ファイル修正は対象外）、Ctrl+Eによる説明表示、権限の強制主体がモデルではなくClaude Code自体であることの根拠

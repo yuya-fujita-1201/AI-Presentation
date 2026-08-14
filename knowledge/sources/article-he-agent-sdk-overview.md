@@ -43,3 +43,5 @@ Anthropic公式のClaude Code Docsは、Agent SDKの入門文書として「Agen
 # 活用先
 
 - [../harness-engineering/what-is-harness-engineering.md](../harness-engineering/what-is-harness-engineering.md) — ハーネスの実装例としての機能群（組み込みツール・Hooks・Subagents・MCP・Permissions・Sessions・Skills/memory・Plugins）の根拠
+- [../harness-engineering/harness-responsibilities-and-ladder.md](../harness-engineering/harness-responsibilities-and-ladder.md) — Agent SDKの位置づけ（Claude Codeと同じツール群・エージェントループ・コンテキスト管理の提供）と提供機能一覧を、11責務との対応表の材料として使用
+- [../harness-engineering/tools-and-mcp.md](../harness-engineering/tools-and-mcp.md) — エージェントの定義（自ら手順を計画しファイル読み取り・コマンド実行・コード編集のツールを呼ぶ）、組み込みツールの内訳、MCPによる外部ツール・データソース接続という位置づけの根拠

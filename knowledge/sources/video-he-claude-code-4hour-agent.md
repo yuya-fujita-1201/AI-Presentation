@@ -74,3 +74,4 @@ generated:
 # 活用先
 
 - [../harness-engineering/why-harness-matters.md](../harness-engineering/why-harness-matters.md) — チャット型AIとAIエージェントの違い、ローカルファイルを直接読めるかどうかという環境差がAIにできる仕事を変えるという指摘の根拠（auto字幕）
+- [../harness-engineering/tools-and-mcp.md](../harness-engineering/tools-and-mcp.md) — ファイル操作能力が効く理由（c2・c3）、日本語の依頼が裏側で`mkdir`等になるという仕組みの説明、MCPによるGoogleカレンダー連携の実演、クラウド型チャットAIとの環境差、スキル＝AIへの業務マニュアルという説明（c4）、「AIに任せすぎない」＝人間の知識で担当を切り分けるという指摘（いずれもauto字幕）

@@ -60,4 +60,4 @@ AI Orchestraは、導入企業に最初に配布している基本形がある�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../harness-engineering/permissions-design.md](../harness-engineering/permissions-design.md) — deny→ask→allowの実務的な読み替え（禁止は現場のallowで破られない）、CLAUDE.mdは確率論／denyは機械的ガードという対比、ルール記法と複合コマンドの分解判定、日本語依頼で設定ファイルを書かせる導入手順、sudoとbypassPermissionsの2論点、権限モードと`disableBypassPermissionsMode`による組織的無効化の根拠
