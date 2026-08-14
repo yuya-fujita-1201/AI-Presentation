@@ -29,7 +29,7 @@
       "trust": "official",
       "score": 9,
       "score_detail": "適合+3(agentic) 初心者+0 新しさ+2 trust+3(official) 再生+1",
-      "status": "needs_human",
+      "status": "selected",
       "reject_reason": "no_subs"
     },
     {
@@ -44,7 +44,7 @@
       "trust": "official",
       "score": 9,
       "score_detail": "適合+3(agent) 初心者+0 新しさ+2 trust+3(official) 再生+1",
-      "status": "needs_human",
+      "status": "selected",
       "reject_reason": "no_subs"
     },
     {
@@ -59,8 +59,8 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3(MCP) 初心者+2(解説) 新しさ+1 trust+2(expert) 再生+1",
-      "status": "needs_human",
-      "reject_reason": null,
+      "status": "rejected",
+      "reject_reason": "off_topic_human_adjudicated(組織論・ハーネス外)",
       "subs": "auto"
     },
     {
