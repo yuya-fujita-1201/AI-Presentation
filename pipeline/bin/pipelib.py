@@ -1342,9 +1342,10 @@ def apply_brief(state, queue, theme, runid, outbox):
         if sec not in text:
             revert_paths([brief_path], runid)
             return False, f"必須節『{sec}』欠落"
-    if re.search(r"notes_slide|スピーカーノート.*(入れ|追加|書き込)", text):
+    if re.search(r"notes_slide|スピーカーノート", text) and \
+            not re.search(r"入れない|操作しない|触らない|禁止|壊", text):
         revert_paths([brief_path], runid)
-        return False, "PPTXノート操作の記述が混入"
+        return False, "PPTXノートへの言及が禁止事項として書かれていない"
     notify(state, f"pipeline: {state['theme']['id']} brief発行 🎉",
            f"{brief_path} 発行。デッキ={theme['theme']['deck_dir']}")
     advance_theme(state, queue, f"{state['theme']['id']} brief発行・テーマ完走")
