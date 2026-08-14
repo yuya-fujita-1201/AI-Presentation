@@ -62,6 +62,8 @@
 - **CE-S10** [docs-ce-openai-prompt-caching.md](./docs-ce-openai-prompt-caching.md) — 同じ入力prefixの計算を再利用するPrompt cache。メモリや圧縮とは異なる
 - **CE-S11** [docs-ce-anthropic-prompt-injection.md](./docs-ce-anthropic-prompt-injection.md) — 外部資料中の悪意ある命令に対する多層防御と継続評価
 - **CE-S12** [docs-ce-openai-data-controls.md](./docs-ce-openai-data-controls.md) — API・機能・第三者接続によって異なる保存、保持、データ境界の確認事項
+- **CE-S21** [docs-ce-cursor-rules.md](./docs-ce-cursor-rules.md) — Cursor公式Rules。適用時にモデルコンテキスト先頭へ毎回含まれる仕組みと「500行以内・大きなルールは分割」の推奨
+- **CE-S22** [docs-ce-anthropic-skill-authoring.md](./docs-ce-anthropic-skill-authoring.md) — Anthropic公式スキル作成指針。メタデータのみ常時読み込み・本文は関連時のみの段階的開示と「SKILL.md本文500行以内・分割推奨」
 
 ## 動画（プロンプトエンジニアリング）
 
