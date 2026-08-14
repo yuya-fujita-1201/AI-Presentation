@@ -55,3 +55,7 @@
 - [video-pe-opus-5-benchmark-tips.md](./video-pe-opus-5-benchmark-tips.md) — "A complete guide to Claude Opus 5!..."（keitoaiweb）。219ページ資料と22パターンの実践比較検証、公式ベストプラクティスに基づくOpus5向けプロンプトのコツ
 - [video-pe-five-engineering-stages.md](./video-pe-five-engineering-stages.md) — "[How to Master AI] A Thorough Guide to Loop, Harness, Prompt, Context, and Graph Engineering"（keitoaiweb）。プロンプト・コンテキスト・ハーネス・ループ・グラフ5つの全体マップと「入れ子」構造の整理
 - [video-pe-loop-engineering-5plus1-parts.md](./video-pe-loop-engineering-5plus1-parts.md) — "The End of the Era of Prompting AI | A Thorough Explanation of Loop Engineering"（RUNTEQ）。プロンプト→コンテキスト→ハーネス→ループの段階変遷、インナー/アウターループの2層構造、ループを構成する「5+1の部品」、自作のエピックフロー／移ローの実装とモデル使い分け
+
+## 動画（コンテキストエンジニアリング）
+
+- [video-ce-context-layers-intro.md](./video-ce-context-layers-intro.md) — 「【ゆっくり解説】コンテキストエンジニアリング入門、AI 出力品質を一段上げる設計術」（ゆっくり探究Lab）。コンテキストをシステムプロンプト・プロジェクトメモリ・検索拡張・ツール呼び出し・会話履歴の5層に整理し、Claude Codeでの実装例と構造化・削減のコツ、3つの落とし穴を解説

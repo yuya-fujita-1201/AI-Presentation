@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-14（さらに続き）
+
+- **Creation**: sources/ に動画1本を video-ce-context-layers-intro.md として登録（コンテキストエンジニアリングテーマ、ゆっくり探究Labチャンネル、字幕全文から要約・主張テーブルつき、research_ledger工程 run:0814123181）。コンテキストを5層（システムプロンプト・プロジェクトメモリ・検索拡張・ツール呼び出し・会話履歴）に整理し、Claude Codeでの実装例と構造化・削減のコツ、3つの落とし穴を解説
+- **Update**: sources/index.md に「動画（コンテキストエンジニアリング）」節を新設し上記1件を追加
+- **Note**: マニフェストの対象動画2本のうち1本（動画ID 8VNLFKCQFa8、"[How to Master AI] A Thorough Guide to Loop, Harness, Prompt, Context, and Graph Engineering"、keitoaiweb）は、2026-08-12にprompt-engineeringテーマで video-pe-five-engineering-stages.md として同一URL・同一タイトルで既に登録済みのため重複登録をスキップ（run:0814123181）
+
 ## 2026-08-14（続き）
 
 - **Fix**: prompt-engineering/ の採点指摘4件を修正（improve_k工程 run:0814042504、findings 4件中fixed 2件・rejected 1件・deferred(out_of_scope) 1件）。modern-model-prompting.mdのL55（effort運用指針／API仕様変更／5段階からの推論の3論点が1段落に密集）とL71（既存プロンプト互換／long-horizon特性／完全仕様の推奨／オフィス業務の4論点が1段落に密集）を指摘単位で段落分割、five-engineering-stages.mdのL15（「もう古い」への言及）を簡潔化しL67（同テーマの反論）へ理由を集約、loop-engineering.mdのL15にfive-engineering-stages.mdへの参照リンクを追加。1件（ダッシュの「冒頭配置」・太字の「同じ位置」という指摘）は全8ファイルのL13前後を実読した結果、ダッシュは全て文中・文末位置で冒頭配置ではなく、太字も1〜2箇所とファイルごとにばらつきがあり指摘の前提が事実と異なるためrejected。1件（採点対象一覧pipeline/staging/lists-081403591d/grade-files.txtに既存バンドル比較対象が含まれない指摘）はknowledge/配下の修正対象スコープ外のためdeferred
