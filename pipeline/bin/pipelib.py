@@ -417,8 +417,11 @@ def enforce_allowlist(phase, runid, theme, pre_entries):
     # 作業中ファイルを巻き戻さない（2026-08-14 02:17 の誤爆=友軍撃ちの再発防止）
     slug = theme["theme"]["slug"]
     protected = ["knowledge/", "pipeline/state/", "tools/", "templates/", "pipeline/prompts/",
-                 theme["theme"]["deck_dir"].rstrip("/") + "/", f"docs/codex-brief-{slug}.md",
                  "rubric-"]
+    # デッキ領域を保護するのは本流がデッキを作るテーマ（scope=full）のみ。
+    # knowledge-onlyテーマではデッキフォルダは他レーン（ユーザー/Codex）の領土（2026-08-14 13:3x）
+    if scope_of(theme["theme"]["id"]) == "full":
+        protected += [theme["theme"]["deck_dir"].rstrip("/") + "/", f"docs/codex-brief-{slug}.md"]
     pre_set = {p for _, p in pre_entries}
     violations = []
     for st, path in git_porcelain():
