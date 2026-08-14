@@ -56,4 +56,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../harness-engineering/sandbox-and-isolation.md](../harness-engineering/sandbox-and-isolation.md) — サンドボックスが必要な理由（エージェントが機械的にファイルを読む／アプリケーション層の除外設定はツール側の制御であり突破されうる）、OWASP Top 10 for Agentic Applications 2026の該当項目、プロンプトインジェクションに対する有効性の引用、3分類の内訳と各実装（Seatbelt/SBPL・Landlock・seccomp・bubblewrap・gVisor・CVE-2020-14386・Apple Virtualization Framework・Docker Sandbox）、`/sandbox`の挙動とClaude Desktopとの比較、選定基準（うっかり許可・攻撃面の広さ）と筆者の運用、最小権限の原則の根拠

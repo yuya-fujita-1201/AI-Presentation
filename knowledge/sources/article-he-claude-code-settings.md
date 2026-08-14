@@ -48,4 +48,4 @@ Userスコープは`~/.claude/`ディレクトリに置かれ、そのユーザ�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../harness-engineering/settings-scopes-and-governance.md](../harness-engineering/settings-scopes-and-governance.md) — スコープシステムの採用理由、Managed/User/Project/Localの所在と共有範囲、Managedだけ配信経路が影響範囲を左右すること、優先順位の5段階と`spinnerTipsEnabled`の具体例、各スコープの想定用途、権限ルールがマージ方式でありセキュリティ関連キーが例外になること、Localがgitignoreされること、`/config`と`/config key=value`（v2.1.181以降）の根拠

@@ -1,5 +1,12 @@
 # 変更履歴
 
+## 2026-08-14（harness-engineering バンドル完成 knowledge run:081421457c）
+
+- **Creation**: harness-engineering/ を新設し8コンセプトを整備（ソース台帳10本を情報源とする。設計と先行5本は先行ランで作成済み、本ラン 081421457c で残り3本を追加して全8本を完成）。本ランで追加したのは `settings-scopes-and-governance.md`（Managed/User/Project/Localの4スコープと優先順位、Managedだけ配信経路が影響範囲を決めること、権限ルールのみ優先順位ではなくマージで合成されdenyが層を問わず有効であること、「どの層に何を書くか」＝統制設計という読み替え、承認で育てた許可リストがLocal層に溜まりgitignoreされること）、`sandbox-and-isolation.md`（アプリケーション層の除外設定はツール側の制御であり突破されうるという限界、OSネイティブ／コンテナ／microVMの3分類と各実装、選定軸としての「うっかり許可への耐性」と「攻撃面の広さ」、権限とサンドボックスの強制主体の違いと「隔離が先、bypassが後」、最小権限の原則）、`project-memory-and-rules.md`（論文の11責務におけるproject memoryとしての位置づけ、コンテキスト汚染と分量の目安、コードスタイルはLint/hooksへ・絶対禁止はdenyへという3層の書き分け、トリガー＋アクションで書く罠の共有、段階的開示、長期記憶として育てる運用）の3本
+- **Creation**: harness-engineering/index.md を作成（8コンセプトの一覧と、4要素を「与える→塞ぐ→配る→備える→渡す」の流れでたどる推奨読書順）
+- **Update**: sources/ の台帳8本の「活用先」にコンセプト側からの被参照を追記し、コンセプトの Citations と双方向でリンクさせた（article-he-claude-code-settings / article-he-sandbox-technology は「（コンセプト昇華時に追記）」から実体へ差し替え、article-he-claude-code-permissions / article-he-claude-code-permissions-admin / article-he-claude-md-best-practices / article-he-harness-engineering-paper / article-he-agent-sdk-overview / video-pe-five-engineering-stages は行を追加）
+- **Update**: ルート index.md に harness-engineering/ を追加
+
 ## 2026-08-14（heソース台帳・記事1本 web_ledger run:081421275c）
 
 - **Creation**: sources/ に記事1本を article-he-*.md として登録（ハーネスエンジニアリングテーマ、web_ledger工程 run:081421275c）。article-he-claude-code-permissions-admin.md（AI Orchestra「Claude Codeの権限設定と管理者権限 — permissions実務ガイド」、法人導入支援の視点から解説する二次資料。deny→ask→allowの評価順序とCLAUDE.md記述との違い（プロンプトの「お願い」対permissionsによる機械的強制）、ツール名とパターンによるルール記法とワイルドカード・複合コマンド分解判定、`.claude/settings.json`への配置による適用範囲の使い分け、OSのsudo権限とbypassPermissionsモードという「管理者権限」の2つの異なる論点、確認プロンプトを減らす4方法とbypassPermissionsモードの起動フラグ・安全装置、managed/コマンドライン指定/local/project/userの4層設定ファイルとdenyルールの層を問わない絶対優先を解説。既存のAnthropic公式一次資料 article-he-claude-code-permissions.md と同一テーマだが視点が異なるため別ファイルとして登録）

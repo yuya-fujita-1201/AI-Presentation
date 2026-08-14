@@ -61,3 +61,5 @@ AI Orchestraは、導入企業に最初に配布している基本形がある�
 # 活用先
 
 - [../harness-engineering/permissions-design.md](../harness-engineering/permissions-design.md) — deny→ask→allowの実務的な読み替え（禁止は現場のallowで破られない）、CLAUDE.mdは確率論／denyは機械的ガードという対比、ルール記法と複合コマンドの分解判定、日本語依頼で設定ファイルを書かせる導入手順、sudoとbypassPermissionsの2論点、権限モードと`disableBypassPermissionsMode`による組織的無効化の根拠
+- [../harness-engineering/settings-scopes-and-governance.md](../harness-engineering/settings-scopes-and-governance.md) — 「どの層に何を書くか」がそのまま統制設計になるという位置づけ、設定4層の優先順位（managed→コマンドライン→local→project→user）、denyルールはどの層でも常に有効でallowで上書きできないこと、`.claude/settings.json`と`~/.claude/settings.json`の適用範囲、日本語依頼で設定ファイルを書かせる運用の根拠
+- [../harness-engineering/sandbox-and-isolation.md](../harness-engineering/sandbox-and-isolation.md) — bypassPermissionsモードを隔離環境以外では使わないのが原則であるという指摘、すなわち権限層の防御を外す前提としてサンドボックスが要求されること（「隔離が先、bypassが後」）の根拠
