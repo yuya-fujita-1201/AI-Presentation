@@ -650,8 +650,9 @@
         "source_tier": "secondary",
         "origin": "web:ai-orchestra.ai",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-he-claude-code-permissions-admin.md"
       }
     ]
   }

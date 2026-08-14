@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（heソース台帳・記事1本 web_ledger run:081421275c）
+
+- **Creation**: sources/ に記事1本を article-he-*.md として登録（ハーネスエンジニアリングテーマ、web_ledger工程 run:081421275c）。article-he-claude-code-permissions-admin.md（AI Orchestra「Claude Codeの権限設定と管理者権限 — permissions実務ガイド」、法人導入支援の視点から解説する二次資料。deny→ask→allowの評価順序とCLAUDE.md記述との違い（プロンプトの「お願い」対permissionsによる機械的強制）、ツール名とパターンによるルール記法とワイルドカード・複合コマンド分解判定、`.claude/settings.json`への配置による適用範囲の使い分け、OSのsudo権限とbypassPermissionsモードという「管理者権限」の2つの異なる論点、確認プロンプトを減らす4方法とbypassPermissionsモードの起動フラグ・安全装置、managed/コマンドライン指定/local/project/userの4層設定ファイルとdenyルールの層を問わない絶対優先を解説。既存のAnthropic公式一次資料 article-he-claude-code-permissions.md と同一テーマだが視点が異なるため別ファイルとして登録）
+- **Update**: sources/index.md の「記事（ハーネスエンジニアリング）」節に上記1件を追加
+
 ## 2026-08-14（heソース台帳・記事2本 web_ledger run:08142122e9）
 
 - **Creation**: sources/ に記事2本を article-he-*.md として登録（ハーネスエンジニアリングテーマ、Zenn記事2本、web_ledger工程 run:08142122e9）。article-he-claude-md-best-practices.md（Zenn「【Claude Code】CLAUDE.md運用のベストプラクティス：失敗しないための7つの原則」、300行以内・指示150〜200個程度というLLMの処理限界に基づく目安、フォーマット・スタイル指示はLint/Formatter/Git hooksに委ねスタイルではなく知識・罠・運用ルールを書くという方針、プロジェクト一行説明・頻出コマンド・トリガー&アクション型の罠共有という3要素、詳細情報を別ファイルへ分離する段階的開示、CLAUDE.mdの文脈が無視されうる前提とLLMの先頭末尾重み付け特性、短期記憶/長期記憶の比喩とモノレポでの親子CLAUDE.md構成を解説）、article-he-sandbox-technology.md（Zenn/株式会社松尾研究所「コーディングエージェントのサンドボックス技術を理解する」、プロンプトインジェクションによる機密ファイル流出をアプリケーション層の除外設定だけでは防ぎきれない理由、OWASP Top 10 for Agentic Applications 2026、OSネイティブ（Seatbelt/Landlock+seccomp/bubblewrap）・コンテナ（gVisor、CVE-2020-14386）・microVM（Apple Virtualization Framework、Docker Sandbox）の3分類、Claude Code `/sandbox`とClaude Desktopの実装比較、最小権限の原則に基づく筆者の使い分けを解説）
