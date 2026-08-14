@@ -516,7 +516,8 @@
   ],
   "web": {
     "subtopics_done": [
-      "official-guides"
+      "official-guides",
+      "concepts-survey"
     ],
     "candidates": [
       {
@@ -572,6 +573,24 @@
         "subtopic": "official-guides",
         "status": "verified",
         "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://arxiv.org/abs/2605.13357",
+        "title": "AI Harness Engineering: A Runtime Substrate for Foundation-Model Software Agents",
+        "publisher": "arXiv",
+        "retrieved": "2026-08-14",
+        "extract": "Foundation models have transformed automated code generation, yet autonomous software-engineering agents remain unreliable in realistic development settings. The dominant explanation locates this gap in model capability. We propose a different locus: software-engineering capability emerges from a model–harness–environment system, in which a runtime substrate—the harness—mediates how a foundation-model agent observes a project, acts on it, receives feedback, and establishes that a change is complete. We formalize this substrate as an AI Harness Engineering and identify eleven component responsibilities: task specification, context selection, tool access, project memory, task state, observability, failure attribution, verification, permissions, entropy auditing, and intervention recording. We operationalize the harness through a four-level ladder (H0–H3) that progressively exposes runtime support to the agent, and we propose a trace-based evaluation protocol that converts each agent run into an auditable episode package. Applied to a controlled validation task, the framework yields episode packages whose evidence structure varies systematically with harness level: lower levels produce only a final patch, higher levels produce reproduction logs, failure attributions, deterministic requirement checks, and structured verification reports. The framework reframes the central question of autonomous software engineering from whether a foundation model can produce a patch to whether the model–harness–environment system can produce a verifiably correct, attributed, and maintainable change. We outline a research program for the runtime systems that foundation-model software agents will require.\n\nFoundation models have rapidly become capable programming assistants. They generate functions, modify files, explain code, write tests, invoke tools, and interact with software repositories. This progress has energized an ambition that predates the current generation of models but has only recently become plausible: autonomous software-engineering agents that take a high-level development task and carry it through implementation, testing, verification, and maintenance with minimal human supervision.\n\nRecent benchmarks and agent systems show that the gap between local code generation and complete software work is real and persistent. A model that writes a correct local patch may still fail to complete a task. It may inspect the wrong files, apply a surface-level patch to a user interface while the underlying API behavior remains broken, run the wrong tests, misinterpret a failure, forget task state, leave behind obsolete artifacts, or declare success without sufficient verification. Humans remain involved not primarily because they are writing every line of code, but because they provide the missing runtime support: they identify relevant context, explain repository structure, select tools, interpret feedback, enforce architectural boundaries, verify behavior, and clean up residue.\n\nThe dominant framing of this gap locates it in model capability. On that view, an agent that fails on a software task does so because the model is not yet capable enough at coding, reasoning, planning, or tool use, and the field's task is to train better models or compose them into more sophisticated agent loops. We do not contest that model capability matters. We argue that this framing is incomplete.\n\nSoftware engineering is a long-horizon, stateful, tool-mediated, feedback-driven activity. It depends on context management, project memory, tool interfaces, execution traces, validation signals, permissions, rollback, and maintenance discipline. When a foundation model is placed inside a development environment designed primarily for human developers, many of these supports remain implicit, inaccessible, or unstable for the agent. The components that human developers acquire through socialization, documentation, and experience are not freely available to a model invocation; they must be exposed, structured, and traced. Where they are not, the agent either improvises or asks the human to fill the gap.\n\nWe therefore propose a different framing. Autonomous software-engineering capability is an emergent property of a model–harness–environment system, not of the model alone: C_system = F(C_model, C_harness, C_environment, T), where C_model is the foundation model's latent capability, C_environment is what the software environment exposes, C_harness is the runtime substrate that mediates between them, and T is the task distribution. We call this substrate an AI Harness Engineering: a runtime layer that surrounds a foundation-model software agent and manages context, tools, project memory, task state, observability, failure attribution, verification, permissions, and maintenance state. The harness is what determines whether latent model capability becomes auditable software-engineering behavior.",
+        "quote": "An AI Harness Engineering is a runtime substrate surrounding a foundation-model software agent that manages context, tools, project memory, task state, observability, failure attribution, verification, permissions, and maintenance state, so that latent model coding capability becomes auditable software-engineering behavior.",
+        "claims": [
+          "Zhong & Zhu (2026)は、自律的なソフトウェアエンジニアリング能力はモデル単体の性質ではなく、モデル・ハーネス・環境から成るシステムの創発的性質であると論じている。",
+          "同論文は、AIハーネスを構成する11の責務（タスク仕様・コンテキスト選択・ツールアクセス・プロジェクトメモリ・タスク状態・可観測性・失敗帰属・検証・権限・エントロピー監査・介入記録）を定義している。",
+          "同論文は、ハーネスが提供する実行時支援を段階的に開放するH0〜H3の4段階ラダーと、各エージェント実行を監査可能なエピソードパッケージに変換するトレースベースの評価プロトコルを提案している。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "concepts-survey",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/concepts-survey"
       }
     ]
   }
