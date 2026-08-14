@@ -84,3 +84,4 @@
 - [article-ce-lost-in-the-middle.md](./article-ce-lost-in-the-middle.md) — DEV Community記事。コンテキスト内の位置によってLLMの正答率がU字型に変化する「lost in the middle」現象を、2023年のStanford等の論文と2025年のMIT研究による2つのアーキテクチャ的原因から解説
 - [article-ce-softbank-what-is-context-engineering.md](./article-ce-softbank-what-is-context-engineering.md) — ソフトバンク株式会社ビジネスブログ。コンテキストエンジニアリングの定義、会話履歴の忘却問題、プロンプトエンジニアリングとの違い、システムプロンプト・要約・外部保管という実践テクニックを解説
 - [article-ce-cloco-context-engineering-claude.md](./article-ce-cloco-context-engineering-claude.md) — cloco Blog。KarpathyやTobi Lütkeの言及を紹介しつつ、AnthropicのWrite/Select/Compress/Isolateの4戦略とClaude CodeのCLAUDE.md整備を実践の入り口として解説
+- [video-he-webmcp-cloudflare-guide.md](./video-he-webmcp-cloudflare-guide.md) — WebMCPの解説。AIエージェントにツール（道具）を与える仕組みとハーネス層の実際

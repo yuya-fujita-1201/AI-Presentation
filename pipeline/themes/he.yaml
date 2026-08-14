@@ -25,6 +25,8 @@ required_concepts:
   - {id: stop-points, label: 人間の確認ポイント, hints: [確認, 承認, 止める, 人間]}
   - {id: config, label: 設定・ルールファイルによる制御, hints: [設定, ルール, ファイル, CLAUDE]}
   - {id: observability, label: ログと観測（何をしたか見えるように）, hints: [ログ, 記録, 監視, 観測]}
+extra_sources:
+  - knowledge/sources/video-pe-five-engineering-stages.md
 subtopics:
   - {id: official-guides, goal: Claude Code・エージェント公式ドキュメントの一次情報台帳化,
      queries: ["Claude Code documentation settings permissions", "Anthropic agent tool use documentation"]}

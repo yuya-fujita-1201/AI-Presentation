@@ -75,7 +75,7 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3(MCP) 初心者+2(解説) 新しさ+2 trust+2(expert) 再生+0",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -105,7 +105,8 @@
           "impact": "normal"
         }
       ],
-      "summary": "クラウドフレアのWebMCPを解説。AIにサイト操作用ツールメニューを提供し、人間の承認フローや設定手順、導入効果（処理時間8割減・正確さ向上）を具体的に説明"
+      "summary": "クラウドフレアのWebMCPを解説。AIにサイト操作用ツールメニューを提供し、人間の承認フローや設定手順、導入効果（処理時間8割減・正確さ向上）を具体的に説明",
+      "ledger_path": "knowledge/sources/video-he-webmcp-cloudflare-guide.md"
     },
     {
       "id": "rVWmPYQrlGA",
@@ -135,8 +136,8 @@
       "trust": "expert",
       "score": 8,
       "score_detail": "適合+3(Harness) 初心者+0 新しさ+2 trust+2(expert) 再生+1",
-      "status": "fetched",
-      "reject_reason": null,
+      "status": "rejected",
+      "reject_reason": "duplicate_cross_theme(video-pe-five-engineering-stages.md)",
       "subs": "auto",
       "claims": [
         {
