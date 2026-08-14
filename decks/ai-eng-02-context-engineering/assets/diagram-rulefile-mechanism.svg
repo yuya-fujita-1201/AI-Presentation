@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="740" viewBox="0 0 1024 740">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#247F7A"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="740" fill="#FFF9F3"/>
+
+  <!-- 左: プロンプト（今回だけ） -->
+  <rect x="88" y="56" width="400" height="160" rx="24" fill="#FCE9DC" stroke="#6F5C52" stroke-width="3"/>
+  <text x="288" y="130" text-anchor="middle" class="h" font-size="28">プロンプト</text>
+  <text x="288" y="190" text-anchor="middle" class="m" font-size="19">今回だけの事情／都度書く</text>
+
+  <!-- 右: ルールファイル（強調枠） -->
+  <rect x="536" y="56" width="400" height="160" rx="24" fill="#E1F2F0" stroke="#247F7A" stroke-width="6"/>
+  <text x="736" y="118" text-anchor="middle" class="h" font-size="27" fill="#247F7A">ルールファイル</text>
+  <text x="736" y="150" text-anchor="middle" class="m" font-size="19" fill="#247F7A">（CLAUDE.md 等）</text>
+  <text x="736" y="194" text-anchor="middle" class="m" font-size="19">毎回の約束／必ず読み込まれる</text>
+
+  <!-- 新入社員ピクトグラム（右ボックス寄り） -->
+  <circle cx="906" cy="50" r="15" fill="#247F7A"/>
+  <rect x="880" y="66" width="52" height="26" rx="13" fill="#247F7A"/>
+
+  <!-- 下向き矢印: 自動読み込み -->
+  <path d="M736 216 L736 372" fill="none" stroke="#247F7A" stroke-width="6" stroke-linecap="round" marker-end="url(#arrT)"/>
+  <text x="708" y="298" text-anchor="end" class="m" font-size="18">指示しなくても自動で読み込む</text>
+
+  <!-- AIセッション開始 -->
+  <rect x="556" y="380" width="360" height="90" rx="20" fill="#FFFFFF" stroke="#247F7A" stroke-width="4"/>
+  <text x="736" y="435" text-anchor="middle" class="h" font-size="26" fill="#247F7A">AIセッション開始</text>
+
+  <!-- 一言メッセージ -->
+  <rect x="112" y="560" width="800" height="110" rx="28" fill="#247F7A"/>
+  <text x="512" y="622" text-anchor="middle" class="h w" font-size="30">書いた分だけ、AIは「配属済み」になる</text>
+</svg>
