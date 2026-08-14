@@ -536,8 +536,9 @@
         "source_tier": "primary",
         "origin": "web:claude.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-he-claude-code-permissions.md"
       },
       {
         "url": "https://code.claude.com/docs/en/settings",
@@ -554,8 +555,9 @@
         "source_tier": "primary",
         "origin": "web:claude.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-he-claude-code-settings.md"
       },
       {
         "url": "https://code.claude.com/docs/en/agent-sdk/overview",

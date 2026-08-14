@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-14（heソース台帳・記事2本 web_ledger run:0814211079）
+
+- **Creation**: sources/ に記事2本を article-he-*.md として登録（ハーネスエンジニアリングテーマ、Anthropic公式Claude Code Docs、web_ledger工程 run:0814211079）。article-he-claude-code-permissions.md（「Configure permissions」、3段階のツール分類と承認要否、deny→ask→allowの評価順序、ツール名指定denyの完全除去とスコープ指定denyの違い、Ctrl+Eの説明表示機能を解説）、article-he-claude-code-settings.md（「Claude Code settings」、Managed/User/Project/Localの4スコープの所在・共有範囲・想定用途・優先順位を解説）
+- **Update**: sources/index.md に「記事（ハーネスエンジニアリング）」節を新設し上記2件を追加
+
 ## 2026-08-14（heソース台帳・研究フェーズ run:08142019a0）
 
 - **Creation**: sources/ に動画台帳を1本追加。`video-he-claude-code-4hour-agent.md`（PIVOT公式チャンネル「【Claude Code活用法】4時間でMC野嶋専用のAIエージェントを構築」、43分53秒）。環境構築・クロードコード基礎操作・悩みのヒアリングを踏まえたスキル作成・完成エージェントのデモという流れを、「スキル＝AIへの業務マニュアル」「AIに任せすぎない」というハーネスエンジニアリング関連の要点を軸に整理した

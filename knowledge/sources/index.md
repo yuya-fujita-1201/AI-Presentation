@@ -86,3 +86,8 @@
 - [article-ce-cloco-context-engineering-claude.md](./article-ce-cloco-context-engineering-claude.md) — cloco Blog。KarpathyやTobi Lütkeの言及を紹介しつつ、AnthropicのWrite/Select/Compress/Isolateの4戦略とClaude CodeのCLAUDE.md整備を実践の入り口として解説
 - [video-he-webmcp-cloudflare-guide.md](./video-he-webmcp-cloudflare-guide.md) — WebMCPの解説。AIエージェントにツール（道具）を与える仕組みとハーネス層の実際
 - [video-he-claude-code-4hour-agent.md](./video-he-claude-code-4hour-agent.md) — 「【Claude Code活用法】4時間でMC野嶋専用のAIエージェントを構築」（PIVOT）。環境構築からスキル作成、業務効率化AIエージェント完成までの体験企画。「スキル＝AIへの業務マニュアル」「AIに任せすぎない」設計の実例
+
+## 記事（ハーネスエンジニアリング）
+
+- [article-he-claude-code-permissions.md](./article-he-claude-code-permissions.md) — Anthropic公式「Configure permissions」。ツール種別ごとの承認要否、deny→ask→allowの評価順序、ツール名指定denyによる完全除去とスコープ指定denyの違い、Ctrl+Eの説明表示機能を解説
+- [article-he-claude-code-settings.md](./article-he-claude-code-settings.md) — Anthropic公式「Claude Code settings」。設定を適用するManaged/User/Project/Localの4スコープと優先順位、各スコープの想定用途を解説
