@@ -738,6 +738,11 @@ def apply_research_scan(state, queue, theme, runid, outbox):
 
 
 def prework_research_fetch(state, queue, theme, runid):
+    already = existing_resource_urls()  # 既存台帳と重複する動画は字幕取得もしない（無駄ラン防止）
+    for v in queue["videos"]:
+        if v["status"] in ("selected", "candidate") and v.get("url") in already:
+            v["status"] = "rejected"
+            v["reject_reason"] = f"duplicate_cross_theme({already[v['url']]})"
     todo = [v for v in queue["videos"] if v["status"] == "selected"][:CFG["research_targets"]["fetch_per_run"]]
     if not todo:
         return {"mode": "transition_check"}
@@ -854,6 +859,12 @@ def compute_origin_article(url, platforms):
 
 
 def prework_research_ledger(state, queue, theme, runid):
+    already = existing_resource_urls()  # 既存台帳と重複する動画は書かせない（クロステーマ重複の最終防波堤）
+    for v in queue["videos"]:
+        if v["status"] in ("fetched", "selected") and v.get("url") in already:
+            v["status"] = "rejected"
+            v["reject_reason"] = f"duplicate_cross_theme({already[v['url']]})"
+            run_log(runid, f"重複却下: {v['id']} → {already[v['url']]}")
     todo = [v for v in queue["videos"] if v["status"] == "fetched"][:CFG["research_targets"]["ledgers_per_run"]]
     if not todo:
         return {"mode": "transition_check"}
