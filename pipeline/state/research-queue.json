@@ -515,7 +515,8 @@
   "web": {
     "subtopics_done": [
       "official-guides",
-      "official-multiagent"
+      "official-multiagent",
+      "research"
     ],
     "candidates": [
       {
@@ -589,6 +590,60 @@
         "subtopic": "official-multiagent",
         "status": "verified",
         "cache_dir": "pipeline/cache/web/official-multiagent"
+      },
+      {
+        "url": "https://arxiv.org/abs/2503.13657",
+        "title": "Why Do Multi-Agent LLM Systems Fail?",
+        "publisher": "arXiv (Cemri, Pan, Yang et al.)",
+        "retrieved": "2026-08-16",
+        "extract": "研究課題として、マルチエージェントLLMシステム(MAS)は単一エージェントに比べて一般的なベンチマークで「minimal」な性能向上にとどまっており、これまで失敗パターンの体系的理解が欠けていたと位置づける。この空白を埋めるため、著者らはMAST(Multi-Agent System Failure Taxonomy)という失敗分類体系と、MAST-Dataという失敗トレースデータセットを提示した。MAST-Dataは7つの人気マルチエージェントフレームワークにまたがる1600件以上の注釈付きトレースから構成され、著者らはこれを「初めてのマルチエージェントシステム失敗ダイナミクスデータセット」と位置づけている。MAST自体は150件のトレースを専門家の人間アノテーターがガイダンスのもとで分析することで構築され、アノテーター間一致度は「kappa=0.88」という高い値を記録した。分類体系は3つの主要カテゴリに整理される。(i)システム設計上の問題(役割定義の曖昧さや終了基準の欠如など)、(ii)エージェント間の非整合(情報フローの破綻、エージェント間の前提の衝突、不完全な文脈伝播)、(iii)タスク検証(誤った受理基準の適用、誤ったエージェントによる時期尚早なタスク終了)。この3カテゴリの下に合計14の独立した失敗モードが分類されている。評価のスケーラビリティを確保するため、人間アノテーションで確立した分類をもとにLLM-as-a-Judgeパイプラインを構築し、自動的な失敗モード判定を可能にした。実験対象としたモデルはGPT-4、Claude 3、Qwen2.5、CodeLlamaで、タスク種別はコーディング、数学、一般的なエージェントタスクにまたがる。著者らはデータセット、分類体系、LLMアノテータツール一式を公開しており、MAS研究コミュニティ全体での再現性・発展を意図している。",
+        "quote": "マルチエージェントLLMシステムは一般的なベンチマークで「minimal」な性能向上にとどまっており、150件のトレースを専門家アノテーターが分析した結果、kappa=0.88の高い一致度で3カテゴリ・14種類の失敗モードから成るMAST分類体系が構築された。",
+        "claims": [
+          "著者らは、マルチエージェントLLMシステムの失敗を体系的に分析するため、7フレームワーク・1600件超のトレースを含むMAST-Dataと、14の失敗モードを3カテゴリ(システム設計・エージェント間非整合・タスク検証)に整理したMAST分類体系を提案している。",
+          "著者らは、150件のトレースを専門家アノテーターがkappa=0.88の高い一致度で分析したことをもって、この分類体系の信頼性を裏付けている。",
+          "著者らは、GPT-4・Claude 3・Qwen2.5・CodeLlamaを含む複数モデル・複数タスク種別(コーディング・数学・一般エージェントタスク)にわたって分類を検証し、LLM-as-a-Judgeによる自動判定パイプラインへの拡張が可能であると主張している。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "research",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/research"
+      },
+      {
+        "url": "https://arxiv.org/abs/2402.16823",
+        "title": "GPTSwarm: Language Agents as Optimizable Graphs",
+        "publisher": "arXiv / Proceedings of the 41st International Conference on Machine Learning (ICML 2024)",
+        "retrieved": "2026-08-16",
+        "extract": "GPTSwarmは、LLMベースのエージェントを計算グラフとして統一的に表現するフレームワークである。単一エージェントは有向非環グラフ(DAG) G=(N,E,F,o)として定義され、ノードNはLLM推論・ツール使用・関数呼び出しなどの操作を、エッジEはノード間の情報フローを表す。入力xに対してトポロジカルソート順に各ノードを実行し、先行ノードの出力を後続ノードの文脈として利用する。K個のエージェントを組み合わせた「スワーム」は複合グラフG_ℰ=(N',E_ℰ,F',o')として定義され、エッジ集合ℰは異なるエージェント間の接続を表す。最適化は2段階からなる。エッジ最適化では、各潜在エッジe_iに実数パラメータθ_i∈[0,1]を割り当て、確率θ_iでエッジを含めるサンプリングを行い、REINFORCEアルゴリズム(∇_θ E[u_τ(G_ℰ)]≈(1/M)Σ û_τ(G_i)∇_θ log p_θ(G_i))で勾配推定しAdamで更新する。ノード最適化では、各ノードの入出力ペアを履歴h_nに蓄積し、OPRO等の既存プロンプト最適化手法でプロンプトp_nを反復改善する。評価では、Mini Crosswords(5×5、20問)でGPT-4-Turbo使用時に最適化後0.800(±0.0616)を達成し、先行技術のTree of Thought(GPT-4-Turbo、0.668)を上回った。HumanEval(164問)ではノード最適化なしの0.76からオンライン学習で0.88(±0.007)まで改善。GAIAベンチマークでは、GPT-4-Turbo単体の平均9.70%、AutoGPTの4.85%に対し、GPTSwarm(7×Tree of Thought構成)は平均18.45%(Level1: 30.56±3.25%、Level2: 20.93±1.27%)を記録し、Level2では260.2%の相対改善を示した。実装は41種類のファイル解析・ウェブ検索・インデックスベースメモリのモジュールに対応する。",
+        "quote": "Various human-designed prompt engineering techniques have been proposed to improve problem solvers based on Large Language Models (LLMs), yielding many disparate code bases.",
+        "claims": [
+          "著者らは、単一エージェントおよび複数エージェント(スワーム)を有向非環グラフとして統一的に表現し、ノードのプロンプトとエッジ(通信トポロジ)の両方を自動最適化できると主張している。",
+          "著者らは、エッジ最適化にREINFORCEベースの確率的グラフサンプリングを用いることで、離散的なエッジ選択の組合せ的複雑性を回避できると述べている。",
+          "著者らは、GAIAベンチマークにおいてGPTSwarm(7×Tree of Thought構成)がGPT-4-Turbo単体(平均9.70%)やAutoGPT(平均4.85%)を大きく上回る平均18.45%を達成したと報告し、Mini CrosswordsやHumanEvalでも同様の改善を確認したとしている。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "research",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/research"
+      },
+      {
+        "url": "https://arxiv.org/abs/2509.25370",
+        "title": "Where LLM Agents Fail and How They can Learn From Failures",
+        "publisher": "arXiv",
+        "retrieved": "2026-08-16",
+        "extract": "本研究は、LLMエージェントが計画・メモリ・反省・ツール使用を統合する一方で、単一の根本原因エラーが後続の判断に波及する「カスケード失敗」に脆弱であるという課題認識から出発する。主要な貢献は3つ。第一に、AgentErrorTaxonomyという失敗モードの分類体系を提示し、Memory(メモリ)、Reflection(反省)、Planning(計画)、Action(行動)、System-level operations(システムレベル操作)という5つの領域に失敗モードを体系化している。第二に、AgentErrorBenchというベンチマークデータセットを構築した。これはALFWorld、GAIA、WebShopという3つの異なる環境での実エージェント軌跡を体系的にアノテーションしたもので、著者らはこれを「実環境のエージェント軌跡から構築された初の大規模失敗軌跡データセット」と位置づけている。第三に、AgentDebugというデバッグフレームワークを提案し、失敗の根本原因を特定した上で矯正フィードバックを提供することでエージェントの反復的な改善を可能にする設計とした。実験ではAgentErrorBenchを用いてAgentDebugの効果を検証し、全正解精度(all-correct accuracy)で24%の向上、ステップレベル精度(step-level accuracy)で17%の向上を達成した。さらに、ALFWorld・GAIA・WebShopの3ベンチマーク全体では、タスク成功率が最大26%の相対改善を示したと報告している。著者らはこの結果を踏まえ、根本原因に基づく原理的なデバッグがより信頼性が高く適応的なLLMエージェントの実現につながると位置づけている。このように本研究は、失敗の分類(AgentErrorTaxonomy)から軌跡データセットの構築(AgentErrorBench)、デバッグ支援フレームワークの実装(AgentDebug)、定量的な性能改善の実証までを一貫した枠組みとして提示しており、計画・メモリ・反省・行動・システムレベルという広い範囲の失敗モードを横断的にカバーしている点が特徴である。",
+        "quote": "原理的なデバッグがより信頼性があり適応的なLLMエージェントへの道筋を確立する。",
+        "claims": [
+          "著者らは、LLMエージェントの失敗をMemory・Reflection・Planning・Action・System-level operationsの5領域に体系化したAgentErrorTaxonomyを提案している。",
+          "著者らは、ALFWorld・GAIA・WebShopの3環境にまたがる実エージェント軌跡をアノテーションしたAgentErrorBenchを、初の大規模失敗軌跡データセットとして構築したと主張している。",
+          "著者らは、根本原因特定と矯正フィードバックを行うAgentDebugフレームワークにより、全正解精度で24%、ステップレベル精度で17%の向上、3ベンチマーク全体でタスク成功率最大26%の相対改善を達成したと報告している。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "research",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/research"
       }
     ]
   }
