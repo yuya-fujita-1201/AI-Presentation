@@ -10,14 +10,14 @@
 
 - **extractのみから執筆する。extractに根拠のない文は書かない。** あなたの一般知識でextractの穴を埋めることがこの工程の最大の契約違反
 - extractは「要点＋短い引用」の形式（原文の連続抜粋とは限らない）。**引用として本文に載せてよいのは、extract内で `「…」` に入っている文字列だけ**。要点部分は自分の言葉で言い換えて書く
-- extractの材料で本文2000字に届かない記事は、**その記事をスキップして notes に理由を書き、blocked_reason: input_mismatch で報告**する（Web再取得はできない設計になっている）
+- extractの材料で本文1200字に届かない記事は、**その記事をスキップして notes に理由を書き、blocked_reason: input_mismatch で報告**する（Web再取得はできない設計になっている）
 
 ## 手順（1本ずつ）
 
 1. テンプレートと手本をRead
 2. ファイル名: `knowledge/sources/article-{{THEME_ID}}-<slug>.md`
 3. frontmatter: テンプレート全フィールド。**origin / source_tier / retrieved / resource(url) / site はマニフェストの値をそのまま転記**
-4. 本文: 2000字以上・帰属文体（「〜と説明している」）・quoteを対応する主張の箇所に引用として併記
+4. 本文: 1200字以上・帰属文体（「〜と説明している」）・quoteを対応する主張の箇所に引用として併記
 5. `knowledge/sources/index.md` と `knowledge/log.md` に追記
 6. 自己検証CHECKログ: 本文字数・frontmatter全フィールド・「extractにない固有名詞/数値を書いていないか」の3点
 

@@ -63,8 +63,11 @@ def main():
                 fail(f"{f}: source_tier欠落")
             if not re.search(r"^site:", fm, re.M):
                 fail(f"{f}: site欠落")
-        if len(body) < 2000:
-            fail(f"{f}: 本文{len(body)}字 (<2000)")
+        # 動画は字幕全文が材料なので2000字。記事はextract（要点＋短い引用・800字〜）が材料のため
+        # 2000字を課すと水増しを誘発する。1200字を下限とする（2026-08-15）
+        min_chars = 2000 if a.mode == "video" else 1200
+        if len(body) < min_chars:
+            fail(f"{f}: 本文{len(body)}字 (<{min_chars})")
         rm = re.search(r"^resource:\s*(\S+)", fm, re.M)
         if rm:
             url = rm.group(1).strip()
