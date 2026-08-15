@@ -4,7 +4,8 @@ theme:
   title: プロンプトエンジニアリング
   series_index: 1
   knowledge_dir: knowledge/prompt-engineering
-  deck_dir: decks/ai-eng-01-prompt-engineering
+  # 35枚の自動生成レーンは不採用。人間レビュー済み正本を上書きしないため隔離する。
+  deck_dir: decks/_archive/ai-eng-01/2026-08-14-auto-pipeline-35slides-rejected
 keywords:            # 通常scan用（英日）
   ja: ["プロンプトエンジニアリング 入門", "プロンプト 書き方 コツ",
        "プロンプトエンジニアリング とは", "生成AI プロンプト 基本",

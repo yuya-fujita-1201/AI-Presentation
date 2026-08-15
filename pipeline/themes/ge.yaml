@@ -1,0 +1,54 @@
+theme:
+  id: ge
+  slug: ai-eng-05-graph-engineering
+  title: グラフエンジニアリング
+  series_index: 5
+  knowledge_dir: knowledge/graph-engineering
+  deck_dir: decks/graph-engineering-visual
+# 既存台帳11本はすべて日本語YouTube（auto字幕）。不足しているのは公式ドキュメント・論文・
+# 技術記事などの一次資料なので、英語圏と公式ソースを厚めに狙う（2026-08-15 追加時点）
+keywords:
+  ja: ["マルチエージェント 設計 分担", "AIエージェント オーケストレーション とは",
+       "サブエージェント 使い方 解説", "AI 並列実行 タスク分割", "エージェント ワークフロー 設計"]
+  en: ["multi agent orchestration LLM", "orchestrator worker agent pattern",
+       "subagents context isolation explained", "agent workflow graph design",
+       "building effective agents patterns"]
+keywords_fallback:
+  ja: ["エージェント 分業 実例", "AI タスク分解 設計", "グラフエンジニアリング 解説"]
+  en: ["agent handoff pattern", "DAG workflow AI agents", "parallel subagents cost"]
+match_vocab:
+  ja: [グラフ, 分担, 分業, ノード, オーケストレーション, サブエージェント, 並列, 構造, 依存]
+  en: [graph, orchestration, "multi-agent", subagent, parallel, workflow, handoff, DAG]
+beginner_vocab: [入門, 初心者, とは, 基本, 解説, 使い方,
+                 beginner, basics, tutorial, introduction, explained]
+# 既存9コンセプトが埋めている論点は除外し、一次資料でしか埋まらない不足分を指定する
+required_concepts:
+  - {id: official-workflow-patterns, label: 公式が示すワークフローの型（連鎖・振り分け・並列・指揮者と作業者・評価者）,
+     hints: [chaining, routing, parallel, orchestrator, evaluator, 型, パターン]}
+  - {id: agent-vs-workflow, label: ワークフローとエージェントの線引き（どちらを使うか）,
+     hints: [workflow, agent, 使い分け, 自律, 決め打ち]}
+  - {id: subagent-context, label: サブエージェントによる文脈の分離,
+     hints: [subagent, サブエージェント, 分離, 文脈, コンテキスト]}
+  - {id: parallel-cost, label: 並列化のコストと効果（トークン消費の実測）,
+     hints: [並列, コスト, トークン, 効率, 実測]}
+  - {id: failure-modes, label: 多エージェント構成が壊れる条件（一次資料の実測・事例）,
+     hints: [失敗, 破綻, エラー, 事例, 限界]}
+# 既存のge台帳11本は *-ge-*.md のグロブで自動的に材料に入る。ここでは他テーマの共有分のみ列挙
+extra_sources:
+  - knowledge/sources/video-pe-five-engineering-stages.md
+  - knowledge/sources/article-he-agent-sdk-overview.md
+  - knowledge/sources/article-le-claude-code-best-practices.md
+subtopics:
+  - {id: official-guides, goal: ベンダー公式のエージェント構成・サブエージェント設計の一次情報を台帳化,
+     queries: ["Anthropic building effective agents workflow patterns",
+               "Claude Code subagents documentation",
+               "OpenAI agents handoff orchestration guide"]}
+  - {id: official-multiagent, goal: 公式が公開した多エージェント運用の実測・設計判断の記録,
+     queries: ["Anthropic multi-agent research system engineering blog",
+               "multi agent token usage cost report"]}
+  - {id: research, goal: 多エージェント/グラフ構成の研究・ベンチマークの原典,
+     queries: ["multi agent LLM system failure modes arxiv",
+               "LLM agent orchestration benchmark arxiv"]}
+primary_domains:
+  [docs.anthropic.com, www.anthropic.com, platform.openai.com, openai.github.io,
+   ai.google.dev, arxiv.org, langchain-ai.github.io]
