@@ -219,8 +219,9 @@
       "trust": "unknown",
       "score": 6,
       "score_detail": "適合+3 初心者+2 新しさ+1 trust+0 再生+0",
-      "status": "selected",
-      "reject_reason": null
+      "status": "rejected",
+      "reject_reason": "vote_failed",
+      "subs": "auto"
     },
     {
       "id": "76biclrOcGk",
@@ -234,7 +235,7 @@
       "trust": "unknown",
       "score": 6,
       "score_detail": "適合+3 初心者+2 新しさ+1 trust+0 再生+0",
-      "status": "candidate",
+      "status": "selected",
       "reject_reason": null
     },
     {
