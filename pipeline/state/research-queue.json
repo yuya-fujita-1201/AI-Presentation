@@ -514,7 +514,8 @@
   ],
   "web": {
     "subtopics_done": [
-      "official-guides"
+      "official-guides",
+      "official-multiagent"
     ],
     "candidates": [
       {
@@ -552,6 +553,42 @@
         "subtopic": "official-guides",
         "status": "verified",
         "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://www.anthropic.com/engineering/multi-agent-research-system",
+        "title": "How we built our multi-agent research system",
+        "publisher": "Anthropic",
+        "retrieved": "2026-08-16",
+        "extract": "アーキテクチャ: オーケストレーター・ワーカーパターンを採用。リードエージェント（Claude Opus 4）がクエリを分析し戦略を立て、サブエージェント（Claude Sonnet 4）を生成して並列に異なる側面を探索させる。処理フローはユーザークエリ→リードエージェント→複数サブエージェント→結果統合→引用エージェントによる最終処理という順。「lead agent analyzes it, develops a strategy, and spawns subagents to explore」。コンテキストウィンドウ超過に備え、計画をメモリ層に保存する仕組みも実装している。\n\n性能評価: 内部評価で、Opus 4をリードエージェントとしSonnet 4をサブエージェントとする多エージェント構成は、単一のOpus 4エージェント構成に対して90.2%の性能改善を示した。BrowseComp評価の分散分析では、トークン使用量単独で分散の80%を説明し、残りは「the number of tool calls and the model choice」で説明される。評価にはLLM-as-judgeを用い、事実性・引用精度・完全性・ソース品質・ツール効率性の5項目を0.0〜1.0でスコアリング。まず「about 20 queries representing real usage patterns」という小規模テストから開始し、人間評価も併用して自動評価が見逃すエッジケース（幻覚回答や情報源選択の偏りなど）を検出した。\n\nトークン消費: 通常のチャットと比較して、一般的なエージェントは約4倍、マルチエージェントシステムでは約15倍のトークンを消費する。この倍率は「tasks where the value of the task is high enough to pay for」という経済性の条件を満たす場合にのみ正当化されるとしている。\n\n失敗事例と対処: 初期段階では単純なクエリに対して50個ものサブエージェントを生成してしまう問題があり、複雑度に応じたスケーリングルールを組み込んで対処した。サブエージェント間で重複した調査が行われる問題には詳細なタスク説明と役割分担の明示で対応。低品質なSEO最適化コンテンツを優先して選んでしまう問題にはソース品質のヒューリスティックを追加した。「agents continuing when they already had sufficient results」という、十分な結果が得られても探索を継続してしまう非効率も観察された。\n\nプロンプトエンジニアリングの教訓（8原則の一部）: (1)Consoleでプロンプトとツール環境を正確に再現するシミュレーション駆動開発、(2)サブエージェントへの委譲では目的・出力形式・ツール指定・境界を明示する必要があり「simple, short instructions like 'research the semiconductor shortage'」のような曖昧な指示では不十分、(3)タスク複雑さに応じた努力配分（単純事実なら1エージェント×3-10コール、複雑研究なら10以上のエージェントで明確分業）、(4)ツール説明が不明瞭だと「agents encounter unseen tools...completely wrong paths」という誤動作が起きる、(5)Claude自身にプロンプト改善を提案させる自己改善メカニズムで、ツール説明改善により40%のタスク完了時間短縮を達成、(8)並列ツール実行（リードは3-5サブエージェントを並列生成、サブエージェントは3つ以上のツールを並列実行）により「cut research time by up to 90%」を実現。\n\n本番運用の設計判断: 状態管理では「we need to durably execute code and handle errors along the way」という方針のもと、再開可能な実行パターン（チェックポイント機構）を採用し、エラー時はリスタートでなく適応的に処理する。可観測性は本番トレースを導入しつつ「without monitoring the contents of individual conversations」という形でユーザープライバシーを保全する。デプロイメントでは、ステートフルな実行中エージェントを保護するため「gradually shifting traffic from old to new versions」というレインボーデプロイメントを採用。実行フローは現状同期実行（リード→サブ群待機→次へ）であり「create bottlenecks in the information flow」という課題があるため将来的な非同期化が検討されているが、結果調整や状態一貫性の複雑さが増す点が課題として挙げられている。",
+        "quote": "In our evaluations, Claude Opus 4 as the lead agent with Claude Sonnet 4 subagents outperformed single-agent Claude Opus 4 by 90.2%. Multi-agent systems use about 15× more tokens than chat interactions.",
+        "claims": [
+          "Anthropicは、Opus 4リード・Sonnet 4サブエージェント構成の多エージェント研究システムが単一エージェント構成に対し内部評価で90.2%の性能改善を示したと報告している。",
+          "Anthropicは、マルチエージェントシステムが通常のチャット対比で約15倍のトークンを消費すると報告している。",
+          "Anthropicは、ツール説明の改善によりあるエージェントのタスク完了時間を40%短縮できたと報告している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:anthropic.com",
+        "subtopic": "official-multiagent",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-multiagent"
+      },
+      {
+        "url": "https://www.anthropic.com/engineering/building-c-compiler",
+        "title": "Building a C compiler with a team of parallel Claudes",
+        "publisher": "Anthropic",
+        "retrieved": "2026-08-16",
+        "extract": "実験概要: AnthropicはRust言語でC言語コンパイラを一から開発し、Linuxカーネルをコンパイル可能にすることを目指す実験を実施した。16個のClaudeインスタンス（エージェント）を用い、約2週間・「nearly 2,000 Claude Code sessions」にわたって並列開発を行った。\n\nモデルとエージェント構成: 使用モデルは「Opus 4.6 using agent teams」。各エージェントはDockerコンテナ内で独立して動作し、Gitリポジトリを共有インフラとして利用した。役割は専門化されており、「one agent with coalescing duplicate code」（重複コードの統合担当）、「another in charge of improving performance」（性能改善担当）、「another responsible for outputting efficient compiled code」（効率的なコード出力担当）などに分かれていた。\n\nトークン消費とコスト: 実測値として、入力トークンは「2 billion input tokens」（20億トークン）、出力トークンは「140 million output tokens」（1億4000万トークン）、総コストは「just under $20,000」（2万ドル弱）、セッション数は「nearly 2,000 Claude Code sessions」と報告されている。\n\nマルチエージェント運用設計: タスク分割の仕組みとして、各エージェントは「current_tasks/」ディレクトリ内のテキストファイルでロックを取得してタスクを担当した。競合回避については「If two agents try to claim the same task, git's synchronization forces the second agent to pick a different one」という形でGitの同期機構自体を競合解決に利用した。同期の流れは「pull from upstream, merges changes from other agents, pushes changes, and removes the lock」という手順。Linuxカーネル対応では、GCCを「online known-good compiler oracle」（既知良好なコンパイラの参照実装）として使い、異なるファイルを異なるエージェントが並行して修正できるよう設計した。\n\n課題と教訓: 最大の学習は「Claude will work autonomously to solve whatever problem I give it. So it's important that the task verifier is nearly perfect」というもので、検証機構（タスクベリファイア）がほぼ完璧である必要性を強調している。文脈管理については「The test harness should not print thousands of useless bytes」として、テストハーネスが無駄に大量の出力をしないよう注意が必要だとしている。また「Claude can't tell time and, left alone, will happily spend hours running tests instead of making progress」という時間感覚の欠如も課題として挙げられ、放置すると進捗のないままテスト実行に何時間も費やしてしまう傾向が観察された。並列化の限界として、単一タスクに固定すると全エージェントが同じバグで停止してしまう問題も見られた。\n\n成果物の性能: 完成したコンパイラは「100,000-line compiler」（10万行規模）で、「build Linux 6.9 on x86, ARM, and RISC-V」という複数アーキテクチャでのLinux 6.9ビルドに対応した。テスト成功率は「99% pass rate on most compiler test suites including the GCC torture test suite」に達し、コンパイル対象として「QEMU, FFmpeg, SQlite, postgres, redis」が挙げられている。一方で制限事項として、16ビットx86コード生成ができずGCCに依存する点、アセンブラとリンカが「somewhat buggy」（やや不安定）である点、最適化を全て無効にした場合でも「less efficient code than GCC」しか生成できない点が挙げられている。",
+        "quote": "Over nearly 2,000 Claude Code sessions across two weeks, the agents consumed 2 billion input tokens and generated 140 million output tokens, for a total cost just under $20,000. Claude will work autonomously to solve whatever problem I give it, so it's important that the task verifier is nearly perfect.",
+        "claims": [
+          "Anthropicは、16個のClaudeエージェント（Opus 4.6）が約2週間・約2000セッションでRust製Cコンパイラを開発し、入力20億トークン・出力1億4000万トークン、総コスト2万ドル弱を要したと報告している。",
+          "Anthropicは、Claudeが自律的に与えられた問題を解こうとするためタスク検証機構（バリファイア）がほぼ完璧である必要があると指摘している。",
+          "Anthropicは、完成したコンパイラがLinux 6.9をx86・ARM・RISC-Vでビルド可能で、GCC torture test suiteを含む主要テストスイートで99%の成功率を達成したと報告している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:anthropic.com",
+        "subtopic": "official-multiagent",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-multiagent"
       }
     ]
   }
