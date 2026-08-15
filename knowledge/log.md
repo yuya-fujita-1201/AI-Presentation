@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-15（leソース台帳・記事2本 web_ledger run:0815121336）
+
+- **Creation**: sources/ に記事2本を article-le-*.md として登録（ループエンジニアリングテーマ、web_ledger工程 run:0815121336）。article-le-qiita-syoitu-loop-engineering.md（Qiita「入門から実践 -「🔁 ループエンジニアリング」」Syoitu、二次情報。Addy Osmaniの定義「Loop engineering is replacing yourself as the person who prompts the agent」の引用、ループを構成する5つのアクション（発見・受け渡し・検証・記憶・スケジューリング）と6つのパーツ（Automations・Worktrees・Skills・Connectors/MCP・Sub-agents・Memory）、Claude Codeでの3ファイル実装（CLAUDE.mdの停止条件「全チェック通過」「最大5回」「同じエラー2回連続」と禁止事項、settings.jsonのStop/PostToolUseフック、fixerサブエージェントの「推測は禁止」条件）、Mastra Goals機能のjudge/maxRuns/prompt、回しっぱなしの代価4リスクを解説）、article-le-note-masawunder-goal-loop-design.md（note「Claude Code ループエンジニアリング入門 /goal・/loopの使い分けと停止条件の設計」masa_wunder、二次情報。「公式が定義した『ループ』の核心は停止条件」という位置づけ、人の関与度によるターン駆動・ゴール駆動・時間駆動・自律駆動の4分類、/goal（ゴール駆動）と/loop（時間駆動）の定義の違い、著者自身の「停止条件を1つだけにした時は失敗しました」という失敗談から品質スコア・最大12イテレーション・最大360分の3重構成に至った経緯、段階的導入の3ステップとトークン管理の確認方法、「賢くお願いする」から「止まり方まで含めて任せる」への総括を解説）
+- **Update**: sources/index.md の「記事（ループエンジニアリング）」節に上記2件を追加
+
 ## 2026-08-15（leソース台帳・記事2本 web_ledger run:08151159f1）
 
 - **Creation**: sources/ に記事2本を article-le-*.md として登録（ループエンジニアリングテーマ、web_ledger工程 run:08151159f1）。article-le-kilo-loop-engineering-definition.md（Kilo「What Is Loop Engineering? AI Feedback Loops」、二次情報。loop engineeringを「AIコーディングエージェントが計画立案・コード変更・結果観察・アプローチ修正を繰り返すフィードバックループの設計・運用・改善の実践」と定義する原文引用、Intent・Context・Action・Observation・Adjustmentの5段階モデル、プロンプトエンジニアリングとの対比表（「良い最初の回答」対「良い最終成果」、失敗モードの違い）、Test-Driven/Compiler-Driven/Review-Driven/Runtime Debugging/Product Iterationの5実践パターン、「テストの失敗は単なるエラーメッセージではなく新たな文脈情報である」という教訓と組織的な再現性標準の必要性を解説）、article-le-zenn-maker-checker-practice.md（Zenn「Claude Code で『ループエンジニアリング』を実践してみた」tetsu_don、二次情報。/spec-review・/code-reviewをMaker-Checker対応に再設計しレビュー役のtoolsからWrite・Editを外すことで修正権限を剥奪した設計、openBD書籍価格チェッカーを検証題材とした3パターンのエラー検証、「想定内の異常系か本当のバグかを判定する」性質判定ステップを最優先に組み込んだ理由、str.isdigit()が全角数字を誤判定していた実バグの修正とpytest 63件全パス、incident-checkerが独立コンテキストでゼロからやり直すことによる自己採点バイアス防止効果、単一プロジェクト専用実装から複数プロジェクト横断のレジストリ設計への今後の課題を解説）

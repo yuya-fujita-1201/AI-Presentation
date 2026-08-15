@@ -676,8 +676,9 @@
         "source_tier": "secondary",
         "origin": "web:qiita.com/Syoitu",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-le-qiita-syoitu-loop-engineering.md"
       },
       {
         "url": "https://note.com/masa_wunder/n/ncca2f2db5a64",
@@ -694,8 +695,9 @@
         "source_tier": "secondary",
         "origin": "web:note.com/masa_wunder",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-le-note-masawunder-goal-loop-design.md"
       }
     ]
   }
