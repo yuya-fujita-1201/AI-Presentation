@@ -37,6 +37,8 @@
 - [video-ge-gaodalie-forget-loop.md](./video-ge-gaodalie-forget-loop.md) — "FORGET Loop Engineering. Graph Engineering is about THIS"（Gao Dalie）。プロンプト/ループ/グラフの3層と「経路を人間が設計する」視点
 - [video-ge-caleb-8min-explainer.md](./video-ge-caleb-8min-explainer.md) — "Graph Engineering explained in 8min.."（Caleb Writes Code）。オイラーのグラフ理論から、ノードが賢くなりボトルネックがエッジへ移った歴史
 - [video-ge-techplay-3min-intro.md](./video-ge-techplay-3min-intro.md) — 「SNSで話題の『グラフエンジニアリング』の正体は？」（TECH PLAY、3分）。ノード/エッジ/状態の3要素、データ可視化との混同の訂正
+- [video-ge-subagent-when-to-use.md](./video-ge-subagent-when-to-use.md) — 「How to use ClaudeCode and Codex subagents!」（にゃんたのAIチャンネル）。Googleの研究論文が示す「シングルエージェント精度45%」という損益分岐点と、並列調査・忖度回避・作成検証ループの3活用法
+- [video-ge-dynamic-workflows-six-patterns.md](./video-ge-dynamic-workflows-six-patterns.md) — 「【Claude Code新機能】Dynamic Workflows完全解説」（みにこーへいのAI活用チャンネル、99秒）。分類振り分け・ファンアウト・敵対的検証・生成篩い落とし・トーナメント・終了判定の6つの編成パターン
 
 ## 記事（プロンプトエンジニアリング）
 

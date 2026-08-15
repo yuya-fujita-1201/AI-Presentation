@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-16（geソース台帳・動画2本 research_ledger run:0816030875）
+
+- **Creation**: sources/ に動画2本を video-ge-*.md として登録（グラフエンジニアリングテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:0816030875）。video-ge-subagent-when-to-use.md（にゃんたのAIチャンネル「How to use ClaudeCode and Codex subagents!」、30分49秒。Googleの研究者によるという実験論文を引用し、シングルエージェント単体の精度が約45%を超えるタスクにエージェントを追加するとネガティブリターンになるという損益分岐点、ファイナンスエージェント対プランクラフトでの並列分割可否による明暗、配信者自身が実践する3つの活用法（並列調査・忖度回避・作成検証ループ）を解説）、video-ge-dynamic-workflows-six-patterns.md（みにこーへいのAI活用チャンネル「【Claude Code新機能】Dynamic Workflows完全解説」、99秒。分類振り分け・ファンアウト・敵対的検証・生成篩い落とし・トーナメント・終了判定の6つの編成パターンと、プロンプトに「ウルトラコード」と書くだけの使い方、トークン予算指定の方法を解説）
+- **Update**: sources/index.md の「動画（グラフエンジニアリング）」節に上記2件を追加
+
 ## 2026-08-15（シリーズ完走・スケジューラ解除）
 
 - **Milestone**: pe→ce→he→le の4テーマすべてが完走。le（ループEG）のデッキ採点が 8/9/9/8/8/9 で2連続合格し、`docs/codex-brief-ai-eng-04-loop-engineering.md` を発行（run:081518579f / commit db0ea82）。パイプラインは `pipeline/PAUSE`（理由: シリーズ完走）で自動停止し `phase: done`
