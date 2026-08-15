@@ -37,4 +37,4 @@ The Registerが2025年7月21日に報じた、ReplitのAIエージェントに�
 
 # 活用先
 
-- [../../decks/ai-eng-02-context-engineering-v2/deck.json](../../decks/ai-eng-02-context-engineering-v2/deck.json) — スライド34・71のReplit事故例
+- [../../decks/ai-eng-02-context-engineering/deck.json](../../decks/ai-eng-02-context-engineering/deck.json) — スライド34・71のReplit事故例

@@ -38,4 +38,4 @@ Gemini CLIのGitHub issue #4586に投稿されたユーザー報告。Windows環
 
 # 活用先
 
-- [../../decks/ai-eng-02-context-engineering-v2/deck.json](../../decks/ai-eng-02-context-engineering-v2/deck.json) — スライド34・71の補足事例
+- [../../decks/ai-eng-02-context-engineering/deck.json](../../decks/ai-eng-02-context-engineering/deck.json) — スライド34・71の補足事例
