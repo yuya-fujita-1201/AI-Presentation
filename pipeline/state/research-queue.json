@@ -139,8 +139,42 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+0",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[00:00]",
+          "text": "ダイナミックワークフローはタスクごとに台本を書きサブエージェント編成を自動生成し、長いコンテキストで起きるサボりや自己バイアスを構造的に防ぐ",
+          "impact": "high"
+        },
+        {
+          "ts": "[00:00]",
+          "text": "型1『分類して振り分け』は分類エージェントがタスク種別を見極め最適なルートに流す",
+          "impact": "high"
+        },
+        {
+          "ts": "[00:00]",
+          "text": "型2『ファンアウト』はタスクを分割して並列処理し最後に結果を1つに統合する",
+          "impact": "high"
+        },
+        {
+          "ts": "[00:00]",
+          "text": "絶対評価が苦手なAIも比較（トーナメント形式）ならかなり正確に評価できる",
+          "impact": "normal"
+        },
+        {
+          "ts": "[01:00]",
+          "text": "使い方はプロンプトに『ウルトラコード』と書くだけで、ディープリサーチでは並列検索と出典検証付きレポートが得られる",
+          "impact": "high"
+        },
+        {
+          "ts": "[01:00]",
+          "text": "トークン予算は『1万トークンで』と指定するだけで上限がかかる",
+          "impact": "high"
+        }
+      ],
+      "summary": "Claude Codeのダイナミックワークフロー機能が提供する6つの型（振り分け・並列・敵対的検証・生成淘汰・トーナメント・反復探索）と使い方を紹介する動画"
     },
     {
       "id": "ns1ifgYEGl0",
@@ -154,8 +188,8 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+0",
-      "status": "selected",
-      "reject_reason": null
+      "status": "rejected",
+      "reject_reason": "no_subs"
     },
     {
       "id": "UR2Pd99Fcto",
@@ -169,7 +203,7 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+0",
-      "status": "candidate",
+      "status": "selected",
       "reject_reason": null
     },
     {
