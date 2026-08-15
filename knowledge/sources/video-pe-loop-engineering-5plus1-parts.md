@@ -101,3 +101,5 @@ RUNTEQ運営者と旅エンジニアという対話形式で進行する動画�
 
 - [../prompt-engineering/loop-engineering.md](../prompt-engineering/loop-engineering.md) — ループエンジニアリングの定義（指示するのではなく指示する仕組みを作る）、プレイングマネージャーからマネジメントへの比喩、学術的土台としてのReActとReflection、インナー／アウターループの2層構造、5+1の部品（自動化・ワークツリー・スキル・プラグイン・サブエージェント＋メモリー）、ルール定義の4要素とハードストップ、「粘り強く動くジュニア」という前提の根拠
 - [../prompt-engineering/five-engineering-stages.md](../prompt-engineering/five-engineering-stages.md) — プロンプト→コンテキスト→ハーネス→ループの4段階に時期を割り当てた変遷（〜2024／2025／2026初頭／2026年6月〜）と、これらが乗り換えではなく前段階を内包してラップしていく関係だという主張の根拠
+- [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — 定義（指示するのではなく指示する仕組みを作る／人間はゴールだけを定義しAIが指示・検証・次タスク決定を行う）を3つの定義の一つとして並置した根拠（auto字幕）
+- [../loop-engineering/from-prompt-to-loop.md](../loop-engineering/from-prompt-to-loop.md) — 4段階への時期の割り当て（〜2024／2025／2026初頭／2026年6月〜）、チャットベースからエージェントベースへの境目、段階が乗り換えではなく前段階を内包してラップする関係だという強調の根拠（auto字幕）

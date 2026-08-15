@@ -58,4 +58,5 @@ Kiloは、loop engineeringの具体的な適用例として5つのユースケ�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — 定義（計画立案・コード変更・結果観察・アプローチ修正をタスク完了まで繰り返すフィードバックループの設計・運用・改善）の根拠、および終了条件が定義自体に組み込まれているという指摘の根拠
+- [../loop-engineering/from-prompt-to-loop.md](../loop-engineering/from-prompt-to-loop.md) — プロンプトエンジニアリングとの対比表（対象・目指すもの・評価者・失敗モード）、「最初の回答は不完全でありうる前提で改善ワークフローを設計する」という引用、テストの失敗は新たな文脈情報であるという教訓、小さな差分の方が検証・修復しやすいという指摘の根拠

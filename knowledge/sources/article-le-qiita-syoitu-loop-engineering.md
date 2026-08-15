@@ -104,4 +104,4 @@ PostToolUseフックは、編集のたびに実行される仕組みだと説明
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — Addy Osmaniによる定義（「エージェントにプロンプトを打つ人」から自分を外す）とその日本語訳、検証が甘いと生成を垂れ流す装置になるという警告の根拠

@@ -68,4 +68,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — ループエンジニアリングの定義（プロンプトを打つ人であることをやめ、それを行うシステムを設計する）を裏づける2つ目の独立ソースとしての根拠

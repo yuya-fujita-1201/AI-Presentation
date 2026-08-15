@@ -96,4 +96,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — 「公式が定義した『ループ』の核心は停止条件」という位置づけ、および停止条件を1つだけにすると伸び悩んだときに回り続けるという失敗談の根拠

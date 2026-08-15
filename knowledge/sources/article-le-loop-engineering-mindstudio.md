@@ -60,4 +60,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — 定義（観察・推論・行動・評価のサイクルを目標到達まで繰り返す方法論）の根拠、および適用条件のうち「人間のレビューがボトルネックになっている」を人間をループの外に出す動機として引用した根拠
