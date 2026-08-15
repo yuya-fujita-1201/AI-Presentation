@@ -41,6 +41,11 @@
 - [video-ge-dynamic-workflows-six-patterns.md](./video-ge-dynamic-workflows-six-patterns.md) — 「【Claude Code新機能】Dynamic Workflows完全解説」（みにこーへいのAI活用チャンネル、99秒）。分類振り分け・ファンアウト・敵対的検証・生成篩い落とし・トーナメント・終了判定の6つの編成パターン
 - [video-ge-subagent-overview-basics.md](./video-ge-subagent-overview-basics.md) — 「【前編】Claude Codeサブエージェント完全ガイド」（まさやん【AIギルドch】）。フロントマターの全設定項目・拒否リスト優先の仕様・呼び出し方法・コンテキスト管理の基礎と、役割分離による品質向上・並列実行の高速化・ネスト不可などの制約を解説
 
+## 記事（グラフエンジニアリング）
+
+- [article-ge-anthropic-building-effective-agents.md](./article-ge-anthropic-building-effective-agents.md) — Anthropic公式「Building Effective AI Agents」。WorkflowとAgentの定義区別、augmented LLMという基本構築ブロック、5つのワークフローパターン（Prompt chaining/Routing/Parallelization/Orchestrator-workers/Evaluator-optimizer）、シンプルさの原則を解説
+- [article-ge-openai-orchestration-handoffs.md](./article-ge-openai-orchestration-handoffs.md) — OpenAI公式「Orchestration and handoffs」。会話の所有権を引き渡すHandoffsと、マネージャーが所有権を保持するAgents as Tools(Managerパターン)の対比、専門家追加の4判断基準、「まず単一エージェントから始める」原則を解説
+
 ## 記事（プロンプトエンジニアリング）
 
 - [article-pe-claude-prompting-best-practices.md](./article-pe-claude-prompting-best-practices.md) — Anthropic公式「Prompting best practices」。明確で直接的な指示・文脈の追加・few-shot例の設計・XMLタグによる構造化の4原則を解説

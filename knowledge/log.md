@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-16（geソース台帳・記事2本 web_ledger run:08160657ff）
+
+- **Creation**: sources/ に記事2本を article-ge-*.md として登録（グラフエンジニアリングテーマ、公式ドキュメント2本、web_ledger工程 run:08160657ff）。article-ge-anthropic-building-effective-agents.md（Anthropic公式「Building Effective AI Agents」、二次情報。Workflowを「LLMsとツールが予め定義されたコードパスを通じてオーケストレーションされるシステム」、Agentを「LLMsが動的に自身のプロセスとツール使用を指示し、タスク達成方法をコントロールし続けるシステム」と定義する引用、検索・ツール・メモリで拡張されたLLM(augmented LLM)を基本構築ブロックとする位置づけ、5つのワークフローパターン(Prompt chaining/Routing/Parallelization/Orchestrator-workers/Evaluator-optimizer)の具体例、「find the simplest solution possible」というシンプルさの原則とツール設計(Agent-Computer Interface)への注力を解説）、article-ge-openai-orchestration-handoffs.md（OpenAI公式「Orchestration and handoffs」、二次情報。会話の所有権そのものを引き渡すHandoffsパターンと、マネージャーが制御・所有権を保持したまま専門エージェントをツール化するAgents as Tools(Managerパターン)の対比、「専門家を追加するのはcapability isolation・policy isolation・prompt clarity・trace legibilityのいずれかを実質的に改善する場合に限る」という引用、「まずは単一エージェントから始める(Start with one agent whenever you can)」という結論を解説）
+- **Update**: sources/index.md に「記事（グラフエンジニアリング）」節を新設し上記2件を追加
+
 ## 2026-08-16（geソース台帳・動画1本 research_ledger run:0816034527）
 
 - **Creation**: sources/ に動画1本を video-ge-subagent-overview-basics.md として登録（グラフエンジニアリングテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:0816034527）。まさやん【AIギルドch】「【前編】Claude Codeサブエージェント完全ガイド｜全体像・基本機能・メリットを徹底解説」（38分29秒、自動字幕）。サブエージェントの定義とコンテキスト独立性、フロントマターの全設定項目（name/description必須・tools/disallowedToolsの拒否リスト優先仕様・実行制御系・拡張統合系）、4通りの呼び出し方法とコンテキスト管理の仕組み、Anthropic公式ブログを引用した役割分離（プランナー/ジェネレーター/エバリエイター）による品質向上、並列実行で8分→3分未満に短縮された事例、ネスト不可などの制約事項、Claude Codeの機能体系（実行主体/能力/ルール環境）における位置付けを解説

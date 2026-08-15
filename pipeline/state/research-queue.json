@@ -534,8 +534,9 @@
         "source_tier": "secondary",
         "origin": "web:anthropic.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-ge-anthropic-building-effective-agents.md"
       },
       {
         "url": "https://developers.openai.com/api/docs/guides/agents/orchestration",
@@ -552,8 +553,9 @@
         "source_tier": "secondary",
         "origin": "web:openai.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-ge-openai-orchestration-handoffs.md"
       },
       {
         "url": "https://www.anthropic.com/engineering/multi-agent-research-system",
