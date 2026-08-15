@@ -86,4 +86,5 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/anatomy-of-a-loop.md](../loop-engineering/anatomy-of-a-loop.md) — ループ設計の4ポイント（ゴールの明確化・エージェントの割り当て・進捗の検証・継続条件の判定）を表として整理した根拠、および「変なゴールや変な検証器を作ると成果物が意図からずれる」という注意点の根拠（auto字幕・聞き取り）
+- [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — ゴールは計測できる形で設定すべきという原則（LLMジャッジや複数LLMの合格判定という例を含む）、および「ゴール」と「ループ」は別概念だとする整理の根拠（auto字幕・聞き取り）

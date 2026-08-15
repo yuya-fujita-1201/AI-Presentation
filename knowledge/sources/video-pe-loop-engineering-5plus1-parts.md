@@ -103,3 +103,5 @@ RUNTEQ運営者と旅エンジニアという対話形式で進行する動画�
 - [../prompt-engineering/five-engineering-stages.md](../prompt-engineering/five-engineering-stages.md) — プロンプト→コンテキスト→ハーネス→ループの4段階に時期を割り当てた変遷（〜2024／2025／2026初頭／2026年6月〜）と、これらが乗り換えではなく前段階を内包してラップしていく関係だという主張の根拠
 - [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — 定義（指示するのではなく指示する仕組みを作る／人間はゴールだけを定義しAIが指示・検証・次タスク決定を行う）を3つの定義の一つとして並置した根拠（auto字幕）
 - [../loop-engineering/from-prompt-to-loop.md](../loop-engineering/from-prompt-to-loop.md) — 4段階への時期の割り当て（〜2024／2025／2026初頭／2026年6月〜）、チャットベースからエージェントベースへの境目、段階が乗り換えではなく前段階を内包してラップする関係だという強調の根拠（auto字幕）
+- [../loop-engineering/anatomy-of-a-loop.md](../loop-engineering/anatomy-of-a-loop.md) — インナーループ／アウターループという2層構造の定義（インナー＝1タスク内の編集・テスト・失敗検知・修正・再実行、アウター＝タスクをまたぎ失敗の教訓を次に引き継ぐ）、および検証は複数観点のレビューを重ねるほど精度が上がるという指摘の根拠（auto字幕・聞き取り）
+- [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — ハードストップ（リトライ回数・時間・コストの上限を設け、詰まったら人間に確認する仕組みを入れる）と「明確なタスク定義＝完了条件が一言で言えるか」というルール定義要素の根拠（auto字幕・聞き取り）

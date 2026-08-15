@@ -105,3 +105,5 @@ PostToolUseフックは、編集のたびに実行される仕組みだと説明
 # 活用先
 
 - [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — Addy Osmaniによる定義（「エージェントにプロンプトを打つ人」から自分を外す）とその日本語訳、検証が甘いと生成を垂れ流す装置になるという警告の根拠
+- [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — CLAUDE.md に停止条件を明文化することが暴走防止の鍵だという指摘と、具体的な3条件（「全チェック通過」「最大5回」「同じエラー2回連続」）を停滞検知を含む4種類の整理に用いた根拠
+- [../loop-engineering/verification-design.md](../loop-engineering/verification-design.md) — 「検証が甘いと、ただ生成を垂れ流すだけの装置になります」という警告（Anthropic公式ドキュメントと突き合わせる独立origin側）、禁止事項2点（チェック出力なしの完了報告／アサーション削除・テスト弱体化）と「Claudeが3周目でアサーションを1行こっそり消してテストを通してきた」という失敗談、Stopフック＋PostToolUseフックによる「書きながら即座に直させる」実装、fixerエージェントに課した「推測は禁止」という条件の根拠

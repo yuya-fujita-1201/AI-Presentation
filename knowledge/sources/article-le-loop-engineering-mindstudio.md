@@ -61,3 +61,5 @@ generated:
 # 活用先
 
 - [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — 定義（観察・推論・行動・評価のサイクルを目標到達まで繰り返す方法論）の根拠、および適用条件のうち「人間のレビューがボトルネックになっている」を人間をループの外に出す動機として引用した根拠
+- [../loop-engineering/anatomy-of-a-loop.md](../loop-engineering/anatomy-of-a-loop.md) — 観察・推論・行動・評価という4サイクル定義（Kiloの5段階と骨格が一致することを示す独立origin側）、および /loop・/goal・/routines という3つの構成要素（繰り返す器・止まる条件・中で動く部品の分離）の根拠
+- [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — 「ゴールなしではループが無期限に実行されるか恣意的に終了する」という指摘、および最もよくある失敗が「ループから作り始めてゴールを後から考えること」だとする引用の根拠

@@ -121,3 +121,4 @@ generated:
 - [../graph-engineering/roles-and-orchestration.md](../graph-engineering/roles-and-orchestration.md) — Claude Codeのメイン/サブエージェント構造とオーケストレーション実装パターンの主根拠
 - [../graph-engineering/verification-and-testing.md](../graph-engineering/verification-and-testing.md) — RefineBench論文の数値を用いた自己修正の限界と別エージェント検証ループの主根拠
 - [../graph-engineering/overview.md](../graph-engineering/overview.md) — 「グラフエンジニアリング」という用語自体の登場経緯・話題化の背景資料
+- [../loop-engineering/verification-design.md](../loop-engineering/verification-design.md) — 検証方法を「プログラムを実行して機械的に合否を判定する」「言語モデルに検証させる」の2つに分ける整理と、議事録のような自由記述の成果物はプログラムでの自動検証が難しいためAIによる検証が現実的な解になるという指摘の根拠（auto字幕・聞き取り）

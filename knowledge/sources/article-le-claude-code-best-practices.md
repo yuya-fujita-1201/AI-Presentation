@@ -44,4 +44,4 @@ Anthropic公式のClaude Code Docsが公開する「Best practices for Claude Co
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/verification-design.md](../loop-engineering/verification-design.md) — 検証がなければ人間が検証ループを肩代わりすることになるという指摘と「pass or fail を返せばループはひとりでに閉じる」という引用、チェックとして置けるものの一覧（テストスイート・ビルドの終了コード・リンター・期待値突き合わせスクリプト・スクリーンショット）、Before/After形式の3つの適用例、チェックの強制力を高める4段階（プロンプト内／`/goal`条件／Stopフック／セカンドオピニオン）、成功の自己申告ではなく証拠を提示させるという推奨の主根拠
