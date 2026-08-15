@@ -105,3 +105,8 @@
 ## 動画（ループエンジニアリング）
 
 - [video-le-loop-design-four-points.md](./video-le-loop-design-four-points.md) — 「【必見】AIエージェントは『ループ設計』の時代！完全自律で回す5つのポイント含め解説します」（まさおAIじっくり解説ch）。ループ設計の4つのポイント（ゴール明確化・エージェント割当・進捗検証・継続条件判定）と、ロングラン自律動作のための5つの技術（オートパーミッション・動的ワークフロー・ループコマンド・自己検証ツール・Ralph Loop）、「ゴール」と「ループ」の概念上の違いを解説
+
+## 記事（ループエンジニアリング）
+
+- [article-le-claude-code-best-practices.md](./article-le-claude-code-best-practices.md) — Anthropic公式「Best practices for Claude Code」。合否判定可能なチェック（テスト・ビルド・スクリーンショット比較）を与えることで実行→検証→反復のループを自律的に回す方法、チェックの強制力を高める4段階（単発プロンプト・/goal・Stopフック・検証サブエージェント）、成功の自己申告ではなく証拠を提示させる推奨を解説
+- [article-le-evaluator-optimizer.md](./article-le-evaluator-optimizer.md) — Anthropic公式Claude Cookbook「Evaluator optimizer」。生成担当と評価担当のLLM呼び出しを分離し評価がPASSになるまで過去の試行とフィードバックを積み増しながら再生成するワークフローパターンと、generate・evaluate・loopの3関数によるPythonリファレンス実装を解説

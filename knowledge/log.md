@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-15（leソース台帳・記事2本 web_ledger run:08151142ae）
+
+- **Creation**: sources/ に記事2本を article-le-*.md として登録(ループエンジニアリングテーマ、Anthropic公式ドキュメント、web_ledger工程 run:08151142ae)。article-le-claude-code-best-practices.md(Claude Code Docs「Best practices for Claude Code」の「Give Claude a way to verify its work」節。合否判定可能なチェック(テスト・ビルド・スクリーンショット比較)を与えると実行→検証→反復のループが自律的に閉じるという主張、Before/After形式の3適用例(検証基準の明示・UI視覚検証・根本原因対処)、チェックの強制力を段階的に高める4段階(単発プロンプト内反復・/goalコンディション・Stopフックの決定的ゲート・検証サブエージェントによるセカンドオピニオン)、成功を自己申告させず証拠(evidence)を提示させる推奨を解説)、article-le-evaluator-optimizer.md(Claude Cookbook「Evaluator optimizer」。生成担当と評価担当のLLM呼び出しを分離するワークフローの定義、有効な場面の2条件と適合の2兆候、generate/evaluate/loopの3関数によるPythonリファレンス実装(docstring・thoughts/response・evaluation/feedbackタグ抽出・PASSになるまでmemoryとフィードバックを積み増す構造)を解説)
+- **Update**: sources/index.md に「記事（ループエンジニアリング）」節を新設し上記2件を追加
+
 ## 2026-08-15（leソース台帳・動画1本 research_ledger run:0815112138）
 
 - **Creation**: sources/ に動画1本を video-le-loop-design-four-points.md として登録（ループエンジニアリングテーマ、まさおAIじっくり解説chチャンネル、字幕全文から要約・主張テーブルつき、research_ledger工程 run:0815112138）。「【必見】AIエージェントは『ループ設計』の時代！完全自律で回す5つのポイント含め解説します」。ループ設計の4つのポイント（ゴール明確化・エージェント割当・進捗検証・継続条件判定）と、Claude Codeの中の人（ボリス氏）によるロングラン自律動作のための5つの技術（オートパーミッション・動的ワークフロー・ループコマンド・自己検証ツール・Ralph Loop）、「ゴール」と「ループ」の概念上の違いを解説

@@ -565,8 +565,9 @@
         "source_tier": "secondary",
         "origin": "web:claude.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-le-claude-code-best-practices.md"
       },
       {
         "url": "https://platform.claude.com/cookbook/patterns-agents-evaluator-optimizer",
@@ -583,8 +584,9 @@
         "source_tier": "secondary",
         "origin": "web:claude.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-le-evaluator-optimizer.md"
       },
       {
         "url": "https://arxiv.org/abs/2303.17651",
