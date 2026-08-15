@@ -1,0 +1,52 @@
+theme:
+  id: de
+  slug: ai-eng-05-dialogue-engineering
+  title: ダイアログエンジニアリング
+  series_index: 5
+  knowledge_dir: knowledge/dialogue-engineering
+  deck_dir: decks/ai-eng-05-dialogue-engineering
+keywords:
+  ja: ["AI 対話 複数ターン コツ", "生成AI やりとり 軌道修正", "AI 聞き返し 質問させる",
+       "チャットAI 会話 続け方 コツ", "AI 対話 設計"]
+  en: ["dialogue driven development AI", "multi-turn conversation LLM technique",
+       "clarifying questions AI agent", "steering AI agent conversation",
+       "dialog engineering coding agent"]
+keywords_fallback:
+  ja: ["AI 追加指示 出し方", "生成AI 修正依頼 伝え方", "AI 対話 履歴 活かす"]
+  en: ["multi-turn prompting best practices", "interactive AI collaboration developer",
+       "human agent interaction coding"]
+match_vocab:
+  ja: [対話, やりとり, ターン, 会話, 聞き返し, 軌道修正, 追加指示, 質問]
+  en: [dialogue, dialog, "multi-turn", conversation, clarification, steering, interactive]
+beginner_vocab: [入門, 初心者, とは, 基本, 解説, 使い方,
+                 beginner, basics, tutorial, introduction, explained]
+required_concepts:
+  - {id: what-is-dialogue-eng, label: 一発の指示から複数ターンの対話へ,
+     hints: [対話, ターン, やりとり, 一発, 往復]}
+  - {id: steering, label: 途中で気づいて直す（軌道修正）の技術,
+     hints: [軌道修正, 修正, 指摘, やり直し, 差し戻し]}
+  - {id: clarification, label: AIに聞き返させる・前提を確認させる,
+     hints: [聞き返, 質問, 確認, 曖昧, 前提]}
+  - {id: turn-design, label: 1ターンに何を載せるかの設計,
+     hints: [1ターン, 粒度, 小さく, 分割, まとめて]}
+  - {id: dialogue-vs-loop, label: 対話と自動ループの使い分け,
+     hints: [ループ, 自動, 対話, 使い分け, 任せる]}
+  - {id: pitfalls, label: 対話が壊れるとき（文脈の劣化・堂々巡り）,
+     hints: [堂々巡り, 劣化, 忘れ, 詰まる, リセット]}
+extra_sources:
+  - knowledge/sources/video-pe-five-engineering-stages.md
+  - knowledge/sources/article-ce-compaction.md
+  - knowledge/sources/article-le-claude-code-best-practices.md
+  - knowledge/sources/article-pe-kddi-prompt-basics.md
+subtopics:
+  - {id: official-guides, goal: ベンダー公式が示す対話・マルチターン運用の一次情報を台帳化,
+     queries: ["Anthropic multi-turn conversation best practices",
+               "OpenAI conversation state guide"]}
+  - {id: research, goal: 対話駆動のエージェント研究（ベンチマーク・実測データ）の原典,
+     queries: ["LLMs get lost in multi-turn conversation arxiv",
+               "Dialogue-SWEBench dialogue driven coding agents",
+               "clarifying questions coding agent study arxiv"]}
+  - {id: jp-practice, goal: 日本語圏の実務解説・初心者向け対話術の代表例,
+     queries: ["生成AI 対話 コツ 軌道修正", "AI 質問し返す 使い方 解説"]}
+primary_domains:
+  [docs.anthropic.com, www.anthropic.com, platform.openai.com, ai.google.dev, arxiv.org]
