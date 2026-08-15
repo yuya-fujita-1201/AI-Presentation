@@ -1,22 +1,22 @@
 {
   "schema": "state-v1",
   "theme": {
-    "id": "de",
-    "slug": "ai-eng-05-dialogue-engineering",
-    "title": "ダイアログエンジニアリング",
+    "id": "ge",
+    "slug": "ai-eng-05-graph-engineering",
+    "title": "グラフエンジニアリング",
     "series": [
       "pe",
       "ce",
       "he",
       "le",
-      "de"
+      "ge"
     ],
     "series_index": 0
   },
   "phase": "research_fetch",
-  "generation": 10,
-  "active_run_id": "08152245a3",
-  "input_commit": "7dc2f46f53d6",
+  "generation": 11,
+  "active_run_id": "08152255cb",
+  "input_commit": "f2d6e3170273",
   "phase_started_at": null,
   "phase_attempts": 0,
   "run_counts": {
@@ -45,9 +45,9 @@
   },
   "push_pending": false,
   "last_result": "succeeded",
-  "last_scan_at": "2026-08-15T22:49:10+09:00",
-  "last_started_at": "2026-08-15T22:45:32+09:00",
-  "last_successful_transition_at": "2026-08-15T22:49:10+09:00",
+  "last_scan_at": "2026-08-15T22:59:49+09:00",
+  "last_started_at": "2026-08-15T22:55:08+09:00",
+  "last_successful_transition_at": "2026-08-15T22:59:49+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
@@ -59,6 +59,6 @@
     "to": "draft",
     "was_stuck": "repair_exhausted"
   },
-  "last_notification_success_at": "2026-08-15T22:45:21+09:00",
+  "last_notification_success_at": "2026-08-15T22:54:12+09:00",
   "_use_fallback": false
 }
