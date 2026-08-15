@@ -44,7 +44,7 @@ def main():
         else:
             extract = str(c.get("extract", ""))
             quote = str(c.get("quote", ""))
-            if len(extract) < 2000:
+            if len(extract) < 800:
                 why = f"extract_short({len(extract)})"
             elif len(extract) > 12000:
                 why = "extract_too_long"
