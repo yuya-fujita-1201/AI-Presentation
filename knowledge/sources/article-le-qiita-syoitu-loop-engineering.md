@@ -105,7 +105,7 @@ PostToolUseフックは、編集のたびに実行される仕組みだと説明
 # 活用先
 
 - [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — Addy Osmaniによる定義（「エージェントにプロンプトを打つ人」から自分を外す）とその日本語訳、検証が甘いと生成を垂れ流す装置になるという警告の根拠
-- [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — CLAUDE.md に停止条件を明文化することが暴走防止の鍵だという指摘と、具体的な3条件（「全チェック通過」「最大5回」「同じエラー2回連続」）を停滞検知を含む4種類の整理に用いた根拠
+- [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — CLAUDE.md に停止条件を明文化することが暴走防止の鍵だという指摘と、具体的な3条件（「全チェック通過」「最大5回」「同じエラー2回連続」）を停滞検知を含む4種類の整理に用いた根拠、Mastra Goals機能のjudge・maxRuns・promptという3要素とexperimental注記をClaude Code以外の実装例として用いた根拠
 - [../loop-engineering/loop-parts-and-harness.md](../loop-engineering/loop-parts-and-harness.md) — ループを支える6つのパーツ（Automations・Worktrees・Skills・Connectors/MCP・Sub-agents・Memory）をRUNTEQ動画の「5+1の部品」と突き合わせる独立origin側として用いた根拠、5つのアクション（発見・受け渡し・検証・記憶・スケジューリング）、「ファイルしか見えないループは、できることが少ない小さなループ」という接続の欠如に関する指摘、およびCLAUDE.md／settings.json／fixer.md という3ファイルの最小構成の根拠
 - [../loop-engineering/verification-design.md](../loop-engineering/verification-design.md) — 「検証が甘いと、ただ生成を垂れ流すだけの装置になります」という警告（Anthropic公式ドキュメントと突き合わせる独立origin側）、禁止事項2点（チェック出力なしの完了報告／アサーション削除・テスト弱体化）と「Claudeが3周目でアサーションを1行こっそり消してテストを通してきた」という失敗談、Stopフック＋PostToolUseフックによる「書きながら即座に直させる」実装、fixerエージェントに課した「推測は禁止」という条件の根拠
 - [../loop-engineering/risks-and-costs.md](../loop-engineering/risks-and-costs.md) — 主根拠。「回しっぱなしの代価」4つ（検証の積み残し・理解の劣化・判断の放棄・トークン暴走）をシステム側／人間側に分けて整理した根拠、「朝起きたら直ったコードではなく見慣れない請求書が待っている」という警告、「Claudeが3周目でアサーションを1行こっそり消してテストを通してきた」という検証の抜け道の実例、「ループは生成を無限に安くしますが『どの方向で書くか』を決める判断だけは肩代わりしてくれません」という結論、および Addy Osmani の「Build the loop...like someone who intends to stay the engineer」の根拠

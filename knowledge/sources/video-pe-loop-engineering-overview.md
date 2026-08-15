@@ -79,3 +79,4 @@ HITLからHOTLへ移行する過程には4つの段階があると言われて�
 - [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — Human in the Loop / Human on the Loop の定義と「in と on の一語の違いが重要」という指摘、アンドリュー・ン氏による速さの異なる3種の入れ子ループ、ハーネスなしに自由に動かせば危険という注意、2026年6月の経緯における人物名の表記ゆれの根拠（auto字幕）
 - [../loop-engineering/from-prompt-to-loop.md](../loop-engineering/from-prompt-to-loop.md) — プロンプト→コンテキスト→ハーネス→ループの4段階の定義と各段階の説明、ハーネスの具体例（テストが通らなければ進めない仕組み・AGENTS.md／CLAUDE.md・リンター・エスカレーション機構）、ループにはハーネスまでの土台が前提だという指摘の根拠（auto字幕）
 - [../loop-engineering/anatomy-of-a-loop.md](../loop-engineering/anatomy-of-a-loop.md) — アンドリュー・ン氏による速さの異なる3つの入れ子ループ（数分刻みの実装ループ／数十分〜数時間の監督ループ／数時間〜数週間の外部フィードバックループ）、および人間がループに残る理由は情報量の差を埋めているに過ぎないという仮説の根拠（auto字幕・聞き取り）
+- [../loop-engineering/when-to-use-loops.md](../loop-engineering/when-to-use-loops.md) — ソフトウェア開発以外への応用例（秘書業務の日程調整でルール違反を検出するハーネス、会議後にタスクを洗い出してカレンダー招待を送る仕組み）の根拠（auto字幕）

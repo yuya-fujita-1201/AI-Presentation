@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-15（採点指摘の修正・improve_k run:0815130695）
+
+- **Fix**: findings-k.json 9件すべてをfixedとして修正。①`index.md`のソース本数「解説動画4本」を実数の「5本」に訂正（記事8本と合わせ計13本は正しかった）②`goal-and-stop-conditions.md`にMastra Goals機能（judge/maxRuns=30/promptの3要素とexperimental注記）をClaude Code以外の実装例として追記③`anatomy-of-a-loop.md`のアウターループ節にエピックフローの実装例（プランナー分解→人間承認→タスク実行→マージ→最終PR確認）を追記④`what-is-loop-engineering.md`のHOTL節後にKarpathy氏の「オートリサーチ」をコーディング以外の自律改善実例として聞き取り留保つきで追記⑤`when-to-use-loops.md`に非開発業務への応用例（日程調整・会議後のタスク洗い出し）とチーム横断の標準化を追記、`verification-design.md`に「視覚的な成功判定」を追記⑥`goal-and-stop-conditions.md`のハードストップ節に「安全な作業環境」を追記し`loop-parts-and-harness.md`からの参照切れを解消⑦`goal-and-stop-conditions.md`の`/goal`と`/loop`の区別節ににゃんたのAIチャンネル動画への参照を追加⑧`goal-and-stop-conditions.md`の「小さく始める」節を`when-to-use-loops.md`側への1文＋リンクに縮約し二重展開を解消⑨3つの引用の重複（「検証が甘いと〜垂れ流す」「アサーションを1行こっそり消して」「少しずつ制約をつけていく」）をそれぞれ主担当ファイル1つに統一し他方を要約+リンクに縮約。関連する6ソースファイルの活用先にも対応する行を追加。OKF検証 errors:0 / warnings:0
+- **Note**: findings 9件の内訳はfixed 9件、deferredなし。詳細は outbox（`pipeline/state/outbox/result-0815130695.json`）参照
+
 ## 2026-08-15（loop-engineering コンセプト10本 knowledge工程）
 
 - **Creation**: `loop-engineering/` を新設。ソース台帳13本（動画4本・記事8本＋Anthropic公式2本を含む）を情報源に、コンセプト10本を追加（what-is-loop-engineering / from-prompt-to-loop / anatomy-of-a-loop / goal-and-stop-conditions / verification-design / maker-checker-separation / self-refine-and-evaluator-optimizer / loop-parts-and-harness / when-to-use-loops / risks-and-costs）。想定読者はチャット型AIの利用経験はあるがエージェント的活用は未経験の層。中核主張は出所の異なる2origin以上で支持させ、単一ソースの主張は「〜としている」と帰属を明示、auto字幕由来の主張は「（聞き取り）」を併記する方針で執筆

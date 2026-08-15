@@ -121,6 +121,8 @@ generated:
 - [../graph-engineering/roles-and-orchestration.md](../graph-engineering/roles-and-orchestration.md) — Claude Codeのメイン/サブエージェント構造とオーケストレーション実装パターンの主根拠
 - [../graph-engineering/verification-and-testing.md](../graph-engineering/verification-and-testing.md) — RefineBench論文の数値を用いた自己修正の限界と別エージェント検証ループの主根拠
 - [../graph-engineering/overview.md](../graph-engineering/overview.md) — 「グラフエンジニアリング」という用語自体の登場経緯・話題化の背景資料
+- [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — Andrej Karpathy氏の「オートリサーチ」プロジェクト（機械学習モデルの改善をAIが実験→評価の繰り返しで自律的に進める）を、コーディング以外の領域での自律改善ループの実例として用いた根拠（auto字幕・聞き取り）
+- [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — `/loop`（定期実行）と `/goal`（実行→検証→再実行を条件達成まで繰り返す）の区別を、noteの記事と独立に述べている根拠（auto字幕・聞き取り）
 - [../loop-engineering/verification-design.md](../loop-engineering/verification-design.md) — 検証方法を「プログラムを実行して機械的に合否を判定する」「言語モデルに検証させる」の2つに分ける整理と、議事録のような自由記述の成果物はプログラムでの自動検証が難しいためAIによる検証が現実的な解になるという指摘の根拠（auto字幕・聞き取り）
 - [../loop-engineering/maker-checker-separation.md](../loop-engineering/maker-checker-separation.md) — 言語モデルは自分の作ったものを甘く評価しがちだという指摘（keitoaiweb動画と突き合わせる独立origin側）、RefineBenchの紹介数値（自己修正はt=1とt=5でほぼ差がない／外部フィードバックありでOpus 4.1が98.4%／自己保持の評価基準75.8に対し他AI採点94.7）、評価専用に高性能モデルを充てるコスト配分、Opus 5では公式が検証サブエージェント不要としているという反対意見と動画作者自身は使い続けているという留保、操作マニュアル生成の比較実験の根拠（auto字幕・聞き取り）
 - [../loop-engineering/risks-and-costs.md](../loop-engineering/risks-and-costs.md) — 検証エージェントを使う手法の弱点2つ（コスト増／局所最適）の根拠。とくに「途中で一度スコアを下げないとたどり着けない停滞的な局面があり、そこそこ良いところで止まってしまう」という局所最適の説明、対策として複数プロンプトを並列で進化させる試みに触れつつ「自動的に最適なプロンプトを設計する方法はまだ固まっていない」と留保していること、「ループエンジニアリングは何でも改善できそうに見えるが実際にはうまくいかないことも多い」という総括、および評価側に高性能モデル・実行側にSonnetというコスト配分の根拠（auto字幕・聞き取り）
