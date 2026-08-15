@@ -107,8 +107,9 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+1 trust+0 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "rejected",
+      "reject_reason": "vote_failed",
+      "subs": "auto"
     },
     {
       "id": "ANxcREbyiOU",
@@ -122,8 +123,9 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+1 trust+0 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "rejected",
+      "reject_reason": "vote_failed",
+      "subs": "auto"
     },
     {
       "id": "YVbhdBcMTS8",
@@ -137,7 +139,7 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+0",
-      "status": "candidate",
+      "status": "selected",
       "reject_reason": null
     },
     {
@@ -152,7 +154,7 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+0",
-      "status": "candidate",
+      "status": "selected",
       "reject_reason": null
     },
     {
