@@ -86,6 +86,7 @@ generated:
 
 # 活用先
 
+- [../loop-engineering/from-prompt-to-loop.md](../loop-engineering/from-prompt-to-loop.md) — AI活用の歴史的変遷（2023年手書き→2024年タブ補完→2024年末の一般化→2026年ループ設計）と、Opus 4.5がその分岐点だったという配信者の振り返りを、時期区分の2本目の資料として用いた根拠（auto字幕・聞き取り）
 - [../loop-engineering/anatomy-of-a-loop.md](../loop-engineering/anatomy-of-a-loop.md) — ループ設計の4ポイント（ゴールの明確化・エージェントの割り当て・進捗の検証・継続条件の判定）を表として整理した根拠、および「変なゴールや変な検証器を作ると成果物が意図からずれる」という注意点の根拠（auto字幕・聞き取り）
 - [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — ゴールは計測できる形で設定すべきという原則（LLMジャッジや複数LLMの合格判定という例を含む）、および「ゴール」と「ループ」は別概念だとする整理の根拠（auto字幕・聞き取り）
 - [../loop-engineering/loop-parts-and-harness.md](../loop-engineering/loop-parts-and-harness.md) — ロングラン自律動作のための5つの技術（オートパーミッション・動的ワークフロー・ループコマンド・自己検証ツール・Ralph Loop）と、「少しずつ制約をつけていくことでかえって自律的に動くようになる」という配信者の見解の根拠（auto字幕・聞き取り）

@@ -104,6 +104,7 @@ PostToolUseフックは、編集のたびに実行される仕組みだと説明
 
 # 活用先
 
+- [../loop-engineering/from-prompt-to-loop.md](../loop-engineering/from-prompt-to-loop.md) — 「積み上がる4層（Prompt→Context→Harness→Loop）」を、動画2本（安野貴博・RUNTEQ）と独立した3本目の出所（自動字幕に依拠しない文章ソース）として引用した根拠
 - [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — Addy Osmaniによる定義（「エージェントにプロンプトを打つ人」から自分を外す）とその日本語訳、検証が甘いと生成を垂れ流す装置になるという警告の根拠
 - [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — CLAUDE.md に停止条件を明文化することが暴走防止の鍵だという指摘と、具体的な3条件（「全チェック通過」「最大5回」「同じエラー2回連続」）を停滞検知を含む4種類の整理に用いた根拠、Mastra Goals機能のjudge・maxRuns・promptという3要素とexperimental注記をClaude Code以外の実装例として用いた根拠
 - [../loop-engineering/loop-parts-and-harness.md](../loop-engineering/loop-parts-and-harness.md) — ループを支える6つのパーツ（Automations・Worktrees・Skills・Connectors/MCP・Sub-agents・Memory）をRUNTEQ動画の「5+1の部品」と突き合わせる独立origin側として用いた根拠、5つのアクション（発見・受け渡し・検証・記憶・スケジューリング）、「ファイルしか見えないループは、できることが少ない小さなループ」という接続の欠如に関する指摘、およびCLAUDE.md／settings.json／fixer.md という3ファイルの最小構成の根拠
