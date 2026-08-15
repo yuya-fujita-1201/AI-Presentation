@@ -695,9 +695,18 @@ def apply_research_scan(state, queue, theme, runid, outbox):
     rows.sort(key=lambda r: (-r[0], -r[1], r[2], -r[3], r[4]))
     target = CFG["research_targets"]["videos_selected_target"]
     existing = {v["id"] for v in queue["videos"]}
+    already = existing_resource_urls()  # 既に別テーマで台帳化済みのURLは取り込まない
     n_sel = sum(1 for v in queue["videos"] if v["status"] == "selected")
     for sc, _, _, _, _, c, s in rows:
         if c["id"] in existing:
+            continue
+        if c["url"] in already:
+            queue["videos"].append({
+                "id": c["id"], "url": c["url"], "title": c["title"], "channel": c.get("channel"),
+                "status": "rejected", "score": sc,
+                "reject_reason": f"duplicate_cross_theme({already[c['url']]})",
+            })
+            existing.add(c["id"])
             continue
         cut = bool(s.get("theme_zero")) or sc <= 0
         status = "rejected" if cut else ("selected" if n_sel < target else "candidate")
@@ -814,6 +823,19 @@ def apply_research_fetch(state, queue, theme, runid, outbox):
         else:
             state["phase"] = "research_ledger"
     return True, f"適合票 {n_ok}/{len(votes)} 通過（fetched計{fetched}）"
+
+
+def existing_resource_urls():
+    """既存sources台帳のresource URL → ファイル名。クロステーマ重複の検出に使う"""
+    out = {}
+    for p in globmod.glob(os.path.join(ROOT, "knowledge/sources/*.md")):
+        try:
+            m = re.search(r"^resource:\s*(\S+)", open(p).read(), re.M)
+        except Exception:
+            continue
+        if m:
+            out[m.group(1).strip()] = os.path.basename(p)
+    return out
 
 
 def compute_origin_article(url, platforms):

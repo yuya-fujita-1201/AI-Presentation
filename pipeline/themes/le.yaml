@@ -29,6 +29,7 @@ extra_sources:
   - knowledge/sources/video-pe-loop-engineering-overview.md
   - knowledge/sources/video-pe-loop-engineering-5plus1-parts.md
   - knowledge/sources/video-pe-five-engineering-stages.md
+  - knowledge/sources/video-ge-nyanta-loop-graph-claude-code.md
 subtopics:
   - {id: official-guides, goal: エージェントワークフロー・評価ループの公式/一次情報台帳化,
      queries: ["Anthropic building effective agents", "evaluator optimizer workflow LLM"]}
