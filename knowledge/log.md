@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-15（leソース台帳・記事2本 web_ledger run:08151159f1）
+
+- **Creation**: sources/ に記事2本を article-le-*.md として登録（ループエンジニアリングテーマ、web_ledger工程 run:08151159f1）。article-le-kilo-loop-engineering-definition.md（Kilo「What Is Loop Engineering? AI Feedback Loops」、二次情報。loop engineeringを「AIコーディングエージェントが計画立案・コード変更・結果観察・アプローチ修正を繰り返すフィードバックループの設計・運用・改善の実践」と定義する原文引用、Intent・Context・Action・Observation・Adjustmentの5段階モデル、プロンプトエンジニアリングとの対比表（「良い最初の回答」対「良い最終成果」、失敗モードの違い）、Test-Driven/Compiler-Driven/Review-Driven/Runtime Debugging/Product Iterationの5実践パターン、「テストの失敗は単なるエラーメッセージではなく新たな文脈情報である」という教訓と組織的な再現性標準の必要性を解説）、article-le-zenn-maker-checker-practice.md（Zenn「Claude Code で『ループエンジニアリング』を実践してみた」tetsu_don、二次情報。/spec-review・/code-reviewをMaker-Checker対応に再設計しレビュー役のtoolsからWrite・Editを外すことで修正権限を剥奪した設計、openBD書籍価格チェッカーを検証題材とした3パターンのエラー検証、「想定内の異常系か本当のバグかを判定する」性質判定ステップを最優先に組み込んだ理由、str.isdigit()が全角数字を誤判定していた実バグの修正とpytest 63件全パス、incident-checkerが独立コンテキストでゼロからやり直すことによる自己採点バイアス防止効果、単一プロジェクト専用実装から複数プロジェクト横断のレジストリ設計への今後の課題を解説）
+- **Update**: sources/index.md の「記事（ループエンジニアリング）」節に上記2件を追加
+
 ## 2026-08-15（leソース台帳・記事2本 web_ledger run:08151148d9）
 
 - **Creation**: sources/ に記事2本を article-le-*.md として登録（ループエンジニアリングテーマ、web_ledger工程 run:08151148d9）。article-le-self-refine.md（arXiv「Self-Refine: Iterative Refinement with Self-Feedback」Madaan et al.、一次情報。人間の推敲プロセスに着想を得て同一LLMが生成器・批評者・改善者を兼ねる3ステップの反復ループ、追加の教師データ・追加学習・強化学習を要しない設計、対話応答生成〜数学的推論の7タスク×GPT-3.5/ChatGPT/GPT-4で人手評価・自動評価とも平均約20%の絶対的改善、loop engineeringで頻繁に参照される「自己改善ループ」の原典としての位置づけ、RCI・CRITIC・Self-Correct等の後続研究の起点であることを解説）、article-le-loop-engineering-mindstudio.md（MindStudio「What Is Loop Engineering? The New Meta for Autonomous AI Agent Workflows」、二次情報。単一ターン依存の従来AIワークフローとの対比からloop engineeringを観察・推論・行動・評価の反復と定義、/loop（有界・条件付き反復）・/goal（成功条件と終了判定）・/routines（再利用可能なアクション配列）の3構成要素、ゴール未定義のままループから着手する失敗パターンへの警句、Self-Refineをloop engineeringの実装例とする位置づけ、多段階・条件付き・完了時間不定・人間レビューがボトルネックという適用条件を解説）

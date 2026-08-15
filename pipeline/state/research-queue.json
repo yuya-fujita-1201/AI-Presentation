@@ -638,8 +638,9 @@
         "source_tier": "secondary",
         "origin": "web:kilo.ai",
         "subtopic": "concepts-survey",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/concepts-survey"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/concepts-survey",
+        "ledger_path": "knowledge/sources/article-le-kilo-loop-engineering-definition.md"
       },
       {
         "url": "https://zenn.dev/tetsu_don/articles/e40b95dfc726ac",
@@ -656,8 +657,9 @@
         "source_tier": "secondary",
         "origin": "web:zenn.dev/tetsu_don",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-le-zenn-maker-checker-practice.md"
       },
       {
         "url": "https://qiita.com/Syoitu/items/97ed37e7ba9c38dc75d8",
