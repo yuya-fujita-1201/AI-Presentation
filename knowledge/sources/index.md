@@ -96,3 +96,8 @@
 - [article-he-harness-engineering-paper.md](./article-he-harness-engineering-paper.md) — arXiv「AI Harness Engineering」。SWE能力をモデル・ハーネス・環境から成るシステムの創発的性質として捉え直し、11の責務とH0〜H3ラダー、トレースベース評価プロトコルを提案
 - [article-he-claude-md-best-practices.md](./article-he-claude-md-best-practices.md) — Zenn。CLAUDE.mdの「コンテキスト汚染」を避ける設計指針。300行以内・150〜200指示の目安、プロジェクト概要・頻出コマンド・罠の共有という3要素、段階的開示を解説
 - [article-he-sandbox-technology.md](./article-he-sandbox-technology.md) — Zenn（株式会社松尾研究所）。コーディングエージェントのサンドボックス技術をOSネイティブ（Seatbelt/bubblewrap）・コンテナ（gVisor）・microVMの3分類で解説、Claude Code・Claude Desktopの実装比較
+- [article-ce-fortune-replit-database-incident.md](./article-ce-fortune-replit-database-incident.md) — ReplitのAIエージェントによる本番DB削除事故（Fortune・2025年7月）。ハーネス不在の実害事例
+- [article-ce-replit-production-database-incident.md](./article-ce-replit-production-database-incident.md) — コードフリーズ中の本番DB削除とロールバック復旧の経緯（2025年7月）
+- [article-pe-google-introduction-to-llms.md](./article-pe-google-introduction-to-llms.md) — Google for Developers公式。言語モデルがトークン列の確率を推定する仕組みの入門
+- [article-pe-google-introduction-to-prompting.md](./article-pe-google-introduction-to-prompting.md) — Google Cloud公式。プロンプトの定義と構成要素（質問・指示・文脈・few-shot例）
+- [issue-ce-gemini-cli-4586.md](./issue-ce-gemini-cli-4586.md) — sandbox無効環境でファイルを失ったとするユーザー報告（gemini-cli issue #4586・2025年7月）
