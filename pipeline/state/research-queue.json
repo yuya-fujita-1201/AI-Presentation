@@ -545,7 +545,8 @@
   ],
   "web": {
     "subtopics_done": [
-      "official-guides"
+      "official-guides",
+      "concepts-survey"
     ],
     "candidates": [
       {
@@ -583,6 +584,57 @@
         "subtopic": "official-guides",
         "status": "verified",
         "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://arxiv.org/abs/2303.17651",
+        "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+        "publisher": "arXiv (Madaan et al.)",
+        "retrieved": "2026-08-15",
+        "extract": "論文の主題: LLMは初回生成で必ずしも最良の出力を作れないという人間の執筆推敲プロセスに着想を得て、Self-Refineは反復的な自己改善手法を提案する。「Like humans, large language models (LLMs) do not always generate the best output on their first try」という指摘が出発点。\n\n手法の骨格: 同一のLLMが生成器・批評者・改善者の三役を兼ねる。手順は(1)初期出力生成、(2)同じLLMがその出力へフィードバックを与える、(3)フィードバックを用いて出力を改善、という反復ループを満足のいく結果が得られるまで繰り返す。原文では「the same LLM provides feedback for its output and uses it to refine itself, iteratively」と記述されている。追加の教師データ・追加学習・強化学習を一切必要としない点が強調されており、「Self-Refine does not require any supervised training data, additional training, or reinforcement learning」という一文がその根拠になっている。\n\n評価設定: 対話応答生成から数学的推論まで7種類の多様なタスクで評価を行い、使用モデルはGPT-3.5・ChatGPT・GPT-4の3種。\n\n性能結果: Self-Refineで生成した出力は、同一LLMによる従来の一段階生成と比較して、人手評価・自動評価指標の双方で好まれ、タスク性能で平均約20%の絶対的改善を達成した。原文表現は「outputs generated with Self-Refine are preferred by humans and automatic metrics over those generated with the same LLM using conventional one-step generation」。\n\n位置づけ: この論文はloop engineeringの文脈で頻繁に参照される「自己改善ループ」の原典であり、後続の自己リファインメント系研究（RCI, CRITIC, Self-Correctなど）の起点となっている。",
+        "quote": "Like humans, large language models (LLMs) do not always generate the best output on their first try. ... Self-Refine does not require any supervised training data, additional training, or reinforcement learning.",
+        "claims": [
+          "Madaan et al.(2023)は、同一LLMが生成・批評・改善を担うSelf-Refineフレームワークにより、追加学習なしで出力品質を向上できると主張している。",
+          "論文は、7つの多様なタスクにおいてSelf-Refineが従来の一段階生成に対し平均約20%の絶対的改善を示したと報告している。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "concepts-survey",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/concepts-survey"
+      },
+      {
+        "url": "https://www.mindstudio.ai/blog/what-is-loop-engineering-autonomous-ai-agent-workflows",
+        "title": "What Is Loop Engineering? The New Meta for Autonomous AI Agent Workflows",
+        "publisher": "MindStudio",
+        "retrieved": "2026-08-15",
+        "extract": "定義: 記事はloop engineeringを「AIエージェントが単一のプロンプトに応答するのではなく、観察・推論・行動・評価のサイクルを繰り返し実行し、定義された目標に達するまで継続する方法論」と説明する。従来型ワークフローとの対比として、「ほとんどのAIワークフローは依然として人間がプロセスを進める必要があり、単一ターンのやり取りに依存している」という課題認識が起点になっている。\n\n3つの構成要素: 記事はloop engineeringの核となる3つの構成概念を提示する。(1) /loop — 一連のアクション実行を繰り返すメカニズムで、有界（N回実行）または条件付き（条件が真になるまで）で動作する。(2) /goal — エージェントが達成すべき成功条件を定義するもので、「ゴールなしでは、ループが無期限に実行されるか恣意的に終了する」とされ、成功状態・制約・優先順位シグナルを含む。(3) /routines — モジュール化された再利用可能なアクション配列で、データ取得・要約・エスカレーション・通知などの個別タスクを構成する。\n\n自己改善への言及: 記事はSELF-REFINEを「同一モデルが生成・批評・改善を行い、満足のいく結果に至るまで反復する」loop engineeringの具体的な実装例として位置づけている。\n\n適用条件: 推奨されるのは「タスクが多段階で条件付き（次のステップが前のステップの結果に依存）」「完了時間が予測不可能」「人間のレビューがボトルネックになる」場合。逆に、単一の明確なステップのタスクや各ステップで人間判断が必須な場合は不向きとされる。\n\n重要な指摘として「loop engineering isn't just about automating repetitive tasks. It enables agents to handle tasks where the right sequence of steps isn't known in advance.」という一文があり、事前に手順が確定できないタスクにこそ価値があるとしている。また「The most common mistake in loop engineering is starting with the loop and figuring out the goal later.」という警句もあり、ゴール設計を先行させるべきという実践的な教訓を示している。",
+        "quote": "loop engineering isn't just about automating repetitive tasks. It enables agents to handle tasks where the right sequence of steps isn't known in advance. The most common mistake in loop engineering is starting with the loop and figuring out the goal later.",
+        "claims": [
+          "MindStudioは、loop engineeringを/loop（反復実行）・/goal（終了条件）・/routines（再利用可能なアクション配列）という3つの構成要素で定義できると主張している。",
+          "記事は、ゴールを先に定義せずループから設計を始めることがloop engineeringにおける最も一般的な失敗だと指摘している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:mindstudio.ai",
+        "subtopic": "concepts-survey",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/concepts-survey"
+      },
+      {
+        "url": "https://kilo.ai/articles/what-is-loop-engineering",
+        "title": "What Is Loop Engineering? AI Feedback Loops",
+        "publisher": "Kilo",
+        "retrieved": "2026-08-15",
+        "extract": "定義: 記事はloop engineeringを「AIコーディングエージェントが計画立案・コード変更・結果観察・アプローチ修正を繰り返すフィードバックループの設計・運用・改善の実践」と定義する。原文では「Loop engineering is the practice of designing, operating, and improving the feedback loops that let AI coding agents plan work, change code, observe results, and revise their approach until a software task is complete.」と記述されている。ワンショットのコード生成ではなく反復的システムとして機能する点を強調する。\n\n5段階のループモデル: Intent（開発者・システムが目標を定義）→ Context（コード・ドキュメント・エラー・ログの収集）→ Action（ファイル編集・コマンド実行・ツール呼び出し）→ Observation（テスト結果・コンパイラエラー・diff・レビューコメントの取得）→ Adjustment（計画更新と反復継続）という5段階で構成される。\n\nプロンプトエンジニアリングとの対比: 記事は両者を表形式で対比し、プロンプトエンジニアリングが「モデルへの入力形成」「より良い最初の回答」「通常は人間評価」を焦点とするのに対し、loop engineeringは「モデル周辺の全体的プロセス」「より良い最終成果」「テスト・ツール・ログ・レビュー」をフィードバック源とすると整理する。失敗モードもそれぞれ異なり、前者は「弱い回答生成」、後者は「不十分なループ設計・早期停止」とされる。原文は「loop engineering assumes the first answer may be incomplete and designs the workflow to improve from there」と述べる。\n\n5つの具体的ユースケースパターン: (1) Test-Driven Agent Loop（テスト失敗から実装修正へ）、(2) Compiler-Driven Loop（型チェッカーエラーを修復リストとして活用、マイグレーション向け）、(3) Review-Driven Loop（人間のレビューコメントを観察源として活用）、(4) Runtime Debugging Loop（ログ・スタックトレース・ブラウザ出力から原因特定）、(5) Product Iteration Loop（UIコピー・状態・レスポンシブ性の反復検証）。\n\n実践的な教訓として「A small diff is easier to verify and easier to repair」「A test failure is not just an error message; it is new context」という指摘があり、テスト失敗自体を次の推論のための新たな文脈情報として扱う考え方を示している。また「Teams need repeatable standards so agent behavior is predictable across repositories」として、組織的な再現性の重要性にも触れている。",
+        "quote": "loop engineering assumes the first answer may be incomplete and designs the workflow to improve from there. A test failure is not just an error message; it is new context.",
+        "claims": [
+          "Kiloは、loop engineeringをIntent・Context・Action・Observation・Adjustmentという5段階のフィードバックループとして定義している。",
+          "記事は、プロンプトエンジニアリングが「良い最初の回答」を目指すのに対し、loop engineeringは「良い最終成果」をテストやツールからのフィードバックで達成する点で異なると主張している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:kilo.ai",
+        "subtopic": "concepts-survey",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/concepts-survey"
       }
     ]
   }
