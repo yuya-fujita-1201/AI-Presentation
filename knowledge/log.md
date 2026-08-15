@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-15（シリーズ完走・スケジューラ解除）
+
+- **Milestone**: pe→ce→he→le の4テーマすべてが完走。le（ループEG）のデッキ採点が 8/9/9/8/8/9 で2連続合格し、`docs/codex-brief-ai-eng-04-loop-engineering.md` を発行（run:081518579f / commit db0ea82）。パイプラインは `pipeline/PAUSE`（理由: シリーズ完走）で自動停止し `phase: done`
+- **Ops**: ユーザー判断により launchd の定期実行を解除（`launchctl bootout gui/501/com.yuyafujita.presentation-pipeline`）。plist は `~/Library/LaunchAgents/` に残置。再開する場合は `launchctl bootstrap gui/501 ~/Library/LaunchAgents/com.yuyafujita.presentation-pipeline.plist` を実行し、新テーマを `pipeline/themes/` に追加のうえ `pipeline/PAUSE` を削除する
+- **Status**: ナレッジ蓄積の到達点 — prompt-engineering 9 / context-engineering 12 / harness-engineering 9 / loop-engineering 11 コンセプト、ソース台帳 80本
+
 ## 2026-08-15（le ナレッジ完成・manual_override受理）
 
 - **Add**: loop-engineering に10コンセプト（ループEGとは/プロンプトからループへ/ループの解剖/目標と停止条件/検証の設計/maker-checker分離/self-refineとevaluator-optimizer/ループの部品とハーネス/いつ使うか/リスクとコスト）。ソースは新規台帳9本＋既存共有4本（pe/geのループ動画）の計13本
