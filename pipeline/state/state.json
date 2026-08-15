@@ -1,80 +1,53 @@
 {
   "schema": "state-v1",
   "theme": {
-    "id": "le",
-    "slug": "ai-eng-04-loop-engineering",
-    "title": "ループエンジニアリング",
+    "id": "de",
+    "slug": "ai-eng-05-dialogue-engineering",
+    "title": "ダイアログエンジニアリング",
     "series": [
       "pe",
       "ce",
       "he",
-      "le"
+      "le",
+      "de"
     ],
     "series_index": 0
   },
-  "phase": "done",
-  "generation": 9,
-  "active_run_id": "081518579f",
-  "input_commit": "f8b566396fab",
+  "phase": "research_fetch",
+  "generation": 10,
+  "active_run_id": "08152245a3",
+  "input_commit": "7dc2f46f53d6",
   "phase_started_at": null,
   "phase_attempts": 0,
   "run_counts": {
-    "research_scan": 1,
-    "research_fetch": 2,
-    "research_ledger": 8,
-    "research_web": 4,
-    "web_ledger": 5,
-    "knowledge": 4,
-    "grade_k": 4,
-    "improve_k": 3,
-    "draft": 1,
-    "deck": 1,
-    "grade_d": 3,
-    "improve_d": 1,
-    "brief": 1
+    "research_scan": 1
   },
   "scan_fallback_done": false,
   "video_shortfall": false,
   "web_rerun_done": false,
   "grade": {
     "knowledge": {
-      "iter": 4,
-      "repair_count": 3,
+      "iter": 0,
+      "repair_count": 0,
       "pass_streak": 0,
       "retry_used": false,
-      "last_unmet": [
-        3,
-        5
-      ],
-      "last_scores": {
-        "1": 9,
-        "2": 8,
-        "3": 7,
-        "4": 8,
-        "5": 7
-      }
+      "last_unmet": null,
+      "last_scores": null
     },
     "deck": {
-      "iter": 3,
-      "repair_count": 1,
-      "pass_streak": 2,
+      "iter": 0,
+      "repair_count": 0,
+      "pass_streak": 0,
       "retry_used": false,
-      "last_unmet": [],
-      "last_scores": {
-        "1": 8,
-        "2": 9,
-        "3": 9,
-        "4": 8,
-        "5": 8,
-        "6": 9
-      }
+      "last_unmet": null,
+      "last_scores": null
     }
   },
   "push_pending": false,
   "last_result": "succeeded",
-  "last_scan_at": "2026-08-15T05:02:52+09:00",
-  "last_started_at": "2026-08-15T18:57:11+09:00",
-  "last_successful_transition_at": "2026-08-15T19:03:24+09:00",
+  "last_scan_at": "2026-08-15T22:49:10+09:00",
+  "last_started_at": "2026-08-15T22:45:32+09:00",
+  "last_successful_transition_at": "2026-08-15T22:49:10+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
@@ -86,6 +59,6 @@
     "to": "draft",
     "was_stuck": "repair_exhausted"
   },
-  "last_notification_success_at": "2026-08-15T19:03:24+09:00",
+  "last_notification_success_at": "2026-08-15T22:45:21+09:00",
   "_use_fallback": false
 }
