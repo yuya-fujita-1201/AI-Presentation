@@ -1,5 +1,13 @@
 # 変更履歴
 
+## 2026-08-15（loop-engineering コンセプト10本 knowledge工程）
+
+- **Creation**: `loop-engineering/` を新設。ソース台帳13本（動画4本・記事8本＋Anthropic公式2本を含む）を情報源に、コンセプト10本を追加（what-is-loop-engineering / from-prompt-to-loop / anatomy-of-a-loop / goal-and-stop-conditions / verification-design / maker-checker-separation / self-refine-and-evaluator-optimizer / loop-parts-and-harness / when-to-use-loops / risks-and-costs）。想定読者はチャット型AIの利用経験はあるがエージェント的活用は未経験の層。中核主張は出所の異なる2origin以上で支持させ、単一ソースの主張は「〜としている」と帰属を明示、auto字幕由来の主張は「（聞き取り）」を併記する方針で執筆
+- **Creation**: `loop-engineering/index.md` を作成（内容一覧と推奨読書順。時間がない場合の3本ルートも記載）
+- **Update**: 台帳13本の「# 活用先」に、各コンセプトからの参照理由を追記（コンセプト側の出典インラインリンクと双方向で対応）
+- **Update**: ルート index.md に `loop-engineering/` を追加
+- **Process**: 執筆は knowledge工程を4ランに分割して実施（run:081512243f・08151231ac・08151240b1・08151249f4）。plan.json（`pipeline/staging/knowledge/plan.json`）にコンセプト設計とsources割り当てを保持し、ランをまたいで status: todo→done で引き継ぐチェックポイント方式。最終ランで `tools/validate_okf.py knowledge` による機械検証と、コンセプト⇄台帳の双方向リンク自己照合を実施
+
 ## 2026-08-15（leソース台帳・記事2本 web_ledger run:0815121336）
 
 - **Creation**: sources/ に記事2本を article-le-*.md として登録（ループエンジニアリングテーマ、web_ledger工程 run:0815121336）。article-le-qiita-syoitu-loop-engineering.md（Qiita「入門から実践 -「🔁 ループエンジニアリング」」Syoitu、二次情報。Addy Osmaniの定義「Loop engineering is replacing yourself as the person who prompts the agent」の引用、ループを構成する5つのアクション（発見・受け渡し・検証・記憶・スケジューリング）と6つのパーツ（Automations・Worktrees・Skills・Connectors/MCP・Sub-agents・Memory）、Claude Codeでの3ファイル実装（CLAUDE.mdの停止条件「全チェック通過」「最大5回」「同じエラー2回連続」と禁止事項、settings.jsonのStop/PostToolUseフック、fixerサブエージェントの「推測は禁止」条件）、Mastra Goals機能のjudge/maxRuns/prompt、回しっぱなしの代価4リスクを解説）、article-le-note-masawunder-goal-loop-design.md（note「Claude Code ループエンジニアリング入門 /goal・/loopの使い分けと停止条件の設計」masa_wunder、二次情報。「公式が定義した『ループ』の核心は停止条件」という位置づけ、人の関与度によるターン駆動・ゴール駆動・時間駆動・自律駆動の4分類、/goal（ゴール駆動）と/loop（時間駆動）の定義の違い、著者自身の「停止条件を1つだけにした時は失敗しました」という失敗談から品質スコア・最大12イテレーション・最大360分の3重構成に至った経緯、段階的導入の3ステップとトークン管理の確認方法、「賢くお願いする」から「止まり方まで含めて任せる」への総括を解説）

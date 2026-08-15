@@ -98,3 +98,4 @@ generated:
 
 - [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — 「公式が定義した『ループ』の核心は停止条件」という位置づけ、および停止条件を1つだけにすると伸び悩んだときに回り続けるという失敗談の根拠
 - [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — 主根拠。`/goal`（ゴール駆動）と`/loop`（時間駆動）の定義と使い分け、evaluator が毎ターン条件を判定し未達なら作業に戻すという仕組み、停止条件の3重構成（品質スコア閾値・最大12イテレーション・最大360分）、Lighthouseスコア90以上という検証可能なゴールの例、「対象は広げず1ページ・1テスト・1つの警告まで狭く切る」「小さく始めて完了条件が見えたら/goalに上げる」「止め方を設計するとエージェントの賢さを過信しなくて済む」という各引用、`/usage` で収束を確認する運用の根拠
+- [../loop-engineering/when-to-use-loops.md](../loop-engineering/when-to-use-loops.md) — 「すべてのタスクが複雑なループを必要とするわけではない」という明言（keitoaiweb動画の「最初からすべてを意識するのはやりすぎ」と突き合わせる独立origin側）、「対象は広げず1ページ・1テスト・1つの警告まで狭く切る」「小さく始めて完了条件が見えたら/goalに上げる」「最初の1回は作業・確認・停止の3点を小さなタスクで見届けられれば上出来」という段階的導入の指針、および人の関与の度合いを4段階の階段として整理していることの根拠

@@ -89,3 +89,4 @@ generated:
 - [../loop-engineering/anatomy-of-a-loop.md](../loop-engineering/anatomy-of-a-loop.md) — ループ設計の4ポイント（ゴールの明確化・エージェントの割り当て・進捗の検証・継続条件の判定）を表として整理した根拠、および「変なゴールや変な検証器を作ると成果物が意図からずれる」という注意点の根拠（auto字幕・聞き取り）
 - [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — ゴールは計測できる形で設定すべきという原則（LLMジャッジや複数LLMの合格判定という例を含む）、および「ゴール」と「ループ」は別概念だとする整理の根拠（auto字幕・聞き取り）
 - [../loop-engineering/loop-parts-and-harness.md](../loop-engineering/loop-parts-and-harness.md) — ロングラン自律動作のための5つの技術（オートパーミッション・動的ワークフロー・ループコマンド・自己検証ツール・Ralph Loop）と、「少しずつ制約をつけていくことでかえって自律的に動くようになる」という配信者の見解の根拠（auto字幕・聞き取り）
+- [../loop-engineering/risks-and-costs.md](../loop-engineering/risks-and-costs.md) — 「変なゴールや変な検証機を作ってしまうと成果物が本来意図するものからずれていく」という注意点、コミュニティからの指摘である「ループはエージェントの振る舞いを修正するものであり知っている内容（知識）までは修正しない／知識レイヤーが欠けているとループがうまく機能しない」という論点、および「少しずつ制約をつけていくことでかえって自律的に動くようになる」を歯止めと自律のトレードオフとして引いた根拠（auto字幕・聞き取り）

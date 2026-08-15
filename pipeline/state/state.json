@@ -12,11 +12,11 @@
     ],
     "series_index": 0
   },
-  "phase": "knowledge",
+  "phase": "grade_k",
   "generation": 8,
-  "active_run_id": "08151240b1",
-  "input_commit": "0ebffff47340",
-  "phase_started_at": "2026-08-15T12:24:17+09:00",
+  "active_run_id": "08151249f4",
+  "input_commit": "1be103d2eaaa",
+  "phase_started_at": null,
   "phase_attempts": 0,
   "run_counts": {
     "research_scan": 1,
@@ -24,7 +24,7 @@
     "research_ledger": 8,
     "research_web": 4,
     "web_ledger": 5,
-    "knowledge": 3
+    "knowledge": 4
   },
   "scan_fallback_done": false,
   "video_shortfall": false,
@@ -50,8 +50,8 @@
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-15T05:02:52+09:00",
-  "last_started_at": "2026-08-15T12:40:19+09:00",
-  "last_successful_transition_at": "2026-08-15T12:24:07+09:00",
+  "last_started_at": "2026-08-15T12:49:00+09:00",
+  "last_successful_transition_at": "2026-08-15T12:57:16+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,

@@ -64,3 +64,4 @@ generated:
 - [../loop-engineering/anatomy-of-a-loop.md](../loop-engineering/anatomy-of-a-loop.md) — 観察・推論・行動・評価という4サイクル定義（Kiloの5段階と骨格が一致することを示す独立origin側）、および /loop・/goal・/routines という3つの構成要素（繰り返す器・止まる条件・中で動く部品の分離）の根拠
 - [../loop-engineering/goal-and-stop-conditions.md](../loop-engineering/goal-and-stop-conditions.md) — 「ゴールなしではループが無期限に実行されるか恣意的に終了する」という指摘、および最もよくある失敗が「ループから作り始めてゴールを後から考えること」だとする引用の根拠
 - [../loop-engineering/self-refine-and-evaluator-optimizer.md](../loop-engineering/self-refine-and-evaluator-optimizer.md) — Self-Refine を loop engineering の具体的な実装例として位置づけ、loop engineering を既存の反復的自己改善アプローチを一般化した上位概念として提示しているという整理の根拠
+- [../loop-engineering/when-to-use-loops.md](../loop-engineering/when-to-use-loops.md) — 主根拠。有効に機能する3条件（多段階で条件付き／完了時間が予測不可能／人間のレビューがボトルネック）と不向きな2条件（単一の明確なステップで完結／各ステップで人間の判断が必須）、および「事前に手順が確定できないタスクにこそ価値がある」という本質の整理の根拠
