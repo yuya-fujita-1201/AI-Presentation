@@ -544,7 +544,46 @@
     }
   ],
   "web": {
-    "subtopics_done": [],
-    "candidates": []
+    "subtopics_done": [
+      "official-guides"
+    ],
+    "candidates": [
+      {
+        "url": "https://code.claude.com/docs/en/best-practices",
+        "title": "Best practices for Claude Code",
+        "publisher": "Anthropic (Claude Code Docs)",
+        "retrieved": "2026-08-15",
+        "extract": "## Give Claude a way to verify its work\n\nGive Claude a check it can run: tests, a build, a screenshot to compare. It's the difference between a session you watch and one you walk away from.\n\nClaude stops when the work looks done. Without a check it can run, \"looks done\" is the only signal available, and you become the verification loop: every mistake waits for you to notice it. Give Claude something that produces a pass or fail, and the loop closes on its own. Claude does the work, runs the check, reads the result, and iterates until the check passes.\n\nThe check is anything that returns a signal Claude can read in the conversation: a test suite, a build exit code, a linter, a script that diffs output against a fixture, or a browser screenshot compared against a design.\n\n| Strategy | Before | After |\n| --- | --- | --- |\n| Provide verification criteria | \"implement a function that validates email addresses\" | \"write a validateEmail function. example test cases: user@example.com is true, invalid is false, user@.com is false. run the tests after implementing\" |\n| Verify UI changes visually | \"make the dashboard look better\" | \"[paste screenshot] implement this design. take a screenshot of the result and compare it to the original. list differences and fix them\" |\n| Address root causes, not symptoms | \"the build is failing\" | \"the build fails with this error: [paste error]. fix it and verify the build succeeds. address the root cause, don't suppress the error\" |\n\nOnce the check exists, decide how hard it gates the stop:\n\n* In one prompt: ask Claude to run the check and iterate in the same message, as in the table above.\n* Across a session: set the check as a /goal condition. A separate evaluator re-checks it after every turn and Claude keeps working until the goal resolves. If Claude stalls, Claude Code eventually stops the run with the goal still set.\n* As a deterministic gate: a Stop hook runs your check as a script and blocks the turn from ending until it passes. Claude Code overrides the hook and ends the turn after 8 consecutive blocks.\n* By a second opinion: a verification subagent or a dynamic workflow that checks its own findings has a fresh model try to refute the result, so the agent doing the work isn't the one grading it.\n\nEach step trades setup for attention. The prompt version works on any task today. The /goal and Stop hook versions are what let an unattended run finish correctly without you.\n\nHave Claude show evidence rather than asserting success: the test output, the command it ran and what it returned, or a screenshot of the result. Reviewing evidence is faster than re-running the verification yourself, and it works for sessions you weren't watching.",
+        "quote": "Give Claude something that produces a pass or fail, and the loop closes on its own. Claude does the work, runs the check, reads the result, and iterates until the check passes.",
+        "claims": [
+          "Claude Code公式ドキュメントは、Claudeに合否判定可能なチェック(テスト・ビルド・スクリーンショット比較)を与えることで、実行→検証→反復のループを人間の監視なしに自律的に回せると述べている。",
+          "同ドキュメントは、チェックの強制力の掛け方として、単発プロンプト内での反復・/goalコンディションによるセッション横断の再評価・Stopフックによる決定的ゲート・別コンテキストの検証サブエージェントによるセカンドオピニオンの4段階を挙げている。",
+          "同ドキュメントは、Claudeに成功を自己申告させるのではなく、テスト出力やコマンド結果、スクリーンショットなどの証拠(evidence)を提示させることを推奨している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:claude.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://platform.claude.com/cookbook/patterns-agents-evaluator-optimizer",
+        "title": "Evaluator optimizer | Claude Cookbook",
+        "publisher": "Anthropic (Claude Developer Platform / Claude Cookbook)",
+        "retrieved": "2026-08-15",
+        "extract": "In this workflow, one LLM call generates a response while another provides evaluation and feedback in a loop.\n\nWhen to use this workflow\n\nThis workflow is particularly effective when we have:\n- Clear evaluation criteria\n- Value from iterative refinement\n\nThe two signs of good fit are:\n- LLM responses can be demonstrably improved when feedback is provided\n- The LLM can provide meaningful feedback itself\n\ndef generate(prompt: str, task: str, context: str = \"\") -> tuple[str, str]:\n    \"\"\"Generate and improve a solution based on feedback.\"\"\"\n    full_prompt = f\"{prompt}\\n{context}\\nTask: {task}\" if context else f\"{prompt}\\nTask: {task}\"\n    response = llm_call(full_prompt)\n    thoughts = extract_xml(response, \"thoughts\")\n    result = extract_xml(response, \"response\")\n    print(\"\\n=== GENERATION START ===\")\n    print(f\"Thoughts:\\n{thoughts}\\n\")\n    print(f\"Generated:\\n{result}\")\n    print(\"=== GENERATION END ===\\n\")\n    return thoughts, result\n\ndef evaluate(prompt: str, content: str, task: str) -> tuple[str, str]:\n    \"\"\"Evaluate if a solution meets requirements.\"\"\"\n    full_prompt = f\"{prompt}\\nOriginal task: {task}\\nContent to evaluate: {content}\"\n    response = llm_call(full_prompt)\n    evaluation = extract_xml(response, \"evaluation\")\n    feedback = extract_xml(response, \"feedback\")\n    print(\"=== EVALUATION START ===\")\n    print(f\"Status: {evaluation}\")\n    print(f\"Feedback: {feedback}\")\n    print(\"=== EVALUATION END ===\\n\")\n    return evaluation, feedback\n\ndef loop(task: str, evaluator_prompt: str, generator_prompt: str) -> tuple[str, list[dict]]:\n    \"\"\"Keep generating and evaluating until requirements are met.\"\"\"\n    memory = []\n    chain_of_thought = []\n    thoughts, result = generate(generator_prompt, task)\n    memory.append(result)\n    chain_of_thought.append({\"thoughts\": thoughts, \"result\": result})\n    while True:\n        evaluation, feedback = evaluate(evaluator_prompt, result, task)\n        if evaluation == \"PASS\":\n            return result, chain_of_thought\n        context = \"\\n\".join(\n            [\"Previous attempts:\", *[f\"- {m}\" for m in memory], f\"\\nFeedback: {feedback}\"]\n        )\n        thoughts, result = generate(generator_prompt, task, context)\n        memory.append(result)\n        chain_of_thought.append({\"thoughts\": thoughts, \"result\": result})",
+        "quote": "In this workflow, one LLM call generates a response while another provides evaluation and feedback in a loop.",
+        "claims": [
+          "Claude Cookbook公式ページは、evaluator-optimizerワークフローを「一方のLLM呼び出しが応答を生成し、別のLLM呼び出しがループの中で評価とフィードバックを行う」パターンと定義している。",
+          "同ページは、このワークフローが有効なのは明確な評価基準が存在し反復的改善に価値がある場合であり、フィードバックにより応答が明確に改善されLLM自身が有意義なフィードバックを提供できることが適合の目安だとしている。",
+          "同ページのリファレンス実装はgenerate()・evaluate()・loop()の3関数で構成され、loop()は評価がPASSになるまで過去の試行履歴とフィードバックをコンテキストに積み増しながら生成を繰り返す構造になっている。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:claude.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      }
+    ]
   }
 }
