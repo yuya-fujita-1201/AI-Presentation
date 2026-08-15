@@ -253,7 +253,7 @@
       "trust": "unknown",
       "score": 6,
       "score_detail": "適合+3 初心者+2 新しさ+1 trust+0 再生+0",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -283,7 +283,8 @@
           "impact": "high"
         }
       ],
-      "summary": "Claude Codeサブエージェントの全体像・コンテキスト分離の仕組み・作成手順・役割分離による品質向上と並列高速化のメリット・制約事項を解説する前編動画"
+      "summary": "Claude Codeサブエージェントの全体像・コンテキスト分離の仕組み・作成手順・役割分離による品質向上と並列高速化のメリット・制約事項を解説する前編動画",
+      "ledger_path": "knowledge/sources/video-ge-subagent-overview-basics.md"
     },
     {
       "id": "m0iuRnE3huM",

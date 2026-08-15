@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-16（geソース台帳・動画1本 research_ledger run:0816034527）
+
+- **Creation**: sources/ に動画1本を video-ge-subagent-overview-basics.md として登録（グラフエンジニアリングテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:0816034527）。まさやん【AIギルドch】「【前編】Claude Codeサブエージェント完全ガイド｜全体像・基本機能・メリットを徹底解説」（38分29秒、自動字幕）。サブエージェントの定義とコンテキスト独立性、フロントマターの全設定項目（name/description必須・tools/disallowedToolsの拒否リスト優先仕様・実行制御系・拡張統合系）、4通りの呼び出し方法とコンテキスト管理の仕組み、Anthropic公式ブログを引用した役割分離（プランナー/ジェネレーター/エバリエイター）による品質向上、並列実行で8分→3分未満に短縮された事例、ネスト不可などの制約事項、Claude Codeの機能体系（実行主体/能力/ルール環境）における位置付けを解説
+- **Update**: sources/index.md の「動画（グラフエンジニアリング）」節に上記1件を追加
+
 ## 2026-08-16（geソース台帳・動画2本 research_ledger run:0816030875）
 
 - **Creation**: sources/ に動画2本を video-ge-*.md として登録（グラフエンジニアリングテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:0816030875）。video-ge-subagent-when-to-use.md（にゃんたのAIチャンネル「How to use ClaudeCode and Codex subagents!」、30分49秒。Googleの研究者によるという実験論文を引用し、シングルエージェント単体の精度が約45%を超えるタスクにエージェントを追加するとネガティブリターンになるという損益分岐点、ファイナンスエージェント対プランクラフトでの並列分割可否による明暗、配信者自身が実践する3つの活用法（並列調査・忖度回避・作成検証ループ）を解説）、video-ge-dynamic-workflows-six-patterns.md（みにこーへいのAI活用チャンネル「【Claude Code新機能】Dynamic Workflows完全解説」、99秒。分類振り分け・ファンアウト・敵対的検証・生成篩い落とし・トーナメント・終了判定の6つの編成パターンと、プロンプトに「ウルトラコード」と書くだけの使い方、トークン予算指定の方法を解説）

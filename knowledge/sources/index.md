@@ -39,6 +39,7 @@
 - [video-ge-techplay-3min-intro.md](./video-ge-techplay-3min-intro.md) — 「SNSで話題の『グラフエンジニアリング』の正体は？」（TECH PLAY、3分）。ノード/エッジ/状態の3要素、データ可視化との混同の訂正
 - [video-ge-subagent-when-to-use.md](./video-ge-subagent-when-to-use.md) — 「How to use ClaudeCode and Codex subagents!」（にゃんたのAIチャンネル）。Googleの研究論文が示す「シングルエージェント精度45%」という損益分岐点と、並列調査・忖度回避・作成検証ループの3活用法
 - [video-ge-dynamic-workflows-six-patterns.md](./video-ge-dynamic-workflows-six-patterns.md) — 「【Claude Code新機能】Dynamic Workflows完全解説」（みにこーへいのAI活用チャンネル、99秒）。分類振り分け・ファンアウト・敵対的検証・生成篩い落とし・トーナメント・終了判定の6つの編成パターン
+- [video-ge-subagent-overview-basics.md](./video-ge-subagent-overview-basics.md) — 「【前編】Claude Codeサブエージェント完全ガイド」（まさやん【AIギルドch】）。フロントマターの全設定項目・拒否リスト優先の仕様・呼び出し方法・コンテキスト管理の基礎と、役割分離による品質向上・並列実行の高速化・ネスト不可などの制約を解説
 
 ## 記事（プロンプトエンジニアリング）
 

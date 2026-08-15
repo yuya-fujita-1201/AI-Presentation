@@ -13,16 +13,16 @@
     ],
     "series_index": 0
   },
-  "phase": "research_ledger",
+  "phase": "research_web",
   "generation": 11,
-  "active_run_id": "0816030875",
-  "input_commit": "9970559dc4bb",
-  "phase_started_at": "2026-08-16T02:57:11+09:00",
+  "active_run_id": "0816034527",
+  "input_commit": "5a33fd5b96ae",
+  "phase_started_at": null,
   "phase_attempts": 0,
   "run_counts": {
     "research_scan": 1,
     "research_fetch": 7,
-    "research_ledger": 2
+    "research_ledger": 3
   },
   "scan_fallback_done": false,
   "video_shortfall": false,
@@ -48,8 +48,8 @@
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-15T22:59:49+09:00",
-  "last_started_at": "2026-08-16T03:08:42+09:00",
-  "last_successful_transition_at": "2026-08-16T02:46:59+09:00",
+  "last_started_at": "2026-08-16T03:45:05+09:00",
+  "last_successful_transition_at": "2026-08-16T03:48:07+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
