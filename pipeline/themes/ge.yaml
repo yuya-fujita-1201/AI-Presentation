@@ -4,7 +4,9 @@ theme:
   title: グラフエンジニアリング
   series_index: 5
   knowledge_dir: knowledge/graph-engineering
-  deck_dir: decks/graph-engineering-visual
+  # 既存の decks/graph-engineering* は8月上旬の別系統の成果物。上書きせず、
+  # ①〜④と同じ連番で新規に作る（2026-08-16 scope: knowledge → full に変更）
+  deck_dir: decks/ai-eng-05-graph-engineering
 # 既存台帳11本はすべて日本語YouTube（auto字幕）。不足しているのは公式ドキュメント・論文・
 # 技術記事などの一次資料なので、英語圏と公式ソースを厚めに狙う（2026-08-15 追加時点）
 keywords:
