@@ -45,6 +45,8 @@
 
 - [article-ge-anthropic-building-effective-agents.md](./article-ge-anthropic-building-effective-agents.md) — Anthropic公式「Building Effective AI Agents」。WorkflowとAgentの定義区別、augmented LLMという基本構築ブロック、5つのワークフローパターン（Prompt chaining/Routing/Parallelization/Orchestrator-workers/Evaluator-optimizer）、シンプルさの原則を解説
 - [article-ge-openai-orchestration-handoffs.md](./article-ge-openai-orchestration-handoffs.md) — OpenAI公式「Orchestration and handoffs」。会話の所有権を引き渡すHandoffsと、マネージャーが所有権を保持するAgents as Tools(Managerパターン)の対比、専門家追加の4判断基準、「まず単一エージェントから始める」原則を解説
+- [article-ge-anthropic-multi-agent-research-system.md](./article-ge-anthropic-multi-agent-research-system.md) — Anthropic公式「How we built our multi-agent research system」。リードエージェントがサブエージェント群に探索を委任するオーケストレーター・ワーカー構成、内部評価による90.2%の性能改善と約15倍のトークン消費、開発中の失敗事例と対処、プロンプトエンジニアリング上の教訓を解説
+- [article-ge-anthropic-building-c-compiler.md](./article-ge-anthropic-building-c-compiler.md) — Anthropic公式「Building a C compiler with a team of parallel Claudes」。16個のClaudeエージェントを並列稼働させたRust製Cコンパイラ開発実験、タスクロックによる競合回避の運用設計、「task verifierがほぼ完璧である必要がある」という教訓を解説
 
 ## 記事（プロンプトエンジニアリング）
 

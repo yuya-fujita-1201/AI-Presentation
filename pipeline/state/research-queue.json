@@ -572,8 +572,9 @@
         "source_tier": "secondary",
         "origin": "web:anthropic.com",
         "subtopic": "official-multiagent",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-multiagent"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-multiagent",
+        "ledger_path": "knowledge/sources/article-ge-anthropic-multi-agent-research-system.md"
       },
       {
         "url": "https://www.anthropic.com/engineering/building-c-compiler",
@@ -590,8 +591,9 @@
         "source_tier": "secondary",
         "origin": "web:anthropic.com",
         "subtopic": "official-multiagent",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-multiagent"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-multiagent",
+        "ledger_path": "knowledge/sources/article-ge-anthropic-building-c-compiler.md"
       },
       {
         "url": "https://arxiv.org/abs/2503.13657",
