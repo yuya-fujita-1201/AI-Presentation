@@ -106,4 +106,5 @@ generated:
 - [../harness-engineering/sandbox-and-isolation.md](../harness-engineering/sandbox-and-isolation.md) — ハーネスの4要素のうち「制限（触れてはいけない領域）」という整理の根拠（auto字幕）
 - [../harness-engineering/project-memory-and-rules.md](../harness-engineering/project-memory-and-rules.md) — ハーネスの4要素のうち「ルール（毎回読み込むべきコンテキスト）」という整理、CLAUDE.md・メモリの自動読み込みを実例として挙げていることの根拠（auto字幕）
 - [../loop-engineering/from-prompt-to-loop.md](../loop-engineering/from-prompt-to-loop.md) — 5段階説（4段階＋グラフ）という数え方の差、目的は共通でスコープだけが違うという整理、ループ＝時間軸／グラフ＝構造軸という対比、入れ子構造という結論の根拠（auto字幕）
+- [../loop-engineering/maker-checker-separation.md](../loop-engineering/maker-checker-separation.md) — AIは自分の生成物への採点が甘くなりがちで他のAIにダメ出しさせると精度が大きく向上するという指摘（にゃんたのAIチャンネル動画と突き合わせる独立origin側）、「赤ペン添削」の比喩、および背景コンテキストを持たない別のサブエージェントに検証させてから人間に戻すという流れの根拠（auto字幕・聞き取り）
 - [../loop-engineering/verification-design.md](../loop-engineering/verification-design.md) — ループエンジニアリングを実行・検証・改善の繰り返しと定義していること、および検証の実例（画像生成後にビジョン機能で文字崩れを確認するループ／Excelの売上データを再計算して数値を合わせるループ／スライドの文字数超過を検出して削るループ）を機械判定とモデル判定の使い分け例として用いた根拠（auto字幕・聞き取り）

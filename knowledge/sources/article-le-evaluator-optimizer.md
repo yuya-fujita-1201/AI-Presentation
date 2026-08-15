@@ -42,4 +42,5 @@ Anthropic公式のClaude Developer Platformが公開する「Claude Cookbook」�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/self-refine-and-evaluator-optimizer.md](../loop-engineering/self-refine-and-evaluator-optimizer.md) — generate／evaluate／loop の3関数構成、thoughts と response・evaluation と feedback をそれぞれ分けて返す設計、"PASS" までコンテキストに全試行履歴とフィードバックを積み増す loop の動作、および有効な場面の4条件（明確な評価基準がある／反復的な改善に価値がある／フィードバックで応答が明確に改善する／LLM自身が有意義なフィードバックを出せる）の根拠
+- [../loop-engineering/maker-checker-separation.md](../loop-engineering/maker-checker-separation.md) — 生成と評価を別々のLLM呼び出しに分離するというワークフロー定義（「one LLM call generates a response while another provides evaluation and feedback in a loop」）を、Maker-Checker の実装形態の1つとして引用した根拠

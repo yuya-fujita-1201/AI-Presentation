@@ -64,4 +64,5 @@ Self-Refineの手順として、論文は同一のLLMが生成器・批評者・
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../loop-engineering/self-refine-and-evaluator-optimizer.md](../loop-engineering/self-refine-and-evaluator-optimizer.md) — 同一LLMが生成器・批評者・改善者の三役を兼ねる3ステップ構成、追加の教師データ・追加学習・強化学習を必要としないという特性、7タスク×3モデルという評価設定、タスク性能で平均約20%の絶対的改善という報告の根拠
+- [../loop-engineering/maker-checker-separation.md](../loop-engineering/maker-checker-separation.md) — 同一モデルによる自己改善が約20%の改善を報告している点を、RefineBench の「自己修正ではほとんど伸びない」という紹介と突き合わせ、手元の資料では決着しない緊張関係として提示した根拠

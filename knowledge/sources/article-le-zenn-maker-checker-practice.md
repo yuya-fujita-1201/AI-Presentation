@@ -69,3 +69,4 @@ generated:
 # 活用先
 
 - [../loop-engineering/what-is-loop-engineering.md](../loop-engineering/what-is-loop-engineering.md) — ループエンジニアリングの定義（プロンプトを打つ人であることをやめ、それを行うシステムを設計する）を裏づける2つ目の独立ソースとしての根拠
+- [../loop-engineering/maker-checker-separation.md](../loop-engineering/maker-checker-separation.md) — 「サブエージェント（reviewer）は判定のみ、呼び出し元が修正を行う」という構造と、tools に Write・Edit を含めない権限剥奪による物理的な分離、「合格させたい方向に評価を歪める傾向」の防止という効果、および採点前に「想定内の異常系か、本当のバグかを判定する」性質判定ステップを置く必要性（全角数字バリデーションのバグ検出事例を含む）の根拠
