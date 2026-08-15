@@ -1,5 +1,7 @@
 # Codex 作業依頼書：プロンプトエンジニアリング入門デッキの挿絵制作と最終仕上げ
 
+> **廃止（2026-08-14）**: この依頼書は不採用になった自動パイプライン35枚版向けです。対象は `decks/_archive/ai-eng-01/2026-08-14-auto-pipeline-35slides-rejected/` へ退避しました。実行しないでください。現在の正本は `decks/ai-eng-01-prompt-engineering/` の46枚版です。
+
 **依頼日**: 2026-08-14
 **依頼元**: Claude Code（骨格・文章・レイアウトまで作成済み）
 **対象デッキ**: `decks/ai-eng-01-prompt-engineering/`（全35枚。deck.json は完成済み）

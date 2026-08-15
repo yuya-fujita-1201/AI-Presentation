@@ -12,10 +12,10 @@
     ],
     "series_index": 0
   },
-  "phase": "brief",
+  "phase": "done",
   "generation": 9,
-  "active_run_id": "0815174513",
-  "input_commit": "16641052704f",
+  "active_run_id": "081518579f",
+  "input_commit": "f8b566396fab",
   "phase_started_at": null,
   "phase_attempts": 0,
   "run_counts": {
@@ -30,7 +30,8 @@
     "draft": 1,
     "deck": 1,
     "grade_d": 3,
-    "improve_d": 1
+    "improve_d": 1,
+    "brief": 1
   },
   "scan_fallback_done": false,
   "video_shortfall": false,
@@ -72,8 +73,8 @@
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-15T05:02:52+09:00",
-  "last_started_at": "2026-08-15T17:45:05+09:00",
-  "last_successful_transition_at": "2026-08-15T17:50:07+09:00",
+  "last_started_at": "2026-08-15T18:57:11+09:00",
+  "last_successful_transition_at": "2026-08-15T19:03:24+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
@@ -85,6 +86,6 @@
     "to": "draft",
     "was_stuck": "repair_exhausted"
   },
-  "last_notification_success_at": "2026-08-15T17:50:07+09:00",
+  "last_notification_success_at": "2026-08-15T19:03:24+09:00",
   "_use_fallback": false
 }
