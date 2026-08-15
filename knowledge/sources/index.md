@@ -101,3 +101,7 @@
 - [article-pe-google-introduction-to-llms.md](./article-pe-google-introduction-to-llms.md) — Google for Developers公式。言語モデルがトークン列の確率を推定する仕組みの入門
 - [article-pe-google-introduction-to-prompting.md](./article-pe-google-introduction-to-prompting.md) — Google Cloud公式。プロンプトの定義と構成要素（質問・指示・文脈・few-shot例）
 - [issue-ce-gemini-cli-4586.md](./issue-ce-gemini-cli-4586.md) — sandbox無効環境でファイルを失ったとするユーザー報告（gemini-cli issue #4586・2025年7月）
+
+## 動画（ループエンジニアリング）
+
+- [video-le-loop-design-four-points.md](./video-le-loop-design-four-points.md) — 「【必見】AIエージェントは『ループ設計』の時代！完全自律で回す5つのポイント含め解説します」（まさおAIじっくり解説ch）。ループ設計の4つのポイント（ゴール明確化・エージェント割当・進捗検証・継続条件判定）と、ロングラン自律動作のための5つの技術（オートパーミッション・動的ワークフロー・ループコマンド・自己検証ツール・Ralph Loop）、「ゴール」と「ループ」の概念上の違いを解説

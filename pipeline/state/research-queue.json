@@ -184,7 +184,7 @@
       "trust": "unknown",
       "score": 8,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -209,7 +209,8 @@
           "impact": "normal"
         }
       ],
-      "summary": "2026年時点で話題の「エージェントループ設計」について、ループ設計の4つのポイント（ゴール・エージェント割当・検証・継続条件）と、ロングラン自律稼働のための5つのテクニック（オートパーミッション・動的ワークフロー・ループコマンド・自己検証・Ralph Loop）を解説する動画"
+      "summary": "2026年時点で話題の「エージェントループ設計」について、ループ設計の4つのポイント（ゴール・エージェント割当・検証・継続条件）と、ロングラン自律稼働のための5つのテクニック（オートパーミッション・動的ワークフロー・ループコマンド・自己検証・Ralph Loop）を解説する動画",
+      "ledger_path": "knowledge/sources/video-le-loop-design-four-points.md"
     },
     {
       "id": "sFcTY-vmKPY",
@@ -328,8 +329,8 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+0",
-      "status": "rejected",
-      "reject_reason": "duplicate_cross_theme(video-ge-techplay-3min-intro.md)"
+      "status": "candidate",
+      "reject_reason": null
     },
     {
       "id": "PHTtC32D4rY",
