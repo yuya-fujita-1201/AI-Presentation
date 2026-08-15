@@ -442,7 +442,7 @@
       "title": "ハーネスエンジニアリング超入門",
       "subtitle": "AIが安全に動き、確かめて仕事を終える環境を設計する",
       "meta": "AIエンジニアリングシリーズ 03  |  2026-08-15",
-      "notes": "シリーズ03はハーネスエンジニアリングです。今回は、AIへの頼み方や見せる情報ではなく、AIが何を実行でき、どこで止まり、何を証拠に完了とするかを設計します。通常発表は40枚目までで、41枚目以降は付録です。"
+      "notes": "シリーズ03はハーネスエンジニアリングです。今回は、AIへの頼み方や見せる情報ではなく、AIが何を実行でき、どこで止まり、何を証拠に完了とするかを設計します。通常発表は41枚目までで、42枚目以降は付録です。"
     },
     {
       "type": "image_text",
@@ -501,7 +501,7 @@
           "text": "小さく設計を始められる",
           "bold": true,
           "children": [
-            "仕事の契約・知識と状態・道具・ガードレール・証拠ループで点検する"
+          "契約・知識と状態・道具・ガードレール・証拠ループで点検"
           ]
         },
         {
@@ -557,7 +557,7 @@
           "color": "teal"
         },
         {
-          "text": "モデルを替えずに、仕事の完了率や証拠の厚さが変わる場合がある"
+        "text": "モデルを替えずに、完了率や証拠の厚さが変わる場合がある"
         }
       ],
       "path": "assets/warm-he-01-environment-difference.png",
@@ -568,13 +568,13 @@
       "type": "image_text",
       "eyebrow": "01｜一言定義",
       "title": "ハーネスは、AIエージェントを取り囲む実行基盤",
-      "punch": "ハーネスエンジニアリング＝観察・行動・状態・制御・検証を設計し、モデルの局所能力を仕事の完了能力へ変えること。",
+      "punch": "ハーネスエンジニアリング＝観察・行動・状態・制御・検証を設計し、局所能力を仕事の完了へつなぐ。",
       "bullets": [
         {
           "text": "ハーネス",
           "bold": true,
           "children": [
-            "AIが何を観察し、どう行動し、何を覚え、どうフィードバックを受けるかを媒介する"
+        "AIの観察・行動・記憶・フィードバックを媒介する"
           ]
         },
         {
@@ -585,7 +585,7 @@
           ]
         },
         {
-          "text": "中心は、正しい情報を見つけ、動き、安全に確かめて終えること",
+        "text": "中心は、正しい情報を見つけ、動き、安全に仕事を終える",
           "bold": true,
           "color": "teal",
           "children": [
@@ -643,7 +643,7 @@
       "type": "image_text",
       "eyebrow": "01｜3つの設計の位置づけ",
       "title": "プロンプト・コンテキスト・ハーネスは、別々の設計観点",
-      "punch": "ハーネスはプロンプトやコンテキストを不要にしません。受け渡す経路に加え、行動・状態・制御・検証を設計します。",
+      "punch": "ハーネスはプロンプトやコンテキストの受け渡しに加え、行動・状態・制御・検証も設計します。",
       "bullets": [
         {
           "text": "プロンプト＝頼み方",
@@ -664,7 +664,7 @@
           "bold": true,
           "color": "teal",
           "children": [
-            "何ができ、どこで止まり、どう状態を保ち、何で完了を確かめるかを整える"
+          "できること・止まる場所・状態維持・完了の証拠を整える"
           ]
         },
         {
@@ -725,16 +725,16 @@
             3.5
           ],
           "row_h": 82,
-          "cell_size": 14,
-          "header_size": 15
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
     {
       "type": "two_column",
       "eyebrow": "01｜同じ資産が持つ二つの側面",
-      "title": "読む内容はコンテキスト、読込・制御・保存・検証はハーネス",
-      "lead": "強制力は重要な差の一つ。ただし、自動読込・状態維持・観測もハーネスの仕事です。",
+      "title": "コンテキストは『モデルが読む情報』、ハーネスは『情報と行動を仲介する仕組み』",
+      "lead": "強制力は重要な差の一つ。ハーネスには、情報供給・状態維持・観測・検証も含まれます。",
       "left": {
         "heading": "CLAUDE.md／Rules",
         "bullets": [
@@ -745,7 +745,7 @@
           "CLAUDE.mdの自動発見・階層ロード、Rulesのpaths条件による読込はハーネス",
           "『本番DBを触るな』という文章だけでは機械的な禁止にならない",
           {
-            "text": "AGENTS.mdはClaude Codeの直接読込対象ではない",
+        "text": "AGENTS.mdはClaude Codeの直接読込対象外",
             "bold": true,
             "color": "teal",
             "children": [
@@ -773,13 +773,18 @@
           }
         ]
       },
-      "notes": "Claude Code公式はCLAUDE.mdとauto memoryをコンテキストとし、機械的な強制にはsettingsやPreToolUse Hook等を使うよう区別しています。Hookはすべてがblock用途ではありません。\n\n根拠: HE-S11, HE-S12, HE-S18, HE-S20"
+      "notes": "Claude Code公式はCLAUDE.mdとauto memoryをコンテキストとし、機械的な強制にはsettingsやPreToolUse Hook等を使うよう区別しています。Hookはすべてがblock用途ではありません。\n\n根拠: HE-S11, HE-S12, HE-S18, HE-S20",
+      "style": {
+        "title": {
+          "size": 29
+        }
+      }
     },
     {
       "type": "image_text",
       "eyebrow": "01｜同じ業務で3つを体感する",
       "title": "週次レポート：チャット回答を、仕事の完了へ変える",
-      "punch": "3つは上下関係ではなく役割分担。頼み方・判断材料・実行環境を揃えると、人が確かめられる仕事になります。",
+      "punch": "3つは上下関係ではなく役割分担。頼み方・判断材料・実行環境を揃え、人が確かめられる仕事にします。",
       "bullets": [
         {
           "text": "プロンプト",
@@ -819,7 +824,7 @@
       "type": "image_text",
       "eyebrow": "01｜この資料の実践地図",
       "title": "ハーネスを、5つの設計責務で点検する",
-      "punch": "仕事の契約 → 知識と状態 → 道具 → ガードレール → 証拠ループ。5つを一周させると、再利用・改善・監査がしやすくなります。",
+      "punch": "仕事の契約 → 知識と状態 → 道具 → ガードレール → 証拠ループ。再利用・改善・監査につなげます。",
       "bullets": [
         {
           "text": "①仕事の契約",
@@ -862,7 +867,7 @@
       "type": "table",
       "eyebrow": "01｜Claude Codeで具体化する",
       "title": "5つの設計責務は、どのファイル・設定・検証になるか",
-      "lead": "製品機能の標準分類ではなく実装例。同じ資産が複数の責務を担うこともあります。",
+      "lead": "実装例。本文はコンテキスト、発見・読込・適用範囲はハーネス。AGENTS.mdはCLAUDE.mdからimportします。",
       "columns": [
         "設計責務",
         "具体的な実体"
@@ -874,19 +879,19 @@
         ],
         [
           "② 知識と状態",
-          "CLAUDE.md（必要なら @AGENTS.md をimport）、.claude/rules/*.md、.claude/skills/<name>/SKILL.md、自動メモリ、計画・進捗・判断記録"
+          "CLAUDE.md、.claude/rules/、.claude/skills/、自動メモリ、plan／progress／decision"
         ],
         [
           "③ 道具",
-          "ファイル／Shell／Browser、.mcp.json／MCP（外部接続）、Plugin、Subagent"
+          "ファイル／Shell／Browser、.mcp.json／MCP、Plugin、Subagent"
         ],
         [
           "④ ガードレール",
-          ".claude/settings.json／.claude/settings.local.json、禁止・確認・許可、判定型Hooks、Sandbox、資格情報・通信制限"
+          ".claude/settings*.json、deny／ask／allow、判定型Hooks、Sandbox、認証／通信制限"
         ],
         [
           "⑤ 証拠ループ",
-          "テスト、Lint、型・Schema、UI／API確認、CI、ログ、実行履歴、評価、結果報告"
+          "Test、Lint、型／Schema、UI／API、CI、ログ、評価、結果報告"
         ]
       ],
       "notes": "Claude Codeを例に5責務を具体化しました。CLAUDE.mdやRulesの本文はコンテキスト、発見・読込・適用範囲はハーネスです。Skillsも本文と呼出機構の二面を持ちます。\n\n根拠: HE-S10, HE-S11, HE-S12, HE-S18, HE-S19, HE-S20",
@@ -897,7 +902,7 @@
             8.3
           ],
           "row_h": 70,
-          "cell_size": 13.5,
+          "cell_size": 16,
           "header_size": 16
         }
       }
@@ -1089,7 +1094,7 @@
       "type": "image_text",
       "eyebrow": "02｜Step 4 ガードレール",
       "title": "『やらないで』ではなく、強制主体の違う層を重ねる",
-      "punch": "権限ルール、サンドボックス、人の承認、本番分離、バックアップを、被害の上限に合わせて組み合わせます。",
+      "punch": "権限・隔離・人の承認・本番分離・バックアップを、被害の上限に合わせて重ねます。",
       "bullets": [
         {
           "text": "権限ルール",
@@ -1184,9 +1189,12 @@
           ]
         },
         {
-          "text": "コンパクションだけに依存しない",
+          "text": "会話の圧縮だけに依存しない",
           "bold": true,
-          "color": "teal"
+          "color": "teal",
+          "children": [
+          "コンパクション＝会話履歴を要約し、コンテキストに収める仕組み"
+          ]
         }
       ],
       "path": "assets/diagram-long-running-handoff.svg",
@@ -1197,7 +1205,7 @@
       "type": "image_text",
       "eyebrow": "02｜恩恵と留保",
       "title": "優れたハーネスは、人の注意を『判断』へ戻す",
-      "punch": "速度だけでなく、再現性・安全・監査可能性・継続改善を高めやすくなります。ただし、設計・保守・評価の仕事は増えます。",
+      "punch": "速度・再現性・安全・監査可能性・継続改善を高めやすい一方、設計・保守・評価の仕事は増えます。",
       "bullets": [
         {
           "text": "より長く任せられる",
@@ -1237,7 +1245,7 @@
       "type": "image_text",
       "eyebrow": "02｜育て方",
       "title": "自動化の量ではなく、証拠と被害上限で任せ方を育てる",
-      "punch": "人が実行 → 限定して任せる → 環境内で完了 → 継続運用。高影響業務は、低い自律度のままでも構いません。",
+      "punch": "人が実行 → 限定して任せる → 環境内で完了 → 継続運用。高影響業務は、低い自律度を保つ。",
       "bullets": [
         {
           "text": "人が実行する",
@@ -1320,13 +1328,13 @@
       "number": "03",
       "title": "応用パターンとトラブルシューティング",
       "subtitle": "まず症状から直す層を選び、必要な応用パターンだけを足す",
-      "notes": "第3章は応用編です。5部品を実装する代表パターンと、症状から直す層を選ぶトラブルシューティングを扱います。"
+      "notes": "第3章は応用編です。5つの設計責務を実装する代表パターンと、症状から直す層を選ぶトラブルシューティングを扱います。"
     },
     {
       "type": "table",
-      "eyebrow": "03｜まず見る一覧",
-      "title": "症状から、最初に直す設計責任を選ぶ",
-      "lead": "一覧で原因候補を絞り、次のスライドの対処パターンへ進みます。",
+      "eyebrow": "03｜まず見る一覧 1/2",
+      "title": "症状から、最初に疑う設計領域を選ぶ",
+      "lead": "全部を読む表ではありません。自分の症状に近い1行から、次の対処へ進みます。",
       "columns": [
         "症状",
         "最初に疑う層",
@@ -1347,7 +1355,33 @@
           "確認が多い／危険",
           "ガードレール",
           "安全な許可を育て、隔離し、高影響だけ人へ確認"
-        ],
+        ]
+      ],
+      "notes": "症状は複数層にまたがります。まず再現条件と現在状態を記録し、一度に1つの設計責任だけ変えて、改善と副作用を測ります。",
+      "style": {
+        "table": {
+          "col_widths": [
+            2.7,
+            2.2,
+            5.4
+          ],
+          "row_h": 100,
+          "cell_size": 17,
+          "header_size": 17
+        }
+      }
+    },
+    {
+      "type": "table",
+      "eyebrow": "03｜まず見る一覧 2/2",
+      "title": "症状から、最初に疑う設計領域を選ぶ",
+      "lead": "完了・長時間・保守の問題は、自己申告ではなく外部状態と記録から切り分けます。",
+      "columns": [
+        "症状",
+        "最初に疑う層",
+        "対処"
+      ],
+      "rows": [
         [
           "『完了』だが反映されない",
           "証拠ループ",
@@ -1355,12 +1389,12 @@
         ],
         [
           "長時間で迷子／重複",
-          "状態",
+          "知識と状態",
           "計画・進捗・判断・テスト結果を会話の外へ残す"
         ],
         [
           "残骸・古いルールが増える",
-          "保守",
+          "5責務の保守",
           "定期的に整理・削除し、鮮度と必要性を再評価"
         ]
       ],
@@ -1372,9 +1406,9 @@
             2.2,
             5.4
           ],
-          "row_h": 62,
-          "cell_size": 15,
-          "header_size": 16
+          "row_h": 100,
+          "cell_size": 17,
+          "header_size": 17
         }
       }
     },
@@ -1439,7 +1473,7 @@
         "heading": "機械で強制する",
         "bullets": [
           {
-            "text": "Lint／Schema／権限／Sandbox／判定型Hook",
+          "text": "Lint／Schema／権限／Sandbox／Hook",
             "bold": true
           },
           "書式、依存方向、危険操作、到達先を自動判定",
@@ -1493,7 +1527,7 @@
       "type": "image_text",
       "eyebrow": "03｜応用パターン④",
       "title": "正しく終わったか不明なら：最終状態と実行履歴を分ける",
-      "punch": "最終結果・最終状態（Outcome）と実行履歴（Trace）を分け、機械的な合否判定と人・モデルの採点を組み合わせます。",
+      "punch": "最終状態（Outcome）と実行履歴（Trace）を分け、主観品質だけを人・モデルで採点する。",
       "bullets": [
         {
           "text": "最終結果・最終状態（Outcome）",
@@ -1516,20 +1550,31 @@
           ]
         },
         {
-          "text": "主観品質は評価基準＋複数試行＋独立評価",
+          "text": "主観品質は、評価基準（Rubric）を先に書く",
           "bold": true,
-          "color": "teal"
+          "color": "teal",
+          "children": [
+            "人または評価役（Grader）が、複数試行を独立評価"
+          ]
         }
       ],
       "path": "assets/diagram-evaluator-outcome.svg",
       "image_side": "right",
-      "notes": "Anthropicのeval記事は、flight bookingなら最後の発話ではなくDB上の予約有無がoutcomeだと例示します。transcriptはツール呼び出し等を含む完全な記録として分けます。\n\n根拠: HE-S05"
+      "notes": "Anthropicのeval記事は、flight bookingなら最後の発話ではなくDB上の予約有無がoutcomeだと例示します。transcriptはツール呼び出し等を含む完全な記録として分けます。\n\n根拠: HE-S05",
+      "style": {
+        "body": {
+          "size": 18,
+          "child_size": 16,
+          "gap": 9,
+          "child_gap": 4
+        }
+      }
     },
     {
       "type": "image_text",
       "eyebrow": "03｜応用パターン⑤",
       "title": "自動化しきれないなら：人が判断する介入点を置く",
-      "punch": "人が判断する介入点（Human-in-the-loop）は全手順の監視ではありません。AIは準備まで進め、人は責任の境界で判断し、実行後の外部状態も確認します。",
+  "punch": "AIが準備し、人は高影響の判断と事後確認を担います。",
       "bullets": [
         {
           "text": "自動で進める",
@@ -1604,7 +1649,7 @@
     },
     {
       "type": "image_text",
-      "eyebrow": "04｜教材用作例① 一般業務への展開",
+      "eyebrow": "04｜【教材用作例】一般業務への展開",
       "title": "週次レポート：収集から人の承認までを1本のハーネスにする",
       "punch": "AIに文章を書かせるだけでなく、出典・計算・テンプレート・公開前承認・保存結果までを設計します。",
       "bullets": [
@@ -1643,11 +1688,17 @@
       ],
       "path": "assets/warm-he-04-report-agent.png",
       "image_side": "left",
-      "notes": "本資料がハーネス設計の原則を一般業務へ展開した教材用作例です。主要な一次資料はソフトウェア開発エージェント中心であり、一般業務での効果を実証した事例とは扱いません。"
+      "notes": "本資料がハーネス設計の原則を一般業務へ展開した教材用作例です。主要な一次資料はソフトウェア開発エージェント中心であり、一般業務での効果を実証した事例とは扱いません。",
+      "style": {
+        "eyebrow": {
+          "size": 16,
+          "h": 24
+        }
+      }
     },
     {
       "type": "image_text",
-      "eyebrow": "04｜教材用作例② コード変更",
+      "eyebrow": "04｜【教材用作例】コード変更",
       "title": "変更エージェント：issueからPR、実画面、外部状態までつなぐ",
       "punch": "ブランチで書き、テストを通すだけで終わらず、利用者が触る面と外部反映を確認します。",
       "bullets": [
@@ -1666,7 +1717,7 @@
         {
           "text": "道具・制御",
           "children": [
-            "編集、CLI、browser、GitHub。push／deploy／mergeは役割別に制御"
+          "編集、CLI、browser、GitHub。push／deploy／mergeは分担"
           ]
         },
         {
@@ -1686,11 +1737,17 @@
       ],
       "path": "assets/diagram-code-agent.svg",
       "image_side": "right",
-      "notes": "OpenAIの公式事例は、worktreeごとにアプリと観測基盤を立ち上げ、DOM・screenshot・logs・metricsをagentへ見える形にしたと説明します。自律度はその専用投資に依存します。\n\n根拠: HE-S01"
+      "notes": "OpenAIの公式事例は、worktreeごとにアプリと観測基盤を立ち上げ、DOM・screenshot・logs・metricsをagentへ見える形にしたと説明します。自律度はその専用投資に依存します。\n\n根拠: HE-S01",
+      "style": {
+        "eyebrow": {
+          "size": 16,
+          "h": 24
+        }
+      }
     },
     {
       "type": "image_text",
-      "eyebrow": "04｜公式事例① OpenAI社内",
+      "eyebrow": "04｜【公式事例】OpenAI社内",
       "title": "読めて、動けて、確かめられるリポジトリへ",
       "punch": "本資料が読み取った要点は、知識・実行環境・証拠をリポジトリ内でつなぐことです。",
       "bullets": [
@@ -1698,7 +1755,7 @@
           "text": "報告された規模",
           "bold": true,
           "children": [
-            "約5か月、約100万行、約1,500 PR、当初3名、手書きコード0の制約"
+          "約5か月、約100万行、約1,500 PR、当初3名、手書きコード0"
           ]
         },
         {
@@ -1710,7 +1767,7 @@
         {
           "text": "実行と観測",
           "children": [
-            "worktree別アプリ、DOM・画面、ログ・メトリクスをエージェントへ可視化"
+          "worktree別アプリ、DOM・画面、ログ・メトリクスをAIへ可視化"
           ]
         },
         {
@@ -1724,11 +1781,17 @@
       ],
       "path": "assets/diagram-progressive-disclosure.svg",
       "image_side": "right",
-      "notes": "OpenAIは約5か月、約100万行、約1500 PR、当初3名、従来見積もりの約10分の1という推定を報告しています。組織固有の環境と投資を伴うため、他組織での再現を断定しません。\n\n根拠: HE-S01"
+      "notes": "OpenAIは約5か月、約100万行、約1500 PR、当初3名、従来見積もりの約10分の1という推定を報告しています。組織固有の環境と投資を伴うため、他組織での再現を断定しません。\n\n根拠: HE-S01",
+      "style": {
+        "eyebrow": {
+          "size": 16,
+          "h": 24
+        }
+      }
     },
     {
       "type": "image_text",
-      "eyebrow": "04｜公式事例② Anthropicの複数実験",
+      "eyebrow": "04｜【公式事例からの本資料による整理】Anthropicの複数実験",
       "title": "外部状態でセッションをつなぎ、実環境を評価した",
       "punch": "本資料が読み取った要点は、会話の外へ現在地を残し、最終状態を実際に確かめることです。",
       "bullets": [
@@ -1748,7 +1811,7 @@
         {
           "text": "後続の別実験",
           "children": [
-            "Planner・Generator・Evaluatorを組み合わせ、構成を1つずつ外して再評価"
+          "Planner・Generator・Evaluatorを組合せ、1要素ずつ外し再評価"
           ]
         },
         {
@@ -1756,25 +1819,33 @@
           "bold": true,
           "color": "teal",
           "children": [
-            "Webアプリ開発・特定モデルでの複数実験。一般ベンチマークではない"
+          "Webアプリ・特定モデルの複数実験。一般ベンチマークではない"
           ]
         }
       ],
       "path": "assets/diagram-long-running-handoff.svg",
       "image_side": "right",
-      "notes": "初期化役と実装役を分ける2025年の長時間エージェント実験と、Planner・Generator・Evaluatorを扱う2026年の後続実験は別の実験です。本資料は複数の公式記事から共通パターンを読み取っています。\n\n根拠: HE-S02, HE-S03, HE-S05"
+      "notes": "初期化役と実装役を分ける2025年の長時間エージェント実験と、Planner・Generator・Evaluatorを扱う2026年の後続実験は別の実験です。本資料は複数の公式記事から共通パターンを読み取っています。\n\n根拠: HE-S02, HE-S03, HE-S05",
+      "style": {
+        "eyebrow": {
+          "size": 16,
+          "h": 24
+        }
+      }
     },
     {
       "type": "image_text",
-      "eyebrow": "04｜公式に記録された境界事例（Anthropic社内ログ）",
+      "eyebrow": "04｜【公式に記録された境界事例】Anthropic社内ログ",
       "title": "内部の過剰行動例から、事故の上限を設計する",
-      "punch": "頻度や一般の事故率を示す例ではありません。禁止文が破られても届かない境界と、失敗後に戻せる経路を考えます。",
+      "punch": "頻度や一般の事故率を示す例ではありません。禁止文に頼らず、届かない境界と戻せる経路を設計します。",
       "bullets": [
         {
-          "text": "公式記事が挙げた過去の社内ログ例",
-          "children": [
-            "remote branch削除、認証tokenの内部環境へのupload、本番DB migrationの試行"
-          ]
+      "text": "公式記事が挙げた過去の社内ログ例",
+      "children": [
+        "remote branch削除",
+        "認証tokenを内部へupload",
+        "本番DB移行の試行"
+      ]
         },
         {
           "text": "モデルへ『しないで』と伝える",
@@ -1785,7 +1856,7 @@
         {
           "text": "環境で届かせない",
           "children": [
-            "本番資格情報を渡さない、Sandbox、外向き通信（egress）制限、最小権限"
+          "本番資格情報を渡さず、Sandbox、egress制限、最小権限"
           ]
         },
         {
@@ -1799,7 +1870,13 @@
       ],
       "path": "assets/diagram-incident-defense.svg",
       "image_side": "right",
-      "notes": "Anthropicのauto mode公式記事が過去の内部ログ例として挙げた3件です。頻度や製品一般の事故率は示していません。Auto modeも高リスクな基盤変更の人間レビュー代替ではありません。\n\n根拠: HE-S17"
+      "notes": "Anthropicのauto mode公式記事が過去の内部ログ例として挙げた3件です。頻度や製品一般の事故率は示していません。Auto modeも高リスクな基盤変更の人間レビュー代替ではありません。\n\n根拠: HE-S17",
+      "style": {
+        "eyebrow": {
+          "size": 16,
+          "h": 24
+        }
+      }
     },
     {
       "type": "closing",
@@ -1819,7 +1896,7 @@
         "人は全手順ではなく、高影響の判断境界に置く",
         "自律度より、検証可能性・被害上限・回復可能性で任せ方を決める",
         {
-          "text": "41枚目以降は、11責務・権限・Sandbox・MCP・評価・出典の付録",
+          "text": "42枚目以降は、11責務・権限・Sandbox・MCP・評価・出典の付録",
           "children": [
             "通常の45分枠ではここまで。ここから質疑へ"
           ]
@@ -1885,9 +1962,9 @@
             2.5,
             6.1
           ],
-          "row_h": 62,
-          "cell_size": 15,
-          "header_size": 16
+          "row_h": 65,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -1937,8 +2014,8 @@
             6.1
           ],
           "row_h": 72,
-          "cell_size": 15,
-          "header_size": 16
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -1970,7 +2047,7 @@
         ],
         [
           "評価対象",
-          "model単体ではなくmodel-harness-environment system",
+          "model単体でなく、モデル＋ハーネス＋環境",
           "モデル順位の主張に使わない"
         ],
         [
@@ -1987,9 +2064,9 @@
             4.2,
             4.0
           ],
-          "row_h": 70,
-          "cell_size": 14,
-          "header_size": 15
+          "row_h": 76,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2016,7 +2093,7 @@
         ],
         [
           "Hook",
-          "ツール前後やsession lifecycleでコードを実行",
+          "ツール前後やsession lifecycleでcode実行",
           "記録・情報追加・判定・入出力変更をeventごとに区別"
         ],
         [
@@ -2038,9 +2115,9 @@
             3.2,
             5.0
           ],
-          "row_h": 72,
-          "cell_size": 14,
-          "header_size": 15
+          "row_h": 76,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2057,7 +2134,7 @@
       "rows": [
         [
           "禁止（Deny）",
-          "一致した操作を禁止。bare tool denyは原則toolをcontextから除去",
+          "操作を禁止。bare tool denyは原則toolをcontextから除く",
           "絶対禁止、秘密情報、本番、外部送信"
         ],
         [
@@ -2089,21 +2166,21 @@
             4.4,
             4.2
           ],
-          "row_h": 72,
-          "cell_size": 14,
-          "header_size": 15
+          "row_h": 76,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
     {
       "type": "table",
-      "eyebrow": "付録｜設定スコープ",
-      "title": "設定の基本優先順位と、合成の例外",
-      "lead": "単一値は上位優先、配列は原則結合。Permissionと一部security keyには個別規則があります。",
+      "eyebrow": "付録｜設定スコープ 1/2",
+      "title": "設定は『どこから効くか』と『どう上書くか』を分ける",
+      "lead": "単一値の原則は上位優先。CLIは永続scopeではなく、そのsessionだけの上書きです。",
       "columns": [
-        "Scope",
+        "項目",
         "誰に効くか",
-        "用途"
+        "用途／留保"
       ],
       "rows": [
         [
@@ -2120,7 +2197,33 @@
           "単一値の原則",
           "Managed > CLI > Local > Project > User",
           "CLIは一時的なsession override"
-        ],
+        ]
+      ],
+      "notes": "2026-08-15時点のClaude Code公式仕様です。優先順は単一値の原則で、配列は原則結合・重複排除、Permissionはscope横断merge、一部keyは別の合成規則を持ちます。\n\n根拠: HE-S11, HE-S12",
+      "style": {
+        "table": {
+          "col_widths": [
+            2.1,
+            4.1,
+            4.1
+          ],
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
+        }
+      }
+    },
+    {
+      "type": "table",
+      "eyebrow": "付録｜設定スコープ 2/2",
+      "title": "設定の合成ルールは、値の種類ごとに異なる",
+      "lead": "配列・Permission・security keyを、単純な『上位設定で上書き』として扱いません。",
+      "columns": [
+        "項目",
+        "合成の原則",
+        "用途／留保"
+      ],
+      "rows": [
         [
           "配列",
           "原則 concatenate＋dedupe",
@@ -2145,16 +2248,16 @@
             4.1,
             4.1
           ],
-          "row_h": 62,
-          "cell_size": 14,
-          "header_size": 15
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
     {
       "type": "table",
-      "eyebrow": "付録｜サンドボックス",
-      "title": "隔離方式は、実装の境界と守る資産で選ぶ",
+      "eyebrow": "付録｜サンドボックス 1/2",
+      "title": "通常コンテナとgVisor／runscは、異なる境界を作る",
       "lead": "単純な強度順位ではありません。通常コンテナとgVisor／runscを同じ仕組みとして扱わない。",
       "columns": [
         "分類",
@@ -2176,7 +2279,33 @@
           "Sandboxed OCI runtime",
           "gVisor／runsc",
           "userspace application kernelがsyscallを仲介"
-        ],
+        ]
+      ],
+      "notes": "gVisor公式はrunscをOCI runtimeとしつつ、userspace application kernelがsystem callを仲介する通常コンテナとも一般的なVMとも異なる方式と説明します。二次資料の便宜的3分類は一次資料で補正しました。\n\n根拠: HE-S06, HE-S07, HE-S16, HE-S21",
+      "style": {
+        "table": {
+          "col_widths": [
+            2.4,
+            3.4,
+            4.5
+          ],
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
+        }
+      }
+    },
+    {
+      "type": "table",
+      "eyebrow": "付録｜サンドボックス 2/2",
+      "title": "方式を選んでも、不要な資産は最初から入れない",
+      "lead": "隔離方式だけで安全になるのではなく、資格情報・通信先・回復経路を重ねて設計します。",
+      "columns": [
+        "分類／原則",
+        "仕組み",
+        "向く場面／留保"
+      ],
+      "rows": [
         [
           "VM／microVM",
           "独立したguest kernel",
@@ -2196,17 +2325,17 @@
             3.4,
             4.5
           ],
-          "row_h": 70,
-          "cell_size": 14,
-          "header_size": 15
+          "row_h": 132,
+          "cell_size": 17,
+          "header_size": 17
         }
       }
     },
     {
       "type": "table",
-      "eyebrow": "付録｜MCPセキュリティ",
-      "title": "MCPは便利な接続口であり、信頼境界でもある",
-      "lead": "外部ツールを増やすと、認証・token・local process・通信先の攻撃面が増えます。",
+      "eyebrow": "付録｜MCPセキュリティ 1/2",
+      "title": "MCPでは、認証とローカル実行を別々に守る",
+      "lead": "外部ツールを増やすと、権限・token・local processの攻撃面が増えます。",
       "columns": [
         "リスク",
         "何が起きるか",
@@ -2224,14 +2353,40 @@
           "audience検証、pass-through禁止"
         ],
         [
-          "ローカル実行",
-          "同じ端末権限でコード実行",
-          "起動command確認、同意、Sandbox、許可リスト、監査"
-        ],
+          "ローカルserver",
+          "同じ端末権限で任意codeを実行",
+          "配布元・起動command・更新経路を審査"
+        ]
+      ],
+      "notes": "MCP公式はtoken passthrough、SSRF、scope minimization、local server compromiseを整理しています。直接stdioは接続面を狭めやすい一方、proxy構成のprocess spawnはRCE経路になり得るため別途確認します。外部ツール結果からの命令注入はMCPに限らない共通の信頼境界です。\n\n根拠: HE-S08, HE-S17",
+      "style": {
+        "table": {
+          "col_widths": [
+            2.0,
+            4.2,
+            4.1
+          ],
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
+        }
+      }
+    },
+    {
+      "type": "table",
+      "eyebrow": "付録｜MCPセキュリティ 2/2",
+      "title": "直接stdioにも、proxyにも別の信頼境界がある",
+      "lead": "直接stdioはMCPサーバーのネットワーク露出を減らせます。一方、起動command自体は任意code実行の入口です。",
+      "columns": [
+        "リスク",
+        "何が起きるか",
+        "設計"
+      ],
+      "rows": [
         [
-          "stdio／proxy",
-          "直接stdioは接続面が狭い。proxy起動は別境界",
-          "接続とprocess起動を別審査"
+          "直接stdio／proxy",
+          "直接stdioはMCPサーバーのネットワーク露出を減らす。proxy起動は別境界",
+          "exact command表示、明示同意、許可リスト、Sandbox、監査"
         ],
         [
           "ツール結果の命令注入",
@@ -2244,7 +2399,7 @@
           "HTTPS、redirect検査、通信許可リスト／proxy"
         ]
       ],
-      "notes": "MCP公式はtoken passthrough、SSRF、scope minimization、local server compromiseを整理しています。直接stdioは接続面を狭めやすい一方、proxy構成のprocess spawnはRCE経路になり得るため別途確認します。外部ツール結果からの命令注入はMCPに限らない共通の信頼境界です。\n\n根拠: HE-S08, HE-S17",
+      "notes": "MCP公式はtoken passthrough、SSRF、scope minimization、local server compromiseを整理しています。直接stdioは外部通信面を狭めやすい一方、proxy構成のprocess spawnはRCE経路になり得るため別途確認します。外部ツール結果からの命令注入はMCPに限らない共通の信頼境界です。\n\n根拠: HE-S08, HE-S17",
       "style": {
         "table": {
           "col_widths": [
@@ -2252,9 +2407,9 @@
             4.2,
             4.1
           ],
-          "row_h": 60,
-          "cell_size": 14,
-          "header_size": 14
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2319,16 +2474,16 @@
             4.2,
             4.3
           ],
-          "row_h": 72,
-          "cell_size": 14,
-          "header_size": 15
+          "row_h": 76,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
     {
       "type": "table",
-      "eyebrow": "付録｜評価用語",
-      "title": "日本語から入って、Task・Outcome・Trace・Graderを分ける",
+      "eyebrow": "付録｜評価用語 1/2",
+      "title": "課題・試行・最終状態を分ける",
       "lead": "評価対象を分けると、『どこで壊れたか』を説明しやすくなります。",
       "columns": [
         "用語",
@@ -2350,15 +2505,41 @@
           "最終状態（Outcome）",
           "終了時の環境の状態",
           "DBに予約が存在／画面が更新"
-        ],
+        ]
+      ],
+      "notes": "Anthropicのeval記事の用語整理に基づきます。agent harnessはモデルをagentとして動かす仕組み、evaluation harnessはそのagentを評価する基盤です。\n\n根拠: HE-S05",
+      "style": {
+        "table": {
+          "col_widths": [
+            2.0,
+            4.1,
+            4.2
+          ],
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
+        }
+      }
+    },
+    {
+      "type": "table",
+      "eyebrow": "付録｜評価用語 2/2",
+      "title": "実行履歴・合否判定・評価基盤を分ける",
+      "lead": "最終状態だけでなく、過程の記録と、何が合否を決めたかを別々に残します。",
+      "columns": [
+        "用語",
+        "意味",
+        "例"
+      ],
+      "rows": [
         [
           "実行履歴（Trace）",
           "出力・tool call・中間結果の記録",
           "何を読み、どこで失敗したか"
         ],
         [
-          "採点器（Grader）",
-          "一側面を採点するlogic",
+          "合否判定・採点器（Grader）",
+          "一側面を機械または基準で判定・採点",
           "unit test、schema check、rubric judge"
         ],
         [
@@ -2371,13 +2552,13 @@
       "style": {
         "table": {
           "col_widths": [
-            2.0,
-            4.1,
-            4.2
+            2.4,
+            3.9,
+            4.0
           ],
-          "row_h": 62,
-          "cell_size": 14,
-          "header_size": 15
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2431,9 +2612,9 @@
             5.0,
             3.1
           ],
-          "row_h": 62,
-          "cell_size": 14.5,
-          "header_size": 16
+          "row_h": 65,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2441,7 +2622,7 @@
       "type": "table",
       "eyebrow": "付録｜出典①-A",
       "title": "定義・実践の一次資料",
-      "lead": "URLはPPTXでもクリックできます。主張は各記事の条件と留保の範囲で使っています。",
+      "lead": "URLはPPTX内にも記載しています。主張は各記事の条件と留保の範囲で使っています。",
       "columns": [
         "ID",
         "資料／locator",
@@ -2472,9 +2653,9 @@
             5.4,
             4.0
           ],
-          "row_h": 92,
-          "cell_size": 14.5,
-          "header_size": 15.5
+          "row_h": 108,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2482,7 +2663,7 @@
       "type": "table",
       "eyebrow": "付録｜出典①-B",
       "title": "設計・評価・研究枠組みの一次資料",
-      "lead": "URLはPPTXでもクリックできます。研究枠組みはpreprintとして扱います。",
+      "lead": "URLはPPTX内にも記載しています。研究枠組みはpreprintとして扱います。",
       "columns": [
         "ID",
         "資料／locator",
@@ -2501,7 +2682,7 @@
         ],
         [
           "HE-S09",
-          "arXiv v1｜11 responsibilities / H0-H3 / trace evaluation｜preprint",
+          "arXiv v1｜11 responsibilities / H0-H3 / trace｜preprint",
           "https://arxiv.org/abs/2605.13357"
         ]
       ],
@@ -2513,9 +2694,9 @@
             5.4,
             4.0
           ],
-          "row_h": 92,
-          "cell_size": 14.5,
-          "header_size": 15.5
+          "row_h": 108,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2532,7 +2713,7 @@
       "rows": [
         [
           "HE-S06",
-          "Anthropic How we contain Claude｜approval fatigue / containment / egress",
+          "Anthropic Containment｜approval fatigue / containment / egress",
           "https://www.anthropic.com/engineering/how-we-contain-claude"
         ],
         [
@@ -2554,9 +2735,9 @@
             5.4,
             4.0
           ],
-          "row_h": 92,
-          "cell_size": 14.5,
-          "header_size": 15.5
+          "row_h": 108,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2573,7 +2754,7 @@
       "rows": [
         [
           "HE-S10",
-          "Claude Agent SDK overview｜tools / hooks / subagents / MCP / sessions",
+          "Claude Agent SDK｜tools / hooks / subagents / MCP / sessions",
           "https://code.claude.com/docs/en/agent-sdk/overview"
         ],
         [
@@ -2595,9 +2776,9 @@
             5.4,
             4.0
           ],
-          "row_h": 92,
-          "cell_size": 14.5,
-          "header_size": 15.5
+          "row_h": 108,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2636,9 +2817,9 @@
             5.4,
             4.0
           ],
-          "row_h": 92,
-          "cell_size": 14.5,
-          "header_size": 15.5
+          "row_h": 108,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
@@ -2677,16 +2858,16 @@
             5.4,
             4.0
           ],
-          "row_h": 92,
-          "cell_size": 14.5,
-          "header_size": 15.5
+          "row_h": 108,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     },
     {
       "type": "table",
-      "eyebrow": "付録｜この資料で断定しなかったこと",
-      "title": "新しい用語・個別事例・製品仕様を、普遍則へ広げない",
+      "eyebrow": "付録｜断定しなかったこと 1/2",
+      "title": "新しい用語・枠組みを、普遍則へ広げない",
       "lead": "確認できた範囲と、教材用の整理を分けています。",
       "columns": [
         "断定しなかったこと",
@@ -2704,7 +2885,31 @@
         [
           "本編の教材用4段階が論文のH0〜H3と同じ",
           "別枠組み。原著の段階内訳を本編へ転記していない"
-        ],
+        ]
+      ],
+      "notes": "新しい用語・教材用マップ・研究枠組みは、確認できた範囲と外部で確立した標準を分けて扱います。",
+      "style": {
+        "table": {
+          "col_widths": [
+            4.0,
+            6.3
+          ],
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
+        }
+      }
+    },
+    {
+      "type": "table",
+      "eyebrow": "付録｜断定しなかったこと 2/2",
+      "title": "個別事例・製品仕様を、普遍則へ広げない",
+      "lead": "事例の再現性と製品の安全性を、条件を外して一般化しません。",
+      "columns": [
+        "断定しなかったこと",
+        "理由／本資料の扱い"
+      ],
+      "rows": [
         [
           "OpenAIの速度・規模が他社でも再現する",
           "専用repositoryと運用への投資を伴う社内事例として限定"
@@ -2725,9 +2930,9 @@
             4.0,
             6.3
           ],
-          "row_h": 55,
-          "cell_size": 13,
-          "header_size": 14
+          "row_h": 100,
+          "cell_size": 16,
+          "header_size": 17
         }
       }
     }
