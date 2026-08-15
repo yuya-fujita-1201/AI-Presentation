@@ -22,8 +22,37 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3 初心者+2 新しさ+1 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[14:00]",
+          "text": "シングルエージェントで45%以上の精度が出るタスクにエージェントを追加するとネガティブリターンになる",
+          "impact": "high"
+        },
+        {
+          "ts": "[10:00]",
+          "text": "ファイナンスエージェントのベンチマークではマルチエージェントの方が精度が高いが、プランクラフトでは全ケースでマルチエージェントの方が精度が低い",
+          "impact": "normal"
+        },
+        {
+          "ts": "[16:00]",
+          "text": "180パターンの実験結果から統計モデルを作り、損益分岐点は45%程度と算出された",
+          "impact": "high"
+        },
+        {
+          "ts": "[22:00]",
+          "text": "サブエージェントは自分と直接やり取りしないため、忖度を避けて率直な評価を返す",
+          "impact": "normal"
+        },
+        {
+          "ts": "[26:00]",
+          "text": "作成エージェントと検証エージェントを分離してループを回すと、自己採点の甘さを避けて品質を自動的に上げられる",
+          "impact": "normal"
+        }
+      ],
+      "summary": "Google論文のマルチエージェント構造分類と45%閾値ルールを解説し、サブエージェントの実用3パターン（並列調査・忖度回避・検証ループ）を紹介する動画"
     },
     {
       "id": "8VNLFKCQFa8",
@@ -46,8 +75,9 @@
       "trust": "unknown",
       "score": 8,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "needs_human",
+      "reject_reason": null,
+      "subs": "auto"
     },
     {
       "id": "P-s9w_xKkTw",
@@ -61,8 +91,9 @@
       "trust": "expert",
       "score": 7,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+2 再生+0",
-      "status": "selected",
-      "reject_reason": null
+      "status": "rejected",
+      "reject_reason": "vote_failed",
+      "subs": "auto"
     },
     {
       "id": "Z65s9l4hpmw",

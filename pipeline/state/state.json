@@ -15,12 +15,13 @@
   },
   "phase": "research_fetch",
   "generation": 11,
-  "active_run_id": "08152255cb",
-  "input_commit": "f2d6e3170273",
-  "phase_started_at": null,
+  "active_run_id": "081523008d",
+  "input_commit": "f04fc3137691",
+  "phase_started_at": "2026-08-15T23:00:19+09:00",
   "phase_attempts": 0,
   "run_counts": {
-    "research_scan": 1
+    "research_scan": 1,
+    "research_fetch": 1
   },
   "scan_fallback_done": false,
   "video_shortfall": false,
@@ -46,7 +47,7 @@
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-15T22:59:49+09:00",
-  "last_started_at": "2026-08-15T22:55:08+09:00",
+  "last_started_at": "2026-08-15T23:00:19+09:00",
   "last_successful_transition_at": "2026-08-15T22:59:49+09:00",
   "consecutive_external": 0,
   "stuck": null,
