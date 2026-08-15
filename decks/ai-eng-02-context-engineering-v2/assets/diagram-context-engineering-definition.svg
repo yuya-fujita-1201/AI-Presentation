@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF!important}
+    </style>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <text x="512" y="80" text-anchor="middle" class="h" font-size="38">コンテキストは3つのつまみで調整する</text>
+
+  <g>
+    <text x="210" y="156" text-anchor="middle" class="h" font-size="34" fill="#B44A32">何を</text>
+    <circle cx="210" cy="322" r="108" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/>
+    <circle cx="210" cy="322" r="22" fill="#B44A32"/>
+    <path d="M210 322L268 264" stroke="#B44A32" stroke-width="10" stroke-linecap="round"/>
+    <path d="M210 194V218M128 228L145 245M92 322H116M128 416L145 399M210 426V450M292 416L275 399M328 322H304M292 228L275 245" stroke="#7C3527" stroke-width="5" stroke-linecap="round"/>
+    <text x="210" y="506" text-anchor="middle" class="h" font-size="28">前提知識を選ぶ</text>
+  </g>
+
+  <g>
+    <text x="512" y="156" text-anchor="middle" class="h" font-size="34" fill="#247F7A">いつ</text>
+    <circle cx="512" cy="322" r="108" fill="#E1F2F0" stroke="#247F7A" stroke-width="5"/>
+    <circle cx="512" cy="322" r="22" fill="#247F7A"/>
+    <path d="M512 322L512 242" stroke="#247F7A" stroke-width="10" stroke-linecap="round"/>
+    <path d="M512 194V218M430 228L447 245M394 322H418M430 416L447 399M512 426V450M594 416L577 399M630 322H606M594 228L577 245" stroke="#247F7A" stroke-width="5" stroke-linecap="round"/>
+    <text x="512" y="506" text-anchor="middle" class="h" font-size="28">渡すタイミング</text>
+  </g>
+
+  <g>
+    <text x="814" y="156" text-anchor="middle" class="h" font-size="34" fill="#C17A27">どれだけ</text>
+    <circle cx="814" cy="322" r="108" fill="#F6E6CF" stroke="#C17A27" stroke-width="5"/>
+    <circle cx="814" cy="322" r="22" fill="#C17A27"/>
+    <path d="M814 322L760 268" stroke="#C17A27" stroke-width="10" stroke-linecap="round"/>
+    <path d="M814 194V218M732 228L749 245M696 322H720M732 416L749 399M814 426V450M896 416L879 399M932 322H908M896 228L879 245" stroke="#7C3527" stroke-width="5" stroke-linecap="round"/>
+    <text x="814" y="506" text-anchor="middle" class="h" font-size="28">量と範囲を絞る</text>
+  </g>
+
+  <rect x="140" y="592" width="744" height="104" rx="28" fill="#7C3527"/>
+  <text x="512" y="657" text-anchor="middle" class="h w" font-size="32" fill="#FFFFFF">必要な情報を、必要な時に、必要な分だけ</text>
+</svg>

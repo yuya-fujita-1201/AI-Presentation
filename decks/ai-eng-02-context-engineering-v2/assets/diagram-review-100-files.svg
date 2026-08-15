@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 指示（共通） -->
+  <text x="512" y="28" text-anchor="middle" class="m" font-size="20">指示はどちらも同じ</text>
+  <rect x="272" y="42" width="480" height="58" rx="29" fill="#FFFFFF" stroke="#7C3527" stroke-width="4"/>
+  <text x="512" y="81" text-anchor="middle" class="h" font-size="27" fill="#7C3527">「このコードをレビューして」</text>
+
+  <!-- 分岐の矢印 -->
+  <path d="M 512 100 V 122 H 268 V 142" fill="none" stroke="#6F5C52" stroke-width="4"/>
+  <path d="M 512 100 V 122 H 756 V 142" fill="none" stroke="#6F5C52" stroke-width="4"/>
+  <polygon points="260,142 276,142 268,156" fill="#6F5C52"/>
+  <polygon points="748,142 764,142 756,156" fill="#6F5C52"/>
+
+  <!-- 左：コンテキストを整えていない -->
+  <rect x="44" y="164" width="448" height="462" rx="22" fill="#FFFFFF" stroke="#A63D32" stroke-width="5"/>
+  <rect x="64" y="184" width="408" height="46" rx="14" fill="#A63D32"/>
+  <text x="268" y="215" text-anchor="middle" class="h w" font-size="22" fill="#FFFFFF">コンテキストを整えていない</text>
+  <text x="268" y="262" text-anchor="middle" class="h" font-size="22">フォルダにソースコード100個</text>
+
+  <text x="84" y="304" class="m" font-size="21">① 10個だけ見て終わる</text>
+  <rect x="84" y="314" width="368" height="30" fill="#FFF2E8" stroke="#C9B8AD" stroke-width="2"/>
+  <rect x="84" y="314" width="37" height="30" fill="#B44A32"/>
+  <text x="84" y="368" class="m" font-size="20">残り90個はノーチェック</text>
+
+  <text x="84" y="410" class="m" font-size="21">② 100個ぜんぶを薄くなでる</text>
+  <rect x="84" y="420" width="368" height="30" fill="#F0B498" stroke="#B44A32" stroke-width="2"/>
+  <text x="84" y="474" class="m" font-size="20">一つひとつは浅い指摘だけ</text>
+
+  <text x="268" y="524" text-anchor="middle" font-size="20">①か②かは、AIの推測しだい</text>
+  <rect x="64" y="546" width="408" height="54" rx="14" fill="#A63D32"/>
+  <text x="268" y="581" text-anchor="middle" class="h w" font-size="22" fill="#FFFFFF">結果：対象・基準が安定しにくい</text>
+
+  <!-- 右：コンテキストを整えた -->
+  <rect x="532" y="164" width="448" height="462" rx="22" fill="#FFFFFF" stroke="#247F7A" stroke-width="5"/>
+  <rect x="552" y="184" width="408" height="46" rx="14" fill="#247F7A"/>
+  <text x="756" y="215" text-anchor="middle" class="h w" font-size="22" fill="#FFFFFF">コンテキストを整えた</text>
+  <text x="756" y="262" text-anchor="middle" class="h" font-size="22">同じく、ソースコード100個</text>
+
+  <rect x="552" y="282" width="408" height="44" rx="12" fill="#DDEFEA"/>
+  <text x="756" y="311" text-anchor="middle" font-size="19">CLAUDE.md：自動生成コードは対象外</text>
+  <rect x="552" y="336" width="408" height="44" rx="12" fill="#DDEFEA"/>
+  <text x="756" y="365" text-anchor="middle" font-size="19">review-guideline.md を基準にする</text>
+
+  <text x="572" y="410" class="m" font-size="20">対象を絞り、固有規約と照合する</text>
+  <rect x="572" y="420" width="184" height="30" fill="#EFE3DA" stroke="#C9B8AD" stroke-width="2"/>
+  <rect x="756" y="420" width="184" height="30" fill="#247F7A"/>
+  <text x="664" y="441" text-anchor="middle" class="m" font-size="19">対象外50</text>
+  <text x="848" y="441" text-anchor="middle" class="w h" font-size="19" fill="#FFFFFF">対象50</text>
+  <text x="572" y="474" class="m" font-size="20">対象50個を、固有規約と照合</text>
+
+  <text x="756" y="524" text-anchor="middle" font-size="20">対象と基準を、こちらで決めている</text>
+  <rect x="552" y="546" width="408" height="54" rx="14" fill="#247F7A"/>
+  <text x="756" y="581" text-anchor="middle" class="h w" font-size="22" fill="#FFFFFF">結果：対象と基準をそろえやすい</text>
+
+  <!-- 下部メッセージ -->
+  <rect x="112" y="668" width="800" height="68" rx="24" fill="#7C3527"/>
+  <text x="512" y="712" text-anchor="middle" class="h w" font-size="24" fill="#FFFFFF">依頼文は同じ。違うのは、事前にロードされたコンテキスト</text>
+</svg>

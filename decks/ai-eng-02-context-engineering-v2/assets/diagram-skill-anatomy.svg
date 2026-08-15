@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="740" viewBox="0 0 1024 740">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="skAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#B44A32"/>
+    </marker>
+    <marker id="skTeal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#247F7A"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="740" fill="#FFF9F3"/>
+
+  <!-- 発動せず: 左上 -->
+  <rect x="50" y="50" width="210" height="90" rx="18" fill="#F2E6DC" fill-opacity="0.55" stroke="#C9BAB2" stroke-width="2"/>
+  <text x="155" y="88" text-anchor="middle" font-size="18" fill="#8A7A6E">スキルA</text>
+  <text x="155" y="112" text-anchor="middle" font-size="16" fill="#A99686">（発動せず）</text>
+
+  <!-- 発動せず: 左下 -->
+  <rect x="50" y="600" width="210" height="90" rx="18" fill="#F2E6DC" fill-opacity="0.55" stroke="#C9BAB2" stroke-width="2"/>
+  <text x="155" y="638" text-anchor="middle" font-size="18" fill="#8A7A6E">スキルC</text>
+  <text x="155" y="662" text-anchor="middle" font-size="16" fill="#A99686">（発動せず）</text>
+
+  <!-- 発動せず: 右上 -->
+  <rect x="770" y="140" width="200" height="90" rx="18" fill="#F2E6DC" fill-opacity="0.55" stroke="#C9BAB2" stroke-width="2"/>
+  <text x="870" y="178" text-anchor="middle" font-size="18" fill="#8A7A6E">スキルD</text>
+  <text x="870" y="202" text-anchor="middle" font-size="16" fill="#A99686">（発動せず）</text>
+
+  <!-- 左: 依頼の吹き出し -->
+  <rect x="40" y="298" width="180" height="90" rx="20" fill="#FADFD5" stroke="#B44A32" stroke-width="3"/>
+  <path d="M210 358L242 358L214 384Z" fill="#FADFD5" stroke="#B44A32" stroke-width="3" stroke-linejoin="round"/>
+  <text x="130" y="352" text-anchor="middle" class="h" font-size="22">依頼</text>
+
+  <path d="M248 350H358" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#skAccent)"/>
+  <text x="304" y="300" text-anchor="middle" class="m" font-size="16">descriptionで</text>
+  <text x="304" y="320" text-anchor="middle" class="m" font-size="16">候補を選ぶ</text>
+
+  <!-- 中央: スキル（解剖図） -->
+  <rect x="362" y="130" width="300" height="440" rx="28" fill="#FFFFFF" stroke="#7C3527" stroke-width="5"/>
+  <text x="512" y="178" text-anchor="middle" class="h" font-size="26">スキル</text>
+  <line x1="386" y1="196" x2="638" y2="196" stroke="#D9B49A" stroke-width="2"/>
+
+  <rect x="378" y="206" width="268" height="112" rx="14" fill="#FADFD5"/>
+  <text x="512" y="242" text-anchor="middle" class="h" font-size="20">description</text>
+  <text x="512" y="268" text-anchor="middle" class="m" font-size="16">何をする／いつ使う</text>
+
+  <rect x="378" y="326" width="268" height="112" rx="14" fill="#F6E6CF"/>
+  <text x="512" y="376" text-anchor="middle" class="h" font-size="19">SKILL.md本文</text>
+  <text x="512" y="408" text-anchor="middle" class="m" font-size="17">手順</text>
+
+  <rect x="378" y="446" width="268" height="112" rx="14" fill="#E1F2F0"/>
+  <text x="512" y="496" text-anchor="middle" class="h" font-size="19">補助ファイル</text>
+  <text x="512" y="528" text-anchor="middle" class="m" font-size="17">参照資料</text>
+
+  <path d="M666 350H756" fill="none" stroke="#247F7A" stroke-width="5" stroke-linecap="round" marker-end="url(#skTeal)"/>
+  <text x="711" y="322" text-anchor="middle" class="m" font-size="15">呼び出し時に本文</text>
+
+  <!-- 右: 今回のコンテキスト -->
+  <rect x="760" y="290" width="224" height="120" rx="20" fill="#E1F2F0" stroke="#247F7A" stroke-width="4"/>
+  <text x="872" y="356" text-anchor="middle" class="h" font-size="19">今回のコンテキスト</text>
+
+  <text x="512" y="714" text-anchor="middle" class="m" font-size="17">descriptionは通常あらかじめ見え、本文は呼び出し後もセッション中に残る</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="740" viewBox="0 0 1024 740">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrT" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#247F7A"/>
+    </marker>
+    <marker id="arrG" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#C17A27"/>
+    </marker>
+    <marker id="arrA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="740" fill="#FFF9F3"/>
+
+  <!-- ①自動ロード -->
+  <rect x="24" y="56" width="316" height="150" rx="24" fill="#E1F2F0" stroke="#247F7A" stroke-width="4"/>
+  <text x="182" y="104" text-anchor="middle" class="h" font-size="25" fill="#247F7A">①自動ロード</text>
+  <text x="182" y="146" text-anchor="middle" class="m" font-size="18">ルール／自動メモリ</text>
+  <text x="182" y="176" text-anchor="middle" class="m" font-size="18">製品・配置・設定に応じる</text>
+  <text x="182" y="234" text-anchor="middle" class="m" font-size="17">この章の中心</text>
+
+  <!-- ②必要時に取得 -->
+  <rect x="356" y="56" width="316" height="150" rx="24" fill="#F6E6CF" stroke="#C17A27" stroke-width="4"/>
+  <text x="514" y="104" text-anchor="middle" class="h" font-size="25" fill="#C17A27">②必要時に取得</text>
+  <text x="514" y="146" text-anchor="middle" class="m" font-size="17">スキル／検索／関連記憶</text>
+  <text x="514" y="176" text-anchor="middle" class="m" font-size="18">外部コネクター</text>
+  <text x="514" y="234" text-anchor="middle" class="m" font-size="17">全体像はここ、詳細は3章</text>
+
+  <!-- ③都度渡す -->
+  <rect x="688" y="56" width="312" height="150" rx="24" fill="#FADFD5" stroke="#B44A32" stroke-width="4"/>
+  <text x="844" y="104" text-anchor="middle" class="h" font-size="25" fill="#B44A32">③今回渡す</text>
+  <text x="844" y="146" text-anchor="middle" class="m" font-size="18">プロンプト</text>
+  <text x="844" y="176" text-anchor="middle" class="m" font-size="18">（シリーズ01の範囲）</text>
+  <text x="844" y="234" text-anchor="middle" class="m" font-size="17">今回は要点だけ</text>
+
+  <!-- 3本の矢印（各1パス・各1矢頭） -->
+  <path d="M182 258 C182 380 300 470 400 548" fill="none" stroke="#247F7A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrT)"/>
+  <path d="M514 258 C518 380 512 470 512 548" fill="none" stroke="#C17A27" stroke-width="5" stroke-linecap="round" marker-end="url(#arrG)"/>
+  <path d="M844 258 C800 370 700 470 624 548" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#arrA)"/>
+
+  <!-- 共通の到達点 -->
+  <rect x="282" y="555" width="460" height="150" rx="28" fill="#7C3527"/>
+  <circle cx="512" cy="597" r="26" fill="#FFFFFF"/>
+  <text x="512" y="605" text-anchor="middle" class="h" font-size="22" fill="#7C3527">AI</text>
+  <text x="512" y="672" text-anchor="middle" class="h w" font-size="23">3経路の情報＋外側のガードレール</text>
+</svg>

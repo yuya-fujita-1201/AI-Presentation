@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="740" viewBox="0 0 1024 740">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+  </defs>
+  <rect width="1024" height="740" fill="#FFF9F3"/>
+
+  <!-- 外枠: ルールファイル -->
+  <rect x="48" y="86" width="928" height="590" rx="32" fill="#FCE9DC" stroke="#7C3527" stroke-width="5"/>
+  <text x="512" y="142" text-anchor="middle" class="h" font-size="30" fill="#7C3527">ルールファイル</text>
+  <line x1="88" y1="168" x2="936" y2="168" stroke="#7C3527" stroke-width="2" opacity="0.25"/>
+
+  <!-- 4分類（同系色で統一・危険色は使わない） -->
+  <rect x="88" y="190" width="408" height="215" rx="24" fill="#FCE9DC" stroke="#7C3527" stroke-width="3"/>
+  <text x="292" y="285" text-anchor="middle" class="h" font-size="27" fill="#7C3527">①用語と前提</text>
+  <text x="292" y="335" text-anchor="middle" class="m" font-size="20">部署の常識</text>
+
+  <rect x="528" y="190" width="408" height="215" rx="24" fill="#FADFD5" stroke="#7C3527" stroke-width="3"/>
+  <text x="732" y="285" text-anchor="middle" class="h" font-size="27" fill="#7C3527">②作業の型</text>
+  <text x="732" y="335" text-anchor="middle" class="m" font-size="20">手順・規約・正本の場所</text>
+
+  <rect x="88" y="437" width="408" height="215" rx="24" fill="#F6E6CF" stroke="#7C3527" stroke-width="3"/>
+  <text x="292" y="532" text-anchor="middle" class="h" font-size="27" fill="#7C3527">③禁止と安全</text>
+  <text x="292" y="582" text-anchor="middle" class="m" font-size="20">してはいけない・確認必須</text>
+
+  <rect x="528" y="437" width="408" height="215" rx="24" fill="#E1F2F0" stroke="#7C3527" stroke-width="3"/>
+  <text x="732" y="532" text-anchor="middle" class="h" font-size="27" fill="#7C3527">④出力の型</text>
+  <text x="732" y="582" text-anchor="middle" class="m" font-size="20">報告の形式</text>
+
+  <text x="512" y="712" text-anchor="middle" class="m" font-size="17">Claude CodeのCLAUDE.md：200行未満が目安</text>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <path d="M512 146V250M318 221L416 318M706 221L608 318M318 575L416 458M706 575L608 458" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <circle cx="512" cy="384" r="122" fill="#7C3527"/>
+  <text x="512" y="370" text-anchor="middle" class="h w" font-size="31" fill="#FFFFFF">推論時の</text>
+  <text x="512" y="414" text-anchor="middle" class="h w" font-size="31" fill="#FFFFFF">コンテキスト</text>
+
+  <rect x="382" y="42" width="260" height="104" rx="24" fill="#FADFD5" stroke="#B44A32" stroke-width="4"/>
+  <text x="512" y="84" text-anchor="middle" class="h" font-size="30">指示</text>
+  <text x="512" y="119" text-anchor="middle" class="m" font-size="21">今回の依頼</text>
+
+  <rect x="66" y="166" width="252" height="110" rx="24" fill="#E1F2F0" stroke="#247F7A" stroke-width="4"/>
+  <text x="192" y="211" text-anchor="middle" class="h" font-size="29">ユーザー情報</text>
+  <text x="192" y="247" text-anchor="middle" class="m" font-size="21">好み・権限</text>
+
+  <rect x="706" y="166" width="252" height="110" rx="24" fill="#F6E6CF" stroke="#C17A27" stroke-width="4"/>
+  <text x="832" y="211" text-anchor="middle" class="h" font-size="29">外部知識</text>
+  <text x="832" y="247" text-anchor="middle" class="m" font-size="21">検索・資料</text>
+
+  <rect x="66" y="520" width="252" height="110" rx="24" fill="#FFF2E8" stroke="#B44A32" stroke-width="4"/>
+  <text x="192" y="565" text-anchor="middle" class="h" font-size="29">ツール結果</text>
+  <text x="192" y="601" text-anchor="middle" class="m" font-size="21">実行・取得</text>
+
+  <rect x="706" y="520" width="252" height="110" rx="24" fill="#FCE9DC" stroke="#7C3527" stroke-width="4"/>
+  <text x="832" y="565" text-anchor="middle" class="h" font-size="29">会話履歴</text>
+  <text x="832" y="601" text-anchor="middle" class="m" font-size="21">対話の流れ</text>
+
+  <text x="512" y="710" text-anchor="middle" class="h" font-size="26" fill="#247F7A">5種類を、今回の判断材料として束ねる</text>
+</svg>

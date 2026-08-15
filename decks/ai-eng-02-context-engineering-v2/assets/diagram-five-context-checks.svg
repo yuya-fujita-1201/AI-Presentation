@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <path d="M512 154V268M748 266L616 330M700 590L588 484M324 590L436 484M276 266L408 330" fill="none" stroke="#D9B49A" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="512" cy="384" r="112" fill="#247F7A"/>
+  <text x="512" y="372" text-anchor="middle" class="h w" font-size="31" fill="#FFFFFF">文脈を</text>
+  <text x="512" y="416" text-anchor="middle" class="h w" font-size="31" fill="#FFFFFF">5項目で確認</text>
+
+  <rect x="402" y="54" width="220" height="100" rx="24" fill="#FADFD5" stroke="#B44A32" stroke-width="4"/>
+  <circle cx="440" cy="104" r="22" fill="#B44A32"/>
+  <text x="440" y="113" text-anchor="middle" class="h w" font-size="24" fill="#FFFFFF">1</text>
+  <text x="528" y="114" text-anchor="middle" class="h" font-size="30">目的</text>
+
+  <rect x="748" y="216" width="220" height="100" rx="24" fill="#E1F2F0" stroke="#247F7A" stroke-width="4"/>
+  <circle cx="786" cy="266" r="22" fill="#247F7A"/>
+  <text x="786" y="275" text-anchor="middle" class="h w" font-size="24" fill="#FFFFFF">2</text>
+  <text x="874" y="276" text-anchor="middle" class="h" font-size="30">読み手</text>
+
+  <rect x="590" y="590" width="220" height="100" rx="24" fill="#F6E6CF" stroke="#C17A27" stroke-width="4"/>
+  <circle cx="628" cy="640" r="22" fill="#C17A27"/>
+  <text x="628" y="649" text-anchor="middle" class="h" font-size="24" fill="#2B211D">3</text>
+  <text x="716" y="650" text-anchor="middle" class="h" font-size="30">状況</text>
+
+  <rect x="214" y="590" width="220" height="100" rx="24" fill="#FCE9DC" stroke="#7C3527" stroke-width="4"/>
+  <circle cx="252" cy="640" r="22" fill="#7C3527"/>
+  <text x="252" y="649" text-anchor="middle" class="h w" font-size="24" fill="#FFFFFF">4</text>
+  <text x="340" y="650" text-anchor="middle" class="h" font-size="30">制約</text>
+
+  <rect x="56" y="216" width="220" height="100" rx="24" fill="#FFF2E8" stroke="#B44A32" stroke-width="4"/>
+  <circle cx="94" cy="266" r="22" fill="#B44A32"/>
+  <text x="94" y="275" text-anchor="middle" class="h w" font-size="24" fill="#FFFFFF">5</text>
+  <text x="184" y="276" text-anchor="middle" class="h" font-size="28">既存資産</text>
+
+  <text x="512" y="734" text-anchor="middle" class="m" font-size="23">AIが迷いそうな項目だけを埋める</text>
+</svg>
