@@ -440,10 +440,22 @@
   - S22でコンパクションを可視定義、S27／28で症状表を分割、S32でRubric／Graderを明示
   - S36〜40の事例ラベルと留保を補強。S40の公式ログ例は3子項目へ分け、事実精度と孤立折返しを両立
   - S43〜47、S55、S58〜64を16px以上へ変更。旧S65の6行表はS65／66へ3行ずつ分割
-  - S59／60はPPTXに実hyperlinkがない事実に合わせ、「URLはPPTX内にも記載」へ訂正
+  - S59／60は生成環境に依存しない「URLはPPTX内にも記載」へ訂正。作業ブランチ側ビルダーでは実hyperlink 0件、指定元パス側の最終ビルダーでは18件を確認
 - **独立内容監査**: 57/60、全6項目8点以上、GPT必須チェック全件`PASS`、最終`GO`
 - **独立Visual QA**: 全66枚通覧後、S6／33／40を修正・単枚再確認。切れ・重なり・表崩れ・端部欠落・重大なコントラスト不良なし、最終`GO`
 - **生成物**: `gate_deck OK: 66 slides`。HTML preview 66枚は全件1280×720、参照asset欠落0
 - **PPTX**: `unzip -t`エラーなし、66枚再パース、`has_notes_slide` 0件。LibreOffice再レンダーで全体一覧と最終S40を実見
 - **OKF／本文抽出**: OKF errors 0／warnings 0。markitdown 1080行、placeholder語句0件
 - **マージ方針**: `auto_merge: false`を維持。Draft PR #9は更新するがマージしない
+
+### R2 配送・指定元パス再検証（2026-08-15 18:45 JST）
+
+- **デッキ内容コミット**: `c00bb566e8704d8bc0686658a6f140359f51a4e6` を `origin/loop/ai-eng-03-gptpro-review` へpushし、Draft PR #9のhead一致を確認。PRは`OPEN`／`Draft`のまま、未マージ
+- **指定元パス反映**: `/Users/yuyafujita/Projects/presentation/decks/ai-eng-03-harness-engineering/` へ最終`deck.json`とassetsを同期し、そのパス自身でbuild／全preview／gateを再実行
+- **保護ファイル**: main側の未追跡`GPT-Review.md`は変更せず、SHA-256 `5c0e1760d1bfa866cdd9efaf05be017df2b2eec00fa4b60f70ba516b3184115a`を同期前後で維持
+- **指定元パスの最終ゲート**: `gate_deck OK: 66 slides`、OKF errors 0／warnings 0、PPTX 66枚再パース、notes 0、preview 66枚すべて1280×720、参照asset欠落0、placeholder 0、出典ID 18件
+- **指定元パスの最終PPTX**: LibreOfficeで全66枚を再レンダーして通覧。切れ・重なり・表崩れなし。表セル内の18 URLはpython-pptxで実hyperlink 18件／unique 18件を確認
+- **指定元パス成果物**:
+  - HTML SHA-256: `cb500776132fc69da3d6ea10873e9bef14bb5b85f00e71cc92b99223229868e8`
+  - PPTX SHA-256: `961732d3beb97e9bef8125801abbdead34e5eb5de1ee164bee8ad84e4954e1af`
+- **生成差**: 作業ブランチと指定元パスは`deck.json`と参照assetsが同一。指定元パス側の新しいビルダーによりS59〜64のURL表示と実hyperlinkだけが強化され、最終PPTXは指定元パス側の生成物を正とする
