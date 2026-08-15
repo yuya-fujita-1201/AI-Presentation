@@ -602,8 +602,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "concepts-survey",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/concepts-survey"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/concepts-survey",
+        "ledger_path": "knowledge/sources/article-le-self-refine.md"
       },
       {
         "url": "https://www.mindstudio.ai/blog/what-is-loop-engineering-autonomous-ai-agent-workflows",
@@ -619,8 +620,9 @@
         "source_tier": "secondary",
         "origin": "web:mindstudio.ai",
         "subtopic": "concepts-survey",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/concepts-survey"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/concepts-survey",
+        "ledger_path": "knowledge/sources/article-le-loop-engineering-mindstudio.md"
       },
       {
         "url": "https://kilo.ai/articles/what-is-loop-engineering",

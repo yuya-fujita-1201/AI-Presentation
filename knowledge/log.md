@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-15（leソース台帳・記事2本 web_ledger run:08151148d9）
+
+- **Creation**: sources/ に記事2本を article-le-*.md として登録（ループエンジニアリングテーマ、web_ledger工程 run:08151148d9）。article-le-self-refine.md（arXiv「Self-Refine: Iterative Refinement with Self-Feedback」Madaan et al.、一次情報。人間の推敲プロセスに着想を得て同一LLMが生成器・批評者・改善者を兼ねる3ステップの反復ループ、追加の教師データ・追加学習・強化学習を要しない設計、対話応答生成〜数学的推論の7タスク×GPT-3.5/ChatGPT/GPT-4で人手評価・自動評価とも平均約20%の絶対的改善、loop engineeringで頻繁に参照される「自己改善ループ」の原典としての位置づけ、RCI・CRITIC・Self-Correct等の後続研究の起点であることを解説）、article-le-loop-engineering-mindstudio.md（MindStudio「What Is Loop Engineering? The New Meta for Autonomous AI Agent Workflows」、二次情報。単一ターン依存の従来AIワークフローとの対比からloop engineeringを観察・推論・行動・評価の反復と定義、/loop（有界・条件付き反復）・/goal（成功条件と終了判定）・/routines（再利用可能なアクション配列）の3構成要素、ゴール未定義のままループから着手する失敗パターンへの警句、Self-Refineをloop engineeringの実装例とする位置づけ、多段階・条件付き・完了時間不定・人間レビューがボトルネックという適用条件を解説）
+- **Update**: sources/index.md の「記事（ループエンジニアリング）」節に上記2件を追加
+
 ## 2026-08-15（leソース台帳・記事2本 web_ledger run:08151142ae）
 
 - **Creation**: sources/ に記事2本を article-le-*.md として登録(ループエンジニアリングテーマ、Anthropic公式ドキュメント、web_ledger工程 run:08151142ae)。article-le-claude-code-best-practices.md(Claude Code Docs「Best practices for Claude Code」の「Give Claude a way to verify its work」節。合否判定可能なチェック(テスト・ビルド・スクリーンショット比較)を与えると実行→検証→反復のループが自律的に閉じるという主張、Before/After形式の3適用例(検証基準の明示・UI視覚検証・根本原因対処)、チェックの強制力を段階的に高める4段階(単発プロンプト内反復・/goalコンディション・Stopフックの決定的ゲート・検証サブエージェントによるセカンドオピニオン)、成功を自己申告させず証拠(evidence)を提示させる推奨を解説)、article-le-evaluator-optimizer.md(Claude Cookbook「Evaluator optimizer」。生成担当と評価担当のLLM呼び出しを分離するワークフローの定義、有効な場面の2条件と適合の2兆候、generate/evaluate/loopの3関数によるPythonリファレンス実装(docstring・thoughts/response・evaluation/feedbackタグ抽出・PASSになるまでmemoryとフィードバックを積み増す構造)を解説)
