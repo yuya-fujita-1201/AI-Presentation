@@ -610,8 +610,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "research",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/research"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/research",
+        "ledger_path": "knowledge/sources/article-ge-mast-multi-agent-failures.md"
       },
       {
         "url": "https://arxiv.org/abs/2402.16823",
@@ -628,8 +629,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "research",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/research"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/research",
+        "ledger_path": "knowledge/sources/article-ge-gptswarm-optimizable-graphs.md"
       },
       {
         "url": "https://arxiv.org/abs/2509.25370",

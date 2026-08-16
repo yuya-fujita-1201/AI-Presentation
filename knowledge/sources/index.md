@@ -47,6 +47,8 @@
 - [article-ge-openai-orchestration-handoffs.md](./article-ge-openai-orchestration-handoffs.md) — OpenAI公式「Orchestration and handoffs」。会話の所有権を引き渡すHandoffsと、マネージャーが所有権を保持するAgents as Tools(Managerパターン)の対比、専門家追加の4判断基準、「まず単一エージェントから始める」原則を解説
 - [article-ge-anthropic-multi-agent-research-system.md](./article-ge-anthropic-multi-agent-research-system.md) — Anthropic公式「How we built our multi-agent research system」。リードエージェントがサブエージェント群に探索を委任するオーケストレーター・ワーカー構成、内部評価による90.2%の性能改善と約15倍のトークン消費、開発中の失敗事例と対処、プロンプトエンジニアリング上の教訓を解説
 - [article-ge-anthropic-building-c-compiler.md](./article-ge-anthropic-building-c-compiler.md) — Anthropic公式「Building a C compiler with a team of parallel Claudes」。16個のClaudeエージェントを並列稼働させたRust製Cコンパイラ開発実験、タスクロックによる競合回避の運用設計、「task verifierがほぼ完璧である必要がある」という教訓を解説
+- [article-ge-mast-multi-agent-failures.md](./article-ge-mast-multi-agent-failures.md) — arXiv「Why Do Multi-Agent LLM Systems Fail?」（Cemri, Pan, Yang et al.）。7フレームワーク・1600件超のトレースを含むMAST-Dataと、14の失敗モードを3カテゴリ(システム設計・エージェント間非整合・タスク検証)に整理したMAST分類体系を提案、kappa=0.88の高い一致度で構築された信頼性を解説
+- [article-ge-gptswarm-optimizable-graphs.md](./article-ge-gptswarm-optimizable-graphs.md) — arXiv/ICML2024「GPTSwarm: Language Agents as Optimizable Graphs」。単一エージェント・スワームを有向非環グラフとして統一表現し、REINFORCEによるエッジ最適化とOPRO等によるノード最適化の2段階最適化、GAIAベンチマークでGPT-4-Turbo・AutoGPTを上回る平均18.45%達成を解説
 
 ## 記事（プロンプトエンジニアリング）
 
