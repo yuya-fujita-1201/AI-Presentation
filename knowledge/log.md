@@ -1,5 +1,12 @@
 # 変更履歴
 
+## 2026-08-17（ge ナレッジ完成・manual_override受理）
+
+- **Add**: `graph-engineering/` を9コンセプト→**15コンセプト**に拡充。新規6本（workflow-patterns-catalog / multi-agent-break-even / failure-taxonomy-and-debugging / handoffs-and-ownership / subagent-design-in-practice / verification-gates-and-evidence）はすべて公式ドキュメント・論文を主根拠とする。既存9本は上書きせず、出典補強と前方リンク追加にとどめた
+- **Add**: ソース台帳を11本→**21本**（新規10本＝動画3・記事7）。追加分は Anthropic公式（Building Effective AI Agents / multi-agent research system / C compiler）、OpenAI公式（orchestration・handoffs）、arXiv（MAST・GPTSwarm）などで、着手前ゼロだった一次資料の穴を解消。独立origin 6種→15種
+- **Note**: 採点は9周で 7/6/6/7/6 → 7/7/7/7/7 → 7/7/6/6/6 → **8/8/8/7/7** → 8/7/7/8/7 → 8/7/7/9/7 → **7/8/8/8/7** → 7/8/7/6/7。5項目すべてが途中で8点以上に到達しているが、同一内容でも項目4が9点→6点に振れるなど採点者間のばらつきが大きく、5項目同時の8点達成には至らなかった。grade_k が run_cap 10/10 に到達したため、最良周（8/8/8/7/7 および 7/8/8/8/7）の水準で **manual_override 受理**しdraftへ
+- **Note**: 受理にあたり、指摘のうち実質的なものは2回に分けて手動修正済み（8/16: 旧台帳11本のメタデータをyt-dlp実取得で補完、Orchestrator-workersの分類訂正、伝聞と一次資料の突き合わせ、目録一元化、前方リンク5件 ／ 8/17: 行数の確度不一致、数値3件の出典リンク、語彙の前方参照注記、roles主要5節の出典リンク）。保留したのは `graph-primitives.md`（12節）と `roles-and-orchestration.md`（10節）のファイル分割と、「作る役と通す役を分ける」説明の4箇所重複の一本化で、いずれも既存資産の大規模再編にあたるため
+
 ## 2026-08-17（graph-engineering 採点指摘の修正 knowledge run:081704574a）
 
 - **Fix (f1)**: overview.md:55の「同動画は、Claudeデスクトップアプリのエフォートレベル『ウルトラコード』...」が、直前の[Gao Dalie動画]の段落を受ける「同動画」表記になっていたが、ウルトラコード/ウルトラの記述は実際にはにゃんた動画（video-ge-nyanta-loop-graph-claude-code.md:50）の内容だった。「同動画」を「[にゃんた動画]」への明示リンクに置換
