@@ -39,6 +39,8 @@ Anthropic公式のClaude Code Docs「Agent SDK overview」は、Claude Codeを�
 | model | 省略するとメインセッションから継承される |
 | tools / disallowedTools | 許可リスト・拒否リスト。**両方指定した場合は拒否リストが優先される** |
 | skills | 指定したスキル本文をコンテキストに読み込む。**メインで使っているスキルは自動継承されない** |
+| mcpServers | 接続するMCPサーバーを指定する |
+| hooks | エージェントのライフサイクルの節目でコマンドを実行する。公式ドキュメントの例として、読み取り専用DBクエリの許可や、書き込み・更新・削除系コマンドのブロックが挙げられている |
 | memory | 永続メモリー。ユーザー・プロジェクト・ローカルの3スコープ |
 | color | ターミナル表示色。書き込み系は赤、読み取り専用は青などリスクの可視化に使う |
 
@@ -122,6 +124,6 @@ Anthropic公式のClaude Code Docs「Agent SDK overview」は、Claude Codeを�
 # Citations
 
 - [Agent SDK overview（Anthropic公式 Claude Code Docs）](../sources/article-he-agent-sdk-overview.md) — Subagents（焦点を絞ったサブタスクのために専門特化したエージェントを派生させる機能）・Permissions・Sessions・Hooks・MCPという提供機能の範囲、およびAgent SDKがClaude Codeと同じツール群・エージェントループ・コンテキスト管理をPython/TypeScriptで提供するライブラリであることの根拠（Anthropic公式ドキュメント）
-- [【前編】Claude Codeサブエージェント完全ガイド（まさやん【AIギルドch】）](../sources/video-ge-subagent-overview-basics.md) — サブエージェントの定義と独立したコンテキスト、フロントマターの設定項目（name/description必須、model継承、tools/disallowedToolsと拒否リスト優先、skills非継承、memory、color）、ツール未指定時の全ツール継承、4通りの呼び出し方、実行モード（フォアグラウンド/バックグラウンドとCtrl+Bでの切り替え、再開可能性）、メインから受け取る5つの情報と会話履歴が渡らないこと、最終結果のみが返る設計、ネスト不可・横のつながりなし・同一ファイル並列編集の競合という3制約、サブエージェントとエージェントチームの違い（セッション・結果の返り方・情報の流れ・コスト差）、プランナー/ジェネレーター/エバリエイターの3役割分離による品質向上、テストスイート4分割で8分→3分未満という並列実行の高速化事例、Anthropic公式ブログ由来として紹介される使用/回避場面の根拠。いずれもauto字幕からの聞き取り
+- [【前編】Claude Codeサブエージェント完全ガイド（まさやん【AIギルドch】）](../sources/video-ge-subagent-overview-basics.md) — サブエージェントの定義と独立したコンテキスト、フロントマターの設定項目（name/description必須、model継承、tools/disallowedToolsと拒否リスト優先、skills非継承、mcpServers、hooksによる書き込み系コマンドのブロック例、memory、color）、ツール未指定時の全ツール継承、4通りの呼び出し方、実行モード（フォアグラウンド/バックグラウンドとCtrl+Bでの切り替え、再開可能性）、メインから受け取る5つの情報と会話履歴が渡らないこと、最終結果のみが返る設計、ネスト不可・横のつながりなし・同一ファイル並列編集の競合という3制約、サブエージェントとエージェントチームの違い（セッション・結果の返り方・情報の流れ・コスト差）、プランナー/ジェネレーター/エバリエイターの3役割分離による品質向上、テストスイート4分割で8分→3分未満という並列実行の高速化事例、Anthropic公式ブログ由来として紹介される使用/回避場面の根拠。いずれもauto字幕からの聞き取り
 - [ClaudeCodeとCodexのサブエージェントの使い方（にゃんたのAIチャンネル）](../sources/video-ge-subagent-when-to-use.md) — 3つの実践的活用法（並列調査・忖度回避・作成検証ループ）と、シングルで足りるタスクにマルチエージェントを使うとコストが上がり精度も下がりうるという総括の根拠。auto字幕からの聞き取り
 - [【Claude Code新機能】Dynamic Workflows完全解説（みにこーへいのAI活用チャンネル）](../sources/video-ge-dynamic-workflows-six-patterns.md) — サブエージェントの編成自体を自動生成する上位レイヤーが存在すること（ネスト不可という制約の回避先として言及）の根拠。auto字幕からの聞き取り

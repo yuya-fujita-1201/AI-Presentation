@@ -1,5 +1,22 @@
 # 変更履歴
 
+## 2026-08-17（graph-engineering 採点指摘の修正 knowledge run:0817014547）
+
+- **Fix (f1)**: workflow-patterns-catalog.md:57のダイナミックワークフロー導入節が、ソース側（video-ge-dynamic-workflows-six-patterns.md c1, impact:high）が明記する「長いコンテキストで起きるサボりや自己バイアスを構造的に防ぐ」という目的に触れず仕組みの説明のみだった。6型が評価型に偏る理由としてこの目的を1文追記
+- **Fix (f2)**: video-ge-koremaji-single-to-multi.md:43-44「最強モデルを全ノードに置いても設計問題は消えない、同じ誤った前提を共有し無条件承認すれば誤りが循環する」という中核主張が、どのコンセプトにも未収録だった。risks-and-safeguards.mdに「能力の足し算では解けない」節を新設
+- **Fix (f3)**: workflow-patterns-catalog.md:19-29のWorkflow/Agent定義節に、article-ge-anthropic-building-effective-agents.md:41が挙げるAgent側のgrounded truth取得（環境からのフィードバックでループする）が未反映だった。1文追記
+- **Fix (f4)**: subagent-design-in-practice.md:35-43の設定項目表からhooks・mcpServersが欠落しており、ツール権限事故の主題で書き込み系コマンドのブロック手段が示せていなかった。表に2行追加
+- **Fix (f5)**: loop-vs-graph-decision.mdに、video-ge-gaodalie-forget-loop.md:54-55の決済システム再構築の複数ドメイン例と「次に何をするか」から「各ノードが何を出力・宣言・待つか」への問いの転換が未反映だった。「過剰なグラフ化への警告」節に具体例を追記
+- **Fix (f6)**: knowledge-graph-as-memory.md:86-88の「次に読む」が、overview.mdの読む順番表（#13→#14）に反し既読3本（#7/#9/#12）への差し戻しになっていた。筆頭をrisks-and-safeguards.mdに差し替え、既読3本は本文インライン参照へ移動
+- **Fix (f7)**: roles-and-orchestration.mdが11見出しを収容し、うち「Anthropicの5つの連携パターン」節（workflow-patterns-catalog.mdと重複）と「組織/作業グラフ」の説明（relationship-graph-for-operations.mdと重複）を1文+参照へ縮約
+- **Fix (f8)**: graph-primitives.md:86-97（バンドル#2、語彙習得の位置）にあったフレームワーク6種の詳細数値（月間DL数千万・A2A・2026年4月GA等）を、名前と一言特徴のみへ圧縮
+- **Fix (f9)**: overview.md:59とterm-lineage-and-layers.md:73-81が「詳細はknowledge-graph-as-memory.mdに譲る」と宣言しながら「実行の地図/ループの網/知識の地図」等の全項目をフル列挙していた。列挙を削除し参照のみに変更
+- **Fix (f10)**: term-lineage-and-layers.md:89,96で「関連コンセプト」節（14ファイル中この1本のみに存在）と「次に読む」節が2本のリンクで重複していた。「関連コンセプト」節を削除し、overview.mdへのリンクは冒頭段落へインライン化
+- **Fix (f11)**: handoffs-and-ownership.md:70が「詳細はmulti-agent-break-even.mdで扱う」と宣言した直後にOpenAIの4条件の中身をフル記載していた。1文へ縮約
+- **Fix (f13)**: roles-and-orchestration.md:44とrisks-and-safeguards.md:44が共に「詳細はgraph-primitives.mdへ」としながらBunの規模の食い違い数字（53万行/75万行）自体を再掲していた。他2ファイルから数字を削除し参照のみに統一
+- **Defer**: f12（multi-agent-break-even・workflow-patterns-catalog・handoffs-and-ownership・subagent-design-in-practice・verification-gates-and-evidence・failure-taxonomy-and-debuggingの6ファイルのみが番号付き総括節と太字教訓の修辞を共有し、他8ファイルと二分している）は指摘自体は事実だが、fix_hintが要求する14ファイル横断のスタイル統一は非対象8ファイルへの変更を伴い、本工程の許可パス（findingsのwhereが指すファイルのみ）を超えるためdeferred(out_of_scope)
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認
+
 ## 2026-08-17（graph-engineering 採点指摘の修正 knowledge run:0817004581）
 
 - **Fix (f1)**: workflow-patterns-catalog.md・verification-gates-and-evidence.mdの2本だけ「## 次に読む」節が無く、overview.mdの推奨順（7→8, 11→12）の導線が途切れていた。両ファイルのCitations直前に同節を追加し、それぞれrelationship-graph-for-operations.md・failure-taxonomy-and-debugging.mdへ送る

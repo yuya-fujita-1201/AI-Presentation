@@ -83,16 +83,16 @@ AI×BPOラジオは、ノード（担当者を表す丸）・エッジ（仕事�
 
 Cursor、Cline、Roo、Windsurfのようなコーディングエージェント（聞き取りに不確実性あり）も、当時はグラフ的な連携拡張よりも単一エージェントそのものの改善に注力していた。時間の経過とともにプロンプトエンジニアリングからコンテキストエンジニアリング、より良いハーネスへと単体強化が進んだ結果、**ボトルネックが「ノードが何をできるか」から「グラフとノードをつなぐエッジ」の方へ移り始めた**という歴史的転換が起きたと説明されている（同ソース）。Claude CodeやCodex CLI、Antigravityのような高性能なコーディングエージェントの登場でノードが信頼できるようになったことで、グラフエンジニアリングが「再び」実用的な話題になってきた、というのがこの動画の論旨である。
 
-## この語彙を実装している主なフレームワーク（2026年時点の報告）
+## この語彙を実装している主なフレームワーク（名前だけ先に知っておく）
 
-ノード・エッジ・状態というグラフの語彙は、既に複数のフレームワークが実装していると紹介されている（[これマジ?動画](../sources/video-ge-koremaji-single-to-multi.md)。数値はDataScienceDojo等の整理の紹介として提示されたもの）。
+ノード・エッジ・状態というグラフの語彙は、既に複数のフレームワークが実装していると紹介されている（[これマジ?動画](../sources/video-ge-koremaji-single-to-multi.md)）。この段階ではまだ語彙を身につける途中のため、詳しい採用事例や利用規模の数字には立ち入らず、名前と一言特徴だけを挙げる。
 
-- **LangGraph**: 2024年1月から実運用。ステートグラフ・チェックポイント・タイムトラベル型デバッグを備え、月間ダウンロードは数千万規模と報告されている
-- **CrewAI**: 役割ベースの「クルー」を組む、名前からして分担型のフレームワーク
-- **Microsoft Agent Framework**: AutoGenとSemantic Kernelを統合した後継で、2026年4月に一般提供
+- **LangGraph**: ステートグラフ・チェックポイントを備える
+- **CrewAI**: 役割ベースの「クルー」を組む分担型
+- **Microsoft Agent Framework**: AutoGenとSemantic Kernelを統合した後継
 - **Google ADK**: 階層型のエージェント構成とA2A（Agent2Agent）を特徴とする
 - **LlamaIndex Workflows**（聞き取りに不確実性あり）: イベント駆動の文書処理
-- **OpenAI Agents SDK**: 明示的なハンドオフを提供する。「完全なグラフというより軽量なチェーンに近い」という整理も併記されている
+- **OpenAI Agents SDK**: 明示的なハンドオフを提供する軽量なチェーン寄りの構成
 
 同動画は「みんな同じグラフを作っているようで、少しずつ対象が違う」と指摘し、ツールを検索・選定するときは用語の横に「誰の表現か」を書いておくことを勧めている。
 
@@ -172,6 +172,6 @@ Sura×Asuraのソースでは、明日から依存関係を描くための実践
 - [動画: Graph Engineering explained in 8min.（Caleb Writes Code）](../sources/video-ge-caleb-8min-explainer.md) — オイラーとケーニヒスベルクの橋の起源、Claude Codeディープリサーチの107/108体DAG実行例、AutoGen/LangGraph黎明期とノードの非力さ、ボトルネック移動の歴史的転換の根拠
 - [動画: 【気になるんだもん No.02】その順番待ち、ほんとに要るのだ？ 〜グラフエンジニアリング〜（ずんだもんの実験道具箱）](../sources/video-ge-kininarundamon-parallelism.md) — 偽エッジテスト「その矢印は結果を読んでいるか」、Bunの53万行書き換え事例と隠れたエッジ（Git衝突）の根拠
 - [動画: 【グラフエンジニアリング】完全ガイド｜AIエージェントは仕事をどう分ける？（Sura×Asura For AI Agent）](../sources/video-ge-complete-guide-work-division.md) — タスクグラフ／依存関係グラフ／DAGという用語整理、DAGの循環＝設計の矛盾という考え方、依存関係を描く実践ステップ（完成形からの逆算・2つの問い・入次数ゼロ）の根拠
-- [動画: グラフエンジニアリング入門（海外テックの「これマジ?」）](../sources/video-ge-koremaji-single-to-multi.md) — LangGraph/CrewAI/Microsoft Agent Framework/Google ADK/LlamaIndex Workflows/OpenAI Agents SDKというフレームワーク一覧と各数値の根拠
+- [動画: グラフエンジニアリング入門（海外テックの「これマジ?」）](../sources/video-ge-koremaji-single-to-multi.md) — LangGraph/CrewAI/Microsoft Agent Framework/Google ADK/LlamaIndex Workflows/OpenAI Agents SDKというフレームワーク一覧の根拠
 - [動画: グラフエンジニアリングとは何か（AI×BPOラジオ）](../sources/video-ge-bpo-org-chart.md) — ノード・エッジに続く3つ目の部品「迂回路」（失敗時の経路をあらかじめ描く）の根拠
 - [動画: AIは忘れる、グラフは忘れない（AISPALab）](../sources/video-ge-ai-forgets-graph-remembers.md) — Bun書き換えの行数（約75万行・11日・通過率99.8%）に関する数値の食い違いの参考
