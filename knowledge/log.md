@@ -1,5 +1,14 @@
 # 変更履歴
 
+## 2026-08-16（graph-engineering 採点指摘の修正 knowledge run:081615158d）
+
+- **Fix**: 採点findings 13件（すべてfixed disposition）に基づき既存コンセプトを修正。graph-primitives.md:103の同時実行上限誤記（「最大16」→「16どころか2桁（64）」、AISPALab概要欄との「一致」の誤った主張を「食い違い」に訂正）／overview.mdの数値誤記（「3本の比喩」→「これらの比喩」、「8つの下位コンセプト」→「14の下位コンセプト」）とバンドル地図の8本時代からの拡張（後半6本を含む14項目化、読む順番をindex.mdの差し込み案と統一、後半6本への内部リンク配置）
+- **Update**: workflow-patterns-catalog.mdに「呼び出し方とトークン予算」小節（ウルトラコード起動・出典検証構成・編成保存・トークン予算指定）を追加、subagent-design-in-practice.mdに「分ける動機: 品質と速さ」小節（3役割分離とManager/Worker/Verifierの対応付け、テスト4分割の高速化事例）を追加、multi-agent-break-even.mdにマルチエージェント4トポロジーの定義と努力配分ルール・90%短縮を追加、risks-and-safeguards.mdに本番運用の設計判断（チェックポイント再開・可観測性・レインボーデプロイ）小節を追加、loop-vs-graph-decision.mdにCalebのトークンコスト試算小節を追加
+- **Refactor**: Gao Dalieの3層対比表の重複をterm-lineage-and-layers.mdに一本化しloop-vs-graph-decision.md側を縮約、「2023年当時ノード非力」歴史説明の重複をgraph-primitives.mdに一本化しroles-and-orchestration.md側を縮約。relationship-graph-for-operations.mdの見出しレベル不整合（H1→H2）を是正
+- **Fix**: subagent-design-in-practice.mdのCitationsに露出していた内部フィールド表記「（source_tier: primary）」を自然文に置換。sources/article-le-claude-code-best-practices.mdのsource_tierをsecondary→primaryに変更しsources/article-he-agent-sdk-overview.mdと統一。knowledge-graph-as-memory.md・risks-and-safeguards.md・relationship-graph-for-operations.mdの日本語文中の半角括弧を全角に統一
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認
+- **Note**: 本ランはfindingsの`where`が指すファイルのみを修正対象とし、それ以外のコンセプトファイルは書き換えていない
+
 ## 2026-08-16（graph-engineering コンセプト拡充・完了 knowledge run:081612459a）
 
 - **Creation**: graph-engineering/ に残りコンセプト3本を追加し、run:08161057e2 で設計した新規6本が全て完了（plan.json 15/15 done）。handoffs-and-ownership.md（OpenAI公式のHandoffsとAgents as Tools（Managerパターン）を「最終回答の所有権を誰が持つか」という軸で対比し、Anthropicの研究システムとClaude Codeサブエージェントがいずれもマネージャー型にあたることを確認したうえで、Cコンパイラ実験の`current_tasks/`ロックを「作業対象の所有権」という別種の所有権として整理）、subagent-design-in-practice.md（Agent SDK公式が保証する機能範囲と、解説動画由来のフロントマター仕様・コンテキスト独立性・ネスト不可という3制約を確度を分けて整理し、使うべき/避けるべき場面と実装前チェックリストを提示）、verification-gates-and-evidence.md（Claude Code公式ベストプラクティスの強制力4段階（プロンプト内／`/goal`／Stopフック／セカンドオピニオン）と8回連続ブロックでの上書き、成功の自己申告ではなく証拠を提示させる原則、「task verifierがほぼ完璧である必要がある」という教訓を、検証をエッジの通行条件として読み替えて整理）

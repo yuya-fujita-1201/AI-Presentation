@@ -24,7 +24,7 @@ generated:
 - 「グラフエンジニアリングとは、プロセス間の関係性を設計することである」とし、プロンプト（対象は指示）・ループ（対象は制御サイクル）・グラフ（対象はトポロジー）という3層の対比で位置づけている（[Gao Dalie動画](../sources/video-ge-gaodalie-forget-loop.md)）
 - 「AIを賢くする魔法のプロンプトではなく、AIをどう動かし、どこで確認し、どこで止めるかの設計」という否定形の定義も示されている（[TECH PLAY動画](../sources/video-ge-techplay-3min-intro.md)）
 
-3本の比喩・強調点はそれぞれ異なるが、共通するのは「単体のAIの性能」ではなく「複数の担当（ノード）の間の受け渡し（エッジ）」を設計対象にするという点である。ノード・エッジという基本語彙の詳細な定義は[graph-primitives.md](./graph-primitives.md)を参照。
+これらの比喩・強調点はそれぞれ異なるが、共通するのは「単体のAIの性能」ではなく「複数の担当（ノード）の間の受け渡し（エッジ）」を設計対象にするという点である。ノード・エッジという基本語彙の詳細な定義は[graph-primitives.md](./graph-primitives.md)を参照。
 
 ## 用語が広まった経緯
 
@@ -60,32 +60,40 @@ generated:
 
 ## このバンドルの地図
 
-このバンドルは、本ファイルを入口として8つの下位コンセプトで構成される。
+このバンドルは、本ファイルを入口として14の下位コンセプトで構成される。前半8本はYouTube解説動画を主な情報源とし、後半6本はAnthropic・OpenAIの公式ドキュメントとarXiv論文を主な情報源とする。
 
 | # | ファイル | 扱う内容 |
 |---|---|---|
 | 1 | [term-lineage-and-layers.md](./term-lineage-and-layers.md) | プロンプト・コンテキスト・ハーネス・ループ・グラフの5段階と、「入れ子」説／「非包含の3層」説の両論併記 |
 | 2 | [graph-primitives.md](./graph-primitives.md) | ノード・エッジ・状態・DAGの基本語彙、循環の見つけ方・偽エッジテスト・隠れたエッジ |
 | 3 | [loop-vs-graph-decision.md](./loop-vs-graph-decision.md) | ループの3つの限界とグラフ化のコスト対比、グラフ化しない方がよいケース |
-| 4 | [roles-and-orchestration.md](./roles-and-orchestration.md) | Manager/Worker/Verifierの役割分担とオーケストレーション実装パターン |
-| 5 | [relationship-graph-for-operations.md](./relationship-graph-for-operations.md) | 業務運用グラフ（目的・担当・作業・根拠・承認）とコンテキストパックの設計 |
-| 6 | [verification-and-testing.md](./verification-and-testing.md) | 自己修正の限界と、別エージェントによる検証ループ・テスト手法 |
-| 7 | [knowledge-graph-as-memory.md](./knowledge-graph-as-memory.md) | もう1つのグラフ＝記憶としてのナレッジグラフ、実行構造との違い |
-| 8 | [risks-and-safeguards.md](./risks-and-safeguards.md) | 増幅される失敗パターンと歯止め（アンカー）、独り歩きする数字への注意（総括） |
+| 4 | [multi-agent-break-even.md](./multi-agent-break-even.md) | マルチエージェント化の損益分岐点。90.2%改善と15倍トークン、45%ルール、増やす前に確認する4条件 |
+| 5 | [roles-and-orchestration.md](./roles-and-orchestration.md) | Manager/Worker/Verifierの役割分担とオーケストレーション実装パターン |
+| 6 | [handoffs-and-ownership.md](./handoffs-and-ownership.md) | 最終回答を誰が所有するか。HandoffsとAgents as Toolsの対比 |
+| 7 | [workflow-patterns-catalog.md](./workflow-patterns-catalog.md) | つなぎ方の型カタログ。Anthropic公式の5パターンとダイナミックワークフローの6編成型 |
+| 8 | [relationship-graph-for-operations.md](./relationship-graph-for-operations.md) | 業務運用グラフ（目的・担当・作業・根拠・承認）とコンテキストパックの設計 |
+| 9 | [subagent-design-in-practice.md](./subagent-design-in-practice.md) | 決めた構造を実際の機能で組む。独立コンテキスト・ツール権限・ネスト不可という制約 |
+| 10 | [verification-and-testing.md](./verification-and-testing.md) | 自己修正の限界と、別エージェントによる検証ループ・テスト手法 |
+| 11 | [verification-gates-and-evidence.md](./verification-gates-and-evidence.md) | 検証をゲートにする。強制力の4段階、自己申告ではなく証拠 |
+| 12 | [failure-taxonomy-and-debugging.md](./failure-taxonomy-and-debugging.md) | 失敗の分類とデバッグ。MASTの3カテゴリ14モード、カスケード失敗の切り分け |
+| 13 | [knowledge-graph-as-memory.md](./knowledge-graph-as-memory.md) | もう1つのグラフ＝記憶としてのナレッジグラフ、実行構造との違い |
+| 14 | [risks-and-safeguards.md](./risks-and-safeguards.md) | 増幅される失敗パターンと歯止め（アンカー）、独り歩きする数字への注意（総括） |
 
 ### 読む順番の提案
 
-上の表の1→8の順番での通読を勧める。
+上の表の1→14の順番での通読を勧める。
 
 1. まず**term-lineage-and-layers**で「グラフはループの延長線上にある5段目」という位置付けを掴む
 2. 次に**graph-primitives**で「ノード」「エッジ」「DAG」という語彙を身につけないと、以降の議論が比喩のままで終わってしまう
 3. 語彙を得たら**loop-vs-graph-decision**で「そもそも自分の課題はグラフ化すべきか」を先に判断する。[AI氣道動画](../sources/video-ge-5-stages-beginner.md)が「困り事が先、道具は後」と繰り返し強調している通り、いきなり5段目（グラフ）から始めない判断が最初に要る
-4. グラフ化すると決めたら**roles-and-orchestration**で実装パターンを知り、**relationship-graph-for-operations**で自分の業務にどう型を当てはめるかへ進む
-5. 動かしたグラフが正しく機能しているかを確かめる**verification-and-testing**へ進む
-6. ここまでで「実行の地図」の話が一通り終わるため、混同しやすいもう1つの意味である**knowledge-graph-as-memory**（知識の地図）を独立させて読む
-7. 最後に**risks-and-safeguards**で、グラフ化によって増幅する失敗と歯止めを総括して締めくくる
+4. グラフ化すると決める前に、**multi-agent-break-even**でそもそも増やして得かを数字で確認する
+5. グラフ化すると決めたら**roles-and-orchestration**で役割分担の実装パターンを知り、**handoffs-and-ownership**で誰が最後に喋るかを決め、**workflow-patterns-catalog**でつなぎ方の型を選ぶ
+6. **relationship-graph-for-operations**で自分の業務にどう型を当てはめるかへ進み、**subagent-design-in-practice**で決めた構造を実際の機能に落とす
+7. 動かしたグラフが正しく機能しているかを確かめる**verification-and-testing**へ進み、**verification-gates-and-evidence**で検証に実際の停止力を持たせ、**failure-taxonomy-and-debugging**でそれでも起きた失敗を分類して原因を切り分ける
+8. ここまでで「実行の地図」の話が一通り終わるため、混同しやすいもう1つの意味である**knowledge-graph-as-memory**（知識の地図）を独立させて読む
+9. 最後に**risks-and-safeguards**で、グラフ化によって増幅する失敗と歯止めを総括して締めくくる
 
-この順番は、語彙 → 判断基準 → 実装 → 検証 → 別概念との切り分け → リスク、という流れで設計しており、いきなり実装や記憶の話に入って比喩や語彙の理解が曖昧なまま進むことを避ける狙いがある。
+この順番は、語彙 → 判断基準 → なぜ分けるか → どう分けるか → 何で作るか → どう止めるか・壊れたらどう直すか → 別概念との切り分け → リスク、という流れで設計しており、いきなり実装や記憶の話に入って比喩や語彙の理解が曖昧なまま進むことを避ける狙いがある。
 
 # Citations
 

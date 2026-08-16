@@ -65,6 +65,15 @@ Anthropicは記事の冒頭で、自社が観察した中で最も成功した�
 
 ここで注目したいのは**3〜6の4つが、すべて「評価の型」だという点**である。5パターン側で評価に関わるのはEvaluator-optimizerの1つだけだったのに対し、ダイナミックワークフロー側は評価の作法を4通りに分けている。特に5(トーナメント)が言う「絶対評価より相対評価の方が精度が出る」という性質は、点数を付けさせるのではなく2案を比べさせるという実務上の工夫につながる。
 
+### 呼び出し方とトークン予算
+
+同動画は、6つの型の紹介に続けて使い方にも触れている（いずれも聞き取り）。
+
+- **起動方法**: プロンプトに「ウルトラコード」と書くだけだとしている。ディープリサーチ用途では検索を並列展開し、出典まで検証した引用付きレポートが得られると説明している
+- **出典検証の構成**: レポートの検証を行う場合は、主張を全て洗い出した上で1つの主張につき1エージェントが出典をチェックし、さらに別の検証役のエージェントが出典の品質そのものを見張る構成になっていると紹介している
+- **編成の保存**: 気に入ったエージェント編成は「S」で保存し、スキルとしてチームに配布できるとしている
+- **トークン予算**: 「1万トークンで」と頼むだけで上限がかかると説明している
+
 なお、ダイナミックワークフローという機能自体はAnthropicの公式ドキュメント側にも登場する。Agent SDKの入門文書は、次のステップとして案内するリソースの中に「Claude Codeチームがダイナミックワークフローを使ってサブエージェントを大規模にオーケストレーションする手法を解説した『Agent harness design』というブログ記事」を挙げている（[Agent SDK overview](../sources/article-he-agent-sdk-overview.md)）。また公式のベストプラクティス文書も、チェックの強制力を高める4段階目の手段として「検証用サブエージェントや、自らの発見内容を検証するダイナミックワークフロー」を挙げている（[Best practices for Claude Code](../sources/article-le-claude-code-best-practices.md)）。**機能の存在と用途は公式側で裏が取れるが、6つの型という数え方と個々の型名は上記動画の聞き取りに依存している**、という確度の差は押さえておきたい。
 
 ## 型を人が選ぶのをやめる方向: トポロジーの自動最適化
@@ -91,7 +100,7 @@ Anthropicは記事の冒頭で、自社が観察した中で最も成功した�
 # Citations
 
 - [Building Effective AI Agents（Anthropic公式）](../sources/article-ge-anthropic-building-effective-agents.md) — WorkflowとAgentの定義と使い分け、augmented LLMという基本構築ブロック、5つのワークフローパターンと各適用例、「最も単純な解から始める」原則、ツール設計に割くべき労力の根拠
-- [【Claude Code新機能】Dynamic Workflows完全解説（みにこーへいのAI活用チャンネル）](../sources/video-ge-dynamic-workflows-six-patterns.md) — ダイナミックワークフローの位置づけと6つの編成型、トーナメント形式が絶対評価より精度が出るという説明の根拠（いずれもauto字幕からの聞き取り）
+- [【Claude Code新機能】Dynamic Workflows完全解説（みにこーへいのAI活用チャンネル）](../sources/video-ge-dynamic-workflows-six-patterns.md) — ダイナミックワークフローの位置づけと6つの編成型、トーナメント形式が絶対評価より精度が出るという説明、呼び出し方（プロンプトに「ウルトラコード」）・出典検証の構成・編成の保存・トークン予算指定の根拠（いずれもauto字幕からの聞き取り）
 - [GPTSwarm: Language Agents as Optimizable Graphs（arXiv / ICML 2024）](../sources/article-ge-gptswarm-optimizable-graphs.md) — エージェントとスワームのDAG統一表現、エッジ最適化とノード最適化の2段階、GAIA・HumanEvalでの評価結果の根拠
 - [Agent SDK overview（Anthropic公式 Claude Code Docs）](../sources/article-he-agent-sdk-overview.md) — ダイナミックワークフローでサブエージェントを大規模にオーケストレーションする手法が公式ブログ記事として案内されていることの根拠
 - [Best practices for Claude Code（Anthropic公式 Claude Code Docs）](../sources/article-le-claude-code-best-practices.md) — 検証手段としてのダイナミックワークフローが公式に言及されていることの根拠

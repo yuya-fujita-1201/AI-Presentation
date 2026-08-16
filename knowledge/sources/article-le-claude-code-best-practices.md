@@ -7,7 +7,7 @@ published: unknown
 retrieved: 2026-08-15
 resource: https://code.claude.com/docs/en/best-practices
 origin: "web:claude.com"
-source_tier: secondary
+source_tier: primary
 tags: [loop-engineering, claude-code, verification, article]
 generated:
   by: claude-code/pipeline-sonnet

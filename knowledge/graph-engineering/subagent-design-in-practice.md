@@ -66,6 +66,13 @@ Anthropic公式のClaude Code Docs「Agent SDK overview」は、Claude Codeを�
 
 **帰結2: コンテキストの節約が主目的になりうる。** 中間処理がメインに返らないということは、10万トークンの探索をさせてもメインには要約だけが返るということである。分業の動機は「速さ」や「賢さ」だけでなく、**メインのコンテキストを汚さないこと**でもある。
 
+## 分ける動機: 品質と速さ
+
+同動画は、サブエージェントに分ける動機として品質面と速度面の2つの実例を挙げている（聞き取り）。
+
+- **品質: 役割分離による自己評価バイアスの回避** — Anthropic公式エンジニアリングブログを引用し、プランナー・ジェネレーター・エバリエイターの3役割に分離した方が単一エージェントより高品質な出力を生むと報告されているとしている。単一エージェントで品質が頭打ちになる最大の理由として、自分の成果物を採点する際に一貫して甘めに評価してしまう自己評価バイアスを挙げ、生成役と評価役を分離することでこれを回避できると説明している。この3役割は、[役割分担とオーケストレーション](./roles-and-orchestration.md)で扱ったManager/Worker/Verifierの三役分担と対応関係にある——プランナーがマネージャー（配る役）、ジェネレーターがワーカー（作る役）、エバリエイターがベリファイア（通す役）に相当し、役割名は違っても「作る役と通す役を同一人物にしない」という設計原則は同じである
+- **速さ: 並列分割による実測の短縮例** — 海外のブログコミュニティで紹介された事例として、テストスイートを4つのサブエージェントに分割して並列実行した結果、従来8分かかっていた作業が3分未満に短縮されたという報告があるとしている
+
 ## 3つの制約
 
 同動画が挙げる制約は次の3つである（いずれも聞き取り）。
@@ -97,7 +104,7 @@ Anthropic公式のClaude Code Docs「Agent SDK overview」は、Claude Codeを�
 
 # Citations
 
-- [Agent SDK overview（Anthropic公式 Claude Code Docs）](../sources/article-he-agent-sdk-overview.md) — Subagents（焦点を絞ったサブタスクのために専門特化したエージェントを派生させる機能）・Permissions・Sessions・Hooks・MCPという提供機能の範囲、およびAgent SDKがClaude Codeと同じツール群・エージェントループ・コンテキスト管理をPython/TypeScriptで提供するライブラリであることの根拠（source_tier: primary）
-- [【前編】Claude Codeサブエージェント完全ガイド（まさやん【AIギルドch】）](../sources/video-ge-subagent-overview-basics.md) — サブエージェントの定義と独立したコンテキスト、フロントマターの設定項目（name/description必須、model継承、tools/disallowedToolsと拒否リスト優先、skills非継承、memory、color）、ツール未指定時の全ツール継承、4通りの呼び出し方、メインから受け取る5つの情報と会話履歴が渡らないこと、最終結果のみが返る設計、ネスト不可・横のつながりなし・同一ファイル並列編集の競合という3制約、Anthropic公式ブログ由来として紹介される使用/回避場面の根拠。いずれもauto字幕からの聞き取り
+- [Agent SDK overview（Anthropic公式 Claude Code Docs）](../sources/article-he-agent-sdk-overview.md) — Subagents（焦点を絞ったサブタスクのために専門特化したエージェントを派生させる機能）・Permissions・Sessions・Hooks・MCPという提供機能の範囲、およびAgent SDKがClaude Codeと同じツール群・エージェントループ・コンテキスト管理をPython/TypeScriptで提供するライブラリであることの根拠（Anthropic公式ドキュメント）
+- [【前編】Claude Codeサブエージェント完全ガイド（まさやん【AIギルドch】）](../sources/video-ge-subagent-overview-basics.md) — サブエージェントの定義と独立したコンテキスト、フロントマターの設定項目（name/description必須、model継承、tools/disallowedToolsと拒否リスト優先、skills非継承、memory、color）、ツール未指定時の全ツール継承、4通りの呼び出し方、メインから受け取る5つの情報と会話履歴が渡らないこと、最終結果のみが返る設計、ネスト不可・横のつながりなし・同一ファイル並列編集の競合という3制約、プランナー/ジェネレーター/エバリエイターの3役割分離による品質向上、テストスイート4分割で8分→3分未満という並列実行の高速化事例、Anthropic公式ブログ由来として紹介される使用/回避場面の根拠。いずれもauto字幕からの聞き取り
 - [ClaudeCodeとCodexのサブエージェントの使い方（にゃんたのAIチャンネル）](../sources/video-ge-subagent-when-to-use.md) — 3つの実践的活用法（並列調査・忖度回避・作成検証ループ）と、シングルで足りるタスクにマルチエージェントを使うとコストが上がり精度も下がりうるという総括の根拠。auto字幕からの聞き取り
 - [【Claude Code新機能】Dynamic Workflows完全解説（みにこーへいのAI活用チャンネル）](../sources/video-ge-dynamic-workflows-six-patterns.md) — サブエージェントの編成自体を自動生成する上位レイヤーが存在すること（ネスト不可という制約の回避先として言及）の根拠。auto字幕からの聞き取り
