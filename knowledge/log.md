@@ -1,5 +1,17 @@
 # 変更履歴
 
+## 2026-08-16（graph-engineering 採点指摘の修正 knowledge run:0816224533）
+
+- **Fix**: 採点findings 12件のうち10件（fixed disposition）に基づき既存コンセプトを修正。overview.mdの「前半8本=動画・後半6本=公式」という出典内訳の誤りを、各ファイルのCitations節から実測した内訳に基づき表の「主根拠」列として訂正。graph-primitives.md:113・roles-and-orchestration.md:33,74の旧形式台帳（主張テーブルなし）由来の数値（同時実行64/合計1000、CAID 25.6/14.7ポイント、アドバイザー約92%/約63%）に「（聞き取り）」の確度注記を追加
+- **Fix**: term-lineage-and-layers.md・graph-primitives.mdの「次に読む」がoverview.mdの推奨順（#3 loop-vs-graph-decision）を飛ばして#7へ誘導していた誤りを是正。「次に読む」節を欠いていた7ファイル（loop-vs-graph-decision・multi-agent-break-even・handoffs-and-ownership・relationship-graph-for-operations・failure-taxonomy-and-debugging・subagent-design-in-practice・risks-and-safeguards）に同節を新設
+- **Update**: knowledge-graph-as-memory.md（本文の出典が匿名参照のみでインラインリンクが皆無だった）に3出典への本文内リンクを追加。relationship-graph-for-operations.md・verification-and-testing.md・risks-and-safeguards.mdにも主根拠へのインラインリンクと主体を明示する文（「同動画は」等）を追加し、受け身表現の連続を解消
+- **Refactor**: verification-and-testing.md・knowledge-graph-as-memory.mdの箇条書き偏重を是正。各節冒頭に論旨を述べる地の文を追加し、本質的な列挙（数値比較・手順・条件リスト）のみ箇条書きとして残す文体に書き換え
+- **Fix**: sources側の活用先の食い違いを是正。video-ge-gaodalie-forget-loop.mdの活用先（overview.md欄）を実際の引用内容（用語の登場経緯ではなく一言定義・3層対比）に修正、video-ge-5-stages-beginner.mdの活用先からknowledge-graph-as-memory.mdに存在しない体験談の記述を削除（risks-and-safeguards.md欄に同内容が既にあるため重複解消）。term-lineage-and-layers.md・knowledge-graph-as-memory.mdのCitations表記（チャンネル名欠落・説明句表記）を「タイトル（チャンネル名）」形式に統一
+- **Update**: コンセプト側に居場所のなかった7つの主張を各対応ファイルへ1〜2文で追記。roles-and-orchestration.md（16エージェントの役割専門化とDockerコンテナ隔離）、workflow-patterns-catalog.md（GPTSwarmのMini Crosswords評価結果）、relationship-graph-for-operations.md（AI氣道の「仕事の地図で読む4情報」）、loop-vs-graph-decision.md（グラフ化の「揺り戻し」の指摘）、overview.md（Gao Dalieの「登場から3日」）、risks-and-safeguards.md（ずんだもんの「実信号を1つ置く」対策）、subagent-design-in-practice.md（サブエージェントのパーミッションモード6種）
+- **Defer**: f5（graph-primitives.mdが1ファイル=1概念を超過、フレームワーク一覧の切り出しが必要）はバンドル全体の再採番・相互参照更新を要し、本工程の許可パス（findingsのwhereが指すファイルのみ）を超えるためdeferred(out_of_scope)
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認
+- **Note**: 本ランはfindingsの`where`が指すファイルのみを修正対象とし、それ以外のコンセプトファイルは書き換えていない
+
 ## 2026-08-16（ge採点停滞の手動修正・findings 7件）
 
 - **Fix (f14)**: パイプライン以前に作られた `video-ge-*` 台帳11本に `origin` / `subs` / `retrieved` が無く、コンセプト側の「（聞き取り）」注記を採点者が照合できない状態だった。yt-dlp で配信元へ再照会し、**実データ**（チャンネルID・字幕の提供状況）を取得して補完。`retrieved` は frontmatter の `generated.at` を採用し、各ファイルに「2026-08-16に再照会で補完した」「主張テーブルは当時の形式に無い」旨を明記した。独立origin数 6種→15種

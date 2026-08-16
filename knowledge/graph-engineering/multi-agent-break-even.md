@@ -95,6 +95,10 @@ Anthropic公式記事「How we built our multi-agent research system」は、リ
 
 最後に一点。上の表を満たしてマルチエージェント化を選んだとしても、それは**失敗しないことを意味しない**。Anthropicは同じ記事で、開発初期に単純なクエリへ50個ものサブエージェントを生成してしまった、サブエージェント間で調査が重複した、低品質なSEO最適化コンテンツを優先的に選んでしまった、といった失敗を率直に報告している。増やすと決めた後にどんな失敗が待っているかは[失敗の分類とデバッグ](./failure-taxonomy-and-debugging.md)で扱う。
 
+## 次に読む
+
+増やすと決めたら、次は[役割分担とオーケストレーション](./roles-and-orchestration.md)でManager/Worker/Verifierの役割分担と実装パターンを確認するとよい。
+
 # Citations
 
 - [How we built our multi-agent research system（Anthropic公式）](../sources/article-ge-anthropic-multi-agent-research-system.md) — 90.2%の性能改善と15倍のトークン消費、オーケストレーター・ワーカー構成、LLM-as-judgeによる5項目評価、トークン使用量が分散の80%を説明するという分析、経済性の条件、タスクの複雑さに応じた努力配分ルール、並列ツール実行によるresearch timeの最大90%短縮、開発初期の失敗事例の根拠

@@ -89,6 +89,10 @@ MASTが**システム全体の配線**を分類しているのに対し、AgentE
 
 検証を誰にどう担わせるかという設計は[検証レイヤーの設計](./verification-and-testing.md)、失敗が組織化されて増幅するメカニズムと歯止めは[リスクと歯止め](./risks-and-safeguards.md)を参照。
 
+## 次に読む
+
+実行構造での失敗の分類を終えたら、次は混同しやすいもう1つの意味である[記憶としてのナレッジグラフ](./knowledge-graph-as-memory.md)へ進み、実行構造との違いを確認するとよい。
+
 # Citations
 
 - [Why Do Multi-Agent LLM Systems Fail?（arXiv, Cemri, Pan, Yang et al.）](../sources/article-ge-mast-multi-agent-failures.md) — MAST-Dataの規模（7フレームワーク・1600件超のトレース）、150件の専門家アノテーションとkappa=0.88という一致度、3カテゴリ14失敗モードの内訳、LLM-as-a-Judgeパイプラインと実験対象モデル・タスク種別、公開方針の根拠

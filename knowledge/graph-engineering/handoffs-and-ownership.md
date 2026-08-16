@@ -82,6 +82,10 @@ Anthropicが16個のClaudeインスタンスで約2週間・約2,000セッショ
 
 なお、所有権をマネージャーに集めた場合に固有の弱点がある。Anthropicは同記事で、現状の実行フローは同期実行（リードエージェントがサブエージェント群の完了を待ってから次に進む）であり、これが**情報フローのボトルネックを作る**という課題があるため将来的な非同期化が検討されていると述べている。ただし非同期化は結果の調整や状態の一貫性を複雑にする点が課題だとしている。握り続けることには、待ち時間という対価がある。
 
+## 次に読む
+
+誰が最後に喋るかを決めたら、次は[つなぎ方の型カタログ](./workflow-patterns-catalog.md)で、Anthropic公式の5パターンとダイナミックワークフローの6編成型からつなぎ方の型を選ぶとよい。
+
 # Citations
 
 - [Orchestration and handoffs（OpenAI公式）](../sources/article-ge-openai-orchestration-handoffs.md) — 「最終的なユーザー向け回答の所有権を誰が持つか」という設計判断がオーケストレーションの本質だという位置づけ、Handoffsパターンと Agents as Tools（Managerパターン）の定義・実装例・制御フローと所有権の対比、専門家追加の4条件と「Start with one agent whenever you can」、狭い職務スコープ・`handoff_description`・分割条件という追加指針の主根拠

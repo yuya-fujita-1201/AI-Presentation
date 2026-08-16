@@ -49,7 +49,7 @@ generated:
 
 - **定義が未統一**: 上の一言定義の節で見た通り、「厨房の段取り表」（実行の地図の比喩）、「ノードとエッジの接続関係の設計」、「AIチームの組織図」という3つの言い方は強調点が微妙に異なる。厳密な統一定義が確立しているわけではない
 - **特定企業の公式名称ではない**: 発端は個人（スタインバーガー、フセイン）のX投稿であり、explainXも「学習プラットフォーム」が打ち出した整理であって、LangGraphやGoogle ADKのような特定ベンダーの製品名・公式ブランドではない
-- **生まれてまだ数週間の言葉**: [AI氣道動画](../sources/video-ge-5-stages-beginner.md)は、公開時点（2026年7月28日）で「まだ生まれて3週間という状況」だったとしてこの言葉を紹介しており、動画自身がこれを「流行語に振り回されないための地図」を作る動機として位置づけている。ただし本バンドルが発端として記録しているスタインバーガー/フセインのX投稿は7月18日であり、そこから7月28日までは約10日で「3週間」とは合わない（聞き取り）。この数字は厳密な起点計算ではなく「ごく最近の言葉である」という語り手の体感として受け取るのが妥当である
+- **生まれてまだ数週間の言葉**: [AI氣道動画](../sources/video-ge-5-stages-beginner.md)は、公開時点（2026年7月28日）で「まだ生まれて3週間という状況」だったとしてこの言葉を紹介しており、動画自身がこれを「流行語に振り回されないための地図」を作る動機として位置づけている。ただし本バンドルが発端として記録しているスタインバーガー/フセインのX投稿は7月18日であり、そこから7月28日までは約10日で「3週間」とは合わない（聞き取り）。この数字は厳密な起点計算ではなく「ごく最近の言葉である」という語り手の体感として受け取るのが妥当である。[Gao Dalie動画](../sources/video-ge-gaodalie-forget-loop.md)はさらに短く「登場からまだ3日しか経っていない」と結びで述べており、この言葉が今後も使われ続けるかは誰にもわからないと率直に留保している——各ソースが挙げる経過日数自体がばらついている点も、統一定義が確立していないことの傍証といえる
 - **「ワークフロー」の言い換えという見方**: [にゃんた動画](../sources/video-ge-nyanta-loop-graph-claude-code.md)は、グラフエンジニアリングは昔からある「ワークフロー」のことをほぼ指しており、Anthropicが2024年の記事で示した「エージェントとワークフロー型」の整理とほとんど同じ、つまり既知の概念の別名だとみている。それでも今盛り上がる理由として、①「グラフ」という語の方がキャッチーで高度なことっぽく注目が集まる、②モデルが賢くなり、連携させると単体で使うよりも明確に良い出力が得られるようになった、という2点を挙げている
 - **すでに製品へ組み込まれている**: 同動画は、Claudeデスクトップアプリのエフォートレベル「ウルトラコード」やChatGPTの推論レベル「ウルトラ」のように、入力した指示からワークフローを自動で組んでくれる機能として既に組み込まれているとし、まったく新しい概念というより「すでに簡単に使える形になっている概念」だと述べている
 
@@ -60,24 +60,24 @@ generated:
 
 ## このバンドルの地図
 
-このバンドルは、本ファイルを入口として14の下位コンセプトで構成される。前半8本はYouTube解説動画を主な情報源とし、後半6本はAnthropic・OpenAIの公式ドキュメントとarXiv論文を主な情報源とする。
+このバンドルは、本ファイルを入口として14の下位コンセプトで構成される。動画を主根拠とするファイルと、Anthropic・OpenAIの公式ドキュメントやarXiv論文を主根拠とするファイルが混在しており、Citations節の内訳は下表の「主根拠」列に示す通りである。
 
-| # | ファイル | 扱う内容 |
-|---|---|---|
-| 1 | [term-lineage-and-layers.md](./term-lineage-and-layers.md) | プロンプト・コンテキスト・ハーネス・ループ・グラフの5段階と、「入れ子」説／「非包含の3層」説の両論併記 |
-| 2 | [graph-primitives.md](./graph-primitives.md) | ノード・エッジ・状態・DAGの基本語彙、循環の見つけ方・偽エッジテスト・隠れたエッジ |
-| 3 | [loop-vs-graph-decision.md](./loop-vs-graph-decision.md) | ループの3つの限界とグラフ化のコスト対比、グラフ化しない方がよいケース |
-| 4 | [multi-agent-break-even.md](./multi-agent-break-even.md) | マルチエージェント化の損益分岐点。90.2%改善と15倍トークン、45%ルール、増やす前に確認する4条件 |
-| 5 | [roles-and-orchestration.md](./roles-and-orchestration.md) | Manager/Worker/Verifierの役割分担とオーケストレーション実装パターン |
-| 6 | [handoffs-and-ownership.md](./handoffs-and-ownership.md) | 最終回答を誰が所有するか。HandoffsとAgents as Toolsの対比 |
-| 7 | [workflow-patterns-catalog.md](./workflow-patterns-catalog.md) | つなぎ方の型カタログ。Anthropic公式の5パターンとダイナミックワークフローの6編成型 |
-| 8 | [relationship-graph-for-operations.md](./relationship-graph-for-operations.md) | 業務運用グラフ（目的・担当・作業・根拠・承認）とコンテキストパックの設計 |
-| 9 | [subagent-design-in-practice.md](./subagent-design-in-practice.md) | 決めた構造を実際の機能で組む。独立コンテキスト・ツール権限・ネスト不可という制約 |
-| 10 | [verification-and-testing.md](./verification-and-testing.md) | 自己修正の限界と、別エージェントによる検証ループ・テスト手法 |
-| 11 | [verification-gates-and-evidence.md](./verification-gates-and-evidence.md) | 検証をゲートにする。強制力の4段階、自己申告ではなく証拠 |
-| 12 | [failure-taxonomy-and-debugging.md](./failure-taxonomy-and-debugging.md) | 失敗の分類とデバッグ。MASTの3カテゴリ14モード、カスケード失敗の切り分け |
-| 13 | [knowledge-graph-as-memory.md](./knowledge-graph-as-memory.md) | もう1つのグラフ＝記憶としてのナレッジグラフ、実行構造との違い |
-| 14 | [risks-and-safeguards.md](./risks-and-safeguards.md) | 増幅される失敗パターンと歯止め（アンカー）、独り歩きする数字への注意（総括） |
+| # | ファイル | 扱う内容 | 主根拠 |
+|---|---|---|---|
+| 1 | [term-lineage-and-layers.md](./term-lineage-and-layers.md) | プロンプト・コンテキスト・ハーネス・ループ・グラフの5段階と、「入れ子」説／「非包含の3層」説の両論併記 | 動画 |
+| 2 | [graph-primitives.md](./graph-primitives.md) | ノード・エッジ・状態・DAGの基本語彙、循環の見つけ方・偽エッジテスト・隠れたエッジ | 動画 |
+| 3 | [loop-vs-graph-decision.md](./loop-vs-graph-decision.md) | ループの3つの限界とグラフ化のコスト対比、グラフ化しない方がよいケース | 動画 |
+| 4 | [multi-agent-break-even.md](./multi-agent-break-even.md) | マルチエージェント化の損益分岐点。90.2%改善と15倍トークン、45%ルール、増やす前に確認する4条件 | 公式・論文 |
+| 5 | [roles-and-orchestration.md](./roles-and-orchestration.md) | Manager/Worker/Verifierの役割分担とオーケストレーション実装パターン | 動画 |
+| 6 | [handoffs-and-ownership.md](./handoffs-and-ownership.md) | 最終回答を誰が所有するか。HandoffsとAgents as Toolsの対比 | 公式・論文 |
+| 7 | [workflow-patterns-catalog.md](./workflow-patterns-catalog.md) | つなぎ方の型カタログ。Anthropic公式の5パターンとダイナミックワークフローの6編成型 | 公式・論文 |
+| 8 | [relationship-graph-for-operations.md](./relationship-graph-for-operations.md) | 業務運用グラフ（目的・担当・作業・根拠・承認）とコンテキストパックの設計 | 動画 |
+| 9 | [subagent-design-in-practice.md](./subagent-design-in-practice.md) | 決めた構造を実際の機能で組む。独立コンテキスト・ツール権限・ネスト不可という制約 | 動画 |
+| 10 | [verification-and-testing.md](./verification-and-testing.md) | 自己修正の限界と、別エージェントによる検証ループ・テスト手法 | 動画 |
+| 11 | [verification-gates-and-evidence.md](./verification-gates-and-evidence.md) | 検証をゲートにする。強制力の4段階、自己申告ではなく証拠 | 混在 |
+| 12 | [failure-taxonomy-and-debugging.md](./failure-taxonomy-and-debugging.md) | 失敗の分類とデバッグ。MASTの3カテゴリ14モード、カスケード失敗の切り分け | 公式・論文 |
+| 13 | [knowledge-graph-as-memory.md](./knowledge-graph-as-memory.md) | もう1つのグラフ＝記憶としてのナレッジグラフ、実行構造との違い | 動画 |
+| 14 | [risks-and-safeguards.md](./risks-and-safeguards.md) | 増幅される失敗パターンと歯止め（アンカー）、独り歩きする数字への注意（総括） | 動画 |
 
 ### 読む順番の提案
 

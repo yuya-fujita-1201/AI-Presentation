@@ -118,5 +118,5 @@ generated:
 - [../graph-engineering/overview.md](../graph-engineering/overview.md) — 「グラフエンジニアリング」という用語が生まれて日が浅いこと、登場の経緯を示す一次資料
 - [../graph-engineering/term-lineage-and-layers.md](../graph-engineering/term-lineage-and-layers.md) — 5段階（プロンプト・コンテキスト・ハーネス・ループ・グラフ）の分類と、厨房・会社経営・子育ての3比喩、「入れ子」説の根拠
 - [../graph-engineering/loop-vs-graph-decision.md](../graph-engineering/loop-vs-graph-decision.md) — ループとグラフの役割の違い（「1つの鍋」対「厨房全体の詰まり」）と、困り事が先で道具は後という導入判断基準の根拠
-- [../graph-engineering/knowledge-graph-as-memory.md](../graph-engineering/knowledge-graph-as-memory.md) — 「実行の地図」「ループの網」「知識の地図」という3つの異なる意味の区別、およびAIが根拠のない資料まで参照した体験談の根拠
+- [../graph-engineering/knowledge-graph-as-memory.md](../graph-engineering/knowledge-graph-as-memory.md) — 「実行の地図」「ループの網」「知識の地図」という3つの異なる意味の区別の根拠
 - [../graph-engineering/risks-and-safeguards.md](../graph-engineering/risks-and-safeguards.md) — 「グラフは提案、確定は人間」という安全運用原則と、AIが未提供の資料を根拠にした失敗事例の根拠
