@@ -78,7 +78,7 @@ generated:
 - [動画: グラフエンジニアリング入門：エージェント単体の挙動から、エージェント同士の分担へ](../sources/video-ge-koremaji-single-to-multi.md) — グラフが増幅する4つの失敗、アンカーの定義と歯止めの根拠、アドバイザーパターンの92%/63%、「精度18%向上・コスト85%削減」の出典と警告の根拠
 - [動画: Graph Engineering explained in 8min.](../sources/video-ge-caleb-8min-explainer.md) — マルチエージェントのトークンコスト（チャット比15倍、単一エージェントはチャット比4倍）の根拠
 - [How we built our multi-agent research system（Anthropic公式）](../sources/article-ge-anthropic-multi-agent-research-system.md) — 15倍のトークン消費という数値の公式出典（動画側の紹介に対する一次的な裏付け）、歯止めの前提となる運用要件（チェックポイント再開・可観測性・レインボーデプロイメント）の根拠
-- [動画: 【気になるんだもん No.02】その順番待ち、ほんとに要るのだ？ 〜グラフエンジニアリング〜](../sources/video-ge-kininarundamon-parallelism.md) — Bunの書き換え規模（53万行）とAPI費用（約16万5000ドル）の根拠
+- [動画: 【気になるんだもん No.02】その順番待ち、ほんとに要るのだ？ 〜グラフエンジニアリング〜（ずんだもんの実験道具箱）](../sources/video-ge-kininarundamon-parallelism.md) — Bunの書き換え規模（53万行）とAPI費用（約16万5000ドル）の根拠
 - [動画: Graphエンジニアリングとは？AI活用5段階の違いと構造を初心者向けに解説](../sources/video-ge-5-stages-beginner.md) — 「グラフは提案、確定は人間」の原則と、AIが未提供資料まで参照した体験の根拠
 - [動画: AIは忘れる、グラフは忘れない——2日で実験700回、『自分で研究するAI』に足りない最後のピース](../sources/video-ge-ai-forgets-graph-remembers.md) — Bunの書き換え規模（約75万行、上記との食い違い）、名寄せ失敗による汚染とスコアのゲーム化の根拠
 - [動画: グラフエンジニアリングとは何か ― AIチームの組織図をバックオフィス目線で解説](../sources/video-ge-bpo-org-chart.md) — 差し戻し条件（迂回路）の具体例、「会社の頭脳」という土台、グラフ設計者は業務を知る人であるべきという結論の根拠

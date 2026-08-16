@@ -119,4 +119,5 @@ generated:
 - [../graph-engineering/term-lineage-and-layers.md](../graph-engineering/term-lineage-and-layers.md) — 5段階（プロンプト・コンテキスト・ハーネス・ループ・グラフ）の分類と、厨房・会社経営・子育ての3比喩、「入れ子」説の根拠
 - [../graph-engineering/loop-vs-graph-decision.md](../graph-engineering/loop-vs-graph-decision.md) — ループとグラフの役割の違い（「1つの鍋」対「厨房全体の詰まり」）と、困り事が先で道具は後という導入判断基準の根拠
 - [../graph-engineering/knowledge-graph-as-memory.md](../graph-engineering/knowledge-graph-as-memory.md) — 「実行の地図」「ループの網」「知識の地図」という3つの異なる意味の区別の根拠
+- [../graph-engineering/relationship-graph-for-operations.md](../graph-engineering/relationship-graph-for-operations.md) — 「仕事の地図」で読み取る4項目（何を実現する仕事か・担当AIは誰か・どの操作が承認待ちか・何の証拠が完了を裏付けるか）を、5種類のノードのうち作業・担当・承認・根拠に相当する最小構成として使用
 - [../graph-engineering/risks-and-safeguards.md](../graph-engineering/risks-and-safeguards.md) — 「グラフは提案、確定は人間」という安全運用原則と、AIが未提供の資料を根拠にした失敗事例の根拠

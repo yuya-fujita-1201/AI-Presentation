@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-17（graph-engineering 採点指摘の修正 knowledge run:0817004581）
+
+- **Fix (f1)**: workflow-patterns-catalog.md・verification-gates-and-evidence.mdの2本だけ「## 次に読む」節が無く、overview.mdの推奨順（7→8, 11→12）の導線が途切れていた。両ファイルのCitations直前に同節を追加し、それぞれrelationship-graph-for-operations.md・failure-taxonomy-and-debugging.mdへ送る
+- **Fix (f2)**: article-ge-anthropic-building-c-compiler.mdの活用先にroles-and-orchestration.mdが抜けていた（roles-and-orchestration.md:38が同記事をDockerコンテナ隔離・役割専門化の根拠に使用済み）。活用先へ項目を追加
+- **Fix (f3)**: video-ge-5-stages-beginner.mdの活用先にrelationship-graph-for-operations.mdが抜けていた（同ファイル:25が「仕事の地図」の4項目の根拠に使用済み）。活用先へ項目を追加
+- **Fix (f4)**: video-ge-kininarundamon-parallelism.mdを参照する5本（graph-primitives.md, loop-vs-graph-decision.md, risks-and-safeguards.md, roles-and-orchestration.md, term-lineage-and-layers.md）でCitations表記が4パターンに割れていたのを正式タイトル（【気になるんだもん No.02】その順番待ち、ほんとに要るのだ？ 〜グラフエンジニアリング〜（ずんだもんの実験道具箱））に統一。本文中の呼称も「ずんだもん」に統一
+- **Fix (f6)**: loop-vs-graph-decision.md:83が偽エッジテスト・Bunの隠れたエッジの説明をgraph-primitives.md:125-150と重複させたまま参照リンクを欠いていた。詳細をgraph-primitives.mdへ委譲する3文へ圧縮しリンクを追加
+- **Defer**: f5（2026-08-16生成6本と2026-08-09生成8本の文体・粒度の二層化）は文体差自体は実際に確認できたが、修正が14本全体の全面リライトに及び、本工程の許可パス（findingsのwhereが指すファイルへのピンポイント修正）を超えるためdeferred(out_of_scope)
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認
+
 ## 2026-08-16（graph-engineering 採点指摘の修正 knowledge run:0816224533）
 
 - **Fix**: 採点findings 12件のうち10件（fixed disposition）に基づき既存コンセプトを修正。overview.mdの「前半8本=動画・後半6本=公式」という出典内訳の誤りを、各ファイルのCitations節から実測した内訳に基づき表の「主根拠」列として訂正。graph-primitives.md:113・roles-and-orchestration.md:33,74の旧形式台帳（主張テーブルなし）由来の数値（同時実行64/合計1000、CAID 25.6/14.7ポイント、アドバイザー約92%/約63%）に「（聞き取り）」の確度注記を追加

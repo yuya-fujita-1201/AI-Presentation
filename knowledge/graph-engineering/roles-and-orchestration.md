@@ -109,7 +109,7 @@ OpenAIの長時間協調型を指す**非公式コードネーム**として「A
 # Citations
 
 - [動画: グラフエンジニアリング完全ガイド（Sura×Asura For AI Agent）](../sources/video-ge-complete-guide-work-division.md) — Manager/Worker/Verifierの三役分担、CAIDの仕組みと効果測定の数値、ワークツリー隔離の限界、Claude Codeエージェントチームズ、Codexの並列サブエージェント機能の根拠
-- [動画: 気になるんだもん No.02（ずんだもんの実験道具箱）](../sources/video-ge-kininarundamon-parallelism.md) — Bunの隠れたエッジ事故と工程側での修正（git stash/reset禁止、1ファイルコミット許可）、敵対的レビュー体制（実装1体・レビュー2体以上・差分のみ提示）の根拠
+- [動画: 【気になるんだもん No.02】その順番待ち、ほんとに要るのだ？ 〜グラフエンジニアリング〜（ずんだもんの実験道具箱）](../sources/video-ge-kininarundamon-parallelism.md) — Bunの隠れたエッジ事故と工程側での修正（git stash/reset禁止、1ファイルコミット許可）、敵対的レビュー体制（実装1体・レビュー2体以上・差分のみ提示）の根拠
 - [動画: グラフエンジニアリング入門（海外テックの「これマジ?」）](../sources/video-ge-koremaji-single-to-multi.md) — Google ADK 2.0のコード/モデル責任分担の原則、組織グラフ/作業グラフの2層構造、Fable 5とSonnet 5のアドバイザーパターン・オーケストレーターパターンの数値と出典確度の根拠
 - [動画: Graph Engineering explained in 8min.（Caleb Writes Code）](../sources/video-ge-caleb-8min-explainer.md) — Anthropicの5つの連携パターン（プロンプトチェイニング/ルーティング/並列化/オーケストレーター/エバリュエーター-オプティマイザー）と、ノードの信頼性向上によるボトルネック移動の根拠
 - [Building Effective AI Agents（Anthropic公式）](../sources/article-ge-anthropic-building-effective-agents.md) — 上記5パターンが公式記事に記載されたものであることの一次的な裏付け（動画側の紹介に対する公式出典）

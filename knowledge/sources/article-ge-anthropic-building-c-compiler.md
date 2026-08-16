@@ -49,6 +49,7 @@ Anthropicは、最大の学習として「Claude will work autonomously to solve
 # 活用先
 
 - [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — 16エージェント・約2週間・約2,000セッション・入力20億トークン・出力1億4000万トークン・総コスト2万ドル弱という実測値と、成果物の規模（10万行）・テスト合格率（99%）を、マルチエージェント化の実額コストの根拠として使用
+- [../graph-engineering/roles-and-orchestration.md](../graph-engineering/roles-and-orchestration.md) — 16個のClaudeエージェントそれぞれをDockerコンテナ内で独立稼働させ、「重複コードの統合」「性能改善」「効率的なコード出力」のように役割そのものも専門化していたという事例を、ワークツリー隔離を実行環境レベルまで広げた例として使用
 - [../graph-engineering/handoffs-and-ownership.md](../graph-engineering/handoffs-and-ownership.md) — `current_tasks/`のテキストファイルによるタスクロック、Gitの同期機構を競合解決に利用する設計、pull→マージ→push→ロック削除という同期手順を、「回答の所有権」とは別種の「作業対象の所有権」の実装例として使用
 - [../graph-engineering/verification-gates-and-evidence.md](../graph-engineering/verification-gates-and-evidence.md) — 「task verifierがほぼ完璧である必要がある」という教訓の引用、GCCを既知良好なコンパイラの参照実装（oracle）として使った設計、テストハーネスが大量出力しないよう注意すべき点、Claudeに時間感覚がなく放置するとテスト実行に何時間も費やす傾向の根拠
 - [../graph-engineering/failure-taxonomy-and-debugging.md](../graph-engineering/failure-taxonomy-and-debugging.md) — 単一タスクに固定すると全エージェントが同じバグで停止するという並列化固有の失敗モードの根拠

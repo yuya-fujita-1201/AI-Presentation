@@ -170,7 +170,7 @@ Sura×Asuraのソースでは、明日から依存関係を描くための実践
 
 - [動画: SNSで話題の「グラフエンジニアリング」の正体をサクッと理解する（TECH PLAY）](../sources/video-ge-techplay-3min-intro.md) — 「データ可視化ではない」という誤解の訂正、ノード・エッジ・状態の3要素、ノードはAIエージェントに限らないという整理の根拠
 - [動画: Graph Engineering explained in 8min.（Caleb Writes Code）](../sources/video-ge-caleb-8min-explainer.md) — オイラーとケーニヒスベルクの橋の起源、Claude Codeディープリサーチの107/108体DAG実行例、AutoGen/LangGraph黎明期とノードの非力さ、ボトルネック移動の歴史的転換の根拠
-- [動画: 【気になるんだもん No.02】その順番待ち、ほんとに要るのだ？（ずんだもんの実験道具箱）](../sources/video-ge-kininarundamon-parallelism.md) — 偽エッジテスト「その矢印は結果を読んでいるか」、Bunの53万行書き換え事例と隠れたエッジ（Git衝突）の根拠
+- [動画: 【気になるんだもん No.02】その順番待ち、ほんとに要るのだ？ 〜グラフエンジニアリング〜（ずんだもんの実験道具箱）](../sources/video-ge-kininarundamon-parallelism.md) — 偽エッジテスト「その矢印は結果を読んでいるか」、Bunの53万行書き換え事例と隠れたエッジ（Git衝突）の根拠
 - [動画: 【グラフエンジニアリング】完全ガイド｜AIエージェントは仕事をどう分ける？（Sura×Asura For AI Agent）](../sources/video-ge-complete-guide-work-division.md) — タスクグラフ／依存関係グラフ／DAGという用語整理、DAGの循環＝設計の矛盾という考え方、依存関係を描く実践ステップ（完成形からの逆算・2つの問い・入次数ゼロ）の根拠
 - [動画: グラフエンジニアリング入門（海外テックの「これマジ?」）](../sources/video-ge-koremaji-single-to-multi.md) — LangGraph/CrewAI/Microsoft Agent Framework/Google ADK/LlamaIndex Workflows/OpenAI Agents SDKというフレームワーク一覧と各数値の根拠
 - [動画: グラフエンジニアリングとは何か（AI×BPOラジオ）](../sources/video-ge-bpo-org-chart.md) — ノード・エッジに続く3つ目の部品「迂回路」（失敗時の経路をあらかじめ描く）の根拠

@@ -97,6 +97,10 @@ Anthropicは記事の冒頭で、自社が観察した中で最も成功した�
 
 なお、ここで挙げた評価系の型がなぜそこまで必要とされるのか——作った本人に採点させると甘くなるという性質については[検証レイヤーの設計](./verification-and-testing.md)を参照。
 
+## 次に読む
+
+型を選んだら、次は[業務運用グラフの設計](./relationship-graph-for-operations.md)で、選んだ型を実際の業務にどう当てはめるかを確認するとよい。
+
 # Citations
 
 - [Building Effective AI Agents（Anthropic公式）](../sources/article-ge-anthropic-building-effective-agents.md) — WorkflowとAgentの定義と使い分け、augmented LLMという基本構築ブロック、5つのワークフローパターンと各適用例、「最も単純な解から始める」原則、ツール設計に割くべき労力の根拠
