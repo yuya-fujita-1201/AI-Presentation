@@ -1,5 +1,17 @@
 # 変更履歴
 
+## 2026-08-17（graph-engineering 採点指摘の修正 knowledge run:081703457a）
+
+- **Fix (f1)**: video-ge-bpo-org-chart.md:47-58の請求書処理5ノード編成（受付AI・読み取りAI・仕訳AI・チェックAI・人間承認者）の具体例が未収載だった。graph-primitives.mdの「迂回路」節に追記
+- **Fix (f2)**: video-pe-five-engineering-stages.md:60-72の症状別使い分け・モデル配分の考え方・AI100ライター/LPビルダーの分業実例が未収載だった。loop-vs-graph-decision.mdに症状別使い分け節を新設、roles-and-orchestration.mdのアドバイザーパターン節にモデル配分・分業実例を追記
+- **Fix (f3)**: article-ge-anthropic-building-c-compiler.md:47の制限事項（16ビットx86生成不可・GCC依存、アセンブラ/リンカ不安定、最適化無効時の非効率性）とLinux 6.9マルチアーキ対応が未収載だった。multi-agent-break-even.md:35の99%合格率の直後に追記
+- **Fix (f4)**: video-ge-gaodalie-forget-loop.md:29の「古くからの問題5点」（タスク分割・依存関係の表現・並列化の判断・障害復旧・状態の保存先）が未収載だった。overview.mdの「ワークフローの言い換えという見方」節にGao Dalie側の独立originとして追記
+- **Fix (f6)**: verification-and-testing.md:86の境界宣言（検証役を分ける理由はここで扱う）と、verification-gates-and-evidence.md:78-88「採点者を分ける」節が同主題を再展開しており分担が崩れていた。後者を段階4の終了条件設計（合格基準・回数上限）に絞り、理由説明を前者への参照1行に置き換え
+- **Fix (f7)**: verification-gates-and-evidence.md/handoffs-and-ownership.md/subagent-design-in-practice.md（いずれも2026-08-16生成）が、relationship-graph-for-operations.md（2026-08-09生成）と比べ結論文全体を太字強調する箇所が多く文体差があった。3ファイルの過剰な太字を整理。チェックリスト等の番号リスト構造は情報量維持のため保持し、全ファイル統一までは行っていない部分対応
+- **Fix (f8)**: 「AIは自分の成果物を甘く評価するので生成役と評価役を分ける」という結論がverification-and-testing.md/verification-gates-and-evidence.md/subagent-design-in-practice.mdで反復されていた。verification-and-testing.md:25を唯一の説明箇所とし、subagent-design-in-practice.md:77の理由説明部分を参照1行に短縮（verification-gates-and-evidence.md分はf6の修正で解消）。workflow-patterns-catalog.md:66,98は既に妥当な状態のため変更不要と確認
+- **Defer**: f5（graph-primitives.mdが177行で他コンセプトファイル平均の約1.7倍、10節超が1ファイルに混在）は指摘は事実だが、fix_hintが求める本質的対応（隠れたエッジ・実践ステップ節の別コンセプトへの分離）は参照元10ファイル（うち3ファイルは節単位で直接参照）のリンク修正とoverview.mdのバンドル地図再設計を伴う構造変更であり、findings単位の局所修正を前提とする本工程の範囲を超えるためdeferred(out_of_scope)。前回run（081702592f元のNote）でも同種の構造分割指摘が同じ理由で保留されている
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認
+
 ## 2026-08-17（ge採点 repair上限の手動修正・findings 4系統）
 
 - **Fix**: `risks-and-safeguards.md` の Citations が約75万行を「Bunの書き換え規模」と断定していたが、`graph-primitives.md:144` は同一プロジェクトと断定できないとしており、バンドル内で確度が不一致だった。graph-primitives 側の確度に揃えて「同種のZig→Rust移植（同一プロジェクトかは断定できない）」に修正
