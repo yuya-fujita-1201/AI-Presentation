@@ -1,5 +1,13 @@
 # 変更履歴
 
+## 2026-08-17（ge採点 repair上限の手動修正・findings 4系統）
+
+- **Fix**: `risks-and-safeguards.md` の Citations が約75万行を「Bunの書き換え規模」と断定していたが、`graph-primitives.md:144` は同一プロジェクトと断定できないとしており、バンドル内で確度が不一致だった。graph-primitives 側の確度に揃えて「同種のZig→Rust移植（同一プロジェクトかは断定できない）」に修正
+- **Fix**: `risks-and-safeguards.md` の「独り歩きしがちな数字」節は、出所を辿らせることが目的の節でありながら 92%/63%・25.6/14.7・18%/85% のいずれにも出典リンクが無かった。3件すべてに台帳へのインラインリンクを追加
+- **Fix**: `term-lineage-and-layers.md` の3層対比表が「トポロジー・ノード・エッジ・状態」を定義前に使っていた（定義は読む順番2番目の graph-primitives）。表の直前に、語の定義先へのリンクと「ここでは『誰と誰をどうつなぐかの形』程度の理解でよい」という読み進め方の注記を追加
+- **Fix**: `roles-and-orchestration.md` は本文10節に対しインラインリンクが3箇所しかなく、三役分担・CAID・Google ADK 2.0の原則・アドバイザーパターン・Claude Code/Codexの機能は末尾Citationsへ戻らないと出所に辿れなかった。主要5節の初出位置に出典リンクを追加
+- **Note**: 採点は 8/8/7/7/7 で repair 3回を使い切り stuck(repair_exhausted)。未達3項目のうち、指摘のうち「graph-primitives.md（12節）と roles-and-orchestration.md（10節）が1ファイル=1概念として大きい」という構造分割と、「作る役と通す役を分ける」説明が4箇所に重複している件は、既存資産の大規模な再編にあたるため自動改善ループに委ねず保留した
+
 ## 2026-08-17（graph-engineering 採点指摘の修正 knowledge run:0817014547）
 
 - **Fix (f1)**: workflow-patterns-catalog.md:57のダイナミックワークフロー導入節が、ソース側（video-ge-dynamic-workflows-six-patterns.md c1, impact:high）が明記する「長いコンテキストで起きるサボりや自己バイアスを構造的に防ぐ」という目的に触れず仕組みの説明のみだった。6型が評価型に偏る理由としてこの目的を1文追記
