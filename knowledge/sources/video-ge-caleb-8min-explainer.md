@@ -65,3 +65,4 @@ Claude Codeにディープリサーチを依頼すると、裏側では1つの�
 - [../graph-engineering/graph-primitives.md](../graph-engineering/graph-primitives.md) — オイラーのケーニヒスベルクの橋問題からノード・エッジ・DAGの起源を説明する一次根拠
 - [../graph-engineering/roles-and-orchestration.md](../graph-engineering/roles-and-orchestration.md) — Anthropicのエージェント連携5パターン（プロンプトチェイニング/ルーティング/並列化/オーケストレーター/エバリュエーター・オプティマイザー）の一次根拠
 - [../graph-engineering/risks-and-safeguards.md](../graph-engineering/risks-and-safeguards.md) — 単一エージェント比4倍・マルチエージェント比15倍というトークンコスト増幅の数値根拠
+- [../graph-engineering/loop-vs-graph-decision.md](../graph-engineering/loop-vs-graph-decision.md) — 108体規模のDAG実行例を使ったトークンコスト試算（入力コスト約10ドル→プロンプトキャッシュで約1ドル）の主根拠

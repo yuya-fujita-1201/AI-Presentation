@@ -95,7 +95,7 @@ AIエージェント、特にマルチエージェントが複雑な仕事をど
 
 # 活用先
 
-- [../graph-engineering/graph-primitives.md](../graph-engineering/graph-primitives.md) — ノード・エッジ・DAG・循環の見つけ方など基本語彙の具体例（API仕様確定→バックエンド/画面分岐、循環の落とし穴）の主根拠
+- [../graph-engineering/graph-primitives.md](../graph-engineering/graph-primitives.md) — ノード・エッジ・DAG・循環の見つけ方など基本語彙の具体例（API仕様確定→バックエンド/画面分岐、循環の落とし穴）、タスクグラフ／依存関係グラフ／DAGという用語整理の主根拠
 - [../graph-engineering/roles-and-orchestration.md](../graph-engineering/roles-and-orchestration.md) — Manager/Worker/Verifierの役割分担とCAID・LangGraph・Claude Code/Codexの連携パターンの主根拠
 - [../graph-engineering/loop-vs-graph-decision.md](../graph-engineering/loop-vs-graph-decision.md) — 1人のエージェントに全部任せた際の詰まりや、順番のままでよいケースの具体例として補助的に参照できる
 - [../graph-engineering/risks-and-safeguards.md](../graph-engineering/risks-and-safeguards.md) — CAIDの効果数値（PaperBench/Commit0）を独り歩きさせない注意喚起が、数字の扱いに関する歯止めの実例として使える

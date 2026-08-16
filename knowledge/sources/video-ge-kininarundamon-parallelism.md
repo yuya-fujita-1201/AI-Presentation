@@ -137,4 +137,4 @@ generated:
 - [../graph-engineering/roles-and-orchestration.md](../graph-engineering/roles-and-orchestration.md) — 実装1体・敵対的レビュアー2体以上・差分のみを見せる文脈分離という役割分担の実例として
 - [../graph-engineering/risks-and-safeguards.md](../graph-engineering/risks-and-safeguards.md) — 衝突事故と工程側の直し方（git stash/reset禁止）、コスト（16.5万ドル）、批判への言及の裏付けとして
 - [../graph-engineering/loop-vs-graph-decision.md](../graph-engineering/loop-vs-graph-decision.md) — 「グラフにしない方がいいとき」の判断基準（仕事が小さい／本当に順番依存）の補助教材として
-- [../graph-engineering/term-lineage-and-layers.md](../graph-engineering/term-lineage-and-layers.md) — グラフエンジニアリングを「ループの1つ上」と位置づける階層説明の裏付けとして
+- [../graph-engineering/term-lineage-and-layers.md](../graph-engineering/term-lineage-and-layers.md) — 壊れどころが「判定」の話に帰着するという振り返りから「判定エンジニアリング」という次の呼称を紹介した箇所の裏付けとして

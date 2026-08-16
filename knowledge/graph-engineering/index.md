@@ -22,13 +22,4 @@
 
 ## 読む順番
 
-初めての人は overview → term-lineage-and-layers → graph-primitives → loop-vs-graph-decision の順で基礎を固め、その後 roles-and-orchestration → relationship-graph-for-operations → verification-and-testing で設計手法へ、最後に knowledge-graph-as-memory → risks-and-safeguards で視野を広げると全体像がつかめる。
-
-公式ドキュメント・論文を根拠にした後半6本は、この流れに次のように差し込むとよい。
-
-- loop-vs-graph-decision の直後に **multi-agent-break-even**（そもそも増やして得かを数字で確認する）
-- roles-and-orchestration の直後に **handoffs-and-ownership**（誰が最後に喋るかを決める）→ **workflow-patterns-catalog**（つなぎ方の型を選ぶ）
-- 型が決まったら **subagent-design-in-practice**（決めた構造を実際の機能で組む）
-- verification-and-testing の直後に **verification-gates-and-evidence**（検証に実際の停止力を持たせる）→ **failure-taxonomy-and-debugging**（それでも起きた失敗を分類して原因を切り分ける）
-
-設計の順に並べ直すと、**なぜ分けるか**（multi-agent-break-even）→ **どう分けるか**（roles-and-orchestration / handoffs-and-ownership / workflow-patterns-catalog）→ **何で作るか**（subagent-design-in-practice）→ **どう止めるか**（verification-gates-and-evidence）→ **壊れたらどう直すか**（failure-taxonomy-and-debugging）という流れになる。
+[overview.md](./overview.md) の「このバンドルの地図」節にある14本の順序表と「読む順番の提案」に従うこと。読む順番はこのファイルではなく overview.md 側で一元管理する。

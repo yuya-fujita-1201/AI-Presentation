@@ -33,6 +33,16 @@ AIエージェントの文脈で使われるグラフエンジニアリングは
 
 途中の結果はどこに置かれるかという問いに対しては、「スクリプトの変数に残る。だから会話の文脈を食わない」という説明もある（[ずんだもん](../sources/video-ge-kininarundamon-parallelism.md)）。より実装寄りの例として、LangGraphのStateGraphは状態をノードへ置き、条件によって次の行き先を変える仕組みだと紹介されている（[Sura×Asura](../sources/video-ge-complete-guide-work-division.md)）。
 
+### 用語整理: タスクグラフ・依存関係グラフ・DAGの強調点の違い
+
+同種の構造を指す語はいくつかあり、強調点が少しずつ異なると整理されている（[Sura×Asura](../sources/video-ge-complete-guide-work-division.md)）。
+
+- **タスクグラフ**: 仕事同士のつながりを表す一般的な言い方
+- **依存関係グラフ（Dependency Graph）**: 何が何を待つかに焦点を当てる言葉。実行順の根拠を説明したい時に特に役立つとされる
+- **DAG**: 向きがあり循環しない構造そのものを指す語
+
+3語は似ているが同義ではなく、場面に応じてどの側面を強調したいかで使い分けるとよいという整理である。
+
 ## ノードはAIエージェントに限らない
 
 「ノードって全部AIエージェントなのか」という素朴な疑問に対し、そうではないと明確に否定されている。ノードになり得るものの例として、以下が挙げられている（[TECH PLAY](../sources/video-ge-techplay-3min-intro.md)）。
@@ -157,7 +167,7 @@ Sura×Asuraのソースでは、明日から依存関係を描くための実践
 - [動画: SNSで話題の「グラフエンジニアリング」の正体をサクッと理解する（TECH PLAY）](../sources/video-ge-techplay-3min-intro.md) — 「データ可視化ではない」という誤解の訂正、ノード・エッジ・状態の3要素、ノードはAIエージェントに限らないという整理の根拠
 - [動画: Graph Engineering explained in 8min.（Caleb Writes Code）](../sources/video-ge-caleb-8min-explainer.md) — オイラーとケーニヒスベルクの橋の起源、Claude Codeディープリサーチの107/108体DAG実行例、AutoGen/LangGraph黎明期とノードの非力さ、ボトルネック移動の歴史的転換の根拠
 - [動画: 【気になるんだもん No.02】その順番待ち、ほんとに要るのだ？（ずんだもんの実験道具箱）](../sources/video-ge-kininarundamon-parallelism.md) — 偽エッジテスト「その矢印は結果を読んでいるか」、Bunの53万行書き換え事例と隠れたエッジ（Git衝突）の根拠
-- [動画: 【グラフエンジニアリング】完全ガイド｜AIエージェントは仕事をどう分ける？（Sura×Asura For AI Agent）](../sources/video-ge-complete-guide-work-division.md) — DAGの循環＝設計の矛盾という考え方、依存関係を描く実践ステップ（完成形からの逆算・2つの問い・入次数ゼロ）の根拠
+- [動画: 【グラフエンジニアリング】完全ガイド｜AIエージェントは仕事をどう分ける？（Sura×Asura For AI Agent）](../sources/video-ge-complete-guide-work-division.md) — タスクグラフ／依存関係グラフ／DAGという用語整理、DAGの循環＝設計の矛盾という考え方、依存関係を描く実践ステップ（完成形からの逆算・2つの問い・入次数ゼロ）の根拠
 - [動画: グラフエンジニアリング入門（海外テックの「これマジ?」）](../sources/video-ge-koremaji-single-to-multi.md) — LangGraph/CrewAI/Microsoft Agent Framework/Google ADK/LlamaIndex Workflows/OpenAI Agents SDKというフレームワーク一覧と各数値の根拠
 - [動画: グラフエンジニアリングとは何か（AI×BPOラジオ）](../sources/video-ge-bpo-org-chart.md) — ノード・エッジに続く3つ目の部品「迂回路」（失敗時の経路をあらかじめ描く）の根拠
 - [動画: AIは忘れる、グラフは忘れない（AISPALab）](../sources/video-ge-ai-forgets-graph-remembers.md) — Bun書き換えの行数（約75万行・11日・通過率99.8%）に関する数値の食い違いの参考

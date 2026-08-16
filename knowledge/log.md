@@ -1,5 +1,14 @@
 # 変更履歴
 
+## 2026-08-16（graph-engineering 採点指摘の修正 knowledge run:081617451a）
+
+- **Fix**: 採点findings 15件（すべてfixed disposition）に基づき既存コンセプトを修正。risks-and-safeguards.md:81のトークンコスト注記誤り（「単一比15倍」→「チャット比15倍・単一エージェントはチャット比4倍」）、overview.md:13の下位コンセプト数誤記（「8つ」→「14の下位コンセプト」）、risks-and-safeguards.md:44のBun行数食い違いの断定表現をgraph-primitives.mdの留保表現に統一
+- **Update**: failure-taxonomy-and-debugging.mdの実地失敗表に「単一タスク固定で全エージェントが同じバグで停止」を1行追加（出典: article-ge-anthropic-building-c-compiler.md）、デバッグ指針にシミュレーション駆動開発を1項追加（出典: article-ge-anthropic-multi-agent-research-system.md）。subagent-design-in-practice.mdに実行モード（フォアグラウンド/バックグラウンド）と「サブエージェントとエージェントチームの使い分け」節を追加。handoffs-and-ownership.mdにメモリ層への計画保存という実装注意を1文追加。graph-primitives.mdに「タスクグラフ・依存関係グラフ・DAG」の用語整理を追加。term-lineage-and-layers.mdのCitationsに判定エンジニアリングの出典動画を追加
+- **Refactor**: risks-and-safeguards.mdの「本番運用の設計判断」節を「歯止めが機能する前提としての運用要件」に縮約（1ファイル=1概念の逸脱を是正）。index.mdの読む順番節をoverview.mdの順序表への参照に一本化（2箇所管理の食い違いを解消）。relationship-graph-for-operations.md・verification-and-testing.mdのH1からサブタイトルを除去し他14本と統一。workflow-patterns-catalog.md・handoffs-and-ownership.md・verification-gates-and-evidence.md・subagent-design-in-practice.mdのエッセイ調リード文・呼びかけ表現を平叙文に書き換え
+- **Fix**: sources側の活用先の食い違いを是正。video-ge-caleb-8min-explainer.mdの活用先にloop-vs-graph-decision.mdを追加、video-ge-kininarundamon-parallelism.mdの活用先理由を「判定エンジニアリング」の紹介に修正、video-ge-gaodalie-forget-loop.mdの活用先を実際の引用内容（承認経路の例／表形式データ対比）に合わせて割り当て直し
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認
+- **Note**: 本ランはfindingsの`where`が指すファイルのみを修正対象とし、それ以外のコンセプトファイルは書き換えていない
+
 ## 2026-08-16（graph-engineering 採点指摘の修正 knowledge run:081615158d）
 
 - **Fix**: 採点findings 13件（すべてfixed disposition）に基づき既存コンセプトを修正。graph-primitives.md:103の同時実行上限誤記（「最大16」→「16どころか2桁（64）」、AISPALab概要欄との「一致」の誤った主張を「食い違い」に訂正）／overview.mdの数値誤記（「3本の比喩」→「これらの比喩」、「8つの下位コンセプト」→「14の下位コンセプト」）とバンドル地図の8本時代からの拡張（後半6本を含む14項目化、読む順番をindex.mdの差し込み案と統一、後半6本への内部リンク配置）

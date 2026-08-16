@@ -62,7 +62,7 @@ MASTが**システム全体の配線**を分類しているのに対し、AgentE
 
 ## 実地の失敗はどう分類されるか
 
-分類体系は抽象的に見えるが、公式に報告された実地の失敗例を当てはめると具体性が出る。Anthropicは自社のマルチエージェント研究システムの開発で直面した問題を率直に記録している（[Anthropic公式記事](../sources/article-ge-anthropic-multi-agent-research-system.md)）。以下は同記事の報告に、上記2つの分類を筆者が対応づけたものである。
+分類体系は抽象的に見えるが、公式に報告された実地の失敗例を当てはめると具体性が出る。Anthropicは自社のマルチエージェント研究システムの開発（[Anthropic公式記事](../sources/article-ge-anthropic-multi-agent-research-system.md)）と、並列Claudeによるコンパイラ開発実験（[Building a C compiler](../sources/article-ge-anthropic-building-c-compiler.md)）の双方で直面した問題を率直に記録している。以下は両記事の報告に、上記2つの分類を筆者が対応づけたものである。
 
 | 報告された失敗 | 対処 | 対応する分類 |
 |---|---|---|
@@ -71,6 +71,7 @@ MASTが**システム全体の配線**を分類しているのに対し、AgentE
 | 低品質な**SEO最適化コンテンツを優先**して選んでしまった | ソース品質のヒューリスティックを追加 | AgentErrorTaxonomy: Action（行動選択） |
 | **十分な結果が得られても探索を継続**してしまった | ― | MAST (i) 終了基準の欠如 |
 | ツールの説明が不明瞭で、未知のツールに遭遇すると全く誤った経路へ進んだ | Claude自身にプロンプト改善を提案させ、ツール説明を改善（タスク完了時間40%短縮） | MAST (ii) 不完全な文脈伝播 |
+| 単一タスクに固定すると**全エージェントが同じバグで停止**してしまった | ― | MAST (i) システム設計（タスク分割の多様性の欠如） |
 
 こうして並べると、**失敗の大半が「指示・定義・境界の書き方」に帰着している**ことが見えてくる。同記事はサブエージェントへの委譲において目的・出力形式・ツール指定・境界を明示する必要があるとし、「research the semiconductor shortage」のような短く曖昧な指示では不十分だと述べている。MASTのカテゴリ(i)(ii)が示すものと同じ結論である。
 
@@ -82,6 +83,7 @@ MASTが**システム全体の配線**を分類しているのに対し、AgentE
 2. **症状の出た場所と原因の場所を分けて考える**。カスケード失敗を前提に、最後のノードから遡る
 3. **終了基準を最初に書く**。MASTが(i)に「終了基準の欠如」を、Anthropicが「十分な結果が得られても継続する」を挙げているのは同じ問題である。いつ止めるかを決めていないグラフは、止まらないか、早すぎるところで止まる
 4. **トレースを読めるようにしておく**。MASTもAgentDebugも、分析の前提はトレース（実行の記録）である。記録が残っていないシステムは、そもそも分類の対象にならない
+5. **本番相当の環境で再現してから直す**。Anthropicはプロンプトエンジニアリング上の教訓として、Consoleでプロンプトとツール環境を正確に再現するシミュレーション駆動開発を第一に挙げている（[Anthropic公式記事](../sources/article-ge-anthropic-multi-agent-research-system.md)）。再現環境がなければ、上記のカテゴリ分けも原因特定も推測の域を出ない
 
 4点目に関連して、[マルチエージェント化の損益分岐点](./multi-agent-break-even.md)で触れたOpenAIの4条件に「trace legibility（トレースの可読性）」が含まれていたことを思い出したい。トレースの読みやすさは、性能とは別立てで**エージェントを分けてよい理由**に数えられている。デバッグ可能性は後から足す機能ではなく、分割の動機そのものになりうるということである。
 
@@ -91,4 +93,5 @@ MASTが**システム全体の配線**を分類しているのに対し、AgentE
 
 - [Why Do Multi-Agent LLM Systems Fail?（arXiv, Cemri, Pan, Yang et al.）](../sources/article-ge-mast-multi-agent-failures.md) — MAST-Dataの規模（7フレームワーク・1600件超のトレース）、150件の専門家アノテーションとkappa=0.88という一致度、3カテゴリ14失敗モードの内訳、LLM-as-a-Judgeパイプラインと実験対象モデル・タスク種別、公開方針の根拠
 - [Where LLM Agents Fail and How They can Learn From Failures（arXiv）](../sources/article-ge-agent-error-taxonomy-debug.md) — カスケード失敗という課題設定、AgentErrorTaxonomyの5領域（Memory/Reflection/Planning/Action/System-level operations）、AgentErrorBenchの構築環境（ALFWorld・GAIA・WebShop）、AgentDebugによる全正解精度24%・ステップレベル精度17%の向上と最大26%の相対改善の根拠
-- [How we built our multi-agent research system（Anthropic公式）](../sources/article-ge-anthropic-multi-agent-research-system.md) — 実地の失敗事例（50個のサブエージェント生成、調査の重複、SEOコンテンツの優先、十分な結果があっても継続、ツール説明の不明瞭さと40%の時間短縮）と、委譲時に目的・出力形式・ツール指定・境界を明示すべきという教訓の根拠
+- [How we built our multi-agent research system（Anthropic公式）](../sources/article-ge-anthropic-multi-agent-research-system.md) — 実地の失敗事例（50個のサブエージェント生成、調査の重複、SEOコンテンツの優先、十分な結果があっても継続、ツール説明の不明瞭さと40%の時間短縮）と、委譲時に目的・出力形式・ツール指定・境界を明示すべきという教訓、Consoleでのシミュレーション駆動開発という教訓の根拠
+- [Building a C compiler with a team of parallel Claudes（Anthropic公式）](../sources/article-ge-anthropic-building-c-compiler.md) — 単一タスクに固定すると全エージェントが同じバグで停止するという並列化固有の失敗モードの根拠

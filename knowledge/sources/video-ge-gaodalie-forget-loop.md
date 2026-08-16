@@ -68,6 +68,6 @@ AIエージェントがより複雑になるにつれ、単純な反復処理だ
 # 活用先
 
 - [../graph-engineering/term-lineage-and-layers.md](../graph-engineering/term-lineage-and-layers.md) — プロンプト・ループ・グラフの3層構造説と「入れ子ではない非包含の3層」説の主根拠
-- [../graph-engineering/loop-vs-graph-decision.md](../graph-engineering/loop-vs-graph-decision.md) — ループの限界とグラフ化すべき/すべきでない判断基準の主根拠
+- [../graph-engineering/loop-vs-graph-decision.md](../graph-engineering/loop-vs-graph-decision.md) — ループの限界とグラフ化すべき/すべきでない判断基準、表形式データと関係性データの対比の主根拠
 - [../graph-engineering/overview.md](../graph-engineering/overview.md) — 「グラフエンジニアリング」という用語の登場経緯（Steinberger氏の投稿など）の一次情報
-- [../graph-engineering/relationship-graph-for-operations.md](../graph-engineering/relationship-graph-for-operations.md) — 表形式データとの対比や関係性ノードの重要性に関する補助教材
+- [../graph-engineering/relationship-graph-for-operations.md](../graph-engineering/relationship-graph-for-operations.md) — 「承認されていない文書は出版に進めない」という承認経路の例の根拠
