@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-17（graph-engineering 採点指摘の修正 knowledge run:081704574a）
+
+- **Fix (f1)**: overview.md:55の「同動画は、Claudeデスクトップアプリのエフォートレベル『ウルトラコード』...」が、直前の[Gao Dalie動画]の段落を受ける「同動画」表記になっていたが、ウルトラコード/ウルトラの記述は実際にはにゃんた動画（video-ge-nyanta-loop-graph-claude-code.md:50）の内容だった。「同動画」を「[にゃんた動画]」への明示リンクに置換
+- **Fix (f2)**: verification-and-testing.md:19-23のRefineBenchの数値（98.4%/75.8/94.7）が「論文の実験結果」として断定され、聞き取り由来であることを示す注記が無かった（同じ数値をloop-engineering/maker-checker-separation.mdは「動画がその論文の結果として紹介しているものであり、本教材では論文原典に当たっていない」と明記済み）。節冒頭に論文原典未確認の1文を追加し、各数値に「（動画の紹介・聞き取り）」を付記
+- **Fix (f3)**: overview.md:60の「混同すると初心者は迷子になると両ソースとも警告している」が、実際にはAI氣道動画のみが「初心者は迷子になる」と警告しており（video-ge-5-stages-beginner.md:70）、これマジ?動画はTuring Post引用で「4つの意味が混在している」と指摘するのみで「迷子」という警告表現は無かった（video-ge-koremaji-single-to-multi.md:56）。主体を分けて記述するよう修正
+- **Fix (f5)**: graph-primitives.md:65とrisks-and-safeguards.md:72が、請求書処理5ノードの図と「業務の言語化の限界がAI化の限界につながる」という結論をほぼ同文で相互参照なしに全文展開していた。結論の説明はrisks-and-safeguards.md側に残し、graph-primitives.md側はノード構成の列挙のみ残して結論部分を1文+リンクへ縮約
+- **Fix (f6)**: roles-and-orchestration.md:74とrisks-and-safeguards.md:39が、アドバイザーパターンの「約92%・約63%」の説明（Sonnet 5+Fable 5、SWE-bench Pro、呼び出し頻度）をほぼ同文で二重展開していた。risks側は「独り歩きする数字」という論点（公開日・特定条件下の数字である点）に絞り、数値の内訳説明はroles側参照へ短縮
+- **Fix (f4)**: overview.md:8ほか計9ファイル（graph-primitives/knowledge-graph-as-memory/loop-vs-graph-decision/relationship-graph-for-operations/risks-and-safeguards/roles-and-orchestration/term-lineage-and-layers/verification-and-testing、いずれもfrontmatter `generated.at: 2026-08-09`）が、git履歴上は2026-08-16・2026-08-17にも複数回の内容改訂を経ていることを確認した。本バンドルでは`generated.at`をコンセプトの**初出（新規作成）日時**として扱い、その後の改訂は本ファイル（log.md）の変更履歴側で追跡する方針とし、これを明文化する。frontmatter日付は改訂の都度更新しない
+- **Check**: `/opt/homebrew/bin/python3 tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認（下記CHECK行参照）
+
 ## 2026-08-17（graph-engineering 採点指摘の修正 knowledge run:081703457a）
 
 - **Fix (f1)**: video-ge-bpo-org-chart.md:47-58の請求書処理5ノード編成（受付AI・読み取りAI・仕訳AI・チェックAI・人間承認者）の具体例が未収載だった。graph-primitives.mdの「迂回路」節に追記
