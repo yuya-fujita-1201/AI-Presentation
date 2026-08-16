@@ -46,3 +46,4 @@ Anthropic公式のClaude Code Docsは、Agent SDKの入門文書として「Agen
 - [../harness-engineering/harness-responsibilities-and-ladder.md](../harness-engineering/harness-responsibilities-and-ladder.md) — Agent SDKの位置づけ（Claude Codeと同じツール群・エージェントループ・コンテキスト管理の提供）と提供機能一覧を、11責務との対応表の材料として使用
 - [../harness-engineering/tools-and-mcp.md](../harness-engineering/tools-and-mcp.md) — エージェントの定義（自ら手順を計画しファイル読み取り・コマンド実行・コード編集のツールを呼ぶ）、組み込みツールの内訳、MCPによる外部ツール・データソース接続という位置づけの根拠
 - [../harness-engineering/project-memory-and-rules.md](../harness-engineering/project-memory-and-rules.md) — 「Skills, commands, and memory」がプロジェクトの`.claude/`とホームディレクトリの`~/.claude/`から自動的に読み込まれることの根拠
+- [../graph-engineering/workflow-patterns-catalog.md](../graph-engineering/workflow-patterns-catalog.md) — 次のステップとして案内されるリソースに「Claude Codeチームがダイナミックワークフローを使ってサブエージェントを大規模にオーケストレーションする手法」の解説記事が含まれることを、ダイナミックワークフローという機能の存在と用途に関する公式側の裏付けとして使用（型の数え方・型名は動画のauto字幕依存であるという確度差を示すため）

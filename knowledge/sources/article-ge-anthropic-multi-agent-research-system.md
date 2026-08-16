@@ -50,4 +50,6 @@ Anthropicは、開発初期段階で単純なクエリに対して50個ものサ
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — 90.2%の性能改善と15倍のトークン消費という引用、オーケストレーター・ワーカー構成、LLM-as-judgeによる5項目評価と約20クエリからの開始、トークン使用量が分散の80%を説明するという分析、「タスクの価値が支払いに見合う場合にのみ正当化される」という経済性条件の主根拠
+- [../graph-engineering/failure-taxonomy-and-debugging.md](../graph-engineering/failure-taxonomy-and-debugging.md) — 実地の失敗事例（単純なクエリへの50サブエージェント生成、調査の重複、SEO最適化コンテンツの優先、十分な結果があっても探索を継続、ツール説明の不明瞭さと改善による40%の時間短縮）と、委譲時に目的・出力形式・ツール指定・境界を明示すべきという教訓を、MAST／AgentErrorTaxonomyの分類に対応づける実例として使用
+- [../graph-engineering/risks-and-safeguards.md](../graph-engineering/risks-and-safeguards.md) — 動画（Caleb Writes Code、auto字幕）経由で紹介されていた「マルチエージェントはチャット比15倍のトークン」という数値に対する公式出典としての裏付け

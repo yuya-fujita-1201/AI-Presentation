@@ -1,5 +1,14 @@
 # 変更履歴
 
+## 2026-08-16（graph-engineering コンセプト拡充 knowledge run:08161057e2）
+
+- **Creation**: graph-engineering/ に公式ドキュメント・論文を一次根拠とするコンセプト3本を追加。workflow-patterns-catalog.md（Anthropic公式「Building Effective AI Agents」のWorkflow/Agent定義と5つのワークフローパターン、Claude Codeダイナミックワークフローの6つの編成型、GPTSwarmによるトポロジー自動最適化）、multi-agent-break-even.md（Anthropicの90.2%改善と15倍トークン、MASTの「minimal」、45%ルール、OpenAIの専門家追加4条件を突き合わせた損益分岐点の整理）、failure-taxonomy-and-debugging.md（MASTの3カテゴリ14失敗モードとkappa=0.88、AgentErrorTaxonomyの5領域とカスケード失敗、AgentDebugの定量結果、Anthropicの実地失敗例との対応づけ）
+- **Update**: 既存コンセプト2本を新しい一次資料で補強（既存記述は書き換えず出典追加のみ）。roles-and-orchestration.md の「Anthropicの5つの連携パターン」（従来はauto字幕動画のみが根拠）に公式記事の出典を追加、risks-and-safeguards.md の「チャット比15倍のトークン」（同）に公式記事の原文引用と出典を追加
+- **Update**: sources/ の台帳11本に「活用先」を追記し、コンセプト⇄台帳の双方向リンクを整合（新規3本が張った出典リンク14件すべてに対応する活用先を確認、不一致0件）
+- **Update**: graph-engineering/index.md に新規3本を追加し、情報源の記述を「動画11本」から公式ドキュメント・論文を含む形へ修正。読む順番に3本の差し込み位置を追記
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認
+- **Note**: 設計した新規コンセプト6本のうち3本が完了。残り3本（handoffs-and-ownership / subagent-design-in-practice / verification-gates-and-evidence）は pipeline/staging/knowledge/plan.json に status: todo として記録済み
+
 ## 2026-08-16（geソース台帳・記事1本 web_ledger run:0816101550）
 
 - **Creation**: sources/ に記事1本を article-ge-agent-error-taxonomy-debug.md として登録（グラフエンジニアリングテーマ、arXiv論文、web_ledger工程 run:0816101550）。arXiv「Where LLM Agents Fail and How They can Learn From Failures」。単一の根本原因エラーが後続の判断へ波及する「カスケード失敗」という課題認識から、LLMエージェントの失敗モードをMemory・Reflection・Planning・Action・System-level operationsの5領域に体系化したAgentErrorTaxonomy、ALFWorld・GAIA・WebShopの3環境での実エージェント軌跡をアノテーションし著者らが「初の大規模失敗軌跡データセット」と位置づけるAgentErrorBench、根本原因を特定し矯正フィードバックを提供するデバッグフレームワークAgentDebugという3つの貢献を提示し、AgentErrorBenchでの検証実験で全正解精度24%・ステップレベル精度17%の向上、3ベンチマーク全体でタスク成功率最大26%の相対改善を達成したと報告している内容を解説

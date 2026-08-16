@@ -48,4 +48,4 @@ Anthropicは、最大の学習として「Claude will work autonomously to solve
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — 16エージェント・約2週間・約2,000セッション・入力20億トークン・出力1億4000万トークン・総コスト2万ドル弱という実測値と、成果物の規模（10万行）・テスト合格率（99%）を、マルチエージェント化の実額コストの根拠として使用

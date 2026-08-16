@@ -42,4 +42,5 @@ GAIAベンチマークでは、GPT-4-Turbo単体の平均9.70%、AutoGPTの4.85%
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../graph-engineering/workflow-patterns-catalog.md](../graph-engineering/workflow-patterns-catalog.md) — エージェントとスワームをDAG G=(N,E,F,o) として統一表現すること、エッジ最適化（REINFORCEによる確率的グラフサンプリング）とノード最適化（OPRO等）の2段階、GAIA・HumanEvalでの評価結果を「トポロジー自体が最適化対象になりうる」という論点の根拠として使用
+- [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — GAIAベンチマークの比較値（GPT-4-Turbo単体9.70%／AutoGPT 4.85%／GPTSwarm 18.45%）を、「エージェント数を増やす以外につなぎ方を変えるという選択肢がある」ことの根拠として使用

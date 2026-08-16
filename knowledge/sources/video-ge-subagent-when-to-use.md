@@ -82,4 +82,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — Googleの研究者によるという論文の紹介（4ベンチマーク×5構成×9モデルの180パターン、ファイナンスエージェントとプランクラフトで明暗が分かれた結果、並列分割の可否という理由、45%という損益分岐点、モデル別の差）の根拠。auto字幕由来のimpact:high主張のため、コンセプト側では帰属＋（聞き取り）で記述し、動画自身が付けている「全ての場合に一般化はできない」という留保も併記している

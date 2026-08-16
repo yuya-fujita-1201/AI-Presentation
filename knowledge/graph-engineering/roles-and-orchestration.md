@@ -85,6 +85,8 @@ Anthropic公式開発者アカウント（@ClaudeDevs）が2026年7月7日に公
 4. **オーケストレーター**: 上位が計画・分配し複数の実行役をまとめる
 5. **エバリュエーター・オプティマイザー**: 2つのLLMが条件を満たすまで敵対的にやり取りする
 
+なおこの5パターンは、Anthropic公式記事「Building Effective AI Agents」に記載されているものである（[Anthropic公式記事](../sources/article-ge-anthropic-building-effective-agents.md)）。上記は動画による紹介だが、各型の正式名称・定義・公式が挙げる適用例は[つなぎ方の型カタログ](./workflow-patterns-catalog.md)に一次資料からまとめ直している。
+
 2023年当時これらのパターンは実用面で大きな成果には至らなかった、とされる。理由は「グラフ自体の問題ではなく、グラフの中のノードが何をできるかの問題だった」——LangChainのブログ記事の趣旨として、「変わったのはグラフではなく、ノードが何をできるかの方だ」という発言が紹介されている。当時のノードは単なるLLM呼び出しに過ぎず、Claude CodeやCodex CLIのような今日の「フルエージェント」とは程遠かった。ノードが信頼できるようになったことで、ボトルネックがノードからグラフ・エッジ側へ移り、この5パターンが実用的な選択肢として再び意味を持つようになった、という論旨である。
 
 ## Claude Codeのサブエージェント機構とCodexの並列サブエージェント機能
@@ -106,4 +108,5 @@ OpenAIの長時間協調型を指す**非公式コードネーム**として「A
 - [動画: 気になるんだもん No.02（ずんだもんの実験道具箱）](../sources/video-ge-kininarundamon-parallelism.md) — Bunの隠れたエッジ事故と工程側での修正（git stash/reset禁止、1ファイルコミット許可）、敵対的レビュー体制（実装1体・レビュー2体以上・差分のみ提示）の根拠
 - [動画: グラフエンジニアリング入門（海外テックの「これマジ?」）](../sources/video-ge-koremaji-single-to-multi.md) — Google ADK 2.0のコード/モデル責任分担の原則、組織グラフ/作業グラフの2層構造、Fable 5とSonnet 5のアドバイザーパターン・オーケストレーターパターンの数値と出典確度の根拠
 - [動画: Graph Engineering explained in 8min.（Caleb Writes Code）](../sources/video-ge-caleb-8min-explainer.md) — Anthropicの5つの連携パターン（プロンプトチェイニング/ルーティング/並列化/オーケストレーター/エバリュエーター-オプティマイザー）と、ノードの信頼性向上によるボトルネック移動の根拠
+- [Building Effective AI Agents（Anthropic公式）](../sources/article-ge-anthropic-building-effective-agents.md) — 上記5パターンが公式記事に記載されたものであることの一次的な裏付け（動画側の紹介に対する公式出典）
 - [動画: 「ループエンジニアリング」「グラフエンジニアリング」とは？（にゃんたのAIチャンネル）](../sources/video-ge-nyanta-loop-graph-claude-code.md) — Claude Codeのメイン/サブエージェント構造の根拠

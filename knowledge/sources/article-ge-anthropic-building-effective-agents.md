@@ -42,4 +42,5 @@ Agent構築の章では「Agentsは典型的には、環境からのフィード
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../graph-engineering/workflow-patterns-catalog.md](../graph-engineering/workflow-patterns-catalog.md) — WorkflowとAgentの定義による区別と使い分け、augmented LLMという基本構築ブロック、5つのワークフローパターン（Prompt chaining / Routing / Parallelization / Orchestrator-workers / Evaluator-optimizer）と各適用例、「最も単純な解から始める」原則、ツール設計（Agent-Computer Interface）に割くべき労力の主根拠
+- [../graph-engineering/roles-and-orchestration.md](../graph-engineering/roles-and-orchestration.md) — 動画（Caleb Writes Code、auto字幕）経由で紹介されていた「Anthropicの5つの連携パターン」に対する公式出典としての裏付け

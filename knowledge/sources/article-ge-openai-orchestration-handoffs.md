@@ -42,4 +42,4 @@ Handoffsパターンでは、トリアージ役のエージェントが特化し
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — 専門家を追加してよい4条件（capability isolation / policy isolation / prompt clarity / trace legibility）の引用と、「Start with one agent whenever you can」という結論、次の分岐が本当に異なる指示・ツール・ポリシーを必要とする場合にのみ分割すべきという指針の根拠

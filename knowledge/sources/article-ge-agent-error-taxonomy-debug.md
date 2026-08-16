@@ -42,4 +42,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../graph-engineering/failure-taxonomy-and-debugging.md](../graph-engineering/failure-taxonomy-and-debugging.md) — カスケード失敗（単一の根本原因エラーが後続の判断へ波及する）という課題設定、AgentErrorTaxonomyの5領域（Memory / Reflection / Planning / Action / System-level operations）、AgentErrorBenchの構築環境（ALFWorld・GAIA・WebShop）、AgentDebugによる全正解精度24%・ステップレベル精度17%の向上と最大26%の相対改善という定量結果の主根拠

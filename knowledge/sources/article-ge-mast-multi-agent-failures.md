@@ -44,4 +44,5 @@ MAST自体は、150件のトレースを専門家の人間アノテーターが�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../graph-engineering/failure-taxonomy-and-debugging.md](../graph-engineering/failure-taxonomy-and-debugging.md) — MAST-Dataの規模（7フレームワーク・1600件超のトレース）、150件の専門家アノテーションとkappa=0.88という一致度、3カテゴリ14失敗モードの内訳（システム設計／エージェント間の非整合／タスク検証）、LLM-as-a-Judgeパイプラインと実験対象、公開方針の主根拠
+- [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — マルチエージェントLLMシステムが一般的なベンチマークで「minimal」な性能向上にとどまるという研究課題設定を、Anthropicの90.2%改善と対比する「負けた側の数字」として使用
