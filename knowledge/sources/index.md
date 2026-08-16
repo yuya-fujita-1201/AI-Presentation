@@ -49,6 +49,7 @@
 - [article-ge-anthropic-building-c-compiler.md](./article-ge-anthropic-building-c-compiler.md) — Anthropic公式「Building a C compiler with a team of parallel Claudes」。16個のClaudeエージェントを並列稼働させたRust製Cコンパイラ開発実験、タスクロックによる競合回避の運用設計、「task verifierがほぼ完璧である必要がある」という教訓を解説
 - [article-ge-mast-multi-agent-failures.md](./article-ge-mast-multi-agent-failures.md) — arXiv「Why Do Multi-Agent LLM Systems Fail?」（Cemri, Pan, Yang et al.）。7フレームワーク・1600件超のトレースを含むMAST-Dataと、14の失敗モードを3カテゴリ(システム設計・エージェント間非整合・タスク検証)に整理したMAST分類体系を提案、kappa=0.88の高い一致度で構築された信頼性を解説
 - [article-ge-gptswarm-optimizable-graphs.md](./article-ge-gptswarm-optimizable-graphs.md) — arXiv/ICML2024「GPTSwarm: Language Agents as Optimizable Graphs」。単一エージェント・スワームを有向非環グラフとして統一表現し、REINFORCEによるエッジ最適化とOPRO等によるノード最適化の2段階最適化、GAIAベンチマークでGPT-4-Turbo・AutoGPTを上回る平均18.45%達成を解説
+- [article-ge-agent-error-taxonomy-debug.md](./article-ge-agent-error-taxonomy-debug.md) — arXiv「Where LLM Agents Fail and How They can Learn From Failures」。Memory/Reflection/Planning/Action/System-level operationsの5領域に失敗モードを体系化したAgentErrorTaxonomy、ALFWorld・GAIA・WebShopの実軌跡から成る初の大規模失敗軌跡データセットAgentErrorBench、根本原因デバッグでタスク成功率を最大26%改善したAgentDebugフレームワークを解説
 
 ## 記事（プロンプトエンジニアリング）
 

@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-16（geソース台帳・記事1本 web_ledger run:0816101550）
+
+- **Creation**: sources/ に記事1本を article-ge-agent-error-taxonomy-debug.md として登録（グラフエンジニアリングテーマ、arXiv論文、web_ledger工程 run:0816101550）。arXiv「Where LLM Agents Fail and How They can Learn From Failures」。単一の根本原因エラーが後続の判断へ波及する「カスケード失敗」という課題認識から、LLMエージェントの失敗モードをMemory・Reflection・Planning・Action・System-level operationsの5領域に体系化したAgentErrorTaxonomy、ALFWorld・GAIA・WebShopの3環境での実エージェント軌跡をアノテーションし著者らが「初の大規模失敗軌跡データセット」と位置づけるAgentErrorBench、根本原因を特定し矯正フィードバックを提供するデバッグフレームワークAgentDebugという3つの貢献を提示し、AgentErrorBenchでの検証実験で全正解精度24%・ステップレベル精度17%の向上、3ベンチマーク全体でタスク成功率最大26%の相対改善を達成したと報告している内容を解説
+- **Update**: sources/index.md の「記事（グラフエンジニアリング）」節に上記1件を追加
+
 ## 2026-08-16（geソース台帳・記事2本 web_ledger run:0816085739）
 
 - **Creation**: sources/ に記事2本を article-ge-*.md として登録（グラフエンジニアリングテーマ、arXiv論文2本、web_ledger工程 run:0816085739）。article-ge-mast-multi-agent-failures.md（arXiv「Why Do Multi-Agent LLM Systems Fail?」Cemri, Pan, Yang et al.、一次情報。マルチエージェントLLMシステムが一般的ベンチマークで「minimal」な性能向上にとどまるという研究課題の位置づけ、7フレームワーク・1600件超の注釈付きトレースからなり著者ら自身が「初めてのマルチエージェントシステム失敗ダイナミクスデータセット」と位置づけるMAST-Data、150件のトレースを専門家アノテーターがkappa=0.88の高い一致度で分析して構築したMAST分類体系、システム設計上の問題・エージェント間の非整合・タスク検証の3カテゴリに整理された14の失敗モード、GPT-4・Claude 3・Qwen2.5・CodeLlamaを対象としたLLM-as-a-Judgeによる自動判定パイプラインへの拡張を解説）、article-ge-gptswarm-optimizable-graphs.md（arXiv/ICML2024「GPTSwarm: Language Agents as Optimizable Graphs」、一次情報。単一エージェントを有向非環グラフG=(N,E,F,o)、複数エージェント(スワーム)を複合グラフG_ℰ=(N',E_ℰ,F',o')として統一的に表現する定式化、REINFORCEアルゴリズムによる確率的エッジサンプリングとOPRO等によるノードプロンプト最適化の2段階最適化、Mini Crosswordsで先行技術のTree of Thought(0.668)を上回る0.800、HumanEvalで0.76から0.88への改善、GAIAベンチマークでGPT-4-Turbo単体(9.70%)・AutoGPT(4.85%)を大きく上回る平均18.45%(Level2は260.2%の相対改善)という評価結果を解説）
