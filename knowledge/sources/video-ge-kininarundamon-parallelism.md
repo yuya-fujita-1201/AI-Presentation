@@ -5,7 +5,10 @@ description: Claude Codeのdynamic workflowsで1件の調べ物を3方向に並�
 channel: ずんだもんの実験道具箱
 duration: "14:05"
 published: 2026-07-28
+retrieved: 2026-08-09
 resource: https://www.youtube.com/watch?v=S0X1G4X4AlQ
+origin: "youtube:UCds1lQj2Y6l0BrvSnBDdhJg"
+subs: auto
 tags: [graph-engineering, video, claude-code, dynamic-workflows, multi-agent, bun]
 generated:
   by: claude-code/fable-5
@@ -130,6 +133,10 @@ generated:
 - Bunの記事、Claude Code公式ドキュメント、Zig作者のブログへのリンクは概要欄に掲載されているとしている
 - 締めのメッセージとして、「この動画を見終えた後が本番」であり、視聴者が次にAIへ依頼する作業の手順を3つに分けてみて、矢印のない2つが見つかれば横に広げてよく、見つからなければループのままで十分（上等）だと呼びかけている
 - エンディング後の一言として、今回扱った「壊れどころ」の話はよく見ると全部「判定」の話だったと振り返り、これを「判定エンジニアリング」と呼んでみてはと書いている人がいると紹介。呼び名はまだ定まっておらず、固まった頃にまた取り上げるとして次回以降への含みを持たせている
+
+## 台帳メタデータの補完（2026-08-16）
+
+この台帳はパイプライン以前の形式で作成されたため `origin` / `subs` / `retrieved` が記録されていなかった。2026-08-16 に yt-dlp で配信元へ再照会し、チャンネルID `UCds1lQj2Y6l0BrvSnBDdhJg` と字幕の提供状況を実取得して補完した（`retrieved` は台帳生成日時 2026-08-09 を採用）。**主張テーブルは作成当時の形式に無いため存在しない。**本文中の主張を引用・参照する際は、時刻付きの逐語確認が済んでいない点に留意すること。
 
 # 活用先
 

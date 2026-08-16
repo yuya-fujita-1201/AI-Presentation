@@ -5,7 +5,10 @@ description: Claude Codeのディープリサーチが生成する動的マル�
 channel: Caleb Writes Code
 duration: "08:35"
 published: 2026-07-30
+retrieved: 2026-08-09
 resource: https://www.youtube.com/watch?v=mBePcvqLX88
+origin: "youtube:UCuU9jE4MHHEIyYMbDfUPSew"
+subs: auto
 tags: [graph-engineering, video, multi-agent, dag, agentic-engineering, token-cost]
 generated:
   by: claude-code/fable-5
@@ -59,6 +62,10 @@ Claude Codeにディープリサーチを依頼すると、裏側では1つの�
 ## 結論：ノードの信頼性向上によりグラフへ「フルサークル」で回帰
 - ノードが信頼でき、より高性能になったことで、単一エージェントからワークフロー・グラフへとスケールし、ディープリサーチの例のような、単一エージェントでは解決が難しかったより広範な問題に取り組めるようになった、という回帰（「意図せぬダジャレだが」とオイラーの円環に絡めて表現）を「結論」として述べている
 - オイラーの課題が「7本の橋すべてを1回ずつ渡ることの可否を判定すること」でありグラフ理論誕生のきっかけとなったのに対し、エージェント領域におけるグラフ理論の応用は「高性能なノードを、より複雑なタスクを解けるように構造的にどう配置するかを決めること」であるとまとめている
+
+## 台帳メタデータの補完（2026-08-16）
+
+この台帳はパイプライン以前の形式で作成されたため `origin` / `subs` / `retrieved` が記録されていなかった。2026-08-16 に yt-dlp で配信元へ再照会し、チャンネルID `UCuU9jE4MHHEIyYMbDfUPSew` と字幕の提供状況を実取得して補完した（`retrieved` は台帳生成日時 2026-08-09 を採用）。**主張テーブルは作成当時の形式に無いため存在しない。**本文中の主張を引用・参照する際は、時刻付きの逐語確認が済んでいない点に留意すること。
 
 # 活用先
 

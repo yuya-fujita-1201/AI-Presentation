@@ -5,7 +5,10 @@ description: カルパシーの自律研究エージェント実験(autoresearch
 channel: AISPALab
 duration: "9:34"
 published: 2026-07-27
+retrieved: 2026-08-09
 resource: https://www.youtube.com/watch?v=YzoHUNJsJhw
+origin: "youtube:UCRjTJeraA1CpJSD6lwDM3Pw"
+subs: auto
 tags: [graph-engineering, video, knowledge-graph, ai-agents, multi-agent-systems, dag]
 generated:
   by: claude-code/fable-5
@@ -76,6 +79,10 @@ generated:
   3. グラフエンジニアリング: 一時的な記憶から永続的な状態へと哲学がシフトし、共有される状態を持つ段階
 - この進化はAI特有の目新しい話ではないと位置づけ、人間の歴史を振り返れば、帳簿・カルテ・公開日誌など、個人の頭の中にある記憶を超越するために常に記録と検証の仕組み(台帳)を使ってきたと述べている。グラフエンジニアリングへの移行も、アーキテクチャとしての必然的な進化の形だとしている
 - 最後に視聴者への問いを投げかけて締めくくっている: もしシステムを構築し、タスクを委ねるとしたら、AIシステムの真の能力の基盤はどこにあるのか。最初に洗練させるべきはモデルに語りかけるプロンプトの文面か、それともシステム全体として決して忘れてはいけないことを構造化した一覧の方か、という問いを視聴者に投げかけている
+
+## 台帳メタデータの補完（2026-08-16）
+
+この台帳はパイプライン以前の形式で作成されたため `origin` / `subs` / `retrieved` が記録されていなかった。2026-08-16 に yt-dlp で配信元へ再照会し、チャンネルID `UCRjTJeraA1CpJSD6lwDM3Pw` と字幕の提供状況を実取得して補完した（`retrieved` は台帳生成日時 2026-08-09 を採用）。**主張テーブルは作成当時の形式に無いため存在しない。**本文中の主張を引用・参照する際は、時刻付きの逐語確認が済んでいない点に留意すること。
 
 # 活用先
 

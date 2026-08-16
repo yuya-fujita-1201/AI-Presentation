@@ -102,6 +102,10 @@ OpenAIの長時間協調型を指す**非公式コードネーム**として「A
 
 なお、そもそもグラフ化（複数役割への分割）そのものが適切かどうかの判断基準は[ループかグラフか——使い分けの判断基準](./loop-vs-graph-decision.md)を参照。
 
+## 次に読む
+
+役割を分けたあと必ず決まっていないと事故になるのが「最終回答を誰が返すか」である。この論点は[最終回答を誰が所有するか](./handoffs-and-ownership.md)で、OpenAIのHandoffsとAgents as Toolsの対比として扱う。役割をClaude Codeの実機能に落とす手順は[サブエージェント設計の実務](./subagent-design-in-practice.md)、そもそも役割を増やして得かの判断は[マルチエージェント化の損益分岐点](./multi-agent-break-even.md)を参照。
+
 # Citations
 
 - [動画: グラフエンジニアリング完全ガイド（Sura×Asura For AI Agent）](../sources/video-ge-complete-guide-work-division.md) — Manager/Worker/Verifierの三役分担、CAIDの仕組みと効果測定の数値、ワークツリー隔離の限界、Claude Codeエージェントチームズ、Codexの並列サブエージェント機能の根拠

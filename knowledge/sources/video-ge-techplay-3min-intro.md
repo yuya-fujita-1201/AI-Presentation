@@ -5,7 +5,10 @@ description: AIエージェントに「何をどの順番で動かし、どこ�
 channel: TECH PLAY Channel
 duration: "3:01"
 published: 2026-08-06
+retrieved: 2026-08-09
 resource: https://www.youtube.com/watch?v=lIpBqO21J6M
+origin: "youtube:UCU2b1YWgg1WBOGfBwhKrtww"
+subs: auto
 tags: [graph-engineering, video, loop-engineering, ai-agent, workflow-design]
 generated:
   by: claude-code/fable-5
@@ -54,6 +57,10 @@ SNSでよく見かける「グラフエンジニアリング」という言葉�
 ## まとめ
 - グラフエンジニアリングは「ナレッジグラフ」の話ではなく「AIの仕事の進め方のグラフ」だとテックンがまとめ、プレ太先輩も「その理解でいい」と肯定している
 - 最後にプレ太先輩は、バズワードに見える言葉ほど「何を指していて、何を指していないのか」を分けて考えることが大事だと締めくくっている
+
+## 台帳メタデータの補完（2026-08-16）
+
+この台帳はパイプライン以前の形式で作成されたため `origin` / `subs` / `retrieved` が記録されていなかった。2026-08-16 に yt-dlp で配信元へ再照会し、チャンネルID `UCU2b1YWgg1WBOGfBwhKrtww` と字幕の提供状況を実取得して補完した（`retrieved` は台帳生成日時 2026-08-09 を採用）。**主張テーブルは作成当時の形式に無いため存在しない。**本文中の主張を引用・参照する際は、時刻付きの逐語確認が済んでいない点に留意すること。
 
 # 活用先
 

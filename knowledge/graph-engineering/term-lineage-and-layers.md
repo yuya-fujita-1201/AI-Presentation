@@ -93,6 +93,10 @@ AI活用の工夫は、この数年で「プロンプト→コンテキスト→
 - 「今の課題はループで十分か、グラフが要るか」の判断基準は [loop-vs-graph-decision.md](./loop-vs-graph-decision.md) を参照
 - 「グラフ」の3つの意味のうち「知識の地図」の詳細は [knowledge-graph-as-memory.md](./knowledge-graph-as-memory.md) を参照
 
+## 次に読む
+
+5段階の位置付けを掴んだら、グラフ側の型を具体的に見るとよい。Anthropic公式の5つのワークフローパターンとダイナミックワークフローの6編成型は[つなぎ方の型カタログ](./workflow-patterns-catalog.md)にまとめてある。
+
 # Citations
 
 - [動画: Graphエンジニアリングとは？AI活用5段階の違いと構造を初心者向けに解説（AI氣道）](../sources/video-ge-5-stages-beginner.md) — 5段階の定義、厨房・会社経営・子育ての3比喩、「入れ子」説、「グラフ」の3つの意味の根拠

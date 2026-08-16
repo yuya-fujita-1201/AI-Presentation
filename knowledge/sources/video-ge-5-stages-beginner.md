@@ -5,7 +5,10 @@ description: 「グラフ」という流行語がまだ生まれて3週間とい
 channel: AI氣道
 duration: "8:42"
 published: 2026-07-28
+retrieved: 2026-08-09
 resource: https://www.youtube.com/watch?v=bitOovEd3yo
+origin: "youtube:UCEzawhU9T9apnRMLJBd3e4Q"
+subs: auto
 tags: [graph-engineering, video, ai-activation-stages, human-in-the-loop, agentic-workflow]
 generated:
   by: claude-code/fable-5
@@ -105,6 +108,10 @@ generated:
 - 順番を飛ばしていきなり5段目（グラフ）から始めてはいけないと明言しており、「社員が1人なら組織図はいらない」「鍋が1つなら段取り表もいらない」という例えで、困り事が先にあって道具は後から選ぶものだという原則を繰り返している
 - まとめとして、①5段階は乗り換えではなく入れ子であること、②グラフは3つに分けて考えること、③グラフは提案であり確定は人間が行うこと、の3点を再掲している
 - 最後に、この運用の効能はAIより先に人間を楽にすることにあるとし、講師自身も段取り表を作ってから夜に何度もパソコンを覗きに行かなくなった、「守られていたのは実は私の方だった」という体験談で締めくくっている
+
+## 台帳メタデータの補完（2026-08-16）
+
+この台帳はパイプライン以前の形式で作成されたため `origin` / `subs` / `retrieved` が記録されていなかった。2026-08-16 に yt-dlp で配信元へ再照会し、チャンネルID `UCEzawhU9T9apnRMLJBd3e4Q` と字幕の提供状況を実取得して補完した（`retrieved` は台帳生成日時 2026-08-09 を採用）。**主張テーブルは作成当時の形式に無いため存在しない。**本文中の主張を引用・参照する際は、時刻付きの逐語確認が済んでいない点に留意すること。
 
 # 活用先
 

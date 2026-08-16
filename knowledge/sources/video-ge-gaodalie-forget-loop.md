@@ -5,7 +5,10 @@ description: 2026年7月に急速に広まった「グラフエンジニアリ�
 channel: Gao Dalie (高達烈)
 duration: "08:37"
 published: 2026-07-26
+retrieved: 2026-08-09
 resource: https://www.youtube.com/watch?v=ueA8RWZ9f5Q
+origin: "youtube:UC6P5WCWjqhhXVFBqbJHNxyw"
+subs: auto
 tags: [graph-engineering, video, loop-engineering, ai-agent, agent-orchestration, prompt-engineering]
 generated:
   by: claude-code/fable-5
@@ -64,6 +67,10 @@ AIエージェントがより複雑になるにつれ、単純な反復処理だ
 - 新しい用語そのものに関する結論として、「正直に述べさせてほしい」とした上で、グラフエンジニアリングという言葉が登場してからまだ3日しか経っておらず、この言葉が今後も使われ続けるかどうかは誰にもわからないと述べている
 - ただし、タスクを分割し、並列実行し、判断チェックを追加するという根本的な概念は、その名称が変わってもなお有効であり、自身の経験からもその有効性を実感していると述べている
 - 「たとえその用語が1か月で消えたとしても」と述べたところでトランスクリプトが途切れており、続く結論部分の文言は本トランスクリプトには含まれていない
+
+## 台帳メタデータの補完（2026-08-16）
+
+この台帳はパイプライン以前の形式で作成されたため `origin` / `subs` / `retrieved` が記録されていなかった。2026-08-16 に yt-dlp で配信元へ再照会し、チャンネルID `UC6P5WCWjqhhXVFBqbJHNxyw` と字幕の提供状況を実取得して補完した（`retrieved` は台帳生成日時 2026-08-09 を採用）。**主張テーブルは作成当時の形式に無いため存在しない。**本文中の主張を引用・参照する際は、時刻付きの逐語確認が済んでいない点に留意すること。
 
 # 活用先
 

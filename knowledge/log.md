@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-16（ge採点停滞の手動修正・findings 7件）
+
+- **Fix (f14)**: パイプライン以前に作られた `video-ge-*` 台帳11本に `origin` / `subs` / `retrieved` が無く、コンセプト側の「（聞き取り）」注記を採点者が照合できない状態だった。yt-dlp で配信元へ再照会し、**実データ**（チャンネルID・字幕の提供状況）を取得して補完。`retrieved` は frontmatter の `generated.at` を採用し、各ファイルに「2026-08-16に再照会で補完した」「主張テーブルは当時の形式に無い」旨を明記した。独立origin数 6種→15種
+- **Fix (f1)**: `workflow-patterns-catalog.md` の型選びまとめが Orchestrator-workers を「Agent側」と分類しており、同ファイル冒頭に引用したAnthropic公式の定義（5つのWorkflowパターンの1つ）と矛盾していた。公式分類に合わせて訂正し、公式のAgentは5つの型のいずれとも別区分である旨を追記
+- **Fix (f2)**: `verification-and-testing.md` の「Opus 5では検証用サブエージェントは不要と公式案内がある」という動画由来の伝聞が、同バンドルの一次資料（Anthropic公式 Best practices for Claude Code、検証サブエージェントを強制力の最上位に位置づけ）と逆を向いたまま放置されていた。伝聞であることを明示し、一次資料側へリンクして「設計判断は検証役を分ける側に寄せるのが安全」と注記。双方向リンク（Citations ⇄ 活用先）も追加
+- **Fix (f3)**: `overview.md` の「生まれて3週間」（動画公開 7/28 時点）が、本バンドルの記録する発端 7/18 と約10日で計算が合わない点を注記
+- **Fix (f11/f13)**: `index.md` の一覧順が `overview.md` の推奨順と不一致で、かつ同じ目録を二重管理していた。推奨順と同じ並びに直し、説明は見出し語のみとして内容説明は overview.md 側に一元化
+- **Fix (f12)**: 新規5本への前方リンクが欠落していた。`verification-and-testing`→`verification-gates-and-evidence`（直系の続編）、`roles-and-orchestration`→`handoffs-and-ownership` など5ファイルに「次に読む」節を追加
+- **Note**: 採点は 7/6/6/7/6 → 7/7/7/7/7 → 7/7/7/7/6 と停滞（stagnation）。findings 16件のうち上記7件を手動修正し `reset-phase.sh grade_k` で再開。未着手は f5〜f8（ソース未回収の主張）・f9（graph-primitives.md が1ファイル=1概念を超過）・f15（重複説明3系統）で、これらは改善ループに委ねた
+
 ## 2026-08-16（graph-engineering 採点指摘の修正 knowledge run:081617451a）
 
 - **Fix**: 採点findings 15件（すべてfixed disposition）に基づき既存コンセプトを修正。risks-and-safeguards.md:81のトークンコスト注記誤り（「単一比15倍」→「チャット比15倍・単一エージェントはチャット比4倍」）、overview.md:13の下位コンセプト数誤記（「8つ」→「14の下位コンセプト」）、risks-and-safeguards.md:44のBun行数食い違いの断定表現をgraph-primitives.mdの留保表現に統一
