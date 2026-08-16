@@ -83,3 +83,5 @@ generated:
 # 活用先
 
 - [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — Googleの研究者によるという論文の紹介（4ベンチマーク×5構成×9モデルの180パターン、ファイナンスエージェントとプランクラフトで明暗が分かれた結果、並列分割の可否という理由、45%という損益分岐点、モデル別の差）の根拠。auto字幕由来のimpact:high主張のため、コンセプト側では帰属＋（聞き取り）で記述し、動画自身が付けている「全ての場合に一般化はできない」という留保も併記している
+- [../graph-engineering/subagent-design-in-practice.md](../graph-engineering/subagent-design-in-practice.md) — 3つの実践的活用法（並列調査・忖度回避・作成検証ループ）と、シングルで足りるタスクにマルチエージェントを使うとコストが上がり精度も下がりうるという総括を、使うべき場面の整理として使用（聞き取り）
+- [../graph-engineering/verification-gates-and-evidence.md](../graph-engineering/verification-gates-and-evidence.md) — sycophancyにより自己評価が迎合的になるという指摘、メイン直接評価とサブエージェント評価の比較デモ（好意的評価 対 10点中8点＋具体的指摘）、点数基準または最大3回で終了する作成検証ループのデモと最終9点という結果、トークン消費増という注意を、採点者を分ける理由とゲートの終了条件の設計例として使用（聞き取り）

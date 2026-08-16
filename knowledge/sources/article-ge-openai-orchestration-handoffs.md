@@ -43,3 +43,4 @@ Handoffsパターンでは、トリアージ役のエージェントが特化し
 # 活用先
 
 - [../graph-engineering/multi-agent-break-even.md](../graph-engineering/multi-agent-break-even.md) — 専門家を追加してよい4条件（capability isolation / policy isolation / prompt clarity / trace legibility）の引用と、「Start with one agent whenever you can」という結論、次の分岐が本当に異なる指示・ツール・ポリシーを必要とする場合にのみ分割すべきという指針の根拠
+- [../graph-engineering/handoffs-and-ownership.md](../graph-engineering/handoffs-and-ownership.md) — 「最終的なユーザー向け回答の所有権を誰が持つか」がオーケストレーションの本質だという位置づけ、Handoffsパターンと Agents as Tools（Managerパターン）の定義・実装例・制御フローと所有権の対比、狭い職務スコープ・`handoff_description`の書き方という追加指針の主根拠

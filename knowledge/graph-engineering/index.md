@@ -16,9 +16,19 @@
 - [workflow-patterns-catalog.md](./workflow-patterns-catalog.md) — つなぎ方の型カタログ。Anthropic公式の5つのワークフローパターンとダイナミックワークフローの6つの編成型、トポロジーの自動最適化
 - [multi-agent-break-even.md](./multi-agent-break-even.md) — マルチエージェント化の損益分岐点。90.2%改善と15倍トークン、45%ルール、増やす前に確認する4条件
 - [failure-taxonomy-and-debugging.md](./failure-taxonomy-and-debugging.md) — 失敗の分類とデバッグ。MASTの3カテゴリ14モード、AgentErrorTaxonomyの5領域、カスケード失敗の切り分け
+- [handoffs-and-ownership.md](./handoffs-and-ownership.md) — 最終回答を誰が所有するか。HandoffsとAgents as Toolsの対比、回答の所有権と作業対象の所有権
+- [subagent-design-in-practice.md](./subagent-design-in-practice.md) — サブエージェント設計の実務。独立コンテキスト・ツール権限・ネスト不可という制約と、使うべき/避けるべき場面
+- [verification-gates-and-evidence.md](./verification-gates-and-evidence.md) — 検証をゲートにする。強制力の4段階、自己申告ではなく証拠、検証機構がほぼ完璧である必要性
 
 ## 読む順番
 
 初めての人は overview → term-lineage-and-layers → graph-primitives → loop-vs-graph-decision の順で基礎を固め、その後 roles-and-orchestration → relationship-graph-for-operations → verification-and-testing で設計手法へ、最後に knowledge-graph-as-memory → risks-and-safeguards で視野を広げると全体像がつかめる。
 
-公式ドキュメント・論文を根拠にした後半3本は、この流れに次のように差し込むとよい。loop-vs-graph-decision の直後に **multi-agent-break-even**（そもそも増やして得かを数字で確認する）、roles-and-orchestration の直後に **workflow-patterns-catalog**（つなぎ方の型を選ぶ）、verification-and-testing の直後に **failure-taxonomy-and-debugging**（失敗を分類して原因を切り分ける）。
+公式ドキュメント・論文を根拠にした後半6本は、この流れに次のように差し込むとよい。
+
+- loop-vs-graph-decision の直後に **multi-agent-break-even**（そもそも増やして得かを数字で確認する）
+- roles-and-orchestration の直後に **handoffs-and-ownership**（誰が最後に喋るかを決める）→ **workflow-patterns-catalog**（つなぎ方の型を選ぶ）
+- 型が決まったら **subagent-design-in-practice**（決めた構造を実際の機能で組む）
+- verification-and-testing の直後に **verification-gates-and-evidence**（検証に実際の停止力を持たせる）→ **failure-taxonomy-and-debugging**（それでも起きた失敗を分類して原因を切り分ける）
+
+設計の順に並べ直すと、**なぜ分けるか**（multi-agent-break-even）→ **どう分けるか**（roles-and-orchestration / handoffs-and-ownership / workflow-patterns-catalog）→ **何で作るか**（subagent-design-in-practice）→ **どう止めるか**（verification-gates-and-evidence）→ **壊れたらどう直すか**（failure-taxonomy-and-debugging）という流れになる。

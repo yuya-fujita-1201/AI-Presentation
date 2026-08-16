@@ -1,5 +1,13 @@
 # 変更履歴
 
+## 2026-08-16（graph-engineering コンセプト拡充・完了 knowledge run:081612459a）
+
+- **Creation**: graph-engineering/ に残りコンセプト3本を追加し、run:08161057e2 で設計した新規6本が全て完了（plan.json 15/15 done）。handoffs-and-ownership.md（OpenAI公式のHandoffsとAgents as Tools（Managerパターン）を「最終回答の所有権を誰が持つか」という軸で対比し、Anthropicの研究システムとClaude Codeサブエージェントがいずれもマネージャー型にあたることを確認したうえで、Cコンパイラ実験の`current_tasks/`ロックを「作業対象の所有権」という別種の所有権として整理）、subagent-design-in-practice.md（Agent SDK公式が保証する機能範囲と、解説動画由来のフロントマター仕様・コンテキスト独立性・ネスト不可という3制約を確度を分けて整理し、使うべき/避けるべき場面と実装前チェックリストを提示）、verification-gates-and-evidence.md（Claude Code公式ベストプラクティスの強制力4段階（プロンプト内／`/goal`／Stopフック／セカンドオピニオン）と8回連続ブロックでの上書き、成功の自己申告ではなく証拠を提示させる原則、「task verifierがほぼ完璧である必要がある」という教訓を、検証をエッジの通行条件として読み替えて整理）
+- **Update**: sources/ の台帳9本に「活用先」を追記（video-ge-subagent-overview-basics.md は初回記入）。新規3本が張った出典リンク12件すべてに対応する活用先を確認し、逆方向（活用先に挙げるが本文に出典リンクなし）も0件
+- **Update**: graph-engineering/index.md に新規3本を追加し、読む順番を「なぜ分けるか→どう分けるか→何で作るか→どう止めるか→壊れたらどう直すか」という設計順の導線として書き直し。ルート index.md の graph-engineering の説明を15本構成に合わせて更新
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認。あわせて plan.json 15件すべての実ファイル存在・sources集合の重複なし・sources 2件未満なしを機械確認
+- **Note**: 既存コンセプト12本は書き換えていない（本ランの変更は新規3本の追加と、台帳側の活用先追記・index更新のみ）
+
 ## 2026-08-16（graph-engineering コンセプト拡充 knowledge run:08161057e2）
 
 - **Creation**: graph-engineering/ に公式ドキュメント・論文を一次根拠とするコンセプト3本を追加。workflow-patterns-catalog.md（Anthropic公式「Building Effective AI Agents」のWorkflow/Agent定義と5つのワークフローパターン、Claude Codeダイナミックワークフローの6つの編成型、GPTSwarmによるトポロジー自動最適化）、multi-agent-break-even.md（Anthropicの90.2%改善と15倍トークン、MASTの「minimal」、45%ルール、OpenAIの専門家追加4条件を突き合わせた損益分岐点の整理）、failure-taxonomy-and-debugging.md（MASTの3カテゴリ14失敗モードとkappa=0.88、AgentErrorTaxonomyの5領域とカスケード失敗、AgentDebugの定量結果、Anthropicの実地失敗例との対応づけ）
