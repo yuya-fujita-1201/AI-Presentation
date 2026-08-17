@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+<defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#460073"/></marker>
+<marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6E6E7E"/></marker></defs>
+<rect width="1024" height="768" fill="#FFFFFF"/>
+<rect x="302" y="74" width="420" height="72" rx="36" fill="#460073"/>
+<text x="512" y="122" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">いま、何に困っている？</text>
+<path d="M 512 146 V 198 H 274 V 240" fill="none" stroke="#6E6E7E" stroke-width="5" marker-end="url(#a4)"/>
+<path d="M 512 146 V 198 H 750 V 240" fill="none" stroke="#460073" stroke-width="5" marker-end="url(#a1)"/>
+<rect x="64" y="246" width="420" height="254" rx="24" fill="#F4F4F6" stroke="#D6D6DE" stroke-width="3"/>
+<text x="274" y="306" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="26" font-weight="800" fill="#6E6E7E">出てくる品質が安定しない</text>
+<path d="M 274 326 V 366" fill="none" stroke="#6E6E7E" stroke-width="5" marker-end="url(#a4)"/>
+<rect x="124" y="374" width="300" height="64" rx="32" fill="#6E6E7E"/>
+<text x="274" y="416" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#FFFFFF">まずループを見直す</text>
+<text x="274" y="474" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="600" fill="#6E6E7E">前回、04の回で扱った内容</text>
+<rect x="540" y="246" width="420" height="254" rx="24" fill="#F7F0FC" stroke="#A100FF" stroke-width="4"/>
+<text x="750" y="306" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#460073">並行し始めて、全体が見えない</text>
+<path d="M 750 326 V 366" fill="none" stroke="#460073" stroke-width="5" marker-end="url(#a1)"/>
+<rect x="600" y="374" width="300" height="64" rx="32" fill="#A100FF"/>
+<text x="750" y="416" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#FFFFFF">グラフの出番</text>
+<text x="750" y="474" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="600" fill="#460073">今日ここから先の内容</text>
+<rect x="32" y="546" width="960" height="184" rx="26" fill="#460073"/>
+<text x="512" y="600" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#FFFFFF">ただし、グラフに進む前にもう1つだけ確かめます</text>
+<text x="512" y="652" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">「互いの結果を読まない仕事」が、2つ以上ありますか？</text>
+<text x="512" y="702" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="22" font-weight="600" fill="#D9BBF2">無ければ、担当を分けても速くはなりません</text>
+</svg>
