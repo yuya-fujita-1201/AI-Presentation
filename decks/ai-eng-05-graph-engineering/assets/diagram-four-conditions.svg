@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+<defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#460073"/></marker>
+<marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#A100FF"/></marker></defs>
+<rect width="1024" height="768" fill="#FFFFFF"/>
+<text x="512" y="92" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="31" font-weight="800" fill="#460073">この4つのどれかが、はっきり良くなりますか？</text>
+<rect x="42" y="146" width="450" height="170" rx="24" fill="#FFFFFF" stroke="#A100FF" stroke-width="4"/>
+<rect x="70" y="168" width="188" height="50" rx="25" fill="#460073"/>
+<text x="164" y="202" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">能力</text>
+<text x="267" y="258" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#460073">1体では手に負えないことが、</text>
+<text x="267" y="292" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#460073">できるようになるか</text>
+<rect x="532" y="146" width="450" height="170" rx="24" fill="#FFFFFF" stroke="#A100FF" stroke-width="4"/>
+<rect x="560" y="168" width="188" height="50" rx="25" fill="#460073"/>
+<text x="654" y="202" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">ルール</text>
+<text x="757" y="258" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#460073">この作業だけは外に出さない、と</text>
+<text x="757" y="292" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#460073">閉じ込められるか</text>
+<rect x="42" y="346" width="450" height="170" rx="24" fill="#FFFFFF" stroke="#A100FF" stroke-width="4"/>
+<rect x="70" y="368" width="188" height="50" rx="25" fill="#460073"/>
+<text x="164" y="402" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">分かりやすさ</text>
+<text x="267" y="458" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#460073">1体に全部書き込むより、</text>
+<text x="267" y="492" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#460073">指示が短く済むか</text>
+<rect x="532" y="346" width="450" height="170" rx="24" fill="#FFFFFF" stroke="#A100FF" stroke-width="4"/>
+<rect x="560" y="368" width="188" height="50" rx="25" fill="#460073"/>
+<text x="654" y="402" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">追跡</text>
+<text x="757" y="458" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#460073">どこで間違えたのかを、</text>
+<text x="757" y="492" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#460073">後から遡れるようになるか</text>
+<rect x="32" y="556" width="960" height="176" rx="26" fill="#460073"/>
+<text x="512" y="616" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="30" font-weight="800" fill="#FFFFFF">どれにも当たらないなら、分けない</text>
+<text x="512" y="668" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">「速くなりそう」「賢くなりそう」は、理由に入りません</text>
+<text x="512" y="712" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="22" font-weight="600" fill="#D9BBF2">できることなら、まずは1体から</text>
+</svg>
