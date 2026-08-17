@@ -335,7 +335,7 @@ def main() -> None:
     for r, label, sub, stroke, fill in reversed(speeds):
         body += circle(512, 385, r, fill, stroke, 5)
         body += t(512, 385 - r + 48, label, 25, stroke, 800)
-    body += robot(512, 380)
+    body += robot(512, 425)   # アンテナが内側の輪のラベルと重ならない位置
     body += t(512, 526, "AIの持ち場", 23, TERRACOTTA, 800)
     body += human(822, 130)
     body += t(822, 282, "人の監督席", 22, PRIMARY, 800)
@@ -476,8 +476,8 @@ def main() -> None:
         "diagram-academic-lineage.svg",
         "反復の構造をめぐる研究の流れ",
         [("ReAct", "考える→行動"), ("Reflection", "失敗を記憶"),
-         ("Self-Refine", "生成→批評→改善"), ("Evaluator", "生成と評価を分離"),
-         ("Loop Eng.", "運用・停止まで設計")],
+         ("Self-Refine", "生成→批評→改善"), ("Evaluator", "評価を分ける"),
+         ("Loop Eng.", "停止・運用まで")],
         highlight=4,
         footer="まったくの新発明ではなく、既存のパターンを実務まで広げたものです",
     )
@@ -520,7 +520,7 @@ def main() -> None:
     compare(
         "diagram-long-run-guardrail.svg",
         "自律度と、必要になる歯止め",
-        ("自律を伸ばす", ["自動承認", "動的ワークフロー", "長時間実行"]),
+        ("自律を伸ばす", ["自動承認", "その場で手順を決める", "長時間実行"]),
         ("歯止めを増やす", ["隔離された作業領域", "停止・コスト上限", "証拠と人への通知"]),
         "自由に動かすために、制約のほうを先に設計します",
     )
