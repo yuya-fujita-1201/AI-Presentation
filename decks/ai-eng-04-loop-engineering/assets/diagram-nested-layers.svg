@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <text x="512" y="68" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="34" font-weight="800" fill="#7C3527">乗り換えではなく、包み込む</text><circle cx="512" cy="385" r="280" fill="#DDEFEA" stroke="#247F7A" stroke-width="5"/><text x="512" y="149" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="800" fill="#247F7A">LOOP</text><circle cx="512" cy="385" r="215" fill="#F6E6CF" stroke="#D99A5E" stroke-width="5"/><text x="512" y="214" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="800" fill="#D99A5E">HARNESS</text><circle cx="512" cy="385" r="150" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/><text x="512" y="279" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="800" fill="#B44A32">CONTEXT</text><circle cx="512" cy="385" r="88" fill="#7C3527" stroke="#7C3527" stroke-width="5"/><text x="512" y="341" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="800" fill="#FFFFFF">PROMPT</text><text x="512" y="402" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#FFFFFF">1周ごとに動く</text><text x="512" y="710" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#B44A32">下の層の質の差は、周回するほど大きくなります</text>
+</svg>
