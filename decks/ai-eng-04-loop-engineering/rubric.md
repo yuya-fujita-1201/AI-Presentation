@@ -1,6 +1,6 @@
 ---
 target: 9
-max_iterations: 8
+max_iterations: 12
 auto_merge: false
 ---
 
@@ -26,5 +26,5 @@ auto_merge: false
 ## 停止条件
 
 - 達成: 全5項目が9点以上
-- 上限: 8周
+- 上限: 12周（ユーザー指示「合格するまで何回も回す」に合わせ、当初の8周から引き上げ）
 - 停滞: 2周連続で合計スコアが改善しない
