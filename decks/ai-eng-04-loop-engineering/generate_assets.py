@@ -405,7 +405,7 @@ def main() -> None:
         "diagram-maker-checker-separation.svg",
         "作る役と採点する役を分ける2つの方法",
         ("Maker", ["生成・編集を行う", "書き込み権限あり", "量をこなす"]),
-        ("Checker", ["判定と根拠だけ返す", "Write / Editを持たない", "まず対象の性質を判定"]),
+        ("Checker", ["判定と根拠だけ返す", "書き込みの権限を持たない", "まず対象の性質を判定"]),
         "直せない採点役は、甘い判定へ流れにくくなります",
     )
 
@@ -442,7 +442,7 @@ def main() -> None:
     files = [
         ("CLAUDE.md", "停止条件・禁止事項", TERRACOTTA, PEACH),
         ("settings.json", "チェック・編集時の自動検査", ACCENT, ACCENT_SOFT),
-        ("fixer.md", "行き詰まりを見る別エージェント", GOLD, SAND),
+        ("fixer.md", "行き詰まりを解く・別のエージェント", GOLD, SAND),
     ]
     for i, (name, sub, stroke, fill) in enumerate(files):
         x = 95 + i * 305
@@ -451,7 +451,6 @@ def main() -> None:
         body += t(x + 125, 355, name, 24, stroke, 800)
         body += lines(x + 125, 420, sub.split("・"), 19, MUTED, 650, "middle", 28)
     body += t(512, 620, "足りなくなってから、接続・隔離・メモリーを足していきます", 25, ACCENT, 800)
-    body += t(512, 682, "部品の一覧は開始条件ではなく、詰まったときの索引です", 22, MUTED, 700)
     save("diagram-three-file-start.svg", body)
 
     flow(
