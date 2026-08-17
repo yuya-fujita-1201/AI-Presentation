@@ -220,15 +220,34 @@ def main() -> None:
         footer="最後に「1ページ・1つのチェック」へ落とす",
     )
 
+    flow(
+        "diagram-what-is-loop.svg",
+        "「繰り返し」から「ループ」へ",
+        [("日常の繰り返し", "洗って｜干して｜また洗う"),
+         ("仕事の繰り返し", "作って｜見てもらい｜直す"),
+         ("この資料のループ", "AIが作って｜自分で確かめて｜直し続ける")],
+        highlight=2,
+        footer="どれも同じ繰り返しです。違うのは、誰が回しているかだけ",
+    )
+
+    compare(
+        "diagram-chat-vs-agent.svg",
+        "チャットAIとエージェントの違い",
+        ("チャットAI", ["質問すると答えが返る", "そこで一度止まる", "次の指示は人が打つ"]),
+        ("エージェント", ["自分で道具を使う", "手順を続けて実行する", "次の一手を自分で決める"]),
+        footer="どちらもAIです。違うのは、1回で止まるか動き続けるか",
+    )
+
     body = t(512, 65, "チャットAIの往復：誰が何をしているか", 34, PRIMARY, 800)
     body += human(130, 320)
     body += t(130, 515, "人間", 27, TERRACOTTA, 800)
+    # ロボット（x=900、矩形836-964）と重ならないよう、ボックス列を詰めている
     for i, label in enumerate(["指示", "読む", "直す", "続ける？"]):
-        x = 300 + i * 155
-        body += rect(x, 250, 125, 126, PEACH if i % 2 == 0 else SAND, GOLD, 3, 22)
-        body += t(x + 62, 325, label, 23, PRIMARY, 800)
+        x = 280 + i * 140
+        body += rect(x, 250, 118, 126, PEACH if i % 2 == 0 else SAND, GOLD, 3, 22)
+        body += t(x + 59, 325, label, 23, PRIMARY, 800)
         if i < 3:
-            body += arrow(x + 130, 313, x + 150, 313, MUTED, 4)
+            body += arrow(x + 123, 313, x + 136, 313, MUTED, 4)
     body += robot(900, 320)
     body += t(900, 515, "AIは1回分だけ", 24, ACCENT, 800)
     body += arrow(840, 560, 210, 560, TERRACOTTA, 5, True)
