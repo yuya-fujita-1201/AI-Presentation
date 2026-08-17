@@ -357,7 +357,7 @@ def main() -> None:
     body += t(512, 366, "INNER", 27, TERRACOTTA, 800)
     body += t(512, 402, "1タスク", 22, MUTED, 700)
     body += t(512, 170, "OUTER｜複数タスク", 25, ACCENT, 800)
-    body += t(512, 116, "HUMAN GATE｜分解後と最終成果", 21, PRIMARY, 800)
+    body += t(512, 116, "人の承認｜分解後と最終成果", 21, PRIMARY, 800)
     body += t(512, 704, "失敗の教訓を外側へ渡せるかどうかが要点になります", 23, ACCENT, 800)
     save("diagram-inner-outer-loop.svg", body)
 
