@@ -23,6 +23,33 @@ GOLD = "#D99A5E"
 FONT = "Hiragino Sans, Yu Gothic, sans-serif"
 
 
+def _w(text: str, size: int) -> float:
+    """描画幅の見積もり。CJKはfont-size相当、英数・記号は0.6倍で数える。"""
+    total = 0.0
+    for ch in text:
+        total += size if ord(ch) > 0x2E7F else size * 0.55
+    return total
+
+
+def _fit(text: str, size: int, maxw: float, where: str) -> None:
+    """枠に収まらない文言を生成時に落とす。
+    文言を変えたのに幅を再検証せず、はみ出しを作り込む事故を防ぐため。
+
+    見積もりが信頼できるのは日本語（1文字≒font-size）だけなので、
+    英数が主体の文字列（ReAct / Self-Refine などの固有名詞ラベル）は
+    対象外にする。通るまで係数を緩めると検査自体が意味を失うため、
+    精度の届かない範囲は正直に外しておく。これらは実画像で確認済み。
+    """
+    cjk = sum(1 for ch in text if ord(ch) > 0x2E7F)
+    if cjk * 2 < len(text):
+        return
+    got = _w(text, size)
+    if got > maxw:
+        raise SystemExit(
+            "図のテキストが枠を超えています: %s / 「%s」 推定%.0fpx > 枠%.0fpx"
+            % (where, text, got, maxw))
+
+
 def t(x: int, y: int, value: str, size: int = 26, color: str = TEXT,
       weight: int = 700, anchor: str = "middle") -> str:
     return (
@@ -125,6 +152,9 @@ def flow(name: str, heading: str, items: list[tuple[str, str]],
         fill = ACCENT if i == highlight else (PEACH if i % 2 == 0 else SAND)
         color = WHITE if i == highlight else PRIMARY
         body += rect(x, 250, w, 230, fill, fill if i == highlight else GOLD, 3, 28)
+        _fit(label, 26, w - 8, "%s flow.label" % name)
+        for _ln in sub.split("｜"):
+            _fit(_ln, 19, w - 8, "%s flow.sub" % name)
         body += t(x + w // 2, 335, label, 26, color, 800)
         body += lines(x + w // 2, 390, sub.split("｜"), 19,
                       WHITE if i == highlight else MUTED, 600, "middle", 30)
@@ -143,8 +173,10 @@ def compare(name: str, heading: str, left: tuple[str, list[str]],
         (60, left, left_color, PEACH), (534, right, right_color, ACCENT_SOFT)
     ):
         body += rect(x, 145, 430, 450, fill, color, 4, 30)
+        _fit(payload[0], 31, 410, "%s compare.heading" % name)
         body += t(x + 215, 220, payload[0], 31, color, 800)
         for i, value in enumerate(payload[1]):
+            _fit(value, 22, 322, "%s compare.item" % name)
             body += circle(x + 58, 298 + i * 82, 13, color)
             body += t(x + 88, 307 + i * 82, value, 22, TEXT, 650, "start")
     if footer:
@@ -170,6 +202,9 @@ def grid(name: str, heading: str, items: list[tuple[str, str]],
         color = ACCENT if i % 2 else TERRACOTTA
         fill = ACCENT_SOFT if i % 2 else PEACH
         body += rect(x, y, card_w, card_h, fill, color, 3, 26)
+        _fit(label, 26, card_w - 16, "%s grid.label" % name)
+        for _ln in sub.split("｜"):
+            _fit(_ln, 19, card_w - 16, "%s grid.sub" % name)
         body += t(x + card_w // 2, y + 64, label, 26, color, 800)
         body += lines(x + card_w // 2, y + 108, sub.split("｜"), 19, MUTED, 600,
                       "middle", 28)
@@ -213,10 +248,10 @@ def main() -> None:
     )
     flow(
         "diagram-learning-journey.svg",
-        "今日たどる6つの問い",
-        [("Why", "なぜ回す"), ("What", "何が1周"), ("Stop", "いつ止める"),
-         ("Check", "何で測る"), ("Who", "誰が採点"), ("Start", "どこから始める")],
-        highlight=5,
+        "今日たどる5つの問い",
+        [("違い", "チャットとの差"), ("中身", "1周に何がある"), ("止め方", "4種類を重ねる"),
+         ("測り方", "機械かAIか"), ("始め方", "1ページから")],
+        highlight=4,
         footer="最後は「1ページ・1つのチェック」まで落とします",
     )
 
@@ -374,7 +409,7 @@ def main() -> None:
     compare(
         "diagram-machine-vs-llm-check.svg",
         "機械で判定する場合と、AIに判定させる場合",
-        ("機械判定", ["コード・数値・構造", "終了コード・差分・件数", "同じ入力なら同じ判定"]),
+        ("機械判定", ["コード・数値・構造", "成功か失敗か・差分・件数", "同じ入力なら同じ判定"]),
         ("モデル判定", ["文章・企画・デザイン", "採点表・画面・根拠", "観点と独立性を設計する"]),
         "両方置けるなら置きます。文字数は機械、崩れはAIが見ます",
     )
@@ -382,8 +417,8 @@ def main() -> None:
     flow(
         "diagram-evidence-chain.svg",
         "完了報告と、証拠として出せるもの",
-        [("申告", "完了しましたの一言"), ("操作", "実際に実行したこと"), ("出力", "戻り値・記録"),
-         ("画面", "見える成果物"), ("状態", "最後にどうなったか")],
+        [("申告", "完了しました｜という一言"), ("操作", "実際に｜実行したこと"), ("出力", "戻り値・記録"),
+         ("画面", "見える成果物"), ("状態", "最後に｜どうなったか")],
         highlight=4,
         footer="自己申告で終わらせず、後から追える結果を残します",
     )
