@@ -82,6 +82,11 @@
     "he": "full",
     "le": "full",
     "ge": "full",
-    "rag": "full"
+    "rag": "full",
+    "tools": "full",
+    "coding": "full",
+    "evals": "full",
+    "sec": "full",
+    "aidocs": "full"
   }
 }

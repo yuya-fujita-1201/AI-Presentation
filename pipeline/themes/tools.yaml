@@ -1,0 +1,51 @@
+theme:
+  id: tools
+  slug: ai-topics-02-skills-mcp-cli
+  title: AIに能力を足す4つの手段（Skills / MCP / CLI / プロンプト）
+  series_index: 2
+  knowledge_dir: knowledge/agent-capabilities
+  deck_dir: decks/ai-topics-02-skills-mcp-cli
+# 2026-08-17 新設。MCP単体ではなく「Skillにするか・MCPで繋ぐか・スクリプトを書くか・
+# プロンプトで済ますか」という判断軸を主題にする。Skillに配分を厚めに取る方針
+keywords:
+  ja: ["Claude Skills とは 使い方", "MCP とは 解説 初心者", "Agent Skills MCP 違い 使い分け",
+       "AIエージェント ツール 追加 方法", "スキル 自作 claude code"]
+  en: ["Anthropic Agent Skills explained", "skills vs MCP when to use",
+       "Model Context Protocol beginners", "claude skills tutorial", "agent tools design"]
+keywords_fallback:
+  ja: ["MCP サーバー 作り方 入門", "AI 業務手順 標準化 スキル", "CLAUDE.md スキル 違い"]
+  en: ["MCP server tutorial", "progressive disclosure skills", "custom tools for LLM agents"]
+match_vocab:
+  ja: [スキル, MCP, ツール, コマンド, スクリプト, 接続, 配布, 手順, 使い分け]
+  en: [skill, MCP, tool, CLI, script, connector, protocol, workflow]
+beginner_vocab: [入門, 初心者, とは, 基本, 解説, 使い方,
+                 beginner, basics, tutorial, introduction, explained]
+required_concepts:
+  - {id: four-options, label: 4つの手段とは何か（プロンプト/Skill/MCP/CLI）,
+     hints: [スキル, MCP, スクリプト, プロンプト, 手段]}
+  - {id: decision-axis, label: どれを選ぶかの判断軸（頻度・決定性・データの所在）,
+     hints: [使い分け, 判断, 選ぶ, 違い, 基準]}
+  - {id: skill-anatomy, label: Skillの構造（SKILL.md・付随スクリプト・段階的な読み込み）,
+     hints: [SKILL, 構造, フォルダ, 読み込み, 手順書]}
+  - {id: mcp-role, label: MCPが担うもの（外部システムへの接続と認証）,
+     hints: [MCP, 接続, サーバー, 認証, 外部]}
+  - {id: deterministic-cli, label: 決定的に実行したい処理はコードに寄せる,
+     hints: [スクリプト, CLI, 決定的, 確実, コード]}
+  - {id: distribution, label: 組織に配る（作った能力を全員の資産にする）,
+     hints: [配布, 共有, チーム, 組織, 標準化]}
+extra_sources:
+  - knowledge/sources/article-he-agent-sdk-overview.md
+  - knowledge/sources/article-he-claude-md-best-practices.md
+  - knowledge/sources/video-ge-subagent-overview-basics.md
+subtopics:
+  - {id: official-skills, goal: Agent Skillsの公式仕様・設計思想を台帳化,
+     queries: ["Anthropic agent skills documentation",
+               "claude skills authoring best practices"]}
+  - {id: official-mcp, goal: MCPの公式仕様と接続モデルの一次情報,
+     queries: ["Model Context Protocol specification introduction",
+               "MCP server quickstart documentation"]}
+  - {id: jp-practice, goal: 日本語圏の実務解説（使い分けの議論と自作例）,
+     queries: ["Claude スキル 自作 実践 解説", "MCP スキル 使い分け 議論"]}
+primary_domains:
+  [docs.anthropic.com, www.anthropic.com, modelcontextprotocol.io,
+   platform.openai.com, ai.google.dev, arxiv.org]
