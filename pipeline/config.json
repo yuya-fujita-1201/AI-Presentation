@@ -81,6 +81,7 @@
     "ce": "knowledge",
     "he": "full",
     "le": "full",
-    "ge": "full"
+    "ge": "full",
+    "rag": "full"
   }
 }
