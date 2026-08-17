@@ -205,22 +205,22 @@ def cycle(name: str, heading: str, labels: list[str], center: list[str],
 def main() -> None:
     flow(
         "diagram-series-five-layers.svg",
-        "5つの設計対象のうち、今回は『時間軸』",
+        "5つの設計対象と、今回の位置",
         [("Prompt", "指示"), ("Context", "情報"), ("Harness", "環境"),
          ("Loop", "時間軸"), ("Graph", "構造軸")],
         highlight=3,
-        footer="前の3層を包み、次のグラフへつなぐ第4層",
+        footer="前の3層を包み、次のグラフへつなぐ4番目の層です",
     )
     flow(
         "diagram-learning-journey.svg",
-        "今日のゴールまでを、6つの問いで進む",
+        "今日たどる6つの問い",
         [("Why", "なぜ回す"), ("What", "何が1周"), ("Stop", "いつ止める"),
          ("Check", "何で測る"), ("Who", "誰が採点"), ("Start", "どこから始める")],
         highlight=5,
-        footer="最後に『1ページ・1テスト』へ落とす",
+        footer="最後に「1ページ・1つのチェック」へ落とす",
     )
 
-    body = t(512, 65, "往復の主語は、ずっと人間だった", 34, PRIMARY, 800)
+    body = t(512, 65, "チャットAIの往復：誰が何をしているか", 34, PRIMARY, 800)
     body += human(130, 320)
     body += t(130, 515, "人間", 27, TERRACOTTA, 800)
     for i, label in enumerate(["指示", "読む", "直す", "続ける？"]):
@@ -232,26 +232,26 @@ def main() -> None:
     body += robot(900, 320)
     body += t(900, 515, "AIは1回分だけ", 24, ACCENT, 800)
     body += arrow(840, 560, 210, 560, TERRACOTTA, 5, True)
-    body += t(512, 620, "次の1回を始めるのも、終わりを決めるのも人間", 25, TERRACOTTA, 800)
+    body += t(512, 620, "次の1回を始めるのも、終わりを決めるのも人間です", 25, TERRACOTTA, 800)
     save("diagram-human-driven-chat.svg", body)
 
     compare(
         "diagram-loop-definition.svg",
-        "『打つ人』を外し、『打つ仕組み』を置く",
+        "「打つ人」から「打つ仕組み」へ",
         ("これまで", ["人が次を指示", "人が出来を読む", "人が終わりを判断"]),
         ("ループ", ["条件が次を起動", "チェックが合否を返す", "停止条件で終わる"]),
-        "自動化するのは回答ではなく、反復を回す役割",
+        "自動化するのは回答ではなく、繰り返しを回す役目です",
     )
 
     compare(
         "diagram-chat-vs-loop.svg",
-        "変わるのは、3つの『誰が』",
+        "チャットAIとループ：入れ替わる3か所",
         ("チャット", ["次を始める：人", "出来を判定：人", "終わりを決める：人"]),
         ("ループ", ["次を始める：条件", "出来を判定：信号", "終わりを決める：停止条件"]),
-        "輪の形は同じ。担い手だけが入れ替わる",
+        "輪の形は同じで、担い手だけが入れ替わります",
     )
 
-    body = t(512, 68, "人間は、輪の中から監督席へ", 34, PRIMARY, 800)
+    body = t(512, 68, "輪の中にいる状態と、輪の外から見る状態", 34, PRIMARY, 800)
     body += circle(305, 360, 205, PEACH, TERRACOTTA, 5)
     body += human(305, 300)
     body += t(305, 492, "Human in the Loop", 27, TERRACOTTA, 800)
@@ -262,19 +262,19 @@ def main() -> None:
     body += human(920, 165, TERRACOTTA)
     body += t(760, 578, "Human on the Loop", 27, ACCENT, 800)
     body += t(760, 616, "外側から方向を監督する", 20, MUTED, 650)
-    body += t(512, 714, "人間が消えるのではなく、介入の頻度が変わる", 24, ACCENT, 800)
+    body += t(512, 714, "人間が消えるわけではなく、口を出す回数が変わります", 24, ACCENT, 800)
     save("diagram-human-in-on-loop.svg", body)
 
     flow(
         "diagram-four-layer-stack.svg",
-        "設計対象は、外へ外へと広がる",
+        "設計する対象の4つの層",
         [("Prompt", "頼み方"), ("Context", "判断材料"), ("Harness", "作業環境"),
          ("Loop", "反復の時間軸")],
         highlight=3,
-        footer="ループは、前の3層が動く順序と停止を設計する",
+        footer="ループでは、前の3層が動く順序と止め方を設計します",
     )
 
-    body = t(512, 68, "乗り換えではなく、包み込む", 34, PRIMARY, 800)
+    body = t(512, 68, "層の入れ子（前の層を内側に含む）", 34, PRIMARY, 800)
     for r, label, fill, stroke in [
         (280, "LOOP｜反復", ACCENT_SOFT, ACCENT),
         (215, "HARNESS｜環境", SAND, GOLD),
@@ -285,18 +285,18 @@ def main() -> None:
         body += t(512, 385 - r + 44, label.split("｜")[0], 23,
                   WHITE if fill == PRIMARY else stroke, 800)
     body += t(512, 402, "1周ごとに動く", 25, WHITE, 800)
-    body += t(512, 710, "下の層の品質差は、周回するほど増幅される", 24, TERRACOTTA, 800)
+    body += t(512, 710, "下の層の質の差は、周回するほど大きくなります", 24, TERRACOTTA, 800)
     save("diagram-nested-layers.svg", body)
 
     cycle(
         "diagram-five-stage-loop.svg",
-        "1周は、観察して次を変えるまで",
+        "ループ1周の5つの段階",
         ["Intent｜意図", "Context｜文脈", "Action｜行動", "Observation｜観察", "Adjustment｜調整"],
-        ["PASS / FAIL", "を次へ渡す"],
-        "つまずきやすいのは Observation：機械が読める信号を置く",
+        ["合格 / 不合格", "を次へ渡す"],
+        "つまずきやすいのは観察です。機械が読める信号を置きます",
     )
 
-    body = t(512, 52, "速い輪を、遅い輪が監督する", 34, PRIMARY, 800)
+    body = t(512, 52, "インナーループとアウターループ", 34, PRIMARY, 800)
     body += circle(512, 378, 285, SAND, GOLD, 5)
     body += circle(512, 378, 190, ACCENT_SOFT, ACCENT, 5)
     body += circle(512, 378, 100, PEACH, TERRACOTTA, 5)
@@ -304,10 +304,10 @@ def main() -> None:
     body += t(512, 402, "1タスク", 22, MUTED, 700)
     body += t(512, 170, "OUTER｜複数タスク", 25, ACCENT, 800)
     body += t(512, 116, "HUMAN GATE｜分解後と最終成果", 21, PRIMARY, 800)
-    body += t(512, 704, "失敗の教訓を外側へ渡せるかが、アウターの要点", 23, ACCENT, 800)
+    body += t(512, 704, "失敗の教訓を外側へ渡せるかどうかが要点になります", 23, ACCENT, 800)
     save("diagram-inner-outer-loop.svg", body)
 
-    body = t(512, 66, "内側ほど速く、外側ほど人間に近い", 34, PRIMARY, 800)
+    body = t(512, 66, "速さの違う3つの輪", 34, PRIMARY, 800)
     speeds = [
         (118, "数分", "実装・テスト・修正", TERRACOTTA, PEACH),
         (212, "数十分〜数時間", "人が方向を修正", ACCENT, ACCENT_SOFT),
@@ -324,7 +324,7 @@ def main() -> None:
 
     compare(
         "diagram-goal-before-loop.svg",
-        "順番で、同じ仕組みが安全にも暴走にもなる",
+        "ゴールを先に置く場合と、後から考える場合",
         ("失敗する順番", ["1 まず器を作る", "2 回し始める", "3 後からゴールを考える"]),
         ("設計する順番", ["1 計測できるゴール", "2 複数の停止条件", "3 最後に器をつなぐ"]),
         "先に置くのはループではなく、ゴールテープ",
@@ -332,13 +332,13 @@ def main() -> None:
 
     compare(
         "diagram-timer-vs-goal.svg",
-        "同じ『loop』でも、止まり方が違う",
+        "時間駆動のループとゴール駆動のループ",
         ("時間駆動", ["決めた間隔で起動", "前回の成否を問わない", "ただ繰り返す"]),
         ("ゴール駆動", ["成功条件を先に定義", "評価で次周を決める", "達成か上限で止まる"]),
-        "改善したいなら、必要なのは右側の条件付きループ",
+        "改善を重ねたいなら、必要なのは右側の条件付きループです",
     )
 
-    body = t(512, 66, "合否信号が、輪を閉じる", 34, PRIMARY, 800)
+    body = t(512, 66, "合否信号がループを閉じるまで", 34, PRIMARY, 800)
     body += robot(180, 360)
     body += rect(320, 245, 230, 230, PEACH, TERRACOTTA, 4, 30)
     body += t(435, 330, "WORK", 29, TERRACOTTA, 800)
@@ -349,27 +349,27 @@ def main() -> None:
     body += arrow(250, 360, 310, 360, MUTED, 5)
     body += arrow(555, 360, 655, 360, MUTED, 5)
     body += f'<path d="M 780 490 C 780 650 435 650 435 490" fill="none" stroke="{TERRACOTTA}" stroke-width="6" marker-end="url(#arrow)"/>'
-    body += t(607, 670, "FAILなら観察結果を次の文脈へ", 23, TERRACOTTA, 800)
+    body += t(607, 670, "不合格なら、観察した結果を次の周へ渡します", 23, TERRACOTTA, 800)
     save("diagram-pass-fail-closes-loop.svg", body)
 
     compare(
         "diagram-machine-vs-llm-check.svg",
-        "成果物の性質で、チェックを分ける",
+        "機械で判定する場合と、AIに判定させる場合",
         ("機械判定", ["コード・数値・構造", "終了コード・差分・件数", "同じ入力なら同じ判定"]),
-        ("モデル判定", ["文章・企画・デザイン", "rubric・画面・根拠", "観点と独立性を設計する"]),
-        "置けるなら両方置く：文字数は機械、崩れはモデル",
+        ("モデル判定", ["文章・企画・デザイン", "採点表・画面・根拠", "観点と独立性を設計する"]),
+        "両方置けるなら置きます。文字数は機械、崩れはAIが見ます",
     )
 
     flow(
         "diagram-evidence-chain.svg",
-        "『完了』を、証拠へ分解する",
+        "完了報告と、証拠として出せるもの",
         [("CLAIM", "完了と申告"), ("COMMAND", "実行した操作"), ("OUTPUT", "戻り値・ログ"),
          ("SURFACE", "画面・成果物"), ("STATE", "最終状態")],
         highlight=4,
-        footer="自己申告ではなく、第三者が追える結果を残す",
+        footer="自己申告で終わらせず、後から追える結果を残します",
     )
 
-    body = t(512, 66, "作った理由を知るほど、採点は甘くなる", 34, PRIMARY, 800)
+    body = t(512, 66, "作った側が採点すると何が起きるか", 34, PRIMARY, 800)
     body += rect(92, 170, 350, 420, PEACH, TERRACOTTA, 4, 30)
     body += robot(267, 305, TERRACOTTA)
     body += t(267, 430, "作る役", 30, TERRACOTTA, 800)
@@ -377,20 +377,20 @@ def main() -> None:
     body += rect(582, 170, 350, 420, ACCENT_SOFT, ACCENT, 4, 30)
     body += robot(757, 305, ACCENT)
     body += t(757, 430, "採点する役", 30, ACCENT, 800)
-    body += lines(757, 480, ["成果物", "rubric", "観察結果だけ"], 21, MUTED, 650, "middle", 32)
+    body += lines(757, 480, ["成果物", "採点表", "観察結果だけ"], 21, MUTED, 650, "middle", 32)
     body += f'<line x1="512" y1="165" x2="512" y2="610" stroke="{GOLD}" stroke-width="5" stroke-dasharray="12 10"/>'
-    body += t(512, 690, "背景文脈を切ること自体が、独立性になる", 24, ACCENT, 800)
+    body += t(512, 690, "背景を渡さないこと自体が、独立性につながります", 24, ACCENT, 800)
     save("diagram-maker-checker-bias.svg", body)
 
     compare(
         "diagram-maker-checker-separation.svg",
-        "お願いではなく、構成で分ける",
+        "作る役と採点する役を分ける2つの方法",
         ("Maker", ["生成・編集を行う", "書き込み権限あり", "量をこなす"]),
         ("Checker", ["判定と根拠だけ返す", "Write / Editを持たない", "まず対象の性質を判定"]),
-        "修正できない採点役は、合格させる方向へ歪みにくい",
+        "直せない採点役は、甘い判定へ流れにくくなります",
     )
 
-    body = t(512, 64, "5つの問いで、適用するか決める", 34, PRIMARY, 800)
+    body = t(512, 64, "ループを使うか決める5つの問い", 34, PRIMARY, 800)
     questions = [
         ("1", "品質が安定しない？", "NO → 他の層へ"),
         ("2", "手順を書き下せない？", "NO → スクリプト"),
@@ -411,18 +411,18 @@ def main() -> None:
 
     grid(
         "diagram-observation-sources.svg",
-        "観察源は、すでに現場にある",
+        "現場にすでにある観察源",
         [("TEST", "失敗→実装修正"), ("COMPILER", "型エラー→修復"),
          ("REVIEW", "コメント→再編集"), ("RUNTIME", "ログ→原因特定"),
          ("PRODUCT", "画面→反復改善")],
-        "新しく作る前に、今ある赤信号を探す",
+        "新しく作る前に、今ある赤信号を探してみます",
         cols=3,
     )
 
-    body = t(512, 66, "最小構成は、3ファイルで成立する", 34, PRIMARY, 800)
+    body = t(512, 66, "最小構成の3ファイル", 34, PRIMARY, 800)
     files = [
         ("CLAUDE.md", "停止条件・禁止事項", TERRACOTTA, PEACH),
-        ("settings.json", "テスト・型チェックのフック", ACCENT, ACCENT_SOFT),
+        ("settings.json", "チェック・編集時の自動検査", ACCENT, ACCENT_SOFT),
         ("fixer.md", "行き詰まりを見る別エージェント", GOLD, SAND),
     ]
     for i, (name, sub, stroke, fill) in enumerate(files):
@@ -432,75 +432,75 @@ def main() -> None:
         body += t(x + 125, 355, name, 24, stroke, 800)
         body += lines(x + 125, 420, sub.split("・"), 19, MUTED, 650, "middle", 28)
     body += t(512, 620, "足りなくなったら、接続・隔離・メモリーを足す", 25, ACCENT, 800)
-    body += t(512, 682, "部品リストは開始条件ではなく、詰まったときの索引", 22, MUTED, 700)
+    body += t(512, 682, "部品の一覧は開始条件ではなく、詰まったときの索引です", 22, MUTED, 700)
     save("diagram-three-file-start.svg", body)
 
     flow(
         "diagram-minimum-slide-loop.svg",
-        "1ページの清書を、最小ループへする",
-        [("GOAL", "rubric 8点"), ("MAKE", "1枚だけ修正"), ("CHECK", "build＋目視"),
+        "1ページの清書を回す最小ループ",
+        [("GOAL", "採点表 8点"), ("MAKE", "1枚だけ修正"), ("CHECK", "ビルド＋目視"),
          ("JUDGE", "別担当が採点"), ("STOP", "達成／3回／停滞")],
         highlight=4,
-        footer="未達なら指摘を次の文脈へ。上限なら人を呼ぶ",
+        footer="未達なら指摘を次へ渡し、上限に達したら人を呼びます",
     )
 
     grid(
         "diagram-four-costs.svg",
-        "回るほど増えるものを、先に見る",
+        "回しっぱなしで増える4つの代価",
         [("トークン暴走", "課金が回り続ける"), ("検証の積み残し", "生成だけが積み上がる"),
          ("理解の劣化", "中身を把握しなくなる"), ("判断の放棄", "方向までAIへ預ける")],
-        "前2つは設定で抑えられる。後2つは人間が持ち続ける",
+        "前の2つは設定で抑えられますが、後の2つは人間が持ち続けます",
         cols=2,
     )
 
     flow(
         "diagram-academic-lineage.svg",
-        "名称より前から、反復の構造は育っていた",
+        "反復の構造をめぐる研究の流れ",
         [("ReAct", "考える→行動"), ("Reflection", "失敗を記憶"),
          ("Self-Refine", "生成→批評→改善"), ("Evaluator", "生成と評価を分離"),
          ("Loop Eng.", "運用・停止まで設計")],
         highlight=4,
-        footer="新発明というより、既存パターンを実務の外周まで広げた概念",
+        footer="まったくの新発明ではなく、既存のパターンを実務まで広げたものです",
     )
 
     compare(
         "diagram-self-refine-vs-evaluator.svg",
-        "骨格は同じ。違うのは、誰が評価するか",
-        ("Self-Refine", ["同一LLMが三役", "フィードバックを次へ", "満足まで反復"]),
-        ("Evaluator-Optimizer", ["生成と評価を別呼び出し", "全履歴＋feedback", "PASSで終了"]),
+        "Self-Refine と Evaluator-Optimizer",
+        ("Self-Refine", ["同じAIが三役", "フィードバックを次へ", "満足まで反復"]),
+        ("Evaluator-Optimizer", ["生成と評価を別呼び出し", "全履歴＋指摘", "合格で終了"]),
         "共通項は『生成→評価→次の生成』",
     )
 
     cycle(
         "diagram-evaluator-optimizer.svg",
-        "評価が PASS を返すまで、履歴を積み増す",
+        "Evaluator-Optimizer の1周",
         ["GENERATE｜生成", "EVALUATE｜評価", "FEEDBACK｜理由", "MEMORY｜履歴"],
-        ["PASS?", "未達なら次へ"],
+        ["合格？", "未達なら次へ"],
         "回数は保険。終了条件は評価側に置く",
     )
 
     grid(
         "diagram-loop-six-parts.svg",
-        "5+1の部品は、6つの詰まりを解く",
+        "ループを支える5+1の部品",
         [("Automation", "誰が起動する"), ("Worktree", "作業が衝突しない"),
          ("Skills", "規約を毎周守る"), ("Connectors", "外部へ触れる"),
          ("Sub-agents", "作る／見るを分ける"), ("Memory", "学びを次へ残す")],
-        "メモリーがなければ、アウターループは毎回ふりだし",
+        "メモリーがないと、長いループは毎回ふりだしに戻ります",
         cols=3,
     )
 
     flow(
         "diagram-actions-to-parts.svg",
-        "名詞の部品を、動詞の流れへつなぐ",
+        "5つのアクションと、対応する部品",
         [("発見", "Automation"), ("受け渡し", "Skills"), ("検証", "Sub-agents"),
          ("記憶", "Memory"), ("予定", "Automation")],
         highlight=2,
-        footer="道具を増やす前に、真ん中の『検証』があるかを見る",
+        footer="道具を増やす前に、真ん中の「確かめる」があるかを見ます",
     )
 
     compare(
         "diagram-long-run-guardrail.svg",
-        "席を離れる時間と、歯止めは同時に増やす",
+        "自律度と、必要になる歯止め",
         ("自律を伸ばす", ["自動承認", "動的ワークフロー", "長時間実行"]),
         ("歯止めを増やす", ["隔離された作業領域", "停止・コスト上限", "証拠と人への通知"]),
         "自由にするために、制約を先に設計する",
@@ -508,11 +508,11 @@ def main() -> None:
 
     grid(
         "diagram-risk-control.svg",
-        "リスクごとに、別の歯止めを置く",
+        "リスクの種類と、対応する歯止め",
         [("暴走", "回数・時間・費用上限"), ("検証抜け", "チェック自体を保護"),
          ("局所最適", "別案を並列で試す"), ("ゴールずれ", "人が基準をレビュー"),
          ("知識不足", "ループ外で前提を整える"), ("判断放棄", "方向は人が持つ")],
-        "最後の1つだけは、設定では防げない",
+        "最後の1つだけは、設定では防げません",
         cols=3,
     )
 
