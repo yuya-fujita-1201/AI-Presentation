@@ -305,6 +305,19 @@
   - `unzip -t` エラーなし／deck.json 46枚・PPTX 46枚一致／`has_notes_slide` 0件
   - markitdown抽出848行、placeholder語句0件、`5つの箱|Before|After` 該当なし
 
+## AI-ENG-01 フォルダ整理・正本昇格（2026-08-14 20:16 JST）
+
+- ユーザー確認により、`decks/ai-eng-01-prompt-engineering/` にあった自動パイプライン35枚版は、今回レビューしていた46枚版の後継ではなく不採用ノイズと確定。採点結果だけを根拠に本流最新版と見なした初期判断を訂正
+- 最新成果物は旧 `decks/ai-eng-01-pe-draft-codex-revised/build/ai-eng-01-pe-draft-codex-revised.html` と確定し、そのフォルダ一式を `decks/ai-eng-01-prompt-engineering/` へ正本昇格
+- `meta.id` を `ai-eng-01-prompt-engineering` に統一し、HTML/PPTXも同名で再生成
+  - `decks/ai-eng-01-prompt-engineering/build/ai-eng-01-prompt-engineering.html`
+  - `decks/ai-eng-01-prompt-engineering/build/ai-eng-01-prompt-engineering.pptx`
+- 旧版は削除せず `decks/_archive/ai-eng-01/` へ退避
+  - `2026-08-14-pe-draft-reviewed-base/`: 46枚・CodexのS23修正前
+  - `2026-08-14-auto-pipeline-35slides-rejected/`: 不採用の自動生成35枚版
+- `decks/README.md` に01の正本を1つだけ明記し、`pipeline/themes/pe.yaml` の自動レーン出力先も不採用版アーカイブへ隔離して、人間レビュー済み正本の上書きを防止
+- 最終ゲート: `pipeline/bin/gate_deck.sh decks/ai-eng-01-prompt-engineering` → `gate_deck OK: 46 slides`
+
 ---
 
 # loop-log — CEデッキ改訂 品質ループ（2026-08-14）
@@ -363,3 +376,60 @@
 - **マージ**: 自動マージ3条件のうち「ユーザーの明示許可」が無いため実施しない。PRを作成して人の判断に委ねる
 - **PR**: https://github.com/yuya-fujita-1201/AI-Presentation/pull/3 （gh はリポジトリ所有者アカウント yuya-fujita-1201 に切替えて作成後、元アカウントへ復帰）
 - **注意**: マージ後に `git checkout main && git pull && rm pipeline/PAUSE` でパイプラインを再開すること
+
+---
+
+# AI-ENG-03 ハーネスエンジニアリング作成（2026-08-15 01:24 JST）
+
+- **対象**: `decks/ai-eng-03-harness-engineering/`
+- 既存ドラフトを参考扱いとして再構成。01/02の暖色テラコッタ、章扉、図解中心の流れを踏襲し、全57枚（本編40＋付録17）へ改訂
+- 本編は「定義と位置づけ → 実践と恩恵 → 応用・トラブルシュート → 具体例」、付録は11責務・権限・settings・sandbox・MCP・評価・出典・非断定事項を収録
+- 5点の暖色3D挿絵と21点のSVG図解を使用。旧 `fig-he-*.png` は参照せず温存
+- 独立目視QAでS11/S16/S18/S19/S39を修正し、対象再確認および全57枚再レンダー後に合格
+- **最終機械ゲート**: `bash pipeline/bin/gate_deck.sh decks/ai-eng-03-harness-engineering` → `gate_deck OK: 57 slides`
+- **検証**: unzip正常／deck.json・PPTX・preview各57枚一致／`has_notes_slide` 0件／全preview 1280×720／参照asset欠落0／出典ID 14件の本文参照と付録台帳が一致／markitdown placeholder 0件
+- コミット・pushは未実施
+
+---
+
+# AI-ENG-05 グラフエンジニアリング超入門 レビュー＆改善ループ（2026-08-18 開始）
+
+- **対象**: `decks/ai-eng-05-graph-engineering/`（Codex作成の第一版35枚）
+- **ブランチ**: `loop/ge-deck-review`（baseline: 8ced38a）
+- **採点表**: `decks/ai-eng-05-graph-engineering/rubric.md`（7項目 各10点 / 目標 全項目8以上）
+- **機械ゲート**: `build_deck.py` → `gate_deck.sh` → `unzip -t` → python-pptx 再パース（枚数一致・notes 0）→ `preview_deck.py` 全枚数1280×720
+- **手法**: graph-engineering で6観点を並列レビュー → 合流 → loop-engineering で改善→ゲート→独立採点を反復
+
+## ベースライン採点（並列レビュー6体、2026-08-18）
+
+| 観点 | 担当 | 点 |
+|---|---|---|
+| ① 初心者への適合性 | rev-beginner | 6 |
+| ② 事実の正確性 | rev-facts | 報告待ち |
+| ③ 事例・比喩の適切さ | rev-examples | 7 |
+| ④ 人間らしい文章 | rev-voice | 4 |
+| ⑤ 構成と段階性 | rev-structure | 5 |
+| ⑥ 図解・視覚の説明力 | rev-visual | 6 |
+| ⑦ シリーズ整合 | （⑤⑥の指摘に包含） | 未 |
+
+主要な指摘:
+- 第1章が「なぜ流行ったか」から始まり、「グラフ＝丸と矢印」の説明が11枚目（第2章）まで出てこない
+- ループとの対比専用スライドが0枚（依頼者が名指しで要求）
+- スライド面で「エージェント」が一度も定義されていない（機械照合で確認済み）
+- 挿絵20枚のうち約4割がラベルなしの飾り画像。5層図・失敗分類図は差し替え必須
+- 「ラベル: 説明」のコロン書式が6枚23行、lead 8個中6個が同一構文、notes に「されています」11回・「としています」5回
+- 出典スライドが0枚（04デッキは付録に3枚）
+
+## 第1周（2026-08-18）— 対象項目 ⑤ 構成と段階性
+
+- **変更**: 35枚 → 45枚。タイトルを「超入門」へ統一
+  - 導入4枚（5層マップ／比喩表／学習ゴール）を04デッキの型に合わせて新設
+  - 第1章を定義章へ全面刷新（問題提起＋エージェント定義 → グラフとは → エンジニアリングするとは → 一言定義 → 流行語としての注意）
+  - **第2章「前回のループと、どこが違うのか」を新設**（対比図・5観点の比較表・症状別の使い分け）
+  - 部品章を「ノードとエッジ」「状態と迂回路」の2枚に分割
+  - 付録に出典3枚（公式・論文／日本語動画／数字の出どころ）を新設
+  - ラベル付きSVG図解を9枚新規作成（5層・グラフとは・エンジニアリングとは・ループ対比・使い分け・ノードエッジ・型カタログ・検証ゲート・失敗分類）
+  - `image_text` の画像枠(h=429→418)とキャプション位置(y=607→632)の重なりを解消
+- **機械ゲート**: gate_deck OK 45枚 / unzip エラーなし / python-pptx 45枚・notes 0 / preview 45枚すべて1280×720 / 参照アセット欠落0 ✅
+- **コミット**: bb442c3
+- **次**: 独立採点エージェント grader-r1 の結果待ち。並行して ④ 文言（notes の受身伝聞・単調さ）の書き換え案を用意済み
