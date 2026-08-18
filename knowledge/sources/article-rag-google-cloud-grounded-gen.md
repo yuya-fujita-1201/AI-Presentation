@@ -44,4 +44,4 @@ APIのレスポンスには、0〜1の範囲のgrounding score、回答を支え
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../rag/rag-origin-and-definition.md](../rag/rag-origin-and-definition.md) — 現在のベンダー定義における「事実を取得し、それを用いて根拠のある回答を生成する」2段階プロセスという定義。原典の特定構成と現在の総称的用法との距離を示す根拠

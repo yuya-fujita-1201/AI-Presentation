@@ -40,4 +40,4 @@ RAGは、事前学習済みのparametric memory（seq2seqトランスフォー�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../rag/rag-origin-and-definition.md](../rag/rag-origin-and-definition.md) — 書誌情報（arXiv 2005.11401 / NeurIPS 2020）、parametric memoryとnon-parametric memoryの組み合わせという提案の核、3タスクでのSOTA達成と「more specific, diverse and factual」という主張の主根拠
