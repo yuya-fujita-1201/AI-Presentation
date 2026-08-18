@@ -518,8 +518,9 @@
         "source_tier": "secondary",
         "origin": "web:co.jp",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-rag-todoonada-pipeline-guide.md"
       },
       {
         "url": "https://zenn.dev/knowledgesense/articles/cec1cd43244524",
@@ -536,8 +537,9 @@
         "source_tier": "secondary",
         "origin": "web:zenn.dev/knowledgesense",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-rag-knowledgesense-retrieval-techniques.md"
       },
       {
         "url": "https://qiita.com/kentarok/items/b5a7d2a2fb5f14beb803",

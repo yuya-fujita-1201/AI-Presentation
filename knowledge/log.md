@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-19（ragソース台帳・記事2本 web_ledger run:08190057ad）
+
+- **Creation**: sources/ に記事2本を article-rag-*.md として登録（RAGテーマ、jp-practice subtopic、二次情報2本、web_ledger工程 run:08190057ad）。article-rag-todoonada-pipeline-guide.md（TodoONada株式会社「社内文書RAGの作り方2026。パース・埋め込み・リランクの最新構成」、二次情報。「RAG精度を決めるのはLLM本体ではなく、パイプライン設計です」という前提のもと「パース→埋め込み→検索→リランク」の4段パイプラインを提示。パース段階の三大障害（PDFレイアウト崩れ・罫線帳票・スキャン画像）とDocling/YomiToku/VLM直読みの3ツール系統、国産埋め込みモデルRuri v3・PLaMo-embedding-1bによる完全ローカル化、ベクトル検索の型番混同弱点を補うBM25とのハイブリッド検索が実務標準である点、国産リランカーを最も費用対効果の高い一手と評価する点、規模別構成例（個人〜小規模はOllama+AnythingLLM、部門規模はvLLM+ハイブリッド検索+リランカー）、RAGで解決しない文体学習はLoRA領域という切り分けを解説）、article-rag-knowledgesense-retrieval-techniques.md（Zenn「RAGでの回答精度向上のためのテクニック集（応用編-A）」株式会社ナレッジセンスCEO門脇篤志氏、二次情報。LlamaIndexのRAGチートシートの翻訳・解説で、RAG精度向上を「①ドキュメント抽出」「②回答生成」の2柱に分解し①に焦点。チャンク分割の最適化（マイクロソフト研究によるチャンクサイズの性能影響）、ハイブリッド検索（キーワード50%・セマンティック50%のブレンド例）、HyDE（ダミー回答生成によるセマンティック検索、得意・不得意領域が明確）、情報の構造化（親ノードによる木構造検索）、メタデータの付加、ナレッジグラフと埋め込みモデルのファインチューニング（上級テクニック）の7手法と「成果が出そうなものから取り組む」という優先順位付けの推奨を解説）
+- **Update**: sources/index.md の「記事（RAG）」節に上記2件を追加
+
 ## 2026-08-19（ragソース台帳・記事2本 web_ledger run:08190045b0）
 
 - **Creation**: sources/ に記事2本を article-rag-*.md として登録（RAGテーマ、arXiv一次情報2本、web_ledger工程 run:08190045b0）。article-rag-seven-failure-points.md（arXiv/CAIN2024「Seven Failure Points When Engineering a Retrieval Augmented Generation System」Barnett et al.、一次情報。RAGシステムの典型的な失敗点をFP1〜FP7の7種に整理（Missing Content/Missed the Top Ranked Documents/Not in Context - Consolidation Strategy Limitations/Not Extracted/Wrong Format/Incorrect Specificity/Incomplete）、研究領域のCognitive Reviewer・教育領域のAI Tutor・バイオメディカル領域のBioASQ（4017件の文書と1000問の質問）という3ケーススタディでの実証、「RAGシステムの検証は実運用時にしか実現できず、堅牢性は設計時に組み込まれるのではなく段階的に発展する」という結論を解説）、article-rag-ragas-eval.md（arXiv/EACL2024「Ragas: Automated Evaluation of Retrieval Augmented Generation」Es et al.、一次情報。人間作成のground truthアノテーションに依存しないreference-free評価フレームワークRagasが提案するFaithfulness（陳述文抽出とコンテキスト照合によるF=|V|/|S|）・Answer Relevance（仮想質問生成と埋め込み余弦類似度によるAR）・Context Relevance（重要文抽出比率によるCR）の3指標、WikiEval（Wikipedia50ページ）での人間評価との一致率（Faithfulness 0.95・Answer Relevance 0.78・Context Relevance 0.70、GPT Score/GPT Rankingより高精度）を解説）

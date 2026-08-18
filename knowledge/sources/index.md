@@ -138,6 +138,8 @@
 - [article-rag-lewis-2020-arxiv.md](./article-rag-lewis-2020-arxiv.md) — arXiv/NeurIPS2020「Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks」（Lewis et al.）。RAGという名称・アーキテクチャの原典論文。parametric memoryとnon-parametric memoryを組み合わせたモデル構成と3つのQAタスクでの最先端達成を解説
 - [article-rag-seven-failure-points.md](./article-rag-seven-failure-points.md) — arXiv/CAIN2024「Seven Failure Points When Engineering a Retrieval Augmented Generation System」（Barnett et al.）。RAGシステムの7つの失敗点(FP1〜FP7)を研究・教育・バイオメディカルの3ケーススタディで実証、検証は実運用時にしか実現できないという結論を解説
 - [article-rag-ragas-eval.md](./article-rag-ragas-eval.md) — arXiv/EACL2024「Ragas: Automated Evaluation of Retrieval Augmented Generation」（Es et al.）。reference-free評価フレームワークRagasのFaithfulness・Answer Relevance・Context Relevanceの3指標とWikiEvalでの人間評価一致率を解説
+- [article-rag-todoonada-pipeline-guide.md](./article-rag-todoonada-pipeline-guide.md) — TodoONada株式会社。社内文書RAGの精度はパイプライン設計で決まるという立場から「パース→埋め込み→検索→リランク」の4段構成、日本語文書パースの三大障害、ハイブリッド検索の実務標準、規模別構成例を解説
+- [article-rag-knowledgesense-retrieval-techniques.md](./article-rag-knowledgesense-retrieval-techniques.md) — Zenn（株式会社ナレッジセンス／門脇篤志）。LlamaIndexのRAGチートシート翻訳・解説。ドキュメント抽出精度を高める7テクニック（チャンク分割最適化・ハイブリッド検索・HyDE・情報構造化・メタデータ付加・ナレッジグラフ・埋め込みファインチューニング）を解説
 
 ## 動画（RAG）
 
