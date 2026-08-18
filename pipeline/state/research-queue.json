@@ -480,8 +480,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "research",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/research"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/research",
+        "ledger_path": "knowledge/sources/article-rag-seven-failure-points.md"
       },
       {
         "url": "https://arxiv.org/abs/2309.15217",
@@ -498,8 +499,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "research",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/research"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/research",
+        "ledger_path": "knowledge/sources/article-rag-ragas-eval.md"
       },
       {
         "url": "https://todoonada.co.jp/blog/local-llm-rag-construction/",

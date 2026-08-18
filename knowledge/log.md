@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-19（ragソース台帳・記事2本 web_ledger run:08190045b0）
+
+- **Creation**: sources/ に記事2本を article-rag-*.md として登録（RAGテーマ、arXiv一次情報2本、web_ledger工程 run:08190045b0）。article-rag-seven-failure-points.md（arXiv/CAIN2024「Seven Failure Points When Engineering a Retrieval Augmented Generation System」Barnett et al.、一次情報。RAGシステムの典型的な失敗点をFP1〜FP7の7種に整理（Missing Content/Missed the Top Ranked Documents/Not in Context - Consolidation Strategy Limitations/Not Extracted/Wrong Format/Incorrect Specificity/Incomplete）、研究領域のCognitive Reviewer・教育領域のAI Tutor・バイオメディカル領域のBioASQ（4017件の文書と1000問の質問）という3ケーススタディでの実証、「RAGシステムの検証は実運用時にしか実現できず、堅牢性は設計時に組み込まれるのではなく段階的に発展する」という結論を解説）、article-rag-ragas-eval.md（arXiv/EACL2024「Ragas: Automated Evaluation of Retrieval Augmented Generation」Es et al.、一次情報。人間作成のground truthアノテーションに依存しないreference-free評価フレームワークRagasが提案するFaithfulness（陳述文抽出とコンテキスト照合によるF=|V|/|S|）・Answer Relevance（仮想質問生成と埋め込み余弦類似度によるAR）・Context Relevance（重要文抽出比率によるCR）の3指標、WikiEval（Wikipedia50ページ）での人間評価との一致率（Faithfulness 0.95・Answer Relevance 0.78・Context Relevance 0.70、GPT Score/GPT Rankingより高精度）を解説）
+- **Update**: sources/index.md の「記事（RAG）」節に上記2件を追加
+
 ## 2026-08-18（ragソース台帳・記事2本 web_ledger run:0818234501）
 
 - **Creation**: sources/ に記事2本を article-rag-*.md として登録（RAGテーマ、公式ドキュメント・原典論文各1本、web_ledger工程 run:0818234501）。article-rag-google-cloud-grounded-gen.md（Google Cloud公式「Generate grounded answers with RAG | Agent Search」、一次情報。RAGを「データソースから事実を取得し根拠のある回答を生成する2段階プロセス」と定義、`generateGroundedContent`/`streamGenerateGroundedContent`の2 API、Google Search/インラインテキスト（最大100 fact text）/Agent Search data storesの3種の接地ソースと組み合わせ時最大10個の制約、動的取得の予測スコアとデフォルトしきい値0.7、grounding score・supportChunks・groundingSupport・webSearchQueriesを含むレスポンス構成、マルチターン会話での過去全文送信要件を解説）、article-rag-lewis-2020-arxiv.md（arXiv/NeurIPS2020「Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks」Lewis et al.、一次情報。「RAG」という略称・アーキテクチャの起源となった原典論文。事前学習済みseq2seqトランスフォーマーのparametric memoryとWikipedia密ベクトルインデックスのnon-parametric memoryを組み合わせエンドツーエンドで微調整する構成、3つのオープンドメインQAタスクでの当時の最先端達成、パラメトリック単体ベースラインより具体的・多様・事実的な言語生成を行うという主張を解説）

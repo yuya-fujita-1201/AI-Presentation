@@ -136,6 +136,8 @@
 - [article-rag-openai-file-search.md](./article-rag-openai-file-search.md) — OpenAI公式「File search」。Responses APIのホスト型検索ツールによるVector Store作成・ファイルアップロード手順、対応ファイル形式、検索カスタマイズ、レート制限を解説
 - [article-rag-google-cloud-grounded-gen.md](./article-rag-google-cloud-grounded-gen.md) — Google Cloud公式「Generate grounded answers with RAG」。Answer Generation APIの3種の接地ソース（Google Search/インラインテキスト/Agent Search data stores）、動的取得のデフォルトしきい値0.7、レスポンス構成とマルチターン要件を解説
 - [article-rag-lewis-2020-arxiv.md](./article-rag-lewis-2020-arxiv.md) — arXiv/NeurIPS2020「Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks」（Lewis et al.）。RAGという名称・アーキテクチャの原典論文。parametric memoryとnon-parametric memoryを組み合わせたモデル構成と3つのQAタスクでの最先端達成を解説
+- [article-rag-seven-failure-points.md](./article-rag-seven-failure-points.md) — arXiv/CAIN2024「Seven Failure Points When Engineering a Retrieval Augmented Generation System」（Barnett et al.）。RAGシステムの7つの失敗点(FP1〜FP7)を研究・教育・バイオメディカルの3ケーススタディで実証、検証は実運用時にしか実現できないという結論を解説
+- [article-rag-ragas-eval.md](./article-rag-ragas-eval.md) — arXiv/EACL2024「Ragas: Automated Evaluation of Retrieval Augmented Generation」（Es et al.）。reference-free評価フレームワークRagasのFaithfulness・Answer Relevance・Context Relevanceの3指標とWikiEvalでの人間評価一致率を解説
 
 ## 動画（RAG）
 
