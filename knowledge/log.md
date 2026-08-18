@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-18（ragソース台帳・記事2本 web_ledger run:0818234501）
+
+- **Creation**: sources/ に記事2本を article-rag-*.md として登録（RAGテーマ、公式ドキュメント・原典論文各1本、web_ledger工程 run:0818234501）。article-rag-google-cloud-grounded-gen.md（Google Cloud公式「Generate grounded answers with RAG | Agent Search」、一次情報。RAGを「データソースから事実を取得し根拠のある回答を生成する2段階プロセス」と定義、`generateGroundedContent`/`streamGenerateGroundedContent`の2 API、Google Search/インラインテキスト（最大100 fact text）/Agent Search data storesの3種の接地ソースと組み合わせ時最大10個の制約、動的取得の予測スコアとデフォルトしきい値0.7、grounding score・supportChunks・groundingSupport・webSearchQueriesを含むレスポンス構成、マルチターン会話での過去全文送信要件を解説）、article-rag-lewis-2020-arxiv.md（arXiv/NeurIPS2020「Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks」Lewis et al.、一次情報。「RAG」という略称・アーキテクチャの起源となった原典論文。事前学習済みseq2seqトランスフォーマーのparametric memoryとWikipedia密ベクトルインデックスのnon-parametric memoryを組み合わせエンドツーエンドで微調整する構成、3つのオープンドメインQAタスクでの当時の最先端達成、パラメトリック単体ベースラインより具体的・多様・事実的な言語生成を行うという主張を解説）
+- **Update**: sources/index.md の「記事（RAG）」節に上記2件を追加
+
 ## 2026-08-18（ragソース台帳・記事2本 web_ledger run:08182245b0）
 
 - **Creation**: sources/ に記事2本を article-rag-*.md として登録（RAGテーマ、公式ドキュメント2本、web_ledger工程 run:08182245b0）。article-rag-anthropic-contextual-retrieval.md（Anthropic公式「Contextual Retrieval in AI Systems」、二次情報。従来のRAGがチャンク分割により個別チャンクの文脈を欠く問題からの出発点、埋め込み・検索インデックス作成前にチャンク固有の説明文脈を追加するContextual EmbeddingsとContextual BM25の2サブ技術、Claude 3 Haikuへのプロンプトによる文脈自動生成とプロンプトキャッシングによる100万ドキュメントトークンあたり$1.02という一度きりの処理コスト、複数ドメイン実験での検索失敗率5.7%→Contextual Embeddingsのみで3.7%（35%削減）→BM25併用で2.9%（49%削減）→リランキング併用で1.9%（67%削減）という段階的改善を解説）、article-rag-openai-file-search.md（OpenAI公式「File search」、二次情報。Responses APIで利用可能なホスト型検索ツールがベクトルストア作成とファイルアップロードのみでモデルの知識を拡張できコード実装が不要である点、Vector Store作成からFiles API登録・vectorStores.files.create()での関連付け・ステータスcompleted確認までの3段階アップロード手順、23種類以上の対応ファイル形式とutf-8/utf-16/asciiのエンコーディング要件、max_num_results・filtersパラメータによる検索カスタマイズ、Tier別に毎分100〜1000リクエストのレート制限を解説）

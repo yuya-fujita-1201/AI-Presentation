@@ -442,8 +442,9 @@
         "source_tier": "primary",
         "origin": "web:google.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-rag-google-cloud-grounded-gen.md"
       },
       {
         "url": "https://arxiv.org/abs/2005.11401",
@@ -460,8 +461,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "research",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/research"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/research",
+        "ledger_path": "knowledge/sources/article-rag-lewis-2020-arxiv.md"
       },
       {
         "url": "https://arxiv.org/abs/2401.05856",
