@@ -383,7 +383,64 @@
     }
   ],
   "web": {
-    "subtopics_done": [],
-    "candidates": []
+    "subtopics_done": [
+      "official-guides"
+    ],
+    "candidates": [
+      {
+        "url": "https://www.anthropic.com/news/contextual-retrieval",
+        "title": "Contextual Retrieval in AI Systems",
+        "publisher": "Anthropic",
+        "retrieved": "2026-08-18",
+        "extract": "背景: 従来のRAGはナレッジベースを小さなチャンクに分割するため、個別チャンクが十分な文脈を欠く問題がある。具体例として、SEC提出書類から「The company's revenue grew by 3% over the previous quarter.」というチャンクを取得しても、企業名や時期が不明なため検索・利用が困難になると説明されている。\n\n手法: Contextual Retrievalは、埋め込み前および検索インデックス作成前に各チャンクに対してチャンク固有の説明的文脈を追加する手法で、Contextual EmbeddingsとContextual BM25の2つのサブ技術からなる。Contextual Embeddingsはチャンクの前に50〜100トークンの説明文を追加する。変換例として、元チャンク「The company's revenue grew by 3% over the previous quarter.」が、文脈化後は「This chunk is from an SEC filing on ACME corp's performance in Q2 2023; the previous quarter's revenue was $314 million. The company's revenue grew by 3% over the previous quarter.」となる。Contextual BM25は同様の説明文脈を語彙マッチング用インデックスに追加する。\n\n実装: 手動でのチャンク注釈は非現実的なため、Claude 3 Haikuに「Please give a short succinct context to situate this chunk within the overall document for the purposes of improving search retrieval of the chunk. Answer only with the succinct context and nothing else.」というプロンプトを与えて文脈を自動生成する。コスト面では「With prompt caching, you don't need to pass in the reference document for every chunk. You simply load the document into the cache once」とあり、100万ドキュメントトークンあたり$1.02の一度きりの処理コストで実装できるとしている。\n\n性能: 複数ドメイン（コードベース、小説、ArXivペーパー、科学論文）での実験で、検索失敗率（5.7%が基準）が、Contextual Embeddingsのみで35%削減（3.7%へ）、Contextual Embeddings + Contextual BM25の組み合わせで49%削減（2.9%へ）、さらにリランキングを加えると67%削減（1.9%へ）と段階的に改善したと報告されている。リランキングは上位150チャンクを取得した後、Cohereなどのリランキングモデルを通し、関連性で上位20チャンクに絞り込むプロセスで、「Reranked Contextual Embedding and Contextual BM25 reduces the top-20-chunk retrieval failure rate by 67%」と結論づけている。推奨設定として埋め込みモデルはVoyageまたはGeminiが最高性能、取得チャンク数は20が5や10より効果的とされる。",
+        "quote": "With prompt caching, you don't need to pass in the reference document for every chunk. You simply load the document into the cache once. / Reranked Contextual Embedding and Contextual BM25 reduces the top-20-chunk retrieval failure rate by 67%.",
+        "claims": [
+          "Anthropicは、チャンクに文脈情報を付加するContextual Retrieval手法（Contextual Embeddings + Contextual BM25）により、素朴なチャンク分割より検索精度を改善できるとしている。",
+          "Anthropicは、Contextual Embeddings・Contextual BM25・リランキングを組み合わせることで、上位20チャンクの検索失敗率を最大67%削減できたと報告している。",
+          "Anthropicは、プロンプトキャッシングを用いることで、Contextual Retrievalの文脈生成コストを100万ドキュメントトークンあたり$1.02に抑えられるとしている。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:anthropic.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://developers.openai.com/api/docs/guides/tools-file-search",
+        "title": "File search | OpenAI API",
+        "publisher": "OpenAI",
+        "retrieved": "2026-08-18",
+        "extract": "概要: File searchは「Responses API」で利用可能なホスト型ツールで、「By creating vector stores and uploading files to them, you can augment the models' inherent knowledge」と説明されている。OpenAIが管理するため開発者側で検索実行のコード実装は不要で、モデルがツール使用を判断すると自動的に呼び出され、ファイルから情報を取得して出力を返す。\n\nVector Storeの作成: 各言語向けのコード例が提供されており、JavaScriptでは次のように作成する。`const vectorStore = await openai.vectorStores.create({ name: \"knowledge_base\" });` Python、Go、Rubyの実装例も掲載されている。\n\nファイルのアップロード手順は3段階。(1) Files APIを通じてURLまたはローカルパスから`purpose: \"assistants\"`でファイルを登録する。(2) `vectorStores.files.create()`メソッドでVector Storeに関連付ける。(3) ファイルが使用可能になるまで、すなわちステータスが`completed`になるまで確認する（原文: \"until the file is ready to be used (i.e., when the status is `completed`)\"）。\n\n対応ファイル形式: PDF、DOCX、TXT、JSON、Markdown、各種プログラミング言語ファイルなど23種類以上に対応。テキスト形式は「utf-8, utf-16, or ascii」のいずれかのエンコーディングが必須とされている。\n\n検索カスタマイズ: `max_num_results`パラメータで検索結果数を制限でき、「can help reduce both token usage and latency」という効果がある。またメタデータの`filters`パラメータで「category」などのキーによる絞り込みが可能。検索の仕組み自体は「semantic and keyword search」と総称されるのみで、クエリ書き換えの詳細な内部処理は文書に明記されていないが、応答には`\"queries\": [\"What is deep research?\"]`のような書き換え後クエリの例が含まれている。\n\n料金・レート制限: Tier 1で毎分100リクエスト（RPM）、Tier 2-3で500RPM、Tier 4-5で1000RPMという上限が設定されている。file_searchはResponses API、Chat Completions API、Assistants APIの3つのAPIで利用可能。",
+        "quote": "By creating vector stores and uploading files to them, you can augment the models' inherent knowledge.",
+        "claims": [
+          "OpenAIは、file_searchツールがベクトルストアへのファイル登録だけでモデルの知識を拡張できるホスト型ツールであり、検索実行のためのコード実装が不要だとしている。",
+          "OpenAIは、アップロードしたファイルはステータスがcompletedになって初めて検索対象として利用可能になるとしている。",
+          "OpenAIは、file_searchの利用可能レート制限がAPIキーのTierに応じて毎分100〜1000リクエストの範囲で設定されると案内している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:openai.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/grounded-gen",
+        "title": "Generate grounded answers with RAG | Agent Search",
+        "publisher": "Google Cloud",
+        "retrieved": "2026-08-18",
+        "extract": "定義: Retrieval Augmented Generation（RAG）は、LLMが「データソースから事実を取得し、それを用いて根拠のある回答を生成する」という2段階のプロセスとして説明されている。\n\nAPI: このドキュメントは`generateGroundedContent`メソッドと`streamGenerateGroundedContent`メソッドという2つのAnswer Generation APIを解説している。\n\n接地ソース（Grounding Sources）: 3種類が利用可能。(1) Google Search — 「世界知識、広範なトピック、またはインターネット上の最新情報に接続したい場合」に使用。(2) インラインテキスト — 最大100個のfact textを直接指定可能。(3) Agent Search data stores — エンタープライズドキュメントを利用。複数の接地ソースを組み合わせる場合は最大10個まで指定できる。\n\nリクエストパラメータ: `contents`（ユーザープロンプトとモデル応答のrole指定）、`systemInstruction`（モデル動作を制御するプリアンブル）、`groundingSpec`（接地ソースの指定）、`generationSpec`（モデルID・温度・top-P・top-Kの設定）、`languageCode`（デフォルトは\"en\"）が主要パラメータとして挙げられている。サンプルコードでは対応モデルとして「gemini-2.5-flash」が使用されている。\n\n動的取得（Dynamic Retrieval）: Google Searchを接地ソースとして使う場合、予測スコア（0〜1の範囲）としきい値を設定でき、「If the prediction score is greater than or equal to the threshold, the answer is grounded with Google Search.」という仕組みで必要な場合のみ検索を実行する。デフォルトのしきい値は0.7とされている。\n\nレスポンス構成: 応答には0〜1の範囲のgrounding score、回答を支えるsupportChunks、claim textと支持チャンクを対応付けるgroundingSupport、ユーザープロンプトから構築されたwebSearchQueriesが含まれる。\n\nマルチターン対応: 複数ターンの会話を扱う場合、「in each request you must send all the text exchanged between the user and the model in all the previous turns」という要件があり、過去のやり取り全文を毎回送信する必要があるとされている。",
+        "quote": "If the prediction score is greater than or equal to the threshold, the answer is grounded with Google Search.",
+        "claims": [
+          "Google Cloudは、Answer Generation APIがGoogle Search・インラインテキスト・Agent Searchデータストアという最大10個までの接地ソースを組み合わせられるとしている。",
+          "Google Cloudは、Google Search接地における動的取得のデフォルトしきい値が0.7であり、予測スコアがこれ以上の場合のみ検索を実行するとしている。",
+          "Google Cloudは、マルチターン会話では過去のやり取り全文を毎回のリクエストに含める必要があるとしている。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:google.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      }
+    ]
   }
 }
