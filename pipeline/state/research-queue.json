@@ -384,7 +384,8 @@
   ],
   "web": {
     "subtopics_done": [
-      "official-guides"
+      "official-guides",
+      "research"
     ],
     "candidates": [
       {
@@ -440,6 +441,60 @@
         "subtopic": "official-guides",
         "status": "verified",
         "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://arxiv.org/abs/2005.11401",
+        "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+        "publisher": "arXiv (NeurIPS 2020)",
+        "retrieved": "2026-08-18",
+        "extract": "## 著者・書誌情報\nPatrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich Küttler, Mike Lewis, Wen-tau Yih, Tim Rocktäschel, Sebastian Riedel, Douwe Kielaの共著で、2020年5月22日にarXiv投稿（ID: 2005.11401）、NeurIPS 2020に採択された。「RAG」という略称・アーキテクチャの起源となった原典論文である。\n\n## モデル構成\nRAGは事前学習済みのparametric memory（seq2seqトランスフォーマー）と、non-parametric memory（事前学習済みニューラルレトリーバーでアクセスするWikipediaの密ベクトルインデックス）を組み合わせる。原文では「the parametric memory is a pre-trained seq2seq transformer, and the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever」と説明されており、両者をエンドツーエンドで微調整する仕組みを提案した。\n\n## 主要な貢献\n知識集約的なNLPタスクにおいて、単体のパラメトリックモデルやタスク特化型アーキテクチャを上回る性能を示した点が核心的貢献。アブストラクトでは「RAG models generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline」と明記されている。\n\n## 実験結果\n3つのオープンドメイン質問応答タスクで当時の最先端(state-of-the-art)を達成し、言語生成タスクにおいても既存手法より具体性・多様性・事実性の高い出力を生成したと結論づけている。",
+        "quote": "RAG models generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline.",
+        "claims": [
+          "Lewis et al. (2020) はparametric memory（事前学習済みseq2seq）とnon-parametric memory（Wikipediaの密ベクトルインデックス）を組み合わせたRAGアーキテクチャを提案した。",
+          "論文は3つのオープンドメイン質問応答タスクで当時の最先端性能を達成したと報告している。",
+          "著者らはRAGがパラメトリック単体のベースラインより具体的・多様・事実的な言語生成を行うと主張している。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "research",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/research"
+      },
+      {
+        "url": "https://arxiv.org/abs/2401.05856",
+        "title": "Seven Failure Points When Engineering a Retrieval Augmented Generation System",
+        "publisher": "arXiv / ACM (IEEE/ACM 3rd International Conference on AI Engineering – CAIN 2024)",
+        "retrieved": "2026-08-18",
+        "extract": "## 7つの失敗点（FP1〜FP7）\nFP1 Missing Content: 「asking a question that cannot be answered from the available documents」— 利用可能な文書では答えられない質問への対応で発生。\nFP2 Missed the Top Ranked Documents: 答えが文書内に存在していても、上位K件のランキングに入らず返されないケース。\nFP3 Not in Context - Consolidation Strategy Limitations: 「Documents with the answer were retrieved from the database but did not make it into the context」— 多数文書を統合する過程で回答を含む文書が脱落する。\nFP4 Not Extracted: 「the answer is present in the context, but the large language model failed to extract out the correct answer」— ノイズや矛盾情報が多い場合に発生。\nFP5 Wrong Format: テーブルやリスト形式での抽出指示をLLMが無視するケース。\nFP6 Incorrect Specificity: 「The answer is returned in the response but is not specific enough or is too specific」— ユーザーが求める粒度と合わない。\nFP7 Incomplete: 「Incomplete answers are not incorrect but miss some of the information even though that information was in the context」— コンテキスト内の情報を完全に抽出できていない。\n\n## ケーススタディ（3領域）\n研究領域のCognitive Reviewer（科学論文の分析支援、目的に応じた文書ランキング機能を搭載）、教育領域のAI Tutor（Whisperで動画を書き起こし、動画・HTML・PDF等の複数形式に対応）、バイオメディカル領域のBioASQ（BioASQデータセットから4017件のオープンアクセス文書と1000問の質問を用いた大規模実験）の3ケースで検証した。\n\n## 結論\n「validation of a RAG system is only feasible during operation」（RAGシステムの検証は実運用時にしか実現できない）、「the robustness of a RAG system evolves rather than designed in at the start」（堅牢性は設計時に組み込むものではなく段階的に発展する）という2点が核心的主張。今後の研究方向としてチャンク戦略・埋め込み手法の改善、RAGとファインチューニングの比較、テスト・モニタリング手法の確立を挙げている。",
+        "quote": "validation of a RAG system is only feasible during operation, and the robustness of a RAG system evolves rather than designed in at the start.",
+        "claims": [
+          "Barnett et al. (2024) は研究・教育・バイオメディカルの3ケーススタディからRAGシステムの7つの失敗点(FP1〜FP7)を特定した。",
+          "論文はRAGシステムの検証が設計時ではなく実運用時にしか実現できないと主張している。",
+          "BioASQケーススタディでは4017件の文書と1000問の質問を用いた大規模実験で失敗点を実証した。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "research",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/research"
+      },
+      {
+        "url": "https://arxiv.org/abs/2309.15217",
+        "title": "Ragas: Automated Evaluation of Retrieval Augmented Generation",
+        "publisher": "arXiv / EACL 2024 (System Demonstrations)",
+        "retrieved": "2026-08-18",
+        "extract": "## 提案の核心\n著者はShahul Es, Jithin James, Luis Espinosa-Anke, Steven Schockaert。人間作成のground truthアノテーションに依存しない「reference-free」な評価フレームワークRagasを提案し、RAGパイプラインを検索・生成・全体品質の複数次元から評価する枠組みを示した。\n\n## 3つの評価指標\nFaithfulness（忠実性）: 「答えの主張がコンテキストから推論できる場合、その答えはコンテキストに忠実である」と定義。LLMで回答から陳述文集合S(as(q))を抽出し、各陳述文がコンテキストから支持されるかを検証関数v(si, c(q))で判定、支持された陳述数を全陳述数で割ったF=|V|/|S|でスコア化する。幻覚の回避と、取得コンテキストが生成回答の正当化として機能することを保証する狙いを持つ。\nAnswer Relevance（回答関連性）: 生成された答えが実際の質問に直接対応している程度を測定する指標。LLMが答えからn個の仮想質問を生成し、テキスト埋め込みモデルで元の質問との余弦類似度の平均AR=(1/n)Σsim(q, qi)を算出する。不完全な回答や冗長情報を含む場合を罰する設計。\nContext Relevance（コンテキスト関連性）: コンテキストが質問に答えるために必要な情報のみを含む範囲を評価する指標。LLMが質問に答えるのに重要な文を抽出し、抽出文数をコンテキスト全文数で割ったスコアCRを算出する。冗長情報の包含と、長いコンテキストによるLLM効果低下を防ぐ狙いを持つ。\n\n## 実験結果\nWikiEval（Wikipediaの50ページから構築したデータセット）を用いて評価し、人間評価との一致率はFaithfulness 0.95、Answer Relevance 0.78、Context Relevance 0.70と報告されている。比較対象のGPT Score/GPT Rankingはいずれも大幅に低い精度だったとされる。著者らは「faster evaluation cycles」の実現がLLM採用の急速化において重要だと指摘している。",
+        "quote": "faster evaluation cycles",
+        "claims": [
+          "Es et al. はground truthアノテーション不要のreference-free評価フレームワークRagasを提案した。",
+          "Ragasは Faithfulness・Answer Relevance・Context Relevance の3指標をLLMベースの陳述抽出と埋め込み類似度で算出する。",
+          "WikiEvalデータセットでの人間評価との一致率はFaithfulness 0.95など、比較対象のGPTベース手法より高いと報告されている。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "research",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/research"
       }
     ]
   }
