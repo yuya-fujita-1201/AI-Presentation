@@ -404,8 +404,9 @@
         "source_tier": "secondary",
         "origin": "web:anthropic.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-rag-anthropic-contextual-retrieval.md"
       },
       {
         "url": "https://developers.openai.com/api/docs/guides/tools-file-search",
@@ -422,8 +423,9 @@
         "source_tier": "secondary",
         "origin": "web:openai.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-rag-openai-file-search.md"
       },
       {
         "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/grounded-gen",

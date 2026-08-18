@@ -130,6 +130,11 @@
 - [article-le-qiita-syoitu-loop-engineering.md](./article-le-qiita-syoitu-loop-engineering.md) — Qiita「入門から実践 -「🔁 ループエンジニアリング」」（Syoitu）。Addy Osmaniの定義を軸に、ループの5つのアクション・6つのパーツ、Claude Codeでの3ファイル実装（CLAUDE.mdの停止条件・settings.jsonのフック・fixerサブエージェント）、Mastra Goals機能、回しっぱなしの代価を解説
 - [article-le-note-masawunder-goal-loop-design.md](./article-le-note-masawunder-goal-loop-design.md) — note「Claude Code ループエンジニアリング入門」（masa_wunder）。ループの核心を停止条件と位置づけ、/goal（ゴール駆動）と/loop（時間駆動）の使い分け、単一条件で失敗した経験から品質スコア・最大イテレーション・最大時間の3重構成に至った設計、段階的導入の3ステップを解説
 
+## 記事（RAG）
+
+- [article-rag-anthropic-contextual-retrieval.md](./article-rag-anthropic-contextual-retrieval.md) — Anthropic公式「Contextual Retrieval in AI Systems」。チャンクへの文脈付加によるContextual Embeddings/Contextual BM25、Claude 3 Haikuでの自動生成とプロンプトキャッシングによるコスト抑制、検索失敗率の段階的削減を解説
+- [article-rag-openai-file-search.md](./article-rag-openai-file-search.md) — OpenAI公式「File search」。Responses APIのホスト型検索ツールによるVector Store作成・ファイルアップロード手順、対応ファイル形式、検索カスタマイズ、レート制限を解説
+
 ## 動画（RAG）
 
 - [video-rag-history-mechanism-limits.md](./video-rag-history-mechanism-limits.md) — 「検索拡張生成(RAG)とは？LLMの嘘と知識不足を克服する仕組みを歴史から最新技術まで解説」（AIの履歴書）。知識のカットオフとハルシネーションという2課題からの誕生経緯、標準パイプラインの4段階（インデクシング・リトリーバル・ランキング・ジェネレーション）、リコール/プレシジョンのトレードオフ、アドバンストRAG各技術を歴史・仕組み・現状と限界・これからの4章で解説

@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-18（ragソース台帳・記事2本 web_ledger run:08182245b0）
+
+- **Creation**: sources/ に記事2本を article-rag-*.md として登録（RAGテーマ、公式ドキュメント2本、web_ledger工程 run:08182245b0）。article-rag-anthropic-contextual-retrieval.md（Anthropic公式「Contextual Retrieval in AI Systems」、二次情報。従来のRAGがチャンク分割により個別チャンクの文脈を欠く問題からの出発点、埋め込み・検索インデックス作成前にチャンク固有の説明文脈を追加するContextual EmbeddingsとContextual BM25の2サブ技術、Claude 3 Haikuへのプロンプトによる文脈自動生成とプロンプトキャッシングによる100万ドキュメントトークンあたり$1.02という一度きりの処理コスト、複数ドメイン実験での検索失敗率5.7%→Contextual Embeddingsのみで3.7%（35%削減）→BM25併用で2.9%（49%削減）→リランキング併用で1.9%（67%削減）という段階的改善を解説）、article-rag-openai-file-search.md（OpenAI公式「File search」、二次情報。Responses APIで利用可能なホスト型検索ツールがベクトルストア作成とファイルアップロードのみでモデルの知識を拡張できコード実装が不要である点、Vector Store作成からFiles API登録・vectorStores.files.create()での関連付け・ステータスcompleted確認までの3段階アップロード手順、23種類以上の対応ファイル形式とutf-8/utf-16/asciiのエンコーディング要件、max_num_results・filtersパラメータによる検索カスタマイズ、Tier別に毎分100〜1000リクエストのレート制限を解説）
+- **Update**: sources/index.md に「記事（RAG）」節を新設し上記2件を追加
+
 ## 2026-08-18（ragソース台帳・動画1本 research_ledger run:08181745ed）
 
 - **Creation**: sources/ に動画1本を video-rag-ollama-local-privacy.md として登録（RAGテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:08181745ed）。「社内文書を外に出さずAIに検索させる、Ollamaローカル型RAGの作り方【ずんだもん解説】」（ずんだもんのAI図鑑、2分51秒、自動字幕）。社内資料をAIに検索させると外部に漏れるのではという懸念を入り口に、取り込み・分割・ベクトル化・検索・生成の5段階に分解したRAGパイプライン全体を手元PCで動かす構成、手元完結によるコストメリット（電気代とマシン代のみ）、会話用LLMと埋め込みモデルの役割の違い・日本語では多言語対応埋め込みモデルを選ぶべきという点、RAGとエージェントの違い、社外に出せない文章か否かによる導入判断基準を解説
