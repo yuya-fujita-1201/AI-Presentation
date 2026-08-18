@@ -188,7 +188,7 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+0 再生+0",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -213,7 +213,8 @@
           "impact": "high"
         }
       ],
-      "summary": "社内文書を外部に出さずローカルで完結させるRAGの紹介動画。取り込み〜生成の5段階を手元PCで実行し、課金構造・埋め込みモデル選定・RAGとエージェントの違いに触れる短編。"
+      "summary": "社内文書を外部に出さずローカルで完結させるRAGの紹介動画。取り込み〜生成の5段階を手元PCで実行し、課金構造・埋め込みモデル選定・RAGとエージェントの違いに触れる短編。",
+      "ledger_path": "knowledge/sources/video-rag-ollama-local-privacy.md"
     },
     {
       "id": "swvzKSOEluc",

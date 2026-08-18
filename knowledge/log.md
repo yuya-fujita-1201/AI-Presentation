@@ -1,6 +1,9 @@
 # 変更履歴
 
-## 2026-08-18（ragソース台帳・動画2本 research_ledger run:08181710a9）
+## 2026-08-18（ragソース台帳・動画1本 research_ledger run:08181745ed）
+
+- **Creation**: sources/ に動画1本を video-rag-ollama-local-privacy.md として登録（RAGテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:08181745ed）。「社内文書を外に出さずAIに検索させる、Ollamaローカル型RAGの作り方【ずんだもん解説】」（ずんだもんのAI図鑑、2分51秒、自動字幕）。社内資料をAIに検索させると外部に漏れるのではという懸念を入り口に、取り込み・分割・ベクトル化・検索・生成の5段階に分解したRAGパイプライン全体を手元PCで動かす構成、手元完結によるコストメリット（電気代とマシン代のみ）、会話用LLMと埋め込みモデルの役割の違い・日本語では多言語対応埋め込みモデルを選ぶべきという点、RAGとエージェントの違い、社外に出せない文章か否かによる導入判断基準を解説
+- **Update**: sources/index.md の「動画（RAG）」節に上記1件を追加
 
 - **Creation**: sources/ に動画2本を video-rag-*.md として登録（RAGテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:08181710a9）。video-rag-sme-adoption-guide.md（株式会社文武堂「RAG（検索拡張生成）とは？」、10分48秒、自動字幕）。中小企業の経営者・担当者向けに、RAGの仕組み（就業規則の具体例）、RAGを賢くする2つの鉄則（SSOT・GIGO）、導入の4レベル（個人プラン→チーム→社内システム連携→フルスクラッチ）、無料版のリスクと安全に使うための4チェック、「RAGは学習しない・運用して育てるもの」という考え方を解説。video-rag-ragflow-oss-intro.md（さつきのOSS研究室「RAGFlow入門｜社内文書を答えるAIに変えるオープンソースRAGエンジン」、13分20秒、自動字幕）。OSS RAGエンジン「RAGFlow」（infiniflow/ragflow）の機能・LangChain/LlamaIndex/Difyとの違い・始め方（クラウド版→セルフホスト）・Apache 2.0ライセンスの条件・3つの導入事例（総務QA・カスタマーサポート・プリセールス）・セルフホスト運用の注意点を解説
 - **Update**: sources/index.md の「動画（RAG）」節に上記2件を追加
