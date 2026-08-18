@@ -140,6 +140,7 @@
 - [article-rag-ragas-eval.md](./article-rag-ragas-eval.md) — arXiv/EACL2024「Ragas: Automated Evaluation of Retrieval Augmented Generation」（Es et al.）。reference-free評価フレームワークRagasのFaithfulness・Answer Relevance・Context Relevanceの3指標とWikiEvalでの人間評価一致率を解説
 - [article-rag-todoonada-pipeline-guide.md](./article-rag-todoonada-pipeline-guide.md) — TodoONada株式会社。社内文書RAGの精度はパイプライン設計で決まるという立場から「パース→埋め込み→検索→リランク」の4段構成、日本語文書パースの三大障害、ハイブリッド検索の実務標準、規模別構成例を解説
 - [article-rag-knowledgesense-retrieval-techniques.md](./article-rag-knowledgesense-retrieval-techniques.md) — Zenn（株式会社ナレッジセンス／門脇篤志）。LlamaIndexのRAGチートシート翻訳・解説。ドキュメント抽出精度を高める7テクニック（チャンク分割最適化・ハイブリッド検索・HyDE・情報構造化・メタデータ付加・ナレッジグラフ・埋め込みファインチューニング）を解説
+- [article-rag-qiita-kentarok-poc-production-gap.md](./article-rag-qiita-kentarok-poc-production-gap.md) — Qiita（kentarok）。組織内情報集約RAGのPoCが本番展開で頓挫する根本原因は検証設計・評価の見方のズレにあるという立場から、規程・Wiki・Slack・メールへの分散という組織内情報の構造的課題と、本番展開時に顕在化する5つの失敗パターン（古い情報の使用・最新版の見落とし・矛盾の無視・文書の取り違え・ハルシネーション）を解説
 
 ## 動画（RAG）
 
