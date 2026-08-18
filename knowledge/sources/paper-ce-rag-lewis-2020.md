@@ -50,3 +50,5 @@ Patrick Lewisらが、事前学習済み生成モデルと外部文書検索を�
 - [../context-engineering/retrieval-memory-compaction-cache.md](../context-engineering/retrieval-memory-compaction-cache.md) — RAGの原型、外部索引と生成モデルの組み合わせ
 - [../context-engineering/context-components.md](../context-engineering/context-components.md) — RAG、会話メモリ、圧縮、キャッシュの区別
 - [../rag/rag-origin-and-definition.md](../rag/rag-origin-and-definition.md) — RAG-Sequence／RAG-Tokenにあたる2方式の比較、外部知識の更新容易性と根拠追跡という動機、および「原典が保証していないこと」（適用範囲の限定／検索が自動解決しない事柄／non-parametric memoryと会話メモリの区別）の根拠
+- [../rag/rag-and-neighbors.md](../rag/rag-and-neighbors.md) — 外部知識がモデル全体の再学習より更新しやすいという動機、「non-parametric memory」が検索可能な外部索引であって会話メモリではないという区別、RAG（取得）／圧縮（履歴の縮約）／メモリ（永続化）／プロンプトキャッシュ（計算再利用）の目的を混同しないという整理
+- [../rag/overview.md](../rag/overview.md) — 外部知識がモデル全体の再学習より更新しやすく、回答の根拠となる文書を扱えるという原典側の動機。「なぜ必要とされたのか」を後付け解釈でなく原典に接続する根拠

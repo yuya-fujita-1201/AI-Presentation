@@ -57,3 +57,5 @@ TodoONada株式会社は、社内文書RAGの構築ガイド記事で、2026年�
 - [../rag/retrieval-and-reranking.md](../rag/retrieval-and-reranking.md) — ベクトル検索が型番・固有名詞・略語の完全一致に弱いこと（XR-2000／XR-3000の例）、ハイブリッド検索が実務標準であること、pgvectorとQdrantの比較、国産リランカーが「CPUで動く軽さ」で「最も費用対効果の高い一手」という評価
 - [../rag/evaluation.md](../rag/evaluation.md) — 構築前チェックリストの「効果が不明のまま対象範囲を拡大する前に評価セットで精度測定を先に行う」という項目、パース結果の目視確認を先行させる順序
 - [../rag/build-or-buy.md](../rag/build-or-buy.md) — 規模別構成例（個人〜小規模: Ollama＋AnythingLLM／Open WebUI内蔵RAGで「半日で立つ」、AnythingLLMのMITライセンス／部門規模: vLLM＋ハイブリッド検索＋リランカー）、国産埋め込みモデルによる「完全ローカルのままOpenAI API級の検索品質」という評価、パース結果の目視確認と「砂上の楼閣」の警告
+- [../rag/rag-and-neighbors.md](../rag/rag-and-neighbors.md) — 文体・書式の学習はRAGではなくLoRA（ファインチューニング）の領域だという整理。「知識はRAG／振る舞いはファインチューニング」という切り分けの主根拠
+- [../rag/overview.md](../rag/overview.md) — 「RAG精度を決めるのはLLM本体ではなくパイプライン設計です」という立場（誤解3）、ベクトル検索が型番・固有名詞・略語の完全一致に弱いこと（XR-2000／XR-3000の例、誤解4）

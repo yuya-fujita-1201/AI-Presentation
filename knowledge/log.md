@@ -1,5 +1,13 @@
 # 変更履歴
 
+## 2026-08-19（rag バンドル完成 knowledge run:081905159f）
+
+- **Creation**: rag/ に残り2コンセプトを追加し、全10本（overview + 9コンセプト）が揃った。rag-and-neighbors.md（ファインチューニング・会話メモリ・コンパクション・プロンプトキャッシュ・エージェント的検索との切り分けを「何をして何をしないか」で対比し、症状→引き出しの対応表に落とす）、overview.md（一言定義・知識のカットオフとハルシネーションという2つの動機・よくある5つの誤解・9本の地図と役割別の読む順番）
+- **Creation**: rag/index.md を作成（内容一覧と、読む順番は overview.md 側で一元管理する旨、関連ディレクトリ context-engineering / graph-engineering への導線）
+- **Update**: ルート index.md の「内容」に rag/ を1行登録
+- **Update**: sources/ の台帳13ファイルに「活用先」を追記（rag-and-neighbors.md へ7件、overview.md へ6件）。コンセプト側のインライン出典と台帳側の活用先が双方向で対応することを機械照合済み
+- **Check**: tools/validate_okf.py knowledge をローカル実行し PASS（生出力は pipeline/logs/run-081905159f.md に記録）
+
 ## 2026-08-19（ragソース台帳・記事1本 web_ledger run:0819014585）
 
 - **Creation**: sources/ に記事1本を article-rag-qiita-kentarok-poc-production-gap.md として登録（RAGテーマ、jp-practice subtopic、二次情報、web_ledger工程 run:0819014585）。Qiita「組織内情報集約RAGの実用化設計① なぜPoCレベルで頓挫するのか」（kentarok）。社内RAGのPoCが本番展開で頓挫する根本原因は技術不足ではなく検証設計・評価の見方のズレにあるという立場から、「検索してから答える」というRAGの基本仕組みと検索精度への依存、規程（人事フォルダ）・運用ルール（社内Wiki）・例外（Slack）・経緯（メール）に分立し性質も件数も不揃いな組織内情報の構造的課題、本番展開時に顕在化する5つの失敗パターン（古い情報の使用・最新版の見落とし・矛盾の無視・文書の取り違え・ハルシネーション）、根拠の透明性を問う「信頼できる回答」の5つの確認項目、平均正答率ではなく致命的失敗の発見を目的とする検証設計の役割を解説

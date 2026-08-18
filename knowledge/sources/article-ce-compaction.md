@@ -69,3 +69,4 @@ response = client.beta.messages.create(
 # 活用先
 
 - [../context-engineering/retrieval-memory-compaction-cache.md](../context-engineering/retrieval-memory-compaction-cache.md) — compactionの目的と4ステップの動作、compactionブロック以前の破棄、Beta段階であることとトリガー閾値(既定150,000/最低50,000トークン)というパラメータ仕様の根拠
+- [../rag/rag-and-neighbors.md](../rag/rag-and-neighbors.md) — compactionが「上限に近づいたとき古いコンテキストを自動要約する」機能であること、4段の動作とcompactionブロック以前の自動破棄、Beta段階と閾値パラメータ（既定150,000／最低50,000トークン、ヘッダー`compact-2026-01-12`）。「RAGは足す／圧縮は減らす」という方向の対比の根拠

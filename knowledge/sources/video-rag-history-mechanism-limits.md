@@ -72,3 +72,4 @@ generated:
 - [../rag/rag-pipeline-stages.md](../rag/rag-pipeline-stages.md) — インデクシング・リトリーバル・ランキング・ジェネレーションの4段階（auto字幕・帰属付き）、チャンクサイズのトレードオフとセマンティックチャンキング／オーバーラップ、クロスエンコーダーによる再ランクと「速度重視で集め精度重視で絞る」2段階戦略、生成段の役割
 - [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — チャンクサイズのトレードオフ（小さすぎると文脈喪失／大きすぎると情報が薄まる）、セマンティックチャンキングとオーバーラップの有効性（auto字幕・帰属付き）
 - [../rag/retrieval-and-reranking.md](../rag/retrieval-and-reranking.md) — 再現率と適合率のトレードオフ（auto字幕・帰属付き・聞き取り）、クロスエンコーダーによる2段階戦略、ハイブリッド検索によるBM25併用、クエリ変換・Parent Document Retriever・Self-RAGというアドバンストRAGの技術群
+- [../rag/overview.md](../rag/overview.md) — 「知識のカットオフ」と「ハルシネーション」という2つの動機、外部の信頼できる情報源を都度参照するのがRAGの基本的な考え方であること、「RAGはLLMを賢くする魔法ではなく、あくまで良質な外部知識へのアクセス手段を提供する技術」という位置づけ（auto字幕・帰属付き・聞き取り）

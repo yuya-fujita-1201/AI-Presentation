@@ -53,3 +53,4 @@ generated:
 - [../context-engineering/context-components.md](../context-engineering/context-components.md) — ツール定義と結果を含む作業コンテキスト
 - [../context-engineering/retrieval-memory-compaction-cache.md](../context-engineering/retrieval-memory-compaction-cache.md) — ツール検索、結果集約、コンテキスト編集、キャッシュの役割差
 - [../context-engineering/long-horizon-and-tools.md](../context-engineering/long-horizon-and-tools.md) — 長時間ツール利用の圧力診断
+- [../rag/rag-and-neighbors.md](../rag/rag-and-neighbors.md) — プロンプトキャッシュが「モデルへ渡るトークン数そのものを減らす方式ではない」「メモリ・RAG・圧縮・コンテキスト編集の代替ではない」という明示、原因別の使い分け（定義が多い→ツール検索／途中結果→集約／古い結果→編集／同じ前半→キャッシュ）、およびツール検索がRAGの発想をツール定義へ適用した例であることとその留保

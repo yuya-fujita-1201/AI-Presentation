@@ -15,6 +15,7 @@ okf_version: "0.2"
 - [context-engineering/](./context-engineering/index.md) — コンテキストエンジニアリングのナレッジ。何を・いつ・どれだけ見せるか、選別・容量・RAG・メモリ・圧縮・キャッシュ・安全境界・実践テンプレートまで
 - [harness-engineering/](./harness-engineering/index.md) — ハーネスエンジニアリング（AIエージェントが動く環境そのものの設計）のナレッジ。定義・11責務とラダーから、道具・権限・設定スコープ・サンドボックス・プロジェクトメモリまで
 - [loop-engineering/](./loop-engineering/index.md) — ループエンジニアリング（実行・検証・改善を自動で繰り返す仕組みそのものの設計）のナレッジ。定義・段階の積み上がり・ループの解剖から、停止条件・検証・Maker-Checker・部品構成・適用条件・リスクまで
+- [rag/](./rag/index.md) — RAG（検索拡張生成）のナレッジ。一言定義・原典・パイプラインの段階から、チャンク分割と埋め込み・検索とリランキング・失敗モード・評価・作るか借りるか・運用と導入レベル・隣接概念との切り分けまで
 - [slide-system/](./slide-system/index.md) — パラメーター駆動の資料作成システム（deck.json → HTML/PPTX、微修正ワークフロー）のナレッジ
 - [sources/](./sources/index.md) — 収集した外部資料（動画・記事）の台帳。1ソース = 1ファイル
 
