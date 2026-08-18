@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-18（ragソース台帳・動画2本 research_ledger run:08181710a9）
+
+- **Creation**: sources/ に動画2本を video-rag-*.md として登録（RAGテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:08181710a9）。video-rag-sme-adoption-guide.md（株式会社文武堂「RAG（検索拡張生成）とは？」、10分48秒、自動字幕）。中小企業の経営者・担当者向けに、RAGの仕組み（就業規則の具体例）、RAGを賢くする2つの鉄則（SSOT・GIGO）、導入の4レベル（個人プラン→チーム→社内システム連携→フルスクラッチ）、無料版のリスクと安全に使うための4チェック、「RAGは学習しない・運用して育てるもの」という考え方を解説。video-rag-ragflow-oss-intro.md（さつきのOSS研究室「RAGFlow入門｜社内文書を答えるAIに変えるオープンソースRAGエンジン」、13分20秒、自動字幕）。OSS RAGエンジン「RAGFlow」（infiniflow/ragflow）の機能・LangChain/LlamaIndex/Difyとの違い・始め方（クラウド版→セルフホスト）・Apache 2.0ライセンスの条件・3つの導入事例（総務QA・カスタマーサポート・プリセールス）・セルフホスト運用の注意点を解説
+- **Update**: sources/index.md の「動画（RAG）」節に上記2件を追加
+
 ## 2026-08-18（ragソース台帳・動画2本 research_ledger run:0818170467）
 
 - **Creation**: sources/ に動画2本を video-rag-*.md として登録（RAGテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:0818170467）。video-rag-history-mechanism-limits.md（AIの履歴書「検索拡張生成(RAG)とは？LLMの嘘と知識不足を克服する仕組みを歴史から最新技術まで解説」、11分18秒、自動字幕）。知識のカットオフとハルシネーションという2課題からRAGが生まれた経緯、Lewisらの2020年論文への言及、標準パイプラインの4段階（インデクシング・リトリーバル・ランキング・ジェネレーション）、チャンク分割やリコール/プレシジョンのトレードオフといった実装上の課題、クエリ変換・ハイブリッド検索・Parent Document Retriever・Self-RAG・マルチモーダルRAGといったアドバンストRAG技術を解説。video-rag-supabase-diy-chatbot.md（KIZUKI PROJECT「社内文書や個人メモを学習させずに回答させるAIの作り方！SupabaseとClaude/OpenAIで作る自作RAGシステムを解説」、18分41秒、自動字幕）。RAGの3ステップ（変換・保管／検索／生成）とベクトルデータベースの意味検索の仕組みを説明したうえで、Claude CodeとSupabase Vectorを使い約15分で自作RAGチャットボットを構築する実演、精度を上げるコツ（チャンクサイズ調整・プロンプト制約・検索件数調整）を解説

@@ -134,3 +134,5 @@
 
 - [video-rag-history-mechanism-limits.md](./video-rag-history-mechanism-limits.md) — 「検索拡張生成(RAG)とは？LLMの嘘と知識不足を克服する仕組みを歴史から最新技術まで解説」（AIの履歴書）。知識のカットオフとハルシネーションという2課題からの誕生経緯、標準パイプラインの4段階（インデクシング・リトリーバル・ランキング・ジェネレーション）、リコール/プレシジョンのトレードオフ、アドバンストRAG各技術を歴史・仕組み・現状と限界・これからの4章で解説
 - [video-rag-supabase-diy-chatbot.md](./video-rag-supabase-diy-chatbot.md) — 「社内文書や個人メモを学習させずに回答させるAIの作り方！SupabaseとClaude/OpenAIで作る自作RAGシステムを解説」（KIZUKI PROJECT）。RAGの3ステップ・ベクトルDBの仕組みを説明したうえで、Claude CodeとSupabase Vectorで約15分で自作RAGチャットボットを構築するハンズオン実演
+- [video-rag-sme-adoption-guide.md](./video-rag-sme-adoption-guide.md) — 「RAG（検索拡張生成）とは？」（株式会社文武堂）。中小企業向けにRAGの仕組み・SSOT/GIGOの2鉄則・導入の4レベル・無料版のリスク・「運用して育てる」考え方を解説
+- [video-rag-ragflow-oss-intro.md](./video-rag-ragflow-oss-intro.md) — 「RAGFlow入門｜社内文書を答えるAIに変えるオープンソースRAGエンジン」（さつきのOSS研究室）。OSS RAGエンジンRAGFlowの機能・LangChain/LlamaIndex/Difyとの違い・Apache 2.0ライセンス・3つの導入事例を解説
