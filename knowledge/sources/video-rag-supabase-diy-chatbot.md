@@ -89,3 +89,4 @@ KIZUKI PROJECTの近藤氏が、社内文書や個人メモを学習させずに
 - [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — 精度を上げるコツの筆頭としてチャンクサイズの調整が挙げられていること
 - [../rag/retrieval-and-reranking.md](../rag/retrieval-and-reranking.md) — キーワード検索とベクトル検索の対比（「疲れた」と「体が重たい」の例）、検索件数を増やすとコストも処理時間も増えるため微調整が必要という指摘
 - [../rag/failure-modes.md](../rag/failure-modes.md) — プロンプトに「資料に書いてないことは答えないで」という制約を加えることである程度ハルシネーションを防げるとされる点
+- [../rag/build-or-buy.md](../rag/build-or-buy.md) — Supabase Vectorを使った自作の3ステップ構成、構築におよそ15分を要したこと、ローカル動作でデプロイ不要という選択、精度を上げるコツ3点を自作で握れる調整項目として、Claude側エラー時のOpenAIフォールバックによるモデル差し替え

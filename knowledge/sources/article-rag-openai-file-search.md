@@ -40,4 +40,4 @@ File searchはResponses API、Chat Completions API、Assistants APIの3つのAPI
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../rag/build-or-buy.md](../rag/build-or-buy.md) — ホスト型ツールという位置づけと「By creating vector stores and uploading files to them...」の引用、検索実行をOpenAI側が管理し開発者のコード実装が不要であること、`max_num_results`と`filters`という限られた調整範囲、「semantic and keyword search」の総称のみで内部処理が非公開であること、23種類以上の対応形式とエンコーディング要件、Tier別レート制限（100/500/1000 RPM）

@@ -40,4 +40,4 @@ Ragasは、Faithfulness（忠実性）・Answer Relevance（回答関連性）�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../rag/evaluation.md](../rag/evaluation.md) — reference-free評価という設計思想と「faster evaluation cycles」の引用、Faithfulness／Answer Relevance／Context Relevanceの定義と算出手順、各指標の狙い（幻覚回避・不完全/冗長な回答への罰・長コンテキストによる効果低下の防止）、WikiEvalでの人間評価一致率0.95／0.78／0.70とGPT Score・GPT Rankingとの比較

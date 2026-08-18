@@ -45,3 +45,4 @@ APIのレスポンスには、0〜1の範囲のgrounding score、回答を支え
 # 活用先
 
 - [../rag/rag-origin-and-definition.md](../rag/rag-origin-and-definition.md) — 現在のベンダー定義における「事実を取得し、それを用いて根拠のある回答を生成する」2段階プロセスという定義。原典の特定構成と現在の総称的用法との距離を示す根拠
+- [../rag/build-or-buy.md](../rag/build-or-buy.md) — 3種類の接地ソース（Google Search／インラインテキスト最大100 fact text／Agent Search data stores）と最大10個の組み合わせ、動的取得の引用としきい値デフォルト0.7、レスポンスのgrounding score・supportChunks・groundingSupport、マルチターンで過去のやり取り全文を毎回送る要件

@@ -55,3 +55,5 @@ TodoONada株式会社は、社内文書RAGの構築ガイド記事で、2026年�
 - [../rag/rag-pipeline-stages.md](../rag/rag-pipeline-stages.md) — パース→埋め込み→検索→リランクの4段構成、日本語文書パースの三大障害と「最初にして最大の難所」という位置づけ、「パース品質を先に目視確認」という鉄則と「砂上の楼閣」の警告、リランカーが費用対効果最大の一手であるという評価、「RAG精度を決めるのはLLM本体ではなくパイプライン設計」という立場
 - [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — 「RAG精度を決めるのはLLM本体ではなくパイプライン設計」という立場、国産埋め込みモデルRuri v3／PLaMo-embedding-1b（Apache 2.0）と「完全ローカルのままOpenAI API級の検索品質」という評価、「2026年の大きな変化」という位置づけ
 - [../rag/retrieval-and-reranking.md](../rag/retrieval-and-reranking.md) — ベクトル検索が型番・固有名詞・略語の完全一致に弱いこと（XR-2000／XR-3000の例）、ハイブリッド検索が実務標準であること、pgvectorとQdrantの比較、国産リランカーが「CPUで動く軽さ」で「最も費用対効果の高い一手」という評価
+- [../rag/evaluation.md](../rag/evaluation.md) — 構築前チェックリストの「効果が不明のまま対象範囲を拡大する前に評価セットで精度測定を先に行う」という項目、パース結果の目視確認を先行させる順序
+- [../rag/build-or-buy.md](../rag/build-or-buy.md) — 規模別構成例（個人〜小規模: Ollama＋AnythingLLM／Open WebUI内蔵RAGで「半日で立つ」、AnythingLLMのMITライセンス／部門規模: vLLM＋ハイブリッド検索＋リランカー）、国産埋め込みモデルによる「完全ローカルのままOpenAI API級の検索品質」という評価、パース結果の目視確認と「砂上の楼閣」の警告
