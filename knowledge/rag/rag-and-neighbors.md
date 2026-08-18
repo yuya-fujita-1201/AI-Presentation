@@ -46,7 +46,7 @@ generated:
 
 判断に迷ったら「その情報は来月更新されるか」と聞くとよい。更新されるものを重みに焼き込むと、更新のたびに学習をやり直すことになる。逆に、来年も再来年も変わらない**書き方の作法**は、毎回プロンプトで指示するより重みに入れたほうが安定する。
 
-そしてもう一つ、現場で最も誤解されている前提がある。株式会社文武堂の解説動画は、「RAGは学習しない」——質問のたびに指定した資料を読みに行って答えるだけなので、資料が古いまま・足りないままだといくら使っても答えは良くならない、と指摘している（[RAG（検索拡張生成）とは？](../sources/video-rag-sme-adoption-guide.md)、auto字幕からの聞き取り）。RAGを入れれば使うほど賢くなる、という期待は最初に外しておいたほうがよい。育てるのは仕組みではなく[資料の側](governance-and-adoption.md)である。
+そしてもう一つ、現場で最も誤解されている前提がある。**「RAGは学習しない」**という誤解は[RAG（検索拡張生成）とは何か](overview.md)の「誤解1」で扱った。RAGを入れれば使うほど賢くなる、という期待は最初に外しておいたほうがよい。育てるのは仕組みではなく[資料の側](governance-and-adoption.md)である。
 
 ## 会話メモリ——探すのではなく、持ち越す
 
@@ -132,7 +132,6 @@ Anthropicは、リードエージェントがユーザーのクエリを分析�
 - [Lewis et al. 2020 — Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](../sources/paper-ce-rag-lewis-2020.md) — 外部知識が再学習より更新しやすいという動機、non-parametric memoryと会話メモリの区別、取得／圧縮／メモリ／キャッシュの目的の違い
 - [Lewis 2020 解説（arXiv 2005.11401）](../sources/article-rag-lewis-2020-arxiv.md) — parametric / non-parametric memoryの定義と、2種類の記憶をエンドツーエンドで微調整する構成
 - [社内文書RAGの作り方2026（TodoONada株式会社）](../sources/article-rag-todoonada-pipeline-guide.md) — 文体・書式の学習はRAGではなくLoRAの領域という整理
-- [RAG（検索拡張生成）とは？（株式会社文武堂）](../sources/video-rag-sme-adoption-guide.md) — 「RAGは学習しない」という前提の指摘（auto字幕・帰属付き）
 - [Compaction（Anthropic公式）](../sources/article-ce-compaction.md) — compactionの目的と4段の動作、compactionブロック以前の破棄、Beta段階であることと閾値パラメータ
 - [Manage tool context（Anthropic公式）](../sources/docs-ce-anthropic-manage-tool-context.md) — プロンプトキャッシュがトークン数を減らす方式でなくRAG・メモリ・圧縮の代替でないこと、ツール検索の位置づけと留保、原因別の使い分け
 - [How we built our multi-agent research system（Anthropic）](../sources/article-ge-anthropic-multi-agent-research-system.md) — オーケストレーター・ワーカー構成、90.2%の性能改善と約15倍のトークン消費、経済性の条件

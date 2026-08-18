@@ -1,5 +1,16 @@
 # 変更履歴
 
+## 2026-08-19（rag 採点指摘の修正 improve_k run:08190745da）
+
+- **Update**: 採点findings（9件）を実ファイル照合のうえ全件fixedとして反映。rag-pipeline-stages.md のパース節にパースツール3系統（Docling／YomiToku／VLM直読み）比較とマルチモーダルRAGへの言及を追加、「分割」「ベクトル化」「再ランク」の説明をchunking-and-embedding.md／retrieval-and-reranking.mdへの1〜2文要約＋リンクに圧縮
+- **Update**: build-or-buy.md の4択比較表直後に、方式共通の運用コスト要素（ベクトルDB運用・埋め込み/再ランキング計算・パイプライン最適化・性能評価の難しさ）とYomiTokuのCC BY-NC-SA非商用ライセンス制約を追加
+- **Update**: failure-modes.md の retrieval-and-reranking.md への参照を「後述の〜で扱う」という前方参照の書きぶりに修正し、症状表にリンクを追加。「RAGは学習しない」の重複記述をoverview.mdへの1文+リンクに圧縮
+- **Update**: rag-origin-and-definition.md に本文中で唯一欠けていた他コンセプトへのリンク（rag-and-neighbors.md、rag-pipeline-stages.md）を追加
+- **Update**: retrieval-and-reranking.md の「エージェント的検索」にrag-and-neighbors.mdへのリンクを追加
+- **Update**: governance-and-adoption.md・rag-and-neighbors.md の「RAGは学習しない」重複記述をoverview.mdへの1文+リンクに圧縮
+- **Update**: sources/article-rag-todoonada-pipeline-guide.md・article-rag-knowledgesense-retrieval-techniques.md・article-rag-qiita-kentarok-poc-production-gap.md に「適用範囲と留保」節を新設（一社/一個人の実務見解であること・数値の時点性・検証範囲の限定を明記）
+- **Check**: tools/validate_okf.py knowledge をローカル実行し PASS（生出力は pipeline/logs/run-08190745da.md に記録）。なお「何段を外部任せにしたか」（build-or-buy.md側）と「パイプライン設計」（chunking-and-embedding.md側）の重複は、findingsのwhereに列挙されたファイル外のため今回は未対応（deferredではなくfixed判定の範囲外として明示）
+
 ## 2026-08-19（rag バンドル完成 knowledge run:081905159f）
 
 - **Creation**: rag/ に残り2コンセプトを追加し、全10本（overview + 9コンセプト）が揃った。rag-and-neighbors.md（ファインチューニング・会話メモリ・コンパクション・プロンプトキャッシュ・エージェント的検索との切り分けを「何をして何をしないか」で対比し、症状→引き出しの対応表に落とす）、overview.md（一言定義・知識のカットオフとハルシネーションという2つの動機・よくある5つの誤解・9本の地図と役割別の読む順番）
