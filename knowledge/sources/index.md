@@ -129,3 +129,8 @@
 - [article-le-zenn-maker-checker-practice.md](./article-le-zenn-maker-checker-practice.md) — Zenn「Claude Code で『ループエンジニアリング』を実践してみた」（tetsu_don）。レビュー役から修正権限を剥奪するMaker-Checkerパターンの実装、「想定内の異常系か本当のバグか」を見極める性質判定ステップの重要性、書籍価格チェッカーでの実践検証を解説
 - [article-le-qiita-syoitu-loop-engineering.md](./article-le-qiita-syoitu-loop-engineering.md) — Qiita「入門から実践 -「🔁 ループエンジニアリング」」（Syoitu）。Addy Osmaniの定義を軸に、ループの5つのアクション・6つのパーツ、Claude Codeでの3ファイル実装（CLAUDE.mdの停止条件・settings.jsonのフック・fixerサブエージェント）、Mastra Goals機能、回しっぱなしの代価を解説
 - [article-le-note-masawunder-goal-loop-design.md](./article-le-note-masawunder-goal-loop-design.md) — note「Claude Code ループエンジニアリング入門」（masa_wunder）。ループの核心を停止条件と位置づけ、/goal（ゴール駆動）と/loop（時間駆動）の使い分け、単一条件で失敗した経験から品質スコア・最大イテレーション・最大時間の3重構成に至った設計、段階的導入の3ステップを解説
+
+## 動画（RAG）
+
+- [video-rag-history-mechanism-limits.md](./video-rag-history-mechanism-limits.md) — 「検索拡張生成(RAG)とは？LLMの嘘と知識不足を克服する仕組みを歴史から最新技術まで解説」（AIの履歴書）。知識のカットオフとハルシネーションという2課題からの誕生経緯、標準パイプラインの4段階（インデクシング・リトリーバル・ランキング・ジェネレーション）、リコール/プレシジョンのトレードオフ、アドバンストRAG各技術を歴史・仕組み・現状と限界・これからの4章で解説
+- [video-rag-supabase-diy-chatbot.md](./video-rag-supabase-diy-chatbot.md) — 「社内文書や個人メモを学習させずに回答させるAIの作り方！SupabaseとClaude/OpenAIで作る自作RAGシステムを解説」（KIZUKI PROJECT）。RAGの3ステップ・ベクトルDBの仕組みを説明したうえで、Claude CodeとSupabase Vectorで約15分で自作RAGチャットボットを構築するハンズオン実演

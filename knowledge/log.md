@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-18（ragソース台帳・動画2本 research_ledger run:0818170467）
+
+- **Creation**: sources/ に動画2本を video-rag-*.md として登録（RAGテーマ、字幕全文から要約・主張テーブルつき、research_ledger工程 run:0818170467）。video-rag-history-mechanism-limits.md（AIの履歴書「検索拡張生成(RAG)とは？LLMの嘘と知識不足を克服する仕組みを歴史から最新技術まで解説」、11分18秒、自動字幕）。知識のカットオフとハルシネーションという2課題からRAGが生まれた経緯、Lewisらの2020年論文への言及、標準パイプラインの4段階（インデクシング・リトリーバル・ランキング・ジェネレーション）、チャンク分割やリコール/プレシジョンのトレードオフといった実装上の課題、クエリ変換・ハイブリッド検索・Parent Document Retriever・Self-RAG・マルチモーダルRAGといったアドバンストRAG技術を解説。video-rag-supabase-diy-chatbot.md（KIZUKI PROJECT「社内文書や個人メモを学習させずに回答させるAIの作り方！SupabaseとClaude/OpenAIで作る自作RAGシステムを解説」、18分41秒、自動字幕）。RAGの3ステップ（変換・保管／検索／生成）とベクトルデータベースの意味検索の仕組みを説明したうえで、Claude CodeとSupabase Vectorを使い約15分で自作RAGチャットボットを構築する実演、精度を上げるコツ（チャンクサイズ調整・プロンプト制約・検索件数調整）を解説
+- **Update**: sources/index.md に「動画（RAG）」節を新設し上記2件を追加
+
 ## 2026-08-17（ge ナレッジ完成・manual_override受理）
 
 - **Add**: `graph-engineering/` を9コンセプト→**15コンセプト**に拡充。新規6本（workflow-patterns-catalog / multi-agent-break-even / failure-taxonomy-and-debugging / handoffs-and-ownership / subagent-design-in-practice / verification-gates-and-evidence）はすべて公式ドキュメント・論文を主根拠とする。既存9本は上書きせず、出典補強と前方リンク追加にとどめた
