@@ -86,3 +86,6 @@ KIZUKI PROJECTの近藤氏が、社内文書や個人メモを学習させずに
 # 活用先
 
 - [../rag/rag-pipeline-stages.md](../rag/rag-pipeline-stages.md) — 3ステップという最短の説明、キーワード検索とベクトル検索の対比（「疲れた」と「体が重たい」の例）、精度を上げるコツ3点（チャンクサイズ・プロンプト制約・検索件数とコストのトレードオフ）
+- [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — 精度を上げるコツの筆頭としてチャンクサイズの調整が挙げられていること
+- [../rag/retrieval-and-reranking.md](../rag/retrieval-and-reranking.md) — キーワード検索とベクトル検索の対比（「疲れた」と「体が重たい」の例）、検索件数を増やすとコストも処理時間も増えるため微調整が必要という指摘
+- [../rag/failure-modes.md](../rag/failure-modes.md) — プロンプトに「資料に書いてないことは答えないで」という制約を加えることである程度ハルシネーションを防げるとされる点

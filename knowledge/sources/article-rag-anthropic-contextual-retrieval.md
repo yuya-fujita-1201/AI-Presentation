@@ -40,4 +40,5 @@ Anthropicは、コードベース・小説・ArXivペーパー・科学論文と
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — チャンクの文脈欠落問題とSEC提出書類の例、Contextual Embeddings／Contextual BM25の定義、50〜100トークンの説明文前置、Claude 3 Haikuによる自動生成とプロンプトキャッシング（$1.02／100万ドキュメントトークン）、検索失敗率5.7%→3.7%（35%削減）、埋め込みモデルはVoyage／Geminiが最高性能という推奨
+- [../rag/retrieval-and-reranking.md](../rag/retrieval-and-reranking.md) — Contextual BM25併用で49%削減（2.9%）、上位150チャンク取得→リランカーで上位20へ絞る処理、リランキング追加で67%削減（1.9%）という数値と結論文、取得チャンク数は20が5や10より効果的という推奨

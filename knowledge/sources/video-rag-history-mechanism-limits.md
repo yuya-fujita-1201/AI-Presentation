@@ -70,3 +70,5 @@ generated:
 
 - [../rag/rag-origin-and-definition.md](../rag/rag-origin-and-definition.md) — 2020年Facebook AI（当時）のPatrick Lewisらによる提案という経緯、知識のカットオフとハルシネーションという2つの動機（auto字幕・帰属付き）、検索部分のDPRと生成部分のモデル名に関する聞き取りの不確実性
 - [../rag/rag-pipeline-stages.md](../rag/rag-pipeline-stages.md) — インデクシング・リトリーバル・ランキング・ジェネレーションの4段階（auto字幕・帰属付き）、チャンクサイズのトレードオフとセマンティックチャンキング／オーバーラップ、クロスエンコーダーによる再ランクと「速度重視で集め精度重視で絞る」2段階戦略、生成段の役割
+- [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — チャンクサイズのトレードオフ（小さすぎると文脈喪失／大きすぎると情報が薄まる）、セマンティックチャンキングとオーバーラップの有効性（auto字幕・帰属付き）
+- [../rag/retrieval-and-reranking.md](../rag/retrieval-and-reranking.md) — 再現率と適合率のトレードオフ（auto字幕・帰属付き・聞き取り）、クロスエンコーダーによる2段階戦略、ハイブリッド検索によるBM25併用、クエリ変換・Parent Document Retriever・Self-RAGというアドバンストRAGの技術群

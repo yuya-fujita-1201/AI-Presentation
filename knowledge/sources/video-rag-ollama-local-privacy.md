@@ -66,3 +66,4 @@ generated:
 # 活用先
 
 - [../rag/rag-pipeline-stages.md](../rag/rag-pipeline-stages.md) — 取り込み・分割・ベクトル化・検索・生成の5段階（auto字幕・帰属付き）、会話用LLMと埋め込みモデルの役割の違いと日本語での多言語対応モデル推奨、「何段を外部任せにしたか」がデータ外出しを決めるという締めくくり
+- [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — 会話用LLMと埋め込みモデルは役割が全く別物であること、日本語文章に英語向け埋め込みモデルは相性が悪く多言語対応モデルを選ぶべきという説明（auto字幕・帰属付き）
