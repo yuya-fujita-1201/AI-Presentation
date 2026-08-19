@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-20（ragデッキ採点 停滞の手動修正）
+
+- **Fix**: `decks/06-rag/deck.json` の採点指摘を修正。①slide-34の対比表と slide-20 で「ファインチューニング」に初出説明（モデルの重み自体を変える）を追加（severity high。チャット型AIしか使っていない読者に対比の意味が通らなかった）②slide-12の「パース」に初出説明を付け、slide-11の工程名を「取り込み・パース」に揃えて語の揺れを解消 ③slide-22のleadに「コンテキスト＝LLMに一度に渡せる文章のまとまり」を一度だけ補足 ④本文行末の泣き別れ（13枚で発生）に対し `meta.layout_overrides.image_text.body_size` を17に調整
+- **Note**: 採点 7/9/9/7/7/9 が2周連続で非改善（stagnation）。未着手は slide-26 の情報過多（Ragas 4トピックを1枚）と、見出しの数字と箇条書き行数の不一致で、スライド分割を伴うため改善ループに委ねた
+- **Note**: improve_d のランが許可外パス `tools/check_svg_fonts.py` を作成しようとして封じ込めが作動、`pipeline/staging/quarantine/08200057a1/` に隔離（既存資産の巻き込みではなく工程逸脱の抑止）
+
 ## 2026-08-19（rag 採点指摘の修正 improve_k run:0819185771）
 
 - **Fix (f1)**: evaluation.md:107 の評価セット規模「30〜50問」がCitations節の4出典（Ragas／kentarok／Seven Failure Points／TodoONada）のいずれにも根拠がなく、出典なしの数値が手順に置かれていた。数値を削除し「壊れやすい条件を優先して仕込む」のみに留めた
