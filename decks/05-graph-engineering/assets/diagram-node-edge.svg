@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+<defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3527"/></marker>
+<marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6F5C52"/></marker></defs>
+<rect width="1024" height="768" fill="#FFF9F3"/>
+<rect x="352" y="116" width="320" height="70" rx="20" fill="#7C3527"/>
+<text x="512" y="162" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="26" font-weight="800" fill="#FFFFFF">ノード＝ひとつの仕事</text>
+<path d="M 512 186 V 252" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#a1)"/>
+<rect x="130" y="260" width="200" height="80" rx="40" fill="#FFFFFF" stroke="#B44A32" stroke-width="5"/>
+<text x="230" y="312" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="700" fill="#7C3527">調べる</text>
+<rect x="412" y="260" width="200" height="80" rx="40" fill="#FFFFFF" stroke="#B44A32" stroke-width="5"/>
+<text x="512" y="312" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="700" fill="#7C3527">書く</text>
+<rect x="694" y="260" width="200" height="80" rx="40" fill="#FFFFFF" stroke="#B44A32" stroke-width="5"/>
+<text x="794" y="312" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="700" fill="#7C3527">確かめる</text>
+<path d="M 330 300 H 402" fill="none" stroke="#7C3527" stroke-width="6" marker-end="url(#a1)"/>
+<path d="M 612 300 H 684" fill="none" stroke="#7C3527" stroke-width="6" marker-end="url(#a1)"/>
+<path d="M 368 424 V 316" fill="none" stroke="#B44A32" stroke-width="4" marker-end="url(#a1)"/>
+<rect x="108" y="426" width="520" height="70" rx="20" fill="#B44A32"/>
+<text x="368" y="472" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#FFFFFF">エッジ＝前の結果を読むから、待つ</text>
+<rect x="32" y="548" width="960" height="184" rx="26" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+<text x="512" y="602" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="26" font-weight="800" fill="#7C3527">ノードになれるのは、AIだけではありません</text>
+<rect x="65" y="630" width="210" height="64" rx="32" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+<text x="170" y="671" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#7C3527">AIに頼む</text>
+<rect x="293" y="630" width="210" height="64" rx="32" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+<text x="398" y="671" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#7C3527">検索する</text>
+<rect x="521" y="630" width="210" height="64" rx="32" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+<text x="626" y="671" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#7C3527">計算する</text>
+<rect x="749" y="630" width="210" height="64" rx="32" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+<text x="854" y="671" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="700" fill="#7C3527">人が確かめる</text>
+</svg>

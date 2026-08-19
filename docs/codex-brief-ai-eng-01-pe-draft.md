@@ -9,7 +9,7 @@
 
 社内勉強会「AIエンジニアリングシリーズ」第1弾（読者: チャット型AI経験のみの新入社員〜SE。30〜60分のカジュアル発表）。
 
-自律パイプラインが同テーマの**品質保証版**を `decks/ai-eng-01-prompt-engineering/` に別途生成する予定（採点ループ込み・数日後）。本依頼はそれを待たずに早出しする**たたき台レーン**。つまり: 完璧さより「発表の流れが見える状態」を最速で。ただし**素材にない主張・数値を創作しない**ことだけは厳守。
+自律パイプラインが同テーマの**品質保証版**を `decks/01-prompt-engineering/` に別途生成する予定（採点ループ込み・数日後）。本依頼はそれを待たずに早出しする**たたき台レーン**。つまり: 完璧さより「発表の流れが見える状態」を最速で。ただし**素材にない主張・数値を創作しない**ことだけは厳守。
 
 ## 2. まず読むもの
 
@@ -36,7 +36,7 @@
 1. `decks/ai-eng-01-pe-draft/deck.json` — **20〜30枚のたたき台**
    - meta: `id: ai-eng-01-pe-draft` / `theme: accenture-purple` / `date: 2026-08-13`
    - 構成の指針: 表紙 → つかみ（「プロンプトを書くな」と言われる時代に、なぜ今さらプロンプト？→ 5段階の地図で位置づけ）→ PEの基本（指示・文脈・出力形式・few-shot・反復・制約 の基礎6概念）→ Anthropic公式ベストプラクティスの要点 → 日本語実務のコツ → よくある失敗 → まとめ＋次回予告（第2弾コンテキストエンジニアリング）
-   - `image_text` タイプを積極的に使う（手本: `decks/okf-visual-v2/deck.json` の構成比）
+   - `image_text` タイプを積極的に使う（手本: `decks/07-okf-visual-guide/deck.json` の構成比）
    - 全スライドに `notes`（話し言葉・1枚30秒〜1分）。**notesはHTML専用でPPTXに入らない仕様——python-pptxのnotes_slideを絶対に操作しない**（Keynote互換性破壊）
 2. 挿絵は**プレースホルダでよい**（`pipeline/templates/placeholder-4x3.png` を `assets/` にコピーして参照）。本気の挿絵制作は清書フェーズで別依頼する
 3. ビルド検証: `python3 tools/build_deck.py decks/ai-eng-01-pe-draft` → `unzip -t`（PPTX）→ python-pptxで `Presentation()` 再パース → `python3 tools/preview_deck.py decks/ai-eng-01-pe-draft` で全枚PNG化 → 文字あふれ・はみ出しがないか目視確認
@@ -49,7 +49,7 @@
 
 ## 6. 変更禁止（絶対に触らない）
 
-- `decks/ai-eng-01-prompt-engineering/`（パイプライン本流の予約領域）およびその他の既存 `decks/*`
+- `decks/01-prompt-engineering/`（パイプライン本流の予約領域）およびその他の既存 `decks/*`
 - `knowledge/` 配下すべて（読むのは自由・書くのは禁止）
 - `pipeline/` 配下すべて（読むのは自由・書くのは禁止）
 - `tools/`・`templates/`

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="860" viewBox="0 0 1140 860">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+  </defs>
+
+  <!-- ===== 上段: 本文に貼り付けるとき ===== -->
+  <text x="50" y="42" class="h" font-size="27" fill="#7C3527">本文に貼り付けるとき</text>
+
+  <!-- プロンプト書類カード（外枠） -->
+  <rect x="50" y="60" width="1040" height="520" rx="28" fill="#FFFFFF" stroke="#7C3527" stroke-width="3"/>
+
+  <!-- 区画1: 指示 -->
+  <rect x="66" y="76" width="700" height="160" rx="20" fill="#F6E6CF" stroke="#DCB26B" stroke-width="3"/>
+  <rect x="86" y="92" width="94" height="42" rx="13" fill="#7C3527"/>
+  <text x="133" y="120" text-anchor="middle" class="h w" font-size="25">指示</text>
+  <rect x="86" y="162" width="6" height="48" rx="3" fill="#B44A32"/>
+  <text x="104" y="196" class="h" font-size="31">会議メモから決定事項を抜き出して</text>
+
+  <!-- 境目の切れ目マーク -->
+  <path d="M66,244 H766" stroke="#B44A32" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/>
+
+  <!-- 区画2: 材料（破線枠） -->
+  <rect x="66" y="252" width="700" height="312" rx="20" fill="#FFF2E8" stroke="#C17A27" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="86" y="268" width="94" height="42" rx="13" fill="#B44A32"/>
+  <text x="133" y="296" text-anchor="middle" class="h w" font-size="25">材料</text>
+
+  <!-- 貼り付けた会議メモ（境界タグ入り） -->
+  <rect x="86" y="328" width="660" height="210" rx="16" fill="#FFFFFF" stroke="#E5A692" stroke-width="2"/>
+  <text x="106" y="364" class="h" font-size="23" fill="#B44A32" letter-spacing="1">＜ここから会議メモ＞</text>
+  <text x="106" y="400" class="m" font-size="22">・キックオフは9月1日に決定</text>
+  <text x="106" y="434" class="m" font-size="22">・予算は120万円で承認</text>
+  <text x="106" y="468" class="m" font-size="22">・次回レビューは9月15日</text>
+  <text x="106" y="518" class="h" font-size="23" fill="#B44A32" letter-spacing="1">＜ここまで会議メモ＞</text>
+
+  <!-- 余白注記（境目の説明） -->
+  <path d="M800,244 H766" stroke="#B44A32" stroke-width="3" stroke-linecap="round"/>
+  <path d="M766,244 L782,235 L782,253 Z" fill="#B44A32"/>
+  <rect x="800" y="184" width="260" height="120" rx="20" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
+  <text x="822" y="226" class="h" font-size="23">区切りの見出しで、</text>
+  <text x="822" y="260" class="h" font-size="23">どこを読むか迷わせない</text>
+
+  <!-- 区切り線 -->
+  <line x1="50" y1="604" x2="1090" y2="604" stroke="#DCB26B" stroke-width="2"/>
+
+  <!-- ===== 下段: 添付ファイルを渡すとき ===== -->
+  <text x="50" y="634" class="h" font-size="27" fill="#7C3527">添付ファイルを渡すとき</text>
+
+  <!-- ファイルアイコン1: PDF -->
+  <g transform="translate(50 654)">
+    <path d="M0,22 L0,124 L100,124 L100,22 L78,0 L0,0 Z" fill="#FFFFFF" stroke="#7C3527" stroke-width="3" stroke-linejoin="round"/>
+    <polygon points="78,0 100,22 78,22" fill="#F0B498" stroke="#7C3527" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M20,42 H80 M20,54 H80 M20,66 H62" stroke="#6F5C52" stroke-width="5" stroke-linecap="round"/>
+    <text x="50" y="108" text-anchor="middle" class="h" font-size="24" fill="#B44A32">PDF</text>
+  </g>
+
+  <!-- ファイルアイコン2: 画像 -->
+  <g transform="translate(196 654)">
+    <path d="M0,22 L0,124 L100,124 L100,22 L78,0 L0,0 Z" fill="#FFFFFF" stroke="#7C3527" stroke-width="3" stroke-linejoin="round"/>
+    <polygon points="78,0 100,22 78,22" fill="#F0B498" stroke="#7C3527" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="20" y="34" width="60" height="44" rx="4" fill="none" stroke="#6F5C52" stroke-width="3"/>
+    <circle cx="34" cy="48" r="6" fill="#C17A27"/>
+    <path d="M22,74 L40,46 L58,74 Z" fill="#6F5C52"/>
+    <text x="50" y="108" text-anchor="middle" class="h" font-size="24" fill="#B44A32">画像</text>
+  </g>
+
+  <!-- ファイルアイコン3: 音声 -->
+  <g transform="translate(342 654)">
+    <path d="M0,22 L0,124 L100,124 L100,22 L78,0 L0,0 Z" fill="#FFFFFF" stroke="#7C3527" stroke-width="3" stroke-linejoin="round"/>
+    <polygon points="78,0 100,22 78,22" fill="#F0B498" stroke="#7C3527" stroke-width="2" stroke-linejoin="round"/>
+    <rect x="23" y="50" width="6" height="16" rx="3" fill="#6F5C52"/>
+    <rect x="35" y="44" width="6" height="28" rx="3" fill="#6F5C52"/>
+    <rect x="47" y="37" width="6" height="42" rx="3" fill="#6F5C52"/>
+    <rect x="59" y="44" width="6" height="28" rx="3" fill="#6F5C52"/>
+    <rect x="71" y="50" width="6" height="16" rx="3" fill="#6F5C52"/>
+    <text x="50" y="108" text-anchor="middle" class="h" font-size="24" fill="#B44A32">音声</text>
+  </g>
+
+  <!-- 吹き出し -->
+  <path d="M480,698 L452,712 L480,726 Z" fill="#FADFD5" stroke="#B44A32" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="480" y="664" width="610" height="112" rx="26" fill="#FADFD5" stroke="#B44A32" stroke-width="3"/>
+  <text x="785" y="728" text-anchor="middle" class="h" font-size="29">添付した会議メモから抜き出して</text>
+
+  <!-- 注記 -->
+  <text x="570" y="812" text-anchor="middle" class="m" font-size="24">ファイルや画像を渡すときは、『添付の◯◯から』と名前で指す</text>
+</svg>

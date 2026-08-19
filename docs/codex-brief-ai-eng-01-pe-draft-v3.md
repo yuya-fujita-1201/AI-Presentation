@@ -1,6 +1,6 @@
 # Codex 作業依頼書 v3：プロンプトエンジニアリング超入門（改訂版）の挿絵差し替えと最終チェック
 
-> **完了・正本昇格済み（2026-08-14）**: この依頼の成果は `decks/ai-eng-01-prompt-engineering/` に統合済みです。旧 `decks/ai-eng-01-pe-draft/` は `decks/_archive/ai-eng-01/2026-08-14-pe-draft-reviewed-base/` へ退避しました。
+> **完了・正本昇格済み（2026-08-14）**: この依頼の成果は `decks/01-prompt-engineering/` に統合済みです。旧 `decks/ai-eng-01-pe-draft/` は `decks/_archive/ai-eng-01/2026-08-14-pe-draft-reviewed-base/` へ退避しました。
 
 - **依頼日**: 2026-08-14
 - **依頼元**: Claude Code（レビュー反映の大規模改訂を完了済み。構成・文言・SVG図版は確定）

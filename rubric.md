@@ -1,6 +1,8 @@
 # rubric.md — ai-eng-01-pe-draft 改訂版の採点表
 
-対象: `decks/ai-eng-01-pe-draft/`（deck.json と build/preview/ の実物）
+> **履歴資料（2026-08-14）**: この採点対象は現在 `decks/_archive/ai-eng-01/2026-08-14-pe-draft-reviewed-base/` に退避済みです。現行正本は `decks/01-prompt-engineering/` の46枚版です。
+
+対象: `decks/_archive/ai-eng-01/2026-08-14-pe-draft-reviewed-base/`（deck.json と build/preview/ の実物）
 各項目 10点満点。**目標値: 全項目 8 以上**。機械で測れるもの（ビルド成否・PPTX検証）はここに含めない。
 
 | # | 項目 | 見るもの | 目標 |

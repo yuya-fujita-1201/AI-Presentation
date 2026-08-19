@@ -8,8 +8,20 @@ cd "$(dirname "$0")/../.." || exit 1
 PY=/opt/homebrew/bin/python3
 
 $PY tools/build_deck.py "$DECK_DIR" || exit 10
-NAME=$(basename "$DECK_DIR")
-PPTX="$DECK_DIR/build/$NAME.pptx"
+# 生成物名はフォルダ名ではなく、build_deck.py と同じ meta.id 契約で決める。
+# これにより、表示順プレフィックス付きのフォルダ名でもゲートを実行できる。
+ARTIFACT_ID=$($PY - "$DECK_DIR/deck.json" <<'PYEOF'
+import json
+import sys
+from pathlib import Path
+
+deck_path = Path(sys.argv[1])
+with deck_path.open(encoding="utf-8") as handle:
+    deck = json.load(handle)
+print(deck.get("meta", {}).get("id") or deck_path.parent.name)
+PYEOF
+) || exit 10
+PPTX="$DECK_DIR/build/$ARTIFACT_ID.pptx"
 [ -f "$PPTX" ] || { echo "pptx not found: $PPTX"; exit 10; }
 unzip -t "$PPTX" >/dev/null 2>&1 || exit 11
 

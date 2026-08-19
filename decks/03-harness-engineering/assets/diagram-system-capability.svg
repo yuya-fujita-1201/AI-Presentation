@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#247F7A"/></marker></defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <text x="512" y="70" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="32" font-weight="800" fill="#7C3527">4つの条件が、相互にかみ合って結果を作る</text>
+  <rect x="48" y="206" width="214" height="190" rx="24" fill="#F6E6CF" stroke="#F0B498" stroke-width="2"/>
+  <text x="155" y="279" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="800" fill="#7C3527">モデル</text>
+  <text x="155" y="333" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="19" font-weight="600" fill="#6F5C52">推論・生成</text>
+  <text x="274" y="315" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="36" font-weight="800" fill="#6F5C52">↔</text>
+  <rect x="286" y="206" width="214" height="190" rx="24" fill="#247F7A" stroke="#247F7A" stroke-width="4"/>
+  <text x="393" y="279" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="800" fill="#FFFFFF">ハーネス</text>
+  <text x="393" y="333" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="19" font-weight="600" fill="#FFFFFF">仲介・制御・検証</text>
+  <text x="512" y="315" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="36" font-weight="800" fill="#6F5C52">↔</text>
+  <rect x="524" y="206" width="214" height="190" rx="24" fill="#FADFD5" stroke="#F0B498" stroke-width="2"/>
+  <text x="631" y="279" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="800" fill="#7C3527">環境</text>
+  <text x="631" y="333" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="19" font-weight="600" fill="#6F5C52">ファイル・API・実行基盤</text>
+  <text x="750" y="315" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="36" font-weight="800" fill="#6F5C52">↔</text>
+  <rect x="762" y="206" width="214" height="190" rx="24" fill="#FFF2E8" stroke="#F0B498" stroke-width="2"/>
+  <text x="869" y="279" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="800" fill="#7C3527">タスク</text>
+  <text x="869" y="333" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="19" font-weight="600" fill="#6F5C52">対象業務・難易度</text>
+  <line x1="512" y1="438" x2="512" y2="525" stroke="#247F7A" stroke-width="7" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <rect x="260" y="544" width="504" height="112" rx="28" fill="#7C3527"/>
+  <text x="512" y="592" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="26" font-weight="800" fill="#FFFFFF">仕事の結果</text>
+  <text x="512" y="629" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="22" font-weight="700" fill="#F0B498">安全に、証拠付きで完了できるか</text>
+  <text x="512" y="710" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="20" font-weight="500" fill="#6F5C52">数式ではなく、設計の抜けを探す関係図</text>
+</svg>

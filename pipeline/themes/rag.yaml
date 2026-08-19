@@ -4,7 +4,7 @@ theme:
   title: RAG（検索拡張生成）
   series_index: 1
   knowledge_dir: knowledge/rag
-  deck_dir: decks/ai-topics-01-rag
+  deck_dir: decks/06-rag
 # 2026-08-17 新設。9月からの実務トラック第1弾。既存の context-engineering に
 # retrieval-memory-compaction-cache.md 等で部分的に触れているため、そこと重複しない
 # 「検索の作り方・失敗の直し方・評価」に軸を置く

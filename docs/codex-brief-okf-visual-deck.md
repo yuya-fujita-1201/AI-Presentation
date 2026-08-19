@@ -1,5 +1,7 @@
 # Codex 向け指示書: OKF ビジュアルデッキ「okf-visual」の作成
 
+> **アーカイブ済み（2026-08-20）**: この21枚版は `decks/_archive/okf/03-okf-visual/` に退避済みです。この指示書は履歴用であり、再実行しないでください。現行正本は `decks/07-okf-visual-guide/` です。
+
 ## 0. ゴール
 
 社内勉強会向けに、**OKF (Open Knowledge Format) を解説するビジュアル重視のスライドデッキ**を作成する。
@@ -7,7 +9,7 @@
 - あなた（Codex）の担当: **ImageGen（Image2）で挿絵画像を生成**し、それを組み込んだ `deck.json` を作成すること
 - こちら（Claude Code / ユーザー）の担当: ビルド（HTML / PPTX 生成）と最終検証。あなたはビルドを実行しなくてよい
 
-既存のテキスト中心デッキ `decks/okf-knowledge-share/`（20枚）が内容の正。これを**上書きせず**、姉妹版として新デッキを作る。
+既存のテキスト中心デッキ `decks/_archive/okf/02-okf-knowledge-share/`（20枚）が内容の正。これを**上書きせず**、姉妹版として新デッキを作る。
 
 ## 1. 前提情報
 
@@ -17,10 +19,10 @@
 
 ## 2. 成果物（この2種以外を作らない・変えない）
 
-1. `decks/okf-visual/assets/fig-01〜fig-08.png` — ImageGen で生成した挿絵 8 枚（§5）
-2. `decks/okf-visual/deck.json` — 21枚構成のデッキ定義（§4）
+1. `decks/_archive/okf/03-okf-visual/assets/fig-01〜fig-08.png` — ImageGen で生成した挿絵 8 枚（§5）
+2. `decks/_archive/okf/03-okf-visual/deck.json` — 21枚構成のデッキ定義（§4）
 
-**変更禁止**: `decks/okf-knowledge-share/` ほか既存デッキ、`tools/`、`templates/`、`knowledge/`（今回の作業では読み取りのみ）、`build/` 配下すべて。
+**変更禁止**: `decks/_archive/okf/02-okf-knowledge-share/` ほか既存デッキ、`tools/`、`templates/`、`knowledge/`（今回の作業では読み取りのみ）、`build/` 配下すべて。
 
 ## 3. deck.json の書き方（要約）
 
@@ -78,7 +80,7 @@
 
 ## 5. 画像（ImageGen）の要件 — 最重要
 
-8枚すべて ImageGen（Image2）で生成し、`decks/okf-visual/assets/` に `fig-01-fragmentation.png` のような連番+スラッグ名で保存する。
+8枚すべて ImageGen（Image2）で生成し、`decks/_archive/okf/03-okf-visual/assets/` に `fig-01-fragmentation.png` のような連番+スラッグ名で保存する。
 
 - **画像内に文字を入れない**（日本語は崩れる。事実・説明はすべてスライド側の title / caption / bullets で伝える）。どうしても必要なら「OKF」「AI」程度の短い英字のみ
 - **横長で生成**（表示領域が 1136×440 の横長のため。1536×640〜1536×1024 推奨。極端な縦長は不可）

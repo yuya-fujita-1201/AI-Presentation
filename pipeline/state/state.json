@@ -78,7 +78,7 @@
     }
   },
   "push_pending": false,
-  "last_result": "succeeded",
+  "last_result": "succeeded+containment",
   "last_scan_at": "2026-08-17T23:25:22+09:00",
   "last_started_at": "2026-08-20T00:57:15+09:00",
   "last_successful_transition_at": "2026-08-20T01:04:49+09:00",

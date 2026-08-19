@@ -15,9 +15,12 @@ presentation/
 │   ├── okf/             #   テーマ別ナレッジ（例: OKFそのものについて）
 │   └── sources/         #   収集した資料の台帳（1ソース = 1ファイル）
 ├── decks/               # ★ プレゼン資料（1デッキ = 1フォルダ）
-│   └── okf-introduction/
-│       ├── deck.json    #   スライドのソース（これだけ編集すればよい）
-│       └── build/       #   生成物（HTML / PPTX）※再生成可能
+│   ├── 01-prompt-engineering/  # 現行デッキ。先頭2桁が表示順
+│   │   ├── deck.json    #   スライドのソース（これだけ編集すればよい）
+│   │   └── build/       #   生成物（HTML / PPTX）※再生成可能
+│   ├── 02-context-engineering/
+│   ├── ...
+│   └── _archive/        #   旧版・比較用・不採用版
 ├── templates/
 │   ├── themes/          # テーマ定義（色・フォント）。HTML/PPTX 共通
 │   └── layouts/         # レイアウト既定値（全オブジェクトの位置・サイズ px）
@@ -46,20 +49,20 @@ OKFの書き方自体は `knowledge/okf/` に整理してあるので、それ�
 # 新しいデッキ: decks/<デッキ名>/deck.json を作る（スキーマは docs/deck-schema.md）
 
 # ビルド（HTML と PPTX を両方生成）
-python3 tools/build_deck.py decks/okf-knowledge-share
+python3 tools/build_deck.py decks/07-okf-visual-guide
 
 # HTML だけ / PPTX だけ
-python3 tools/build_deck.py decks/okf-knowledge-share --html
-python3 tools/build_deck.py decks/okf-knowledge-share --pptx
+python3 tools/build_deck.py decks/07-okf-visual-guide --html
+python3 tools/build_deck.py decks/07-okf-visual-guide --pptx
 
 # 指定スライドを PNG 化して目視確認
-python3 tools/preview_deck.py decks/okf-knowledge-share 5
+python3 tools/preview_deck.py decks/07-okf-visual-guide 5
 ```
 
-生成物は `decks/<デッキ名>/build/` に出力される:
+生成物は `decks/<デッキ名>/build/` に出力される。ファイル名には `deck.json` の `meta.id` を使う:
 
-- `<デッキ名>.html` — ブラウザで開けるスライドショー（← / → キーで移動、N でノート表示）
-- `<デッキ名>.pptx` — PowerPoint ファイル（16:9）
+- `<meta.id>.html` — ブラウザで開けるスライドショー（← / → キーで移動、N でノート表示）
+- `<meta.id>.pptx` — PowerPoint ファイル（16:9）
 - `preview/slide-NN.png` — プレビュー画像
 
 ### 3. 編集する（パラメーター駆動の微修正）

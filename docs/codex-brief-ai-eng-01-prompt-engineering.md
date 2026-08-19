@@ -1,10 +1,10 @@
 # Codex 作業依頼書：プロンプトエンジニアリング入門デッキの挿絵制作と最終仕上げ
 
-> **廃止（2026-08-14）**: この依頼書は不採用になった自動パイプライン35枚版向けです。対象は `decks/_archive/ai-eng-01/2026-08-14-auto-pipeline-35slides-rejected/` へ退避しました。実行しないでください。現在の正本は `decks/ai-eng-01-prompt-engineering/` の46枚版です。
+> **廃止（2026-08-14）**: この依頼書は不採用になった自動パイプライン35枚版向けです。対象は `decks/_archive/ai-eng-01/2026-08-14-auto-pipeline-35slides-rejected/` へ退避しました。実行しないでください。現在の正本は `decks/01-prompt-engineering/` の46枚版です。
 
 **依頼日**: 2026-08-14
 **依頼元**: Claude Code（骨格・文章・レイアウトまで作成済み）
-**対象デッキ**: `decks/ai-eng-01-prompt-engineering/`（全35枚。deck.json は完成済み）
+**対象デッキ**: `decks/01-prompt-engineering/`（全35枚。deck.json は完成済み）
 **あなたの担当**: **挿絵19枚の生成（ImageGen）と、それを入れた状態での最終ビルド・目視検証**
 
 ---
@@ -13,7 +13,7 @@
 
 1. 本ファイル（全体）
 2. `AGENTS.md` の「ビルド・検証手順」
-3. `decks/ai-eng-01-prompt-engineering/deck.json`（各 `image_text` スライドの `title` / `punch` / `bullets` / `caption` を必ず読んでから絵を設計すること）
+3. `decks/01-prompt-engineering/deck.json`（各 `image_text` スライドの `title` / `punch` / `bullets` / `caption` を必ず読んでから絵を設計すること）
 4. `pipeline/staging/draft/draft.md`（各スライドの `- figure:` 行 = 図案の原文。§4 の対応表はここから抜粋している）
 5. `docs/deck-schema.md`（`image_text` タイプの仕様。§9 に要点を抜粋済み）
 
@@ -23,25 +23,25 @@
 
 このデッキは社内勉強会向けの「プロンプトエンジニアリング入門」（全35枚）。35枚のうち **19枚が `image_text` タイプ**で、1枚の中に「見出し → パンチライン（一目で伝える一文）→ 箇条書き本文 → 図 → キャプション」が同居する構成になっている。
 
-**図の役割は、ページを飾るイメージカットではない。** 隣に置かれた `punch` / `bullets` の内容を視覚的に理解させる図解でなければならない。ここが今回の最重要ポイント（`decks/okf-visual-v2/` を作ったときと同じ方針）。
+**図の役割は、ページを飾るイメージカットではない。** 隣に置かれた `punch` / `bullets` の内容を視覚的に理解させる図解でなければならない。ここが今回の最重要ポイント（`decks/07-okf-visual-guide/` を作ったときと同じ方針）。
 
-`decks/ai-eng-01-prompt-engineering/assets/` には現在すでに `fig-pe-01.png` 〜 `fig-pe-19.png` の19枚が置かれており、`deck.json` の各 `path` はこれらを参照済み。**これは仮の下描き段階の画像**で、今回の依頼は同じファイル名で本仕上げの図に差し替えることが主タスク。ファイル名・`deck.json` 側のパスは変更不要。
+`decks/01-prompt-engineering/assets/` には現在すでに `fig-pe-01.png` 〜 `fig-pe-19.png` の19枚が置かれており、`deck.json` の各 `path` はこれらを参照済み。**これは仮の下描き段階の画像**で、今回の依頼は同じファイル名で本仕上げの図に差し替えることが主タスク。ファイル名・`deck.json` 側のパスは変更不要。
 
 ### 変更禁止（絶対に触らないこと）
 
-- `decks/okf-introduction/`、`decks/okf-knowledge-share/`
-- `decks/okf-visual/`、`decks/okf-visual-v2/`
-- `decks/graph-engineering/`、`decks/graph-engineering-visual/`
+- `decks/_archive/okf/01-okf-introduction/`、`decks/_archive/okf/02-okf-knowledge-share/`
+- `decks/_archive/okf/03-okf-visual/`、`decks/07-okf-visual-guide/`
+- `decks/_archive/graph-engineering/01-graph-engineering/`、`decks/_archive/graph-engineering/02-graph-engineering-visual/`
 - `decks/ai-eng-01-pe-draft/`、`decks/ai-eng-01-pe-draft-codex-revised/`（別テーマの並行進行中デッキ）
-- `decks/ai-eng-02-context-engineering/`（別テーマの並行進行中デッキ）
+- `decks/02-context-engineering/`（別テーマの並行進行中デッキ）
 - `knowledge/` 配下（ナレッジは今回変更しない）
 - `tools/build_deck.py`、`templates/`（`image_text` タイプは実装・検証済み。バグを見つけた場合だけ報告してよいが、勝手に仕様変更しない。配色トークンの参照のために `templates/themes/accenture-purple.json` を**読む**のは問題ない）
 
 ### あなたが触ってよいもの
 
-- `decks/ai-eng-01-prompt-engineering/assets/*.png`（**全19枚を差し替える**のが主タスク）
-- `decks/ai-eng-01-prompt-engineering/deck.json` の `style` / `caption` の微修正（**§6 の範囲内でのみ**）
-- `decks/ai-eng-01-prompt-engineering/build/`（ビルド生成物。直接編集はせず再ビルドで更新）
+- `decks/01-prompt-engineering/assets/*.png`（**全19枚を差し替える**のが主タスク）
+- `decks/01-prompt-engineering/deck.json` の `style` / `caption` の微修正（**§6 の範囲内でのみ**）
+- `decks/01-prompt-engineering/build/`（ビルド生成物。直接編集はせず再ビルドで更新）
 
 ---
 
@@ -106,7 +106,7 @@
 2. 試作3枚をデッキに入れてビルドし、**524×378px に縮小された状態で識別できるか**を実際のプレビューPNGで確認する（ここで潰れるなら要素を減らす）
 3. 画風が固まってから残り16枚を生成する
 4. 図案（§4）の中には **1枚の画像内で Before/After や複数状態を比較する構図**が複数ある（`fig-pe-01`：小さいメモ／大きいメモの対比、`fig-pe-05`：曖昧／絞り込みの2段比較、`fig-pe-14`：左右の依頼書の対比、`fig-pe-16`：3つの容器の状態比較）。これらは1枚の中で左右・上下のバランスと画風が揃っているかに特に注意する
-5. 生成した画像は `decks/ai-eng-01-prompt-engineering/assets/` に**同じファイル名で上書き**する（`deck.json` のパスは変更不要）
+5. 生成した画像は `decks/01-prompt-engineering/assets/` に**同じファイル名で上書き**する（`deck.json` のパスは変更不要）
 
 ### ImageGen へ渡す共通プロンプト骨子（日本語で書いてあるが、英語で投げてよい）
 
@@ -148,17 +148,17 @@
 
 ビルド・検証は**あなたのローカル CLI セッションで完結させる**こと（クラウドサンドボックスでは python-pptx / Playwright / 画像目視ができないため、その場合は正直に「実行できなかった」と報告する）。python3 は `/opt/homebrew/bin/python3`。
 
-- [ ] 19枚すべてを 4:3 で新規生成し、`decks/ai-eng-01-prompt-engineering/assets/` に上書きした
+- [ ] 19枚すべてを 4:3 で新規生成し、`decks/01-prompt-engineering/assets/` に上書きした
 - [ ] 全19枚に**文字が入っていない**ことを目視確認した
 - [ ] 19枚を並べて見て、画風・配色・線の太さが統一されていることを確認した
-- [ ] `python3 tools/build_deck.py decks/ai-eng-01-prompt-engineering` が成功
-- [ ] `python3 tools/preview_deck.py decks/ai-eng-01-prompt-engineering` で全35枚をPNG化し、**35枚すべてを実際に開いて目視**した
+- [ ] `python3 tools/build_deck.py decks/01-prompt-engineering` が成功
+- [ ] `python3 tools/preview_deck.py decks/01-prompt-engineering` で全35枚をPNG化し、**35枚すべてを実際に開いて目視**した
 - [ ] 目視で「文字切れ・要素の重なり・本文の枠外はみ出し・表の縦溢れ・図とキャプションの配置破綻」がないことを確認した
 - [ ] 図が縮小表示（524×378px）でも識別できることを確認した
-- [ ] `unzip -t decks/ai-eng-01-prompt-engineering/build/ai-eng-01-prompt-engineering.pptx` がエラーなし
+- [ ] `unzip -t decks/01-prompt-engineering/build/ai-eng-01-prompt-engineering.pptx` がエラーなし
 - [ ] python-pptx の `Presentation()` で再パースでき、**スライド数が35**
 - [ ] 全スライドで `has_notes_slide` が **False**（`notes` フィールドは HTML でのみ表示する仕様。python-pptx の `notes_slide` を触ると Keynote 互換性が壊れる既知のバグがあるため、PPTXへのスピーカーノート追加操作は一切行わないこと）
-- [ ] 他デッキ（`decks/okf-*`、`decks/graph-engineering*`、`decks/ai-eng-01-pe-draft*`、`decks/ai-eng-02-context-engineering`）と `knowledge/` に変更が入っていないことを `git status` で確認した
+- [ ] 他デッキ（`decks/okf-*`、`decks/_archive/graph-engineering/01-graph-engineering*`、`decks/ai-eng-01-pe-draft*`、`decks/02-context-engineering`）と `knowledge/` に変更が入っていないことを `git status` で確認した
 
 ### 報告に含めること
 

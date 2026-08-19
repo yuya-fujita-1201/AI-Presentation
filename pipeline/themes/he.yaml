@@ -4,7 +4,7 @@ theme:
   title: ハーネスエンジニアリング
   series_index: 3
   knowledge_dir: knowledge/harness-engineering
-  deck_dir: decks/ai-eng-03-harness-engineering
+  deck_dir: decks/03-harness-engineering
 keywords:
   ja: ["ハーネスエンジニアリング", "AIエージェント 環境 構築", "Claude Code 使い方 設定",
        "AIエージェント 安全 権限", "AI ツール実行 とは"]

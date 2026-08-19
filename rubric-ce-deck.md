@@ -1,6 +1,6 @@
 # rubric-ce-deck.md — ai-eng-02-context-engineering 改訂版の採点表
 
-対象: `decks/ai-eng-02-context-engineering/`（deck.json と build/preview/ の実物）
+対象: `decks/02-context-engineering/`（deck.json と build/preview/ の実物）
 各項目 10点満点。**目標値: 全項目 8 以上**。機械で測れるもの（ビルド成否・PPTX検証）はここに含めない。
 
 背景: 2026-08-14 のユーザーレビューで「コンテキストエンジニアリングって、結局何なの？が理解できなかった」という根本フィードバックを受けた改訂。要件詳細は同日の改訂要件（①定義ファーストの第1章、②5項目とPE5要素の関係明示、③段階的な章構成と事例章、④付録キーワードの本編組み込み）。

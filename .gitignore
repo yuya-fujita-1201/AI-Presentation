@@ -1,4 +1,5 @@
 decks/*/build/
+decks/_archive/**/build/
 decks/.backups/
 __pycache__/
 .DS_Store

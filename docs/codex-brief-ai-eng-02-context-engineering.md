@@ -2,8 +2,8 @@
 
 - 依頼日: 2026-08-14
 - 制作ブランチ: `loop/ai-eng-02-context-engineering`
-- 作業場所: `decks/ai-eng-02-context-engineering/`
-- 正本: `decks/ai-eng-02-context-engineering/deck.json`
+- 作業場所: `decks/02-context-engineering/`
+- 正本: `decks/02-context-engineering/deck.json`
 - ベースSHA: `aac9134365b2702391a7ab7cae9797e585e6ba3c`
 
 ## 1. 目的と読者
@@ -68,8 +68,8 @@
 
 - `knowledge/context-engineering/` のOKFコンセプト群とindex
 - `knowledge/sources/` の公式一次資料台帳とindex
-- `decks/ai-eng-02-context-engineering/deck.json`
-- `decks/ai-eng-02-context-engineering/assets/` のSVG図解・ImageGenイラスト
+- `decks/02-context-engineering/deck.json`
+- `decks/02-context-engineering/assets/` のSVG図解・ImageGenイラスト
 - `build/ai-eng-02-context-engineering.html`
 - `build/ai-eng-02-context-engineering.pptx`
 - `build/preview/slide-01.png`〜`slide-51.png`
@@ -79,7 +79,7 @@
 
 1. `python3 tools/validate_okf.py knowledge` が errors 0。
 2. `deck.json` がJSONとして有効、IDがディレクトリ名と一致、51枚、全枚notesあり、画像参照が実在。
-3. `python3 tools/build_deck.py decks/ai-eng-02-context-engineering` が成功。
+3. `python3 tools/build_deck.py decks/02-context-engineering` が成功。
 4. `unzip -t` がエラーなし。
 5. python-pptxで再パースでき、deck.json/PPTXとも51枚。
 6. 全スライドで `has_notes_slide == False`。

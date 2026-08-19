@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="860" viewBox="0 0 1140 860">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="7" refY="7" orient="auto">
+      <path d="M2 2L12 7L2 12Z" fill="#B44A32"/>
+    </marker>
+  </defs>
+
+  <!-- 「なぜ」ラベル（矢印の束の上に小さく） -->
+  <rect x="305" y="56" width="250" height="44" rx="22" fill="#B44A32"/>
+  <text x="430" y="85" text-anchor="middle" class="h w" font-size="22">なぜ＝使い道が違う</text>
+
+  <!-- 矢印（1つの材料から4つに分岐） -->
+  <path d="M350,390 C455,390 455,125 552,125" stroke="#B44A32" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M350,390 C455,390 455,301 552,301" stroke="#B44A32" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M350,390 C455,390 455,477 552,477" stroke="#B44A32" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M350,390 C455,390 455,653 552,653" stroke="#B44A32" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <circle cx="354" cy="390" r="8" fill="#B44A32"/>
+
+  <!-- 左: 材料カード（同じ会議メモ・1枚） -->
+  <g>
+    <rect x="50" y="270" width="300" height="240" rx="30" fill="#F0B498" stroke="#B44A32" stroke-width="3"/>
+    <g transform="translate(200,300)">
+      <rect x="-45" y="0" width="90" height="108" rx="8" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+      <rect x="-30" y="18" width="60" height="10" rx="3" fill="#B44A32"/>
+      <line x1="-30" y1="42" x2="30" y2="42" stroke="#6F5C52" stroke-width="4" stroke-linecap="round"/>
+      <line x1="-30" y1="58" x2="30" y2="58" stroke="#6F5C52" stroke-width="4" stroke-linecap="round"/>
+      <line x1="-30" y1="74" x2="14" y2="74" stroke="#6F5C52" stroke-width="4" stroke-linecap="round"/>
+      <line x1="-30" y1="90" x2="22" y2="90" stroke="#6F5C52" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <text x="200" y="450" text-anchor="middle" class="h" font-size="32">同じ会議メモ</text>
+    <text x="200" y="484" text-anchor="middle" class="m" font-size="23">たった1枚の材料</text>
+  </g>
+
+  <!-- 右: 4つの出力カード -->
+  <!-- 1. 社外向け -->
+  <g transform="translate(560,50)">
+    <rect width="540" height="150" rx="28" fill="#FFF2E8" stroke="#EDC9B4" stroke-width="3"/>
+    <g transform="translate(74,75)">
+      <rect x="-38" y="-46" width="76" height="92" rx="10" fill="none" stroke="#7C3527" stroke-width="2.5"/>
+      <rect x="-30" y="-38" width="60" height="76" rx="6" fill="#FFFFFF" stroke="#B44A32" stroke-width="2.5"/>
+      <rect x="-20" y="-27" width="40" height="8" rx="3" fill="#B44A32"/>
+      <line x1="-20" y1="-6" x2="20" y2="-6" stroke="#6F5C52" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="-20" y1="6" x2="20" y2="6" stroke="#6F5C52" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="-20" y1="18" x2="8" y2="18" stroke="#6F5C52" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="-20" y1="30" x2="14" y2="30" stroke="#6F5C52" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+    <text x="150" y="68" class="h" font-size="32">社外向け</text>
+    <text x="150" y="104" class="m" font-size="23">お客さまに見せる、整った資料</text>
+  </g>
+
+  <!-- 2. 社内向け -->
+  <g transform="translate(560,226)">
+    <rect width="540" height="150" rx="28" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
+    <g transform="translate(74,75) rotate(-7)">
+      <path d="M-32,-40 L20,-40 L32,-28 L32,44 L-32,44 Z" fill="#FFFFFF" stroke="#B44A32" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M20,-40 L20,-28 L32,-28 Z" fill="#F0B498" stroke="#B44A32" stroke-width="2"/>
+      <path d="M-20,-16 q10,-5 22,0" stroke="#6F5C52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M-20,0 q14,7 26,-2" stroke="#6F5C52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M-20,16 q8,-5 18,2" stroke="#6F5C52" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M-20,32 q12,5 20,-2" stroke="#6F5C52" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </g>
+    <text x="150" y="68" class="h" font-size="32">社内向け</text>
+    <text x="150" y="104" class="m" font-size="23">ディスカッション用の手早いメモ</text>
+  </g>
+
+  <!-- 3. 役員向け -->
+  <g transform="translate(560,402)">
+    <rect width="540" height="150" rx="28" fill="#F6E6CF" stroke="#DCB26B" stroke-width="3"/>
+    <g transform="translate(74,75)">
+      <rect x="-34" y="-44" width="68" height="88" rx="6" fill="#FFFFFF" stroke="#B44A32" stroke-width="2.5"/>
+      <line x1="-22" y1="-18" x2="22" y2="-18" stroke="#B44A32" stroke-width="8" stroke-linecap="round"/>
+      <line x1="-22" y1="6" x2="10" y2="6" stroke="#6F5C52" stroke-width="4" stroke-linecap="round"/>
+      <line x1="-22" y1="22" x2="16" y2="22" stroke="#6F5C52" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <text x="150" y="68" class="h" font-size="32">役員向け</text>
+    <text x="150" y="104" class="m" font-size="23">全体が一目で分かる短い要約</text>
+  </g>
+
+  <!-- 4. 開発者向け -->
+  <g transform="translate(560,578)">
+    <rect width="540" height="150" rx="28" fill="#FADFD5" stroke="#D98C72" stroke-width="3"/>
+    <g transform="translate(74,75)">
+      <rect x="-34" y="-46" width="68" height="92" rx="6" fill="#FFFFFF" stroke="#B44A32" stroke-width="2.5"/>
+      <line x1="-24" y1="-36" x2="24" y2="-36" stroke="#6F5C52" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-24" y1="-25" x2="16" y2="-25" stroke="#6F5C52" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-24" y1="-14" x2="24" y2="-14" stroke="#6F5C52" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-24" y1="-3" x2="12" y2="-3" stroke="#6F5C52" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-24" y1="8" x2="24" y2="8" stroke="#6F5C52" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-24" y1="19" x2="18" y2="19" stroke="#6F5C52" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-24" y1="30" x2="24" y2="30" stroke="#6F5C52" stroke-width="3" stroke-linecap="round"/>
+      <line x1="-24" y1="41" x2="14" y2="41" stroke="#6F5C52" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <text x="150" y="68" class="h" font-size="32">開発者向け</text>
+    <text x="150" y="104" class="m" font-size="23">設計まで分かる詳しい記録</text>
+  </g>
+
+  <!-- 下部メッセージバンド -->
+  <rect x="60" y="760" width="1020" height="80" rx="30" fill="#7C3527"/>
+  <text x="570" y="810" text-anchor="middle" class="h w" font-size="30">使い道を1文添えるだけで、残す情報・省く情報が決まる</text>
+</svg>

@@ -5,7 +5,7 @@
 - ナレッジ一覧: `{{KNOWLEDGE_LIST_FILE}}`（完成済みコンセプト群。**これが唯一の内容ソース**）
 - 原稿ファイル: `{{DRAFT_FILE}}`（現在 {{CURRENT_BLOCKS}} ブロック）
 - 枚数: **{{SLIDES_MIN}}〜{{SLIDES_MAX}}枚**
-- 品質手本: `decks/okf-visual-v2/deck.json`（35枚・image_text 19枚の構成比・1枚1メッセージの粒度）
+- 品質手本: `decks/07-okf-visual-guide/deck.json`（35枚・image_text 19枚の構成比・1枚1メッセージの粒度）
 - **ユーザーレビューの学び: `{{FEEDBACK_FILE}}`（存在する場合は必読。ここに書かれた構成・文章・実用性・図版の方針を最優先で反映する）**
 - 読者像: 新入社員＋ITコンサル・SE（チャットAI経験あり・エージェント未経験）。発表30〜60分・超初心者向け
 

@@ -1,11 +1,13 @@
 # Codex 向け指示書: グラフエンジニアリング図解デッキ「graph-engineering-visual」の作成
 
+> **アーカイブ済み（2026-08-20）**: この旧図解版は `decks/_archive/graph-engineering/02-graph-engineering-visual/` に退避済みです。この指示書は履歴用であり、再実行しないでください。現行正本は `decks/05-graph-engineering/` です。
+
 ## 0. ゴール
 
 社内勉強会向けに、**グラフエンジニアリングを初心者にも分かるように解説する、図解・挿絵中心のスライドデッキ**を新規作成する。
 
 - あなた（Codex）の担当: **ImageGen（Image2）で挿絵を生成**し、それを組み込んだ `deck.json` を作成し、**ビルド・目視検証・PPTX 検証まで自分で完結**させること（手順は `AGENTS.md`「ビルド・検証手順」。ローカル CLI セッションで実行する前提。クラウドサンドボックスの場合のみビルド以降を引き継ぎ報告する）
-- 既存のプロ向け詳細版 `decks/graph-engineering/`（29枚）が**内容の正**。ユーザーの意向により**これは残す**。上書き・変更せず、姉妹版として新デッキを作る
+- 既存のプロ向け詳細版 `decks/_archive/graph-engineering/01-graph-engineering/`（29枚）が**内容の正**。ユーザーの意向により**これは残す**。上書き・変更せず、姉妹版として新デッキを作る
 
 既存版との違い（今回の狙い）:
 
@@ -20,10 +22,10 @@
 
 ## 2. 成果物（この2種以外を作らない・変えない）
 
-1. `decks/graph-engineering-visual/assets/fig-01〜fig-09.png` — ImageGen で生成した挿絵 9 枚（§5）
-2. `decks/graph-engineering-visual/deck.json` — 22枚構成のデッキ定義（§4）
+1. `decks/_archive/graph-engineering/02-graph-engineering-visual/assets/fig-01〜fig-09.png` — ImageGen で生成した挿絵 9 枚（§5）
+2. `decks/_archive/graph-engineering/02-graph-engineering-visual/deck.json` — 22枚構成のデッキ定義（§4）
 
-**変更禁止**: `decks/graph-engineering/` ほか既存デッキすべて、`tools/`、`templates/`、`docs/`、`knowledge/`（読み取りのみ）、各 `build/` 配下。`rubric-*.md` / `loop-log.md` も触らない。
+**変更禁止**: `decks/_archive/graph-engineering/01-graph-engineering/` ほか既存デッキすべて、`tools/`、`templates/`、`docs/`、`knowledge/`（読み取りのみ）、各 `build/` 配下。`rubric-*.md` / `loop-log.md` も触らない。
 
 ## 3. deck.json の書き方（要約）
 
@@ -41,7 +43,7 @@
 }
 ```
 
-使用できるスライドタイプ（詳細は `docs/deck-schema.md`。実物例は `decks/graph-engineering/deck.json` と `decks/okf-visual/deck.json`）:
+使用できるスライドタイプ（詳細は `docs/deck-schema.md`。実物例は `decks/_archive/graph-engineering/01-graph-engineering/deck.json` と `decks/_archive/okf/03-okf-visual/deck.json`）:
 
 - `title` / `section` / `bullets` / `two_column` / `table` / `quote` / `closing`
 - `image`: `{ "type": "image", "title", "path": "assets/fig-01-xxx.png", "caption" }` — 画像は 1136×440px の領域に等比で収まる
@@ -77,7 +79,7 @@
 
 ## 5. 画像（ImageGen）の要件 — 最重要
 
-9枚すべて ImageGen（Image2）で生成し、`decks/graph-engineering-visual/assets/` に `fig-01-lost-robot.png` のような連番+スラッグ名で保存する。
+9枚すべて ImageGen（Image2）で生成し、`decks/_archive/graph-engineering/02-graph-engineering-visual/assets/` に `fig-01-lost-robot.png` のような連番+スラッグ名で保存する。
 
 - **画像内に文字を入れない**（日本語は崩れる。事実・説明はすべてスライド側の title / caption で伝える）。どうしても必要なら「AI」程度の短い英字のみ
 - **横長で生成**（表示領域 1136×440。1536×640〜1536×1024 推奨。極端な縦長は不可）
@@ -103,7 +105,7 @@
 
 ## 7. コンテンツのファクトシート（この範囲の事実だけを使う）
 
-初心者向けのため、**数字・固有名詞は以下にあるものだけ**を使う。動画由来の主張は「〜という報告がある」「〜と言われている」のように断定を避ける（既存版 `decks/graph-engineering/deck.json` の書きぶりが手本）。
+初心者向けのため、**数字・固有名詞は以下にあるものだけ**を使う。動画由来の主張は「〜という報告がある」「〜と言われている」のように断定を避ける（既存版 `decks/_archive/graph-engineering/01-graph-engineering/deck.json` の書きぶりが手本）。
 
 **A. AI活用の5段階**: ①プロンプト＝頼み方（「甘さ控えめで」と注文すると出てくる料理が変わる）②コンテキスト＝渡す材料（冷蔵庫から今日使う食材だけ出す）③ハーネス＝作業環境（厨房設備と、危ないものを触らせない仕組み）④ループ＝味見して直してまた味見（1体のAIが試す→確認する→直すを繰り返す）⑤グラフ＝厨房全体の段取り表（誰が何を作っていて、どの注文が待ちか）。会社なら「指示の出し方→渡す資料→決裁ライン→振り返り→組織図と業務フロー」、家庭なら「頼み方→理由を伝える→安全な環境→一緒にやって見守る→家族のカレンダー」に対応する。順番を飛ばして5段目から始めない。グラフは1〜4段目の置き換えではなく、役割が違うだけ。
 
@@ -135,7 +137,7 @@
 - [ ] 本文・caption の事実が §7 の範囲内（§7 にない数字・固有名詞を書いていない）
 - [ ] 箇条書きは1枚4項目まで・1行25字以内目安を守っている（初心者向けの密度）
 - [ ] 色の hex 直書きをしていない（テーマトークン名のみ）
-- [ ] 既存ファイルを一切変更していない（特に `decks/graph-engineering/` は温存）
+- [ ] 既存ファイルを一切変更していない（特に `decks/_archive/graph-engineering/01-graph-engineering/` は温存）
 - [ ] ビルド・検証を完了した: `build_deck.py` 成功 / preview 全22枚を目視して崩れなし / `unzip -t` エラーなし / `Presentation()` 再パースで22枚 / 全スライド `has_notes_slide` False
 
 ## 9. 完了報告の形式

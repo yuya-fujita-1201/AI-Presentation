@@ -4,7 +4,7 @@ theme:
   title: コンテキストエンジニアリング
   series_index: 2
   knowledge_dir: knowledge/context-engineering
-  deck_dir: decks/ai-eng-02-context-engineering
+  deck_dir: decks/02-context-engineering
 keywords:
   ja: ["コンテキストエンジニアリング 入門", "コンテキストエンジニアリング とは",
        "AI コンテキスト 渡し方", "LLM コンテキストウィンドウ 解説",

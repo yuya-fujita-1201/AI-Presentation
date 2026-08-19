@@ -4,7 +4,7 @@ theme:
   title: ループエンジニアリング
   series_index: 4
   knowledge_dir: knowledge/loop-engineering
-  deck_dir: decks/ai-eng-04-loop-engineering
+  deck_dir: decks/04-loop-engineering
 keywords:
   ja: ["ループエンジニアリング", "AI 自己改善 ループ", "AIエージェント 検証 繰り返し",
        "Human in the Loop とは", "AI レビュー 自動化"]

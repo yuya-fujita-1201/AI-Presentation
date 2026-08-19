@@ -3,10 +3,10 @@
 ## セットアップ（2026-08-09 03:35 JST）
 
 - **対象1**: `knowledge/graph-engineering/`（コンセプト群）+ `knowledge/sources/video-ge-*.md`（11ファイル）→ 採点表 `rubric-knowledge.md`
-- **対象2**: `decks/graph-engineering/`（deck.json → HTML/PPTX）→ 採点表 `rubric-deck.md`
+- **対象2**: `decks/_archive/graph-engineering/01-graph-engineering/`（deck.json → HTML/PPTX）→ 採点表 `rubric-deck.md`
 - **縮退モード**: presentation/ は git 未追跡（リポジトリ ~/Projects は別プロジェクトの管理下）のため、ブランチ/PR は省略。maker≠grader・機械ゲート・rubric採点・本ログ記録は維持する
 - **機械ゲート（ナレッジ）**: `python3 tools/validate_okf.py knowledge` — フロントマター/type必須、リンク切れ、index網羅、okf_version
-- **機械ゲート（デッキ）**: `python3 tools/build_deck.py decks/graph-engineering`（HTML+PPTX）→ `unzip -t` → python-pptx `Presentation()` 再パース → `preview_deck.py` PNG生成成功
+- **機械ゲート（デッキ）**: `python3 tools/build_deck.py decks/_archive/graph-engineering/01-graph-engineering`（HTML+PPTX）→ `unzip -t` → python-pptx `Presentation()` 再パース → `preview_deck.py` PNG生成成功
 - **採点**: Agentツールで独立採点エージェント（general-purpose）を起動。maker の意図・経緯は渡さない
 - **入力素材**: YouTube動画11本（字幕+メタデータ取得済み）。ソース執筆とコンセプト設計は Workflow（Digest 11並列 → Architect 3案 → Judge 統合）で実施
 
@@ -111,7 +111,7 @@
 
 # okf-visual-v2 デッキ（2026-08-09 夕方）
 
-対象: `decks/okf-visual-v2/`（35枚）。旧版 `decks/okf-visual/`（21枚）は温存・無変更。
+対象: `decks/07-okf-visual-guide/`（35枚）。旧版 `decks/_archive/okf/03-okf-visual/`（21枚）は温存・無変更。
 
 ## 背景（ユーザー要望）
 
@@ -168,7 +168,7 @@
 
 - `build_deck.py` 成功 → `preview_deck.py` 35枚PNG化 → 全枚目視
 - `unzip -t` エラーなし ／ `Presentation()` 再パースで35枚一致 ／ `has_notes_slide` 全False ／ `notesSlide` パーツ 0
-- 旧デッキ無変更を mtime で確認（`decks/okf-visual/deck.json` は 2026-08-06 20:05 のまま）
+- 旧デッキ無変更を mtime で確認（`decks/_archive/okf/03-okf-visual/deck.json` は 2026-08-06 20:05 のまま）
 
 ## 最終検品（3体目の独立エージェント、35枚全数目視）
 
@@ -182,19 +182,19 @@
 
 ## Codex 挿絵制作・最終仕上げ（2026-08-09 17:45 JST）
 
-- `docs/codex-brief-okf-visual-v2.md` の発注仕様に従い、`fig-01`〜`fig-19` を ImageGen で全件新規生成し、`decks/okf-visual-v2/assets/` へ同名で差し替え
+- `docs/codex-brief-okf-visual-v2.md` の発注仕様に従い、`fig-01`〜`fig-19` を ImageGen で全件新規生成し、`decks/07-okf-visual-guide/assets/` へ同名で差し替え
   - 全19枚を 1024×768px（4:3）へ統一
   - 紫系のみ（濃紫・明紫・薄紫・白）、フラットベクター、画像内の単語・文章・数字なし
   - 19枚のコンタクトシートと各スライド上の 524×378px 表示で、線幅・配色・人物／ロボット造形・縮小識別性を目視確認
 - 初回QAで `fig-03-bundle-tree.png` の相互リンクが縦方向に寄っていたため、主ツリーを維持したまま書類間の横／斜めリンク3本へ修正し、slide 14 を再ビルド・再確認
 - `deck.json` は文言・style・caption を含め**変更なし**。確定済み本文を維持
 - 最終ビルド・検証:
-  - `python3 tools/build_deck.py decks/okf-visual-v2` 成功
-  - `python3 tools/preview_deck.py decks/okf-visual-v2` で 35枚を再生成し、全35枚を目視。文字切れ・重なり・本文／表のはみ出し・図とキャプションの破綻なし
+  - `python3 tools/build_deck.py decks/07-okf-visual-guide` 成功
+  - `python3 tools/preview_deck.py decks/07-okf-visual-guide` で 35枚を再生成し、全35枚を目視。文字切れ・重なり・本文／表のはみ出し・図とキャプションの破綻なし
   - `unzip -t` エラーなし
   - python-pptx 再パースで deck.json / PPTX とも35枚、`has_notes_slide` 全False、`ppt/notesSlides/` パーツ0
   - markitdown 抽出成功、placeholder語句スキャン0件
-- 変更禁止範囲は未編集。`decks/okf-visual/deck.json` は 2026-08-06 20:05:10 JST のまま。親リポジトリでは `presentation/` 全体が未追跡のため、`git status` ではファイル単位の差分証明は不可
+- 変更禁止範囲は未編集。`decks/_archive/okf/03-okf-visual/deck.json` は 2026-08-06 20:05:10 JST のまま。親リポジトリでは `presentation/` 全体が未追跡のため、`git status` ではファイル単位の差分証明は不可
 
 ---
 
@@ -307,16 +307,16 @@
 
 ## AI-ENG-01 フォルダ整理・正本昇格（2026-08-14 20:16 JST）
 
-- ユーザー確認により、`decks/ai-eng-01-prompt-engineering/` にあった自動パイプライン35枚版は、今回レビューしていた46枚版の後継ではなく不採用ノイズと確定。採点結果だけを根拠に本流最新版と見なした初期判断を訂正
-- 最新成果物は旧 `decks/ai-eng-01-pe-draft-codex-revised/build/ai-eng-01-pe-draft-codex-revised.html` と確定し、そのフォルダ一式を `decks/ai-eng-01-prompt-engineering/` へ正本昇格
+- ユーザー確認により、`decks/01-prompt-engineering/` にあった自動パイプライン35枚版は、今回レビューしていた46枚版の後継ではなく不採用ノイズと確定。採点結果だけを根拠に本流最新版と見なした初期判断を訂正
+- 最新成果物は旧 `decks/ai-eng-01-pe-draft-codex-revised/build/ai-eng-01-pe-draft-codex-revised.html` と確定し、そのフォルダ一式を `decks/01-prompt-engineering/` へ正本昇格
 - `meta.id` を `ai-eng-01-prompt-engineering` に統一し、HTML/PPTXも同名で再生成
-  - `decks/ai-eng-01-prompt-engineering/build/ai-eng-01-prompt-engineering.html`
-  - `decks/ai-eng-01-prompt-engineering/build/ai-eng-01-prompt-engineering.pptx`
+  - `decks/01-prompt-engineering/build/ai-eng-01-prompt-engineering.html`
+  - `decks/01-prompt-engineering/build/ai-eng-01-prompt-engineering.pptx`
 - 旧版は削除せず `decks/_archive/ai-eng-01/` へ退避
   - `2026-08-14-pe-draft-reviewed-base/`: 46枚・CodexのS23修正前
   - `2026-08-14-auto-pipeline-35slides-rejected/`: 不採用の自動生成35枚版
 - `decks/README.md` に01の正本を1つだけ明記し、`pipeline/themes/pe.yaml` の自動レーン出力先も不採用版アーカイブへ隔離して、人間レビュー済み正本の上書きを防止
-- 最終ゲート: `pipeline/bin/gate_deck.sh decks/ai-eng-01-prompt-engineering` → `gate_deck OK: 46 slides`
+- 最終ゲート: `pipeline/bin/gate_deck.sh decks/01-prompt-engineering` → `gate_deck OK: 46 slides`
 
 ---
 
@@ -324,7 +324,7 @@
 
 ## セットアップ（2026-08-14 13:45 JST）
 
-- **対象**: `decks/ai-eng-02-context-engineering/`（deck.json → HTML/PPTX）
+- **対象**: `decks/02-context-engineering/`（deck.json → HTML/PPTX）
 - **背景**: ユーザーレビュー「CEって結局何なの？が分からない」→ 4要件（定義ファースト/PE対比/5要素対応/事例章・付録組み込み）
 - **ブランチ**: `loop/ce-deck-clarity`（baseline=初版51枚の復元コミット 19675c1 → 改訂 74bb6c8）
 - **採点表**: `rubric-ce-deck.md`（7項目×10点、目標全項目8以上）
@@ -381,12 +381,12 @@
 
 # AI-ENG-03 ハーネスエンジニアリング作成（2026-08-15 01:24 JST）
 
-- **対象**: `decks/ai-eng-03-harness-engineering/`
+- **対象**: `decks/03-harness-engineering/`
 - 既存ドラフトを参考扱いとして再構成。01/02の暖色テラコッタ、章扉、図解中心の流れを踏襲し、全57枚（本編40＋付録17）へ改訂
 - 本編は「定義と位置づけ → 実践と恩恵 → 応用・トラブルシュート → 具体例」、付録は11責務・権限・settings・sandbox・MCP・評価・出典・非断定事項を収録
 - 5点の暖色3D挿絵と21点のSVG図解を使用。旧 `fig-he-*.png` は参照せず温存
 - 独立目視QAでS11/S16/S18/S19/S39を修正し、対象再確認および全57枚再レンダー後に合格
-- **最終機械ゲート**: `bash pipeline/bin/gate_deck.sh decks/ai-eng-03-harness-engineering` → `gate_deck OK: 57 slides`
+- **最終機械ゲート**: `bash pipeline/bin/gate_deck.sh decks/03-harness-engineering` → `gate_deck OK: 57 slides`
 - **検証**: unzip正常／deck.json・PPTX・preview各57枚一致／`has_notes_slide` 0件／全preview 1280×720／参照asset欠落0／出典ID 14件の本文参照と付録台帳が一致／markitdown placeholder 0件
 - コミット・pushは未実施
 
@@ -394,9 +394,9 @@
 
 # AI-ENG-05 グラフエンジニアリング超入門 レビュー＆改善ループ（2026-08-18 開始）
 
-- **対象**: `decks/ai-eng-05-graph-engineering/`（Codex作成の第一版35枚）
+- **対象**: `decks/05-graph-engineering/`（Codex作成の第一版35枚）
 - **ブランチ**: `loop/ge-deck-review`（baseline: 8ced38a）
-- **採点表**: `decks/ai-eng-05-graph-engineering/rubric.md`（7項目 各10点 / 目標 全項目8以上）
+- **採点表**: `decks/05-graph-engineering/rubric.md`（7項目 各10点 / 目標 全項目8以上）
 - **機械ゲート**: `build_deck.py` → `gate_deck.sh` → `unzip -t` → python-pptx 再パース（枚数一致・notes 0）→ `preview_deck.py` 全枚数1280×720
 - **手法**: graph-engineering で6観点を並列レビュー → 合流 → loop-engineering で改善→ゲート→独立採点を反復
 
@@ -541,3 +541,15 @@
 - あわせて S17 で punch・図中2箇所・caption の4つが同趣旨だったため、caption を別角度（「うまくいく道より、外れたときの道を先に決めておく」）へ
 
 機械ゲート再実行: gate_deck OK 48枚 / unzip エラーなし / pptx 48枚・notes 0 / preview 48枚すべて1280×720 / 参照アセット欠落0 ✅
+
+## decks正本の番号整理と旧版アーカイブ（2026-08-20）
+
+- トップ階層の正本を、表示順がそのまま分かる `01-prompt-engineering/`〜`07-okf-visual-guide/` に整理
+- AI Engineeringは 01 Prompt / 02 Context / 03 Harness / 04 Loop / 05 Graph の順を維持。続けて 06 RAG / 07 OKF Visual Guide とした
+- OKFは現行35枚版だけをトップ階層に残し、旧3版を `decks/_archive/okf/01-*`〜`03-*` に退避
+- 旧グラフ2版を `decks/_archive/graph-engineering/01-*`〜`02-*` に退避し、現行正本を `decks/05-graph-engineering/` に一本化
+- `deck.json` の `meta.id` は生成物名との互換性維持のため変更せず、`gate_deck.sh` を `meta.id` 解決に対応させた
+- `decks/README.md` と `decks/_archive/README.md` を正本・アーカイブ台帳として更新し、AGENTS・pipeline設定・ナレッジリンク・現行レビュー文書の参照パスを追随
+- 全7正本を番号付きパスから再ビルドし、機械ゲート通過: 01=53枚 / 02=72枚 / 03=66枚 / 04=55枚 / 05=48枚 / 06=35枚 / 07=35枚。各PPTXはZIP正常・再パース成功・deck.jsonとの枚数一致・notes 0・preview枚数一致
+- 旧正本名のトップ階層ディレクトリが0件であること、OKF旧3版と旧グラフ2版の各 `deck.json` がアーカイブ先に存在することを確認
+- コミット・pushは未実施

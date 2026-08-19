@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="860" viewBox="0 0 1140 860">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="ar" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M2 1 L10 6 L2 11 Z" fill="#B44A32"/>
+    </marker>
+  </defs>
+
+  <!-- ラベル③ 材料の指定 -->
+  <text x="404" y="75" text-anchor="middle" class="h" font-size="24" fill="#B44A32">③材料の指定＝AIに何を渡すか</text>
+  <path d="M404 95 V378" stroke="#B44A32" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/>
+
+  <!-- ラベル④ 返し方 -->
+  <text x="866" y="75" text-anchor="middle" class="h" font-size="24" fill="#B44A32">④返し方＝受け取る形</text>
+
+  <!-- 材料カード：会議メモ -->
+  <rect x="40" y="274" width="270" height="240" rx="28" fill="#FFFFFF" stroke="#F0B498" stroke-width="3"/>
+  <g>
+    <rect x="143" y="310" width="64" height="76" rx="6" fill="#FCE9DC" stroke="#E5A692" stroke-width="2.5"/>
+    <path d="M191 310 L207 310 L207 326 Z" fill="#FFFFFF" stroke="#E5A692" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M155 338 H195" stroke="#D98C72" stroke-width="3" stroke-linecap="round"/>
+    <path d="M155 356 H199" stroke="#D98C72" stroke-width="3" stroke-linecap="round"/>
+    <path d="M155 374 H187" stroke="#D98C72" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <text x="175" y="426" text-anchor="middle" class="h" font-size="30" fill="#7C3527">会議メモ</text>
+  <text x="175" y="460" text-anchor="middle" class="m" font-size="22">（AIに渡す入力）</text>
+
+  <!-- 矢印: 材料 → AI -->
+  <path d="M318 394 H490" stroke="#B44A32" stroke-width="5" fill="none" marker-end="url(#ar)" stroke-linecap="round"/>
+
+  <!-- AIチップ -->
+  <circle cx="570" cy="394" r="72" fill="#7C3527"/>
+  <text x="570" y="408" text-anchor="middle" class="h w" font-size="42">AI</text>
+
+  <!-- 矢印: AI → 3候補（返し方） -->
+  <path d="M642 394 L752 194" stroke="#B44A32" stroke-width="4" fill="none" marker-end="url(#ar)" stroke-linecap="round"/>
+  <path d="M642 394 L752 394" stroke="#B44A32" stroke-width="4" fill="none" marker-end="url(#ar)" stroke-linecap="round"/>
+  <path d="M642 394 L752 594" stroke="#B44A32" stroke-width="4" fill="none" marker-end="url(#ar)" stroke-linecap="round"/>
+
+  <!-- カードA: 文章のかたまり（×） -->
+  <rect x="760" y="110" width="330" height="168" rx="24" fill="#FFFFFF" stroke="#F0B498" stroke-width="3"/>
+  <g>
+    <rect x="780" y="126" width="64" height="68" rx="6" fill="#FCE9DC" stroke="#E5A692" stroke-width="2.5"/>
+    <path d="M828 126 L844 126 L844 142 Z" fill="#FFFFFF" stroke="#E5A692" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M792 150 q8 -8 16 0 q8 8 16 0" stroke="#D98C72" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M792 166 q8 -8 16 0 q8 8 16 0 q8 -8 16 0" stroke="#D98C72" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M792 182 q6 -6 12 0 q6 6 12 0" stroke="#D98C72" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="862" y="168" class="h" font-size="28">文章のかたまり</text>
+  <text x="780" y="250" class="h" font-size="32" fill="#A63D32">×</text>
+  <text x="822" y="250" font-size="22" fill="#A63D32">貼り直しが必要</text>
+
+  <!-- カードB: 表（○） -->
+  <rect x="760" y="310" width="330" height="168" rx="24" fill="#FFFFFF" stroke="#F0B498" stroke-width="3"/>
+  <g>
+    <rect x="780" y="326" width="84" height="56" rx="6" fill="#FFFFFF" stroke="#DCB26B" stroke-width="2.5"/>
+    <rect x="782" y="328" width="80" height="14" rx="4" fill="#7C3527"/>
+    <path d="M801 342 V382" stroke="#DCB26B" stroke-width="1.5"/>
+    <path d="M822 342 V382" stroke="#DCB26B" stroke-width="1.5"/>
+    <path d="M843 342 V382" stroke="#DCB26B" stroke-width="1.5"/>
+    <path d="M780 362 H864" stroke="#DCB26B" stroke-width="1.5"/>
+  </g>
+  <text x="882" y="364" class="h" font-size="30">表</text>
+  <text x="780" y="450" class="h" font-size="32" fill="#247F7A">○</text>
+  <text x="822" y="450" font-size="22" fill="#247F7A">資料に貼りやすい下書き</text>
+
+  <!-- カードC: 箇条書き（○） -->
+  <rect x="760" y="510" width="330" height="168" rx="24" fill="#FFFFFF" stroke="#F0B498" stroke-width="3"/>
+  <g>
+    <circle cx="788" cy="540" r="4" fill="#C17A27"/>
+    <path d="M800 540 H840" stroke="#D98C72" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="788" cy="561" r="4" fill="#C17A27"/>
+    <path d="M800 561 H848" stroke="#D98C72" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="788" cy="582" r="4" fill="#C17A27"/>
+    <path d="M800 582 H828" stroke="#D98C72" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <text x="866" y="566" class="h" font-size="28">箇条書き</text>
+  <text x="780" y="650" class="h" font-size="32" fill="#247F7A">○</text>
+  <text x="822" y="650" font-size="22" fill="#247F7A">チャットで共有しやすい</text>
+
+  <!-- 最下部メッセージ -->
+  <rect x="90" y="774" width="960" height="64" rx="32" fill="#7C3527"/>
+  <text x="570" y="814" text-anchor="middle" class="h w" font-size="25">内容が合っていても、形が違えば作り直し。先に形を指定する</text>
+</svg>

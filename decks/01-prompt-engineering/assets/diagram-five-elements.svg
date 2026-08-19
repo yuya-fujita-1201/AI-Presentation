@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#B44A32"/>
+    </marker>
+  </defs>
+
+  <!-- タイトル -->
+  <text x="600" y="68" text-anchor="middle" class="h" font-size="37">AIへの依頼を組み立てる5つの要素</text>
+  <text x="600" y="100" text-anchor="middle" class="m" font-size="22">この順番で書けば、AIに伝わる依頼になる</text>
+
+  <!-- 矢印: ①→②→③（上段）、③→④（折り返し）、④→⑤（下段） -->
+  <path d="M385 238H435" stroke="#B44A32" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M765 238H815" stroke="#B44A32" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M980 338 V358 H410 V378" stroke="#B44A32" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+  <path d="M575 478H625" stroke="#B44A32" stroke-width="5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <!-- ① やること -->
+  <g transform="translate(55 138)">
+    <rect width="330" height="200" rx="28" fill="#F6E6CF" stroke="#DCB26B" stroke-width="3"/>
+    <circle cx="38" cy="42" r="22" fill="#FFFFFF" stroke="#DCB26B" stroke-width="3"/>
+    <text x="38" y="51" text-anchor="middle" class="h" font-size="25" fill="#7C3527">1</text>
+    <text x="76" y="52" class="h" font-size="29">やること</text>
+    <text x="30" y="112" font-size="26">要約する／分類する</text>
+    <text x="30" y="152" class="m" font-size="22">動詞で始める</text>
+  </g>
+
+  <!-- ② なぜ -->
+  <g transform="translate(435 138)">
+    <rect width="330" height="200" rx="28" fill="#FADFD5" stroke="#D98C72" stroke-width="3"/>
+    <circle cx="38" cy="42" r="22" fill="#FFFFFF" stroke="#D98C72" stroke-width="3"/>
+    <text x="38" y="51" text-anchor="middle" class="h" font-size="25" fill="#7C3527">2</text>
+    <text x="76" y="52" class="h" font-size="29">なぜ</text>
+    <text x="30" y="112" font-size="26">欠席者へ共有する</text>
+    <text x="30" y="152" class="m" font-size="22">使い道を1文で</text>
+  </g>
+
+  <!-- ③ 材料 -->
+  <g transform="translate(815 138)">
+    <rect width="330" height="200" rx="28" fill="#FFF2E8" stroke="#EDC9B4" stroke-width="3"/>
+    <circle cx="38" cy="42" r="22" fill="#FFFFFF" stroke="#EDC9B4" stroke-width="3"/>
+    <text x="38" y="51" text-anchor="middle" class="h" font-size="25" fill="#7C3527">3</text>
+    <text x="76" y="52" class="h" font-size="29">材料</text>
+    <text x="30" y="112" font-size="26">会議メモを貼る</text>
+    <text x="30" y="152" class="m" font-size="22">読ませる範囲を区切る</text>
+  </g>
+
+  <!-- ④ 返し方 -->
+  <g transform="translate(245 378)">
+    <rect width="330" height="200" rx="28" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
+    <circle cx="38" cy="42" r="22" fill="#FFFFFF" stroke="#E5A692" stroke-width="3"/>
+    <text x="38" y="51" text-anchor="middle" class="h" font-size="25" fill="#7C3527">4</text>
+    <text x="76" y="52" class="h" font-size="29">返し方</text>
+    <text x="30" y="112" font-size="26">4列の表にする</text>
+    <text x="30" y="152" class="m" font-size="22">受け取る形を決める</text>
+  </g>
+
+  <!-- ⑤ 守ること（毎回必ず添える条件。他4枚と役割が違うため配色を変えて強調） -->
+  <g transform="translate(625 378)">
+    <rect width="330" height="200" rx="28" fill="#F0B498" stroke="#B44A32" stroke-width="3"/>
+    <circle cx="38" cy="42" r="22" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+    <text x="38" y="51" text-anchor="middle" class="h" font-size="25" fill="#7C3527">5</text>
+    <text x="76" y="52" class="h" font-size="29">守ること</text>
+    <text x="30" y="112" font-size="26">ない情報は作らない</text>
+    <text x="30" y="152" class="h" font-size="22" fill="#7C3527">守ってほしい重要な条件と理由</text>
+  </g>
+
+  <!-- 最下部メッセージバンド -->
+  <rect x="170" y="618" width="860" height="140" rx="32" fill="#7C3527"/>
+  <text x="600" y="674" text-anchor="middle" class="w h" font-size="31">最初から全部はいらない</text>
+  <text x="600" y="724" text-anchor="middle" class="w" font-size="26">迷ったら「やること」と「返し方」の2つから</text>
+</svg>

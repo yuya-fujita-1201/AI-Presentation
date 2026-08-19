@@ -4,9 +4,9 @@ max_iterations: 5
 auto_merge: false
 ---
 
-# 採点表: decks/graph-engineering/ 解説スライド
+# 採点表: decks/_archive/graph-engineering/01-graph-engineering/ 解説スライド
 
-対象: `decks/graph-engineering/deck.json` とそのビルド生成物（`build/preview/slide-*.png` を実際に見る）。
+対象: `decks/_archive/graph-engineering/01-graph-engineering/deck.json` とそのビルド生成物（`build/preview/slide-*.png` を実際に見る）。
 プロ向け有償講演（受講者は仕事でAIを使う社会人）で使える水準かを問う。
 各項目を10点満点で採点する。根拠（実際に見たスライド番号・読んだ箇所）を必ず添えること。
 ビルド成功・PPTX整合性は機械ゲートの担当なので採点しない。

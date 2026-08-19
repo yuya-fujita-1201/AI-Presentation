@@ -1,37 +1,31 @@
-# decks — デッキ一覧
+# decks — 現行デッキ一覧
 
-## AI-ENG-02 の最新版
+トップ階層には、現在使う正本だけを表示順で置きます。フォルダ名先頭の2桁が並び順です。
 
-**02で使う正本は次の1フォルダだけです。**
+## 正本
 
-- [`ai-eng-02-context-engineering-v2/`](ai-eng-02-context-engineering-v2/)
-  - タイトル: コンテキストエンジニアリング超入門
-  - 72枚
-  - Claude統合版にGPT Proの4回のレビューとCodex最終再監査を適用済み
-  - 正本: [`deck.json`](ai-eng-02-context-engineering-v2/deck.json)
-  - 人間向けHTML: [`build/ai-eng-02-context-engineering-v2.html`](ai-eng-02-context-engineering-v2/build/ai-eng-02-context-engineering-v2.html)
-  - PowerPoint: [`build/ai-eng-02-context-engineering-v2.pptx`](ai-eng-02-context-engineering-v2/build/ai-eng-02-context-engineering-v2.pptx)
-  - 最終版の修正内容・検証記録: [`CODEX-Review04.md`](ai-eng-02-context-engineering-v2/CODEX-Review04.md)
+| 順番 | フォルダ | タイトル | 枚数 | 生成物ID |
+|---:|---|---|---:|---|
+| 01 | [`01-prompt-engineering/`](01-prompt-engineering/) | プロンプトエンジニアリング超入門 | 53 | `ai-eng-01-prompt-engineering` |
+| 02 | [`02-context-engineering/`](02-context-engineering/) | コンテキストエンジニアリング超入門 | 72 | `ai-eng-02-context-engineering-v2` |
+| 03 | [`03-harness-engineering/`](03-harness-engineering/) | ハーネスエンジニアリング超入門 | 66 | `ai-eng-03-harness-engineering` |
+| 04 | [`04-loop-engineering/`](04-loop-engineering/) | ループエンジニアリング超入門 | 55 | `ai-eng-04-loop-engineering` |
+| 05 | [`05-graph-engineering/`](05-graph-engineering/) | グラフエンジニアリング超入門 | 48 | `ai-eng-05-graph-engineering` |
+| 06 | [`06-rag/`](06-rag/) | RAG（検索拡張生成）とは何か | 35 | `ai-topics-01-rag` |
+| 07 | [`07-okf-visual-guide/`](07-okf-visual-guide/) | OKFビジュアルガイド v2 | 35 | `okf-visual-v2` |
 
-`ai-eng-02-context-engineering/` と `.claude/worktrees/` 配下の作業版は比較・履歴用です。通常のレビューや発表準備ではv2だけを使用してください。
+`deck.json` の `meta.id` はHTML/PPTXの生成物名として使うため、フォルダ整理では変更しません。
 
-## AI-ENG-01 の最新版
+## アーカイブ
 
-**01で使う正本は次の1フォルダだけです。**
-
-- [`ai-eng-01-prompt-engineering/`](ai-eng-01-prompt-engineering/)
-  - タイトル: プロンプトエンジニアリング超入門
-  - 46枚
-  - 人間レビュー反映版に挿絵差し替えとCodex最終修正を適用済み
-  - 正本: [`deck.json`](ai-eng-01-prompt-engineering/deck.json)
-  - 人間向けHTML: [`build/ai-eng-01-prompt-engineering.html`](ai-eng-01-prompt-engineering/build/ai-eng-01-prompt-engineering.html)
-  - PowerPoint: [`build/ai-eng-01-prompt-engineering.pptx`](ai-eng-01-prompt-engineering/build/ai-eng-01-prompt-engineering.pptx)
-  - 修正内容・検証記録: [`review/README.md`](ai-eng-01-prompt-engineering/review/README.md)
-
-`ai-eng-01` の旧版・自動生成版は [`_archive/ai-eng-01/`](_archive/ai-eng-01/) に退避しています。通常のレビューや発表準備では開かないでください。
+- OKF旧版: [`_archive/okf/`](_archive/okf/)
+- グラフエンジニアリング旧版: [`_archive/graph-engineering/`](_archive/graph-engineering/)
+- AI Engineering 01旧版・不採用版: [`_archive/ai-eng-01/`](_archive/ai-eng-01/)
+- Context Engineering旧版: [`_archive/ai-eng-02-context-engineering/`](_archive/ai-eng-02-context-engineering/)
 
 ## 命名ルール
 
-- トップ階層: 現在使うデッキだけ
-- `_archive/`: 旧版、比較用、採用しなかった自動生成版
+- トップ階層: 現在使う正本だけ。`NN-slug` 形式で表示順を固定する
+- `_archive/`: 旧版、比較用、採用しなかった版。正本として編集しない
 - `.backups/`: 作業前のローカル全量バックアップ
+- 正本の追加・順序変更時は、この一覧とリポジトリ内の参照パスを同時に更新する

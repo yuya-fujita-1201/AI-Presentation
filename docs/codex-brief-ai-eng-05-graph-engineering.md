@@ -2,7 +2,7 @@
 
 **依頼日**: 2026-08-17
 **依頼元**: Claude Code（パイプライン工程。骨格・文章・レイアウトまで作成済み）
-**対象デッキ**: `decks/ai-eng-05-graph-engineering/`（全35枚。`deck.json` は完成済み）
+**対象デッキ**: `decks/05-graph-engineering/`（全35枚。`deck.json` は完成済み）
 **あなたの担当**: **挿絵20枚の生成（ImageGen）と、それを入れた状態での最終ビルド・目視検証**
 
 ---
@@ -11,7 +11,7 @@
 
 1. 本ファイル（全体）
 2. `AGENTS.md` の「ビルド・検証手順」
-3. `decks/ai-eng-05-graph-engineering/deck.json`（各 `image_text` スライドの `title` / `punch` / `bullets` / `caption` を必ず読んでから絵を設計すること）
+3. `decks/05-graph-engineering/deck.json`（各 `image_text` スライドの `title` / `punch` / `bullets` / `caption` を必ず読んでから絵を設計すること）
 4. `docs/deck-schema.md` の `image_text` の項（領域サイズ・画像比率の目安）
 
 ---
@@ -22,25 +22,25 @@
 
 `deck.json` の35枚のうち20枚が `image_text` タイプで作られている。`docs/deck-schema.md` はこのタイプの役割を、画像だけ・文章だけのページに分離せずメッセージと図解を1枚に載せるものと定義しており、1枚の中に見出し→パンチライン（一目で伝える一文）→箇条書き本文→図→キャプションが同居する構成になっている。**つまり図は、ページを飾るイメージカットではなく、隣の文章の内容を視覚的に理解させる図解でなければならない。** ここが今回の最重要ポイントである。
 
-各 `image_text` スライドの図の設計（モチーフ指定）は、`pipeline/staging/draft/draft.md` の該当スライドの `figure:` 行にすでに書き起こされている。あなたの仕事は、その指定に沿って実際の画像を生成し、`decks/ai-eng-05-graph-engineering/assets/` に配置し、デッキ全体をビルド・検証することである。
+各 `image_text` スライドの図の設計（モチーフ指定）は、`pipeline/staging/draft/draft.md` の該当スライドの `figure:` 行にすでに書き起こされている。あなたの仕事は、その指定に沿って実際の画像を生成し、`decks/05-graph-engineering/assets/` に配置し、デッキ全体をビルド・検証することである。
 
 ### 変更禁止（絶対に触らないこと）
 
-- 他のすべてのデッキ: `decks/okf-introduction/`、`decks/okf-knowledge-share/`、`decks/okf-visual/`、`decks/okf-visual-v2/`、`decks/graph-engineering/`、`decks/graph-engineering-visual/`、`decks/ai-eng-01-prompt-engineering/`、`decks/ai-eng-02-context-engineering/`、`decks/ai-eng-02-context-engineering-v2/`、`decks/ai-eng-03-harness-engineering/`、`decks/ai-eng-04-loop-engineering/`（今回の対象は `ai-eng-05-graph-engineering` のみ。特に `decks/graph-engineering/`・`decks/graph-engineering-visual/` は名前が紛らわしいが**別デッキ**なので混同しないこと）
+- 他のすべてのデッキ: `decks/_archive/okf/01-okf-introduction/`、`decks/_archive/okf/02-okf-knowledge-share/`、`decks/_archive/okf/03-okf-visual/`、`decks/07-okf-visual-guide/`、`decks/_archive/graph-engineering/01-graph-engineering/`、`decks/_archive/graph-engineering/02-graph-engineering-visual/`、`decks/01-prompt-engineering/`、`decks/02-context-engineering/`、`decks/02-context-engineering/`、`decks/03-harness-engineering/`、`decks/04-loop-engineering/`（今回の対象は `ai-eng-05-graph-engineering` のみ。特に `decks/_archive/graph-engineering/01-graph-engineering/`・`decks/_archive/graph-engineering/02-graph-engineering-visual/` は名前が紛らわしいが**別デッキ**なので混同しないこと）
 - `knowledge/` 配下全体（ナレッジは今回変更しない）
-- `decks/ai-eng-05-graph-engineering/deck.json` の `title` / `punch` / `bullets` / `notes` / スライドの追加・削除・順序変更・`meta.theme` 以外の `meta` 項目（文言は確定済み。触れてよい範囲は次項に限定される）
+- `decks/05-graph-engineering/deck.json` の `title` / `punch` / `bullets` / `notes` / スライドの追加・削除・順序変更・`meta.theme` 以外の `meta` 項目（文言は確定済み。触れてよい範囲は次項に限定される）
 - `tools/build_deck.py`、`templates/`（`image_text` タイプは実装・検証済み。バグを見つけた場合だけ報告してよいが、勝手に仕様変更しない）
 - `pipeline/` 配下全体（このデッキの挿絵制作とは無関係）
 
 ### あなたが触ってよいもの
 
-- `decks/ai-eng-05-graph-engineering/assets/*.png`（**全20枚を差し替える**のが主タスク。ファイル名は変更不要、既存パス `fig-ge-01.png`〜`fig-ge-20.png` に上書きする）
-- `decks/ai-eng-05-graph-engineering/deck.json` の `style` / `caption` の微修正。範囲は次の3点のみ:
+- `decks/05-graph-engineering/assets/*.png`（**全20枚を差し替える**のが主タスク。ファイル名は変更不要、既存パス `fig-ge-01.png`〜`fig-ge-20.png` に上書きする）
+- `decks/05-graph-engineering/deck.json` の `style` / `caption` の微修正。範囲は次の3点のみ:
   - 画像を入れた結果、キャプションと図の内容が食い違った場合の `caption` の修正
   - 図が大きすぎ/小さすぎる場合の該当スライドの `style.img` の調整（例: `{"img": {"w": 500, "h": 360}}`）
   - 本文が枠から溢れた場合の `style.body.size` / `style.body.gap` の微調整
   - **やってはいけないこと**: スライドの追加・削除・順序変更、`title` / `punch` / `bullets` の書き換え、テーマ変更、`templates/` の編集。文章に問題を見つけた場合は、直さずに**報告だけ**すること（発注者が判断する）
-- `decks/ai-eng-05-graph-engineering/build/`（ビルド生成物。直接編集はせず再ビルドで更新）
+- `decks/05-graph-engineering/build/`（ビルド生成物。直接編集はせず再ビルドで更新）
 
 ---
 
@@ -51,7 +51,7 @@
 | サイズ・比率 | **4:3 前後（1024×768 px 推奨）**。表示領域が 524×378px なので、極端な横長・縦長は letterbox になり破綻する |
 | 文字 | **画像内に文字を入れない**（日本語が崩れる／PPTXで拡大縮小時に読めなくなるため）。ラベルが要る場合はアイコンや記号で表現する |
 | 画風 | フラットベクターイラスト風。立体的な3Dレンダリングやフォトリアルは不可。線は細め、面はソリッド |
-| 配色 | 現行テーマ `accenture-purple`（`decks/ai-eng-05-graph-engineering/deck.json` の `meta.theme`。定義は `templates/themes/accenture-purple.json`）の配色に統一する。基調 `#460073`（濃紫・primary）、アクセント `#A100FF`（明るい紫・accent）、補助に薄紫 `#F7F0FC`（surface）と白。紫以外の色相は原則使わない。**清書時に `meta.theme` を切り替えれば別テーマの配色に変更できる**ため、今回は現行テーマの配色に合わせて生成すればよく、テーマそのものを変更する必要はない |
+| 配色 | 現行テーマ `accenture-purple`（`decks/05-graph-engineering/deck.json` の `meta.theme`。定義は `templates/themes/accenture-purple.json`）の配色に統一する。基調 `#460073`（濃紫・primary）、アクセント `#A100FF`（明るい紫・accent）、補助に薄紫 `#F7F0FC`（surface）と白。紫以外の色相は原則使わない。**清書時に `meta.theme` を切り替えれば別テーマの配色に変更できる**ため、今回は現行テーマの配色に合わせて生成すればよく、テーマそのものを変更する必要はない |
 | 背景 | 白または極薄い紫のフラット背景。写真的な背景・グラデーションの多用は不可（スライド背景が白なので、なじませる） |
 | 余白 | 図の四辺に十分な余白。要素を端まで詰めない |
 | 密度 | **1枚につき伝える概念は1つだけ**。要素は5〜7個までに抑える。情報を詰め込むと 524px 幅で潰れて読めない |
@@ -59,7 +59,7 @@
 
 ### 現在の20枚はプレースホルダーである
 
-`decks/ai-eng-05-graph-engineering/assets/fig-ge-01.png` 〜 `fig-ge-20.png` は現在すべて、紫の枠線と対角線の×印だけが描かれた仮画像（プレースホルダー）である（`fig-ge-01.png` を実際に目視確認済み）。**20枚すべてを本番の挿絵として新規生成し、同じファイル名で上書きすること。** `deck.json` 側のパスは変更不要。
+`decks/05-graph-engineering/assets/fig-ge-01.png` 〜 `fig-ge-20.png` は現在すべて、紫の枠線と対角線の×印だけが描かれた仮画像（プレースホルダー）である（`fig-ge-01.png` を実際に目視確認済み）。**20枚すべてを本番の挿絵として新規生成し、同じファイル名で上書きすること。** `deck.json` 側のパスは変更不要。
 
 ### 進め方（推奨）
 
@@ -67,7 +67,7 @@
 2. 試作3枚をデッキに入れてビルドし、**524×378px に縮小された状態で識別できるか**を実際のプレビューPNGで確認する（ここで潰れるなら要素を減らす）
 3. 画風が固まってから残り17枚を生成する
 4. 対応表（§4）のとおり、**左右対比構図を含む図案が多い**（`fig-ge-06`・`fig-ge-08`・`fig-ge-11`・`fig-ge-13`・`fig-ge-15`）。左右で画風・線の太さ・人物やノードの描き方がずれないよう、1枚の中の一貫性にも注意する
-5. 生成した画像は `decks/ai-eng-05-graph-engineering/assets/` に**同じファイル名で上書き**する
+5. 生成した画像は `decks/05-graph-engineering/assets/` に**同じファイル名で上書き**する
 
 ---
 
@@ -133,30 +133,30 @@
 
 ビルド・検証は**あなたのローカル CLI セッションで完結させる**こと（クラウドサンドボックスでは python-pptx / Playwright / 画像目視ができないため、その場合は正直に「実行できなかった」と報告する）。python3 は `/opt/homebrew/bin/python3`（python-pptx / Playwright 導入済み）。手順は `AGENTS.md`「ビルド・検証手順」に準拠する。
 
-1. ビルド: `python3 tools/build_deck.py decks/ai-eng-05-graph-engineering`（HTML と PPTX を `build/` に生成）
-2. プレビュー: `python3 tools/preview_deck.py decks/ai-eng-05-graph-engineering` で全35枚を PNG 化し、実際に開いて「文字切れ・要素の重なり・表の収まり・画像とキャプションの配置」を目視確認する
-3. 修正: 問題があれば §1/§5 の範囲内で deck.json の該当スライドに差分だけ書いて再ビルドし、`python3 tools/preview_deck.py decks/ai-eng-05-graph-engineering <番号>` で該当スライドのみ再確認する
+1. ビルド: `python3 tools/build_deck.py decks/05-graph-engineering`（HTML と PPTX を `build/` に生成）
+2. プレビュー: `python3 tools/preview_deck.py decks/05-graph-engineering` で全35枚を PNG 化し、実際に開いて「文字切れ・要素の重なり・表の収まり・画像とキャプションの配置」を目視確認する
+3. 修正: 問題があれば §1/§5 の範囲内で deck.json の該当スライドに差分だけ書いて再ビルドし、`python3 tools/preview_deck.py decks/05-graph-engineering <番号>` で該当スライドのみ再確認する
 4. PPTX 検証（必須）:
-   - `unzip -t decks/ai-eng-05-graph-engineering/build/ai-eng-05-graph-engineering.pptx` がエラーなし
+   - `unzip -t decks/05-graph-engineering/build/ai-eng-05-graph-engineering.pptx` がエラーなし
    - python-pptx の `Presentation()` で再パースでき、**スライド数が35**
    - 全スライドで `has_notes_slide` が **False**（スピーカーノート混入はKeynote互換性を破壊する既知問題。PPTXにスピーカーノートを入れる操作は一切行わないこと）
-5. `decks/ai-eng-05-graph-engineering/` 以外に変更が入っていないことを `git status` で確認する
+5. `decks/05-graph-engineering/` 以外に変更が入っていないことを `git status` で確認する
 
 ---
 
 ## 8. 完了時のチェックリスト（あなた自身が実行して結果を報告する）
 
-- [ ] 20枚すべてを 4:3 で新規生成し、`decks/ai-eng-05-graph-engineering/assets/` に上書きした
+- [ ] 20枚すべてを 4:3 で新規生成し、`decks/05-graph-engineering/assets/` に上書きした
 - [ ] 全20枚に**文字が入っていない**ことを目視確認した
 - [ ] 20枚を並べて見て、画風・配色・線の太さが統一されていることを確認した
-- [ ] `python3 tools/build_deck.py decks/ai-eng-05-graph-engineering` が成功
-- [ ] `python3 tools/preview_deck.py decks/ai-eng-05-graph-engineering` で全35枚をPNG化し、**35枚すべてを実際に開いて目視**した
+- [ ] `python3 tools/build_deck.py decks/05-graph-engineering` が成功
+- [ ] `python3 tools/preview_deck.py decks/05-graph-engineering` で全35枚をPNG化し、**35枚すべてを実際に開いて目視**した
 - [ ] 目視で「文字切れ・要素の重なり・本文の枠外はみ出し・表の縦溢れ・図とキャプションの配置破綻」がないことを確認した
 - [ ] 図が縮小表示（524×378px）でも識別できることを確認した
-- [ ] `unzip -t decks/ai-eng-05-graph-engineering/build/ai-eng-05-graph-engineering.pptx` がエラーなし
+- [ ] `unzip -t decks/05-graph-engineering/build/ai-eng-05-graph-engineering.pptx` がエラーなし
 - [ ] python-pptx の `Presentation()` で再パースでき、**スライド数が35**
 - [ ] 全スライドで `has_notes_slide` が **False**
-- [ ] 他デッキ（特に `decks/graph-engineering/`・`decks/graph-engineering-visual/`・`decks/ai-eng-04-loop-engineering/`）と `knowledge/` に変更が入っていないことを `git status` で確認した
+- [ ] 他デッキ（特に `decks/_archive/graph-engineering/01-graph-engineering/`・`decks/_archive/graph-engineering/02-graph-engineering-visual/`・`decks/04-loop-engineering/`）と `knowledge/` に変更が入っていないことを `git status` で確認した
 
 **未実施の項目は「未実施」と正直に書く。推測で「成功したはず」と書かない。**
 

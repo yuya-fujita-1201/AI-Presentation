@@ -1020,7 +1020,7 @@ improve受理後: 6. disposition件数一致検査 → **未達項目(score<8)�
 
 - Opus 5は判断が濃い4工程のみ（採点品質＝ループ全体の信号品質のためgradeは特にOpus固定）。想定実行時間の正式値は監視付き試走でphase別p95を実測し**上限=p95×1.5**に更新する
 - **1テーマ所要**: research系9〜11ラン＋knowledge以降で**フェルミ推定29スロット**（8スロット/日・60%稼働でも約6日分）
-- テーマ順序は5段階厳守: `state.theme.series: ["pe","ce","he","le"]`（ge完成済み）。**pe完成後は自動遷移せずPAUSE**（要件§2-6）。デッキ命名= `decks/ai-eng-01-prompt-engineering/`（`ai-eng-<NN>-<slug>` 形式）
+- テーマ順序は5段階厳守: `state.theme.series: ["pe","ce","he","le"]`（ge完成済み）。**pe完成後は自動遷移せずPAUSE**（要件§2-6）。デッキ命名= `decks/01-prompt-engineering/`（`ai-eng-<NN>-<slug>` 形式）
 
 ### 2. 状態管理設計（stateスキーマ・フェーズ遷移・ロック仕様）
 

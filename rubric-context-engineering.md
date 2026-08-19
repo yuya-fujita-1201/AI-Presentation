@@ -6,7 +6,7 @@ auto_merge: false
 
 # 採点表：コンテキストエンジニアリング超入門
 
-対象は `knowledge/context-engineering/`、対応する `knowledge/sources/*-ce-*`、`decks/ai-eng-02-context-engineering/deck.json`、ビルド済み全PNGである。採点者はmakerと別にし、全ファイルと全PNGを実際に確認する。各項目10点満点。根拠としてファイル名・見出し・スライド番号を必ず示す。
+対象は `knowledge/context-engineering/`、対応する `knowledge/sources/*-ce-*`、`decks/02-context-engineering/deck.json`、ビルド済み全PNGである。採点者はmakerと別にし、全ファイルと全PNGを実際に確認する。各項目10点満点。根拠としてファイル名・見出し・スライド番号を必ず示す。
 
 | # | 項目 | 8点到達条件 |
 |---|---|---|

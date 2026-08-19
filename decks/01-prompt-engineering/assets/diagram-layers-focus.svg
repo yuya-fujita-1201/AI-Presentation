@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="860" viewBox="0 0 1140 860">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}.ws{fill:#FFEDE3}
+    </style>
+  </defs>
+
+  <!-- 第5層（最外）: 処理のつながり -->
+  <rect x="20" y="66" width="1100" height="774" rx="44" fill="#FFF2E8" stroke="#EDC9B4" stroke-width="3"/>
+  <g>
+    <circle cx="78" cy="118" r="21" fill="#FFFFFF" stroke="#EDC9B4" stroke-width="3"/>
+    <text x="78" y="128" text-anchor="middle" class="h" font-size="26" fill="#7C3527">5</text>
+    <text x="114" y="128" class="h" font-size="29">処理のつながり（グラフ）</text>
+    <text x="492" y="127" class="m" font-size="22">順序・分岐・役割分担を設計する</text>
+  </g>
+
+  <!-- 第4層: 確認の繰り返し -->
+  <rect x="64" y="156" width="1012" height="640" rx="38" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
+  <g>
+    <circle cx="122" cy="208" r="21" fill="#FFFFFF" stroke="#E5A692" stroke-width="3"/>
+    <text x="122" y="218" text-anchor="middle" class="h" font-size="26" fill="#7C3527">4</text>
+    <text x="158" y="218" class="h" font-size="29">確認の繰り返し（ループ）</text>
+    <text x="536" y="217" class="m" font-size="22">作る→確かめる→直す</text>
+  </g>
+
+  <!-- 第3層: AIを動かす周辺の仕組み -->
+  <rect x="108" y="246" width="924" height="506" rx="34" fill="#F6E6CF" stroke="#DCB26B" stroke-width="3"/>
+  <g>
+    <circle cx="166" cy="298" r="21" fill="#FFFFFF" stroke="#DCB26B" stroke-width="3"/>
+    <text x="166" y="308" text-anchor="middle" class="h" font-size="26" fill="#7C3527">3</text>
+    <text x="202" y="308" class="h" font-size="29">周辺の仕組み（ハーネス）</text>
+    <text x="620" y="307" class="m" font-size="21">権限・ツール・実行環境・ログ</text>
+  </g>
+
+  <!-- 第2層: 渡す情報 -->
+  <rect x="152" y="336" width="836" height="372" rx="30" fill="#FADFD5" stroke="#D98C72" stroke-width="3"/>
+  <g>
+    <circle cx="210" cy="388" r="21" fill="#FFFFFF" stroke="#D98C72" stroke-width="3"/>
+    <text x="210" y="398" text-anchor="middle" class="h" font-size="26" fill="#7C3527">2</text>
+    <text x="246" y="398" class="h" font-size="29">渡す情報（コンテキスト）</text>
+    <text x="618" y="397" class="m" font-size="22">資料や前提をそろえる</text>
+  </g>
+
+  <!-- 第1層（中心）: 頼み方 = 今回の範囲 -->
+  <rect x="196" y="426" width="748" height="238" rx="26" fill="#7C3527"/>
+  <g>
+    <circle cx="330" cy="512" r="27" fill="#FFFFFF"/>
+    <text x="330" y="524" text-anchor="middle" class="h" font-size="34" fill="#7C3527">1</text>
+    <text x="380" y="526" class="h w" font-size="40">頼み方（プロンプト）</text>
+    <text x="380" y="586" class="ws" font-size="27">1回の指示を分かりやすくする</text>
+  </g>
+
+  <!-- 「今回はここ」バッジ -->
+  <g>
+    <rect x="742" y="20" width="236" height="58" rx="29" fill="#B44A32"/>
+    <text x="860" y="59" text-anchor="middle" class="h w" font-size="28">今回はここ</text>
+    <path d="M860 78 V 396" stroke="#B44A32" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round"/>
+    <path d="M846 392 L860 416 L874 392 Z" fill="#B44A32"/>
+  </g>
+
+  <!-- 内→外の軸ラベル -->
+  <text x="570" y="827" text-anchor="middle" class="m" font-size="24">内側の1回の頼み方を、外側の仕組みが包んで支える</text>
+</svg>

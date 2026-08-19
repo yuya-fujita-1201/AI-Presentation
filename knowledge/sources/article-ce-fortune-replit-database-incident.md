@@ -37,4 +37,4 @@ Fortuneが2025年7月23日に報じた、ReplitのAIエージェントによる�
 
 # 活用先
 
-- [../../decks/ai-eng-02-context-engineering/deck.json](../../decks/ai-eng-02-context-engineering/deck.json) — スライド34・71の影響規模
+- [../../decks/02-context-engineering/deck.json](../../decks/02-context-engineering/deck.json) — スライド34・71の影響規模

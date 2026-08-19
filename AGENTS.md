@@ -39,10 +39,10 @@
 
 ## 依頼中のタスク
 
-- **PE超入門デッキ（改訂版）の挿絵差し替えと最終チェック**（2026-08-14 依頼）: 指示書は `docs/codex-brief-ai-eng-01-pe-draft-v3.md`。`decks/ai-eng-01-pe-draft/`（レビュー反映で46枚に全面改訂済み）のイラスト2点差し替え＋任意1点新規を ImageGen で生成し、ビルド・全46枚目視・PPTX 3点検証まで完結させる。SVG図版（`diagram-*.svg`）と deck.json の本文・構成は**変更禁止**（画像 path の差し替えのみ可）
-- **OKF ビジュアルガイド v2 の挿絵制作**（2026-08-09 依頼）: 指示書は `docs/codex-brief-okf-visual-v2.md`。`decks/okf-visual-v2/`（35枚、deck.json は完成済み）の挿絵19枚を **4:3・文字なし・紫系フラットベクター**で ImageGen 生成し、`assets/` に上書き → ビルド・全35枚の目視・PPTX 3点検証まで完結させる。旧版 `decks/okf-visual/` は**変更禁止（温存）**
-- **グラフエンジニアリング図解デッキの作成**（2026-08-09 依頼）: 指示書は `docs/codex-brief-graph-engineering-visual.md`。初心者向け・図解中心の新デッキ `decks/graph-engineering-visual/`（22枚 + ImageGen 挿絵9枚）を作成し、ビルド・検証まで完結させる。既存のプロ向け詳細版 `decks/graph-engineering/` は**変更禁止（温存）**
+- **OKF ビジュアルガイド v2 の挿絵制作**（2026-08-09 依頼）: 指示書は `docs/codex-brief-okf-visual-v2.md`。`decks/07-okf-visual-guide/`（35枚、deck.json は完成済み）の挿絵19枚を **4:3・文字なし・紫系フラットベクター**で ImageGen 生成し、`assets/` に上書き → ビルド・全35枚の目視・PPTX 3点検証まで完結させる。旧版 `decks/_archive/okf/03-okf-visual/` は**変更禁止（温存）**
 
 ## 完了済みタスク
 
+- **デッキ正本の番号整理と旧グラフ版のアーカイブ**（2026-08-20 完了）: 現行正本を `decks/01-*`〜`decks/07-*` に整理。旧グラフ2版は `decks/_archive/graph-engineering/` に退避し、現行正本は `decks/05-graph-engineering/`
+- **PE超入門デッキ（改訂版）の挿絵差し替え・最終チェック・正本整理**（2026-08-14 完了）: 現在の正本は `decks/01-prompt-engineering/`（現行53枚）。旧たたき台と不採用の自動生成35枚版は `decks/_archive/ai-eng-01/` に退避済み。最新版の判定は `decks/README.md` を参照
 - **OKF ビジュアルデッキの作成**（2026-08-06 完了）: `docs/codex-brief-okf-visual-deck.md`。deck.json＋画像8枚の作成、HTML/PPTX ビルド、全21枚の目視検証・PPTX 検証まで完了

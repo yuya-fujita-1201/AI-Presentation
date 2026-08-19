@@ -27,4 +27,4 @@ Google Cloudのプロンプト設計入門。プロンプトを言語モデル�
 
 # 活用先
 
-- [../../decks/ai-eng-01-prompt-engineering/deck.json](../../decks/ai-eng-01-prompt-engineering/deck.json) — 「プロンプト」と「コンテキスト」の広義・講義上の呼び分け、反復して直す説明の根拠
+- [../../decks/01-prompt-engineering/deck.json](../../decks/01-prompt-engineering/deck.json) — 「プロンプト」と「コンテキスト」の広義・講義上の呼び分け、反復して直す説明の根拠

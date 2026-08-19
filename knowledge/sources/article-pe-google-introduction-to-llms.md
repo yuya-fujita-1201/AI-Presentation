@@ -27,4 +27,4 @@ GoogleのMachine Learning Crash Courseに含まれるLLM入門教材。言語モ
 
 # 活用先
 
-- [../../decks/ai-eng-01-prompt-engineering/deck.json](../../decks/ai-eng-01-prompt-engineering/deck.json) — 「言葉のかけら（トークン）」を一つずつ生成するという初心者向け説明の根拠
+- [../../decks/01-prompt-engineering/deck.json](../../decks/01-prompt-engineering/deck.json) — 「言葉のかけら（トークン）」を一つずつ生成するという初心者向け説明の根拠

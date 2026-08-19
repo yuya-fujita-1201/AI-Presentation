@@ -16,7 +16,7 @@
 - 画像の共通仕様は固定で記載: 4:3（1024×768推奨）・**画像内に文字を入れない**・フラットベクターイラスト風・テーマ準拠配色（仮版はaccenture-purple。**清書時に `meta.theme` の切替でテーマカラー変更可能**なことを明記）
 - 対応表: 全{{N_FIGURES}}図について `| 図番号 | スライド番号 | 図案（draftのfigure行原文） | 参考punch |` の表を書く（**行数=図の枚数。ラッパーが照合**）
 - **PPTXへのスピーカーノート操作を指示に含めない**（python-pptxのnotes_slideはKeynote互換性を破壊する既知問題。手本と同様に注意書きとして記載する）
-- 変更禁止リストに他デッキ（decks/okf-visual*・decks/graph-engineering*）とknowledge/を明記
+- 変更禁止リストに他デッキ（decks/_archive/okf/03-okf-visual*・decks/_archive/graph-engineering/01-graph-engineering*）とknowledge/を明記
 - 「未実施の項目は未実施と書く」チェックリスト様式を手本から踏襲
 
 ## 自己検証（CHECKログ必須）

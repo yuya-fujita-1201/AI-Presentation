@@ -106,6 +106,21 @@ def fit_code_size(code: str, r: dict):
     return size, lines
 
 
+def is_http_url(value) -> bool:
+    """Return True only when the entire table-cell value is an HTTP(S) URL."""
+    return bool(re.fullmatch(r"https?://\S+", str(value)))
+
+
+def table_cell_parts(value):
+    """Normalize a table cell into visible text and an optional external URL."""
+    if isinstance(value, dict):
+        text = str(value.get("text", ""))
+        url = value.get("url")
+        return text, str(url) if url and is_http_url(url) else None
+    text = str(value)
+    return text, text if is_http_url(text) else None
+
+
 def svg_size(svg_text: str):
     """SVG の描画サイズを viewBox / width / height 属性から取得する。"""
     m = re.search(
@@ -328,10 +343,18 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                 bg = col(theme, tr["row_alt_fill"]) if i % 2 else col(theme, "background")
             html.append("<tr>")
             for cell in row:
+                visible_text, cell_url = table_cell_parts(cell)
+                cell_text = esc(visible_text)
+                if cell_url:
+                    cell_text = (
+                        f'<a href="{esc(cell_url)}" target="_blank" rel="noopener noreferrer" '
+                        'style="color:inherit;text-decoration:underline;'
+                        f'text-underline-offset:2px;">{cell_text}</a>'
+                    )
                 html.append(
                     f'<td style="background:{bg};color:{col(theme, tr["cell_color"])};'
                     f'font-size:{tr["cell_size"]}px;height:{tr["row_h"]}px;{cells_pad}'
-                    f'box-sizing:border-box;border-bottom:1px solid rgba(0,0,0,0.08);">{esc(cell)}</td>'
+                    f'box-sizing:border-box;border-bottom:1px solid rgba(0,0,0,0.08);">{cell_text}</td>'
                 )
             html.append("</tr>")
         html.append("</tbody></table></div>")
@@ -734,7 +757,11 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 cell.margin_right = IN(tr["pad_x"])
                 p = cell.text_frame.paragraphs[0]
                 p.line_spacing = tr["line_height"]
-                set_run(p.add_run(), str(val), tr["cell_size"], C(tr["cell_color"]))
+                visible_text, cell_url = table_cell_parts(val)
+                run = p.add_run()
+                set_run(run, visible_text, tr["cell_size"], C(tr["cell_color"]))
+                if cell_url:
+                    run.hyperlink.address = cell_url
 
     def s_code(slide, data, st, page, total):
         chrome(slide, data, st, page, total)

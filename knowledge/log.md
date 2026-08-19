@@ -382,7 +382,7 @@
 
 ## 2026-08-14（ce ナレッジの品質判定・manual_override受理）
 
-- **Note**: context-engineering の11コンセプトを採点 8/6/7/6/6（①事実正確性8・②網羅性6・③構成7・④リンク6・⑤文章品質6）のまま manual_override で受理し、テーマを he へ進めた。網羅性と独立裏取りに既知の弱みが残る**参考ナレッジ**の位置づけ（02の発表資料本体は `decks/ai-eng-02-context-engineering/` 側で別途品質担保済み）
+- **Note**: context-engineering の11コンセプトを採点 8/6/7/6/6（①事実正確性8・②網羅性6・③構成7・④リンク6・⑤文章品質6）のまま manual_override で受理し、テーマを he へ進めた。網羅性と独立裏取りに既知の弱みが残る**参考ナレッジ**の位置づけ（02の発表資料本体は `decks/02-context-engineering/` 側で別途品質担保済み）
 
 ## 2026-08-14（採点指摘の修正・improve_k run:0814155936）
 
@@ -415,7 +415,7 @@
 - **Creation**: context-engineering/ を新設。定義とPromptとの重なり、推論時の構成要素、5項目、必要性・十分性・信頼性・鮮度、window/history/memory/trainingの区別、RAG・外部メモリ・圧縮・Prompt cache、長期タスクとtool context、prompt injection・データ境界、コピー可能なcontext packを8コンセプトに分離
 - **Creation**: sources/ に公式一次資料・原著12件を `*-ce-*` として登録。CE-S01〜CE-S12を一意に採番し、全台帳へ原文の見出し・節を示すlocatorを追加。Microsoft教材は固定commit URL、McKinnon (2025) はGemini 2.5 Flash単一・simple factoid Q&Aの限定的対照として記録
 - **Update**: ルートindexとsources indexにcontext-engineeringの導線を追加。コンセプトから一次資料、台帳から活用先への双方向リンクを整備
-- **Creation**: decks/ai-eng-02-context-engineering/ を新設。本編30枚＋付録21枚の全51枚（初版）
+- **Creation**: decks/02-context-engineering/ を新設。本編30枚＋付録21枚の全51枚（初版）
 - **Note**: 上記は 2026-08-14 未明に loop/ai-eng-02-context-engineering ブランチへコミット済みだったが main へ未マージだったため、同日午後の改訂（51→58枚）時に loop/ce-deck-clarity ブランチへ復元した
 
 ## 2026-08-14（さらに続き4）
@@ -496,7 +496,7 @@
 - **Creation**: graph-engineering/ を新設。YouTube解説動画11本（グラフエンジニアリング関連、2026年7〜8月公開）を情報源に、9コンセプトを追加（overview / term-lineage-and-layers / graph-primitives / loop-vs-graph-decision / roles-and-orchestration / relationship-graph-for-operations / verification-and-testing / knowledge-graph-as-memory / risks-and-safeguards）
 - **Creation**: sources/ に動画11本を video-ge-*.md として登録（1ソース=1ファイル、字幕全文から要約・「活用先」リンクつき。自動字幕の誤変換は正規化し、聞き取り不確実箇所とソース間の数値食い違い（Bun書き換え行数53万/75万、explainX発表時期など）は明記）
 - **Update**: ルート index.md と sources/index.md に graph-engineering 系の項目を追加
-- **Creation**: decks/graph-engineering/ を新設（29枚、テーマ accenture-purple、全スライドにHTML用スピーカーノートつき）。構成は「序（用語誕生の事件）→ 地図 → 基本語彙 → ループかグラフか → 配線と検証 → 歯止め → 3フレーム+1原則」
+- **Creation**: decks/_archive/graph-engineering/01-graph-engineering/ を新設（29枚、テーマ accenture-purple、全スライドにHTML用スピーカーノートつき）。構成は「序（用語誕生の事件）→ 地図 → 基本語彙 → ループかグラフか → 配線と検証 → 歯止め → 3フレーム+1原則」
 - **Process**: 制作はダイナミックワークフロー3本（Digest 11並列 → Architect 3案合議 → Judge統合／コンセプト執筆9並列+リンク追記11並列／デッキ構成3案合議 → 審査統合）で実施。品質はループエンジニアリング（maker≠grader・機械ゲート・rubric採点、独立採点5体×3周）で担保し、ナレッジ 36→38→44/50、デッキ 51/60 で全rubric項目が目標（各8点）達成。活用先⇄Citations の双方向整合は自作クロスチェックで0件不一致。詳細は ../loop-log.md
 - **Tooling**: tools/validate_okf.py を追加（フロントマター/type必須・リンク切れ・index網羅・okf_version の機械検証ゲート）
 

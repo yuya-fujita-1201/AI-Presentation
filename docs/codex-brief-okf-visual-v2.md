@@ -2,7 +2,7 @@
 
 **依頼日**: 2026-08-09
 **依頼元**: Claude Code（骨格・文章・レイアウトまで作成済み）
-**対象デッキ**: `decks/okf-visual-v2/`（全35枚。deck.json は完成済み）
+**対象デッキ**: `decks/07-okf-visual-guide/`（全35枚。deck.json は完成済み）
 **あなたの担当**: **挿絵19枚の生成（ImageGen）と、それを入れた状態での最終ビルド・目視検証**
 
 ---
@@ -11,13 +11,13 @@
 
 1. 本ファイル（全体）
 2. `AGENTS.md` の「ビルド・検証手順」
-3. `decks/okf-visual-v2/deck.json`（各スライドの `title` / `punch` / `bullets` / `caption` を必ず読んでから絵を設計すること）
+3. `decks/07-okf-visual-guide/deck.json`（各スライドの `title` / `punch` / `bullets` / `caption` を必ず読んでから絵を設計すること）
 
 ---
 
 ## 1. このタスクの背景（なぜこれをやるのか）
 
-前バージョン `decks/okf-visual/`（21枚）は「画像だけのページ」と「文章だけのページ」が交互に並ぶ構成で、**画像が単なるイメージカットになり、重要な説明が別ページに分離していた**。発注者から「一目で内容が伝わらない」「他のチームメンバーが見ても一発で納得できるレベルにしたい」という指摘があった。
+前バージョン `decks/_archive/okf/03-okf-visual/`（21枚）は「画像だけのページ」と「文章だけのページ」が交互に並ぶ構成で、**画像が単なるイメージカットになり、重要な説明が別ページに分離していた**。発注者から「一目で内容が伝わらない」「他のチームメンバーが見ても一発で納得できるレベルにしたい」という指摘があった。
 
 そこで v2 では **`image_text` という新しいスライドタイプ**を作り、1枚の中に「見出し → パンチライン（一目で伝える一文）→ 箇条書き本文 → 図 → キャプション」を同居させた。35枚中19枚がこの形式になっている。
 
@@ -25,17 +25,17 @@
 
 ### 変更禁止（絶対に触らないこと）
 
-- `decks/okf-visual/`（旧21枚版。**温存対象**）
-- `decks/graph-engineering/` および `decks/graph-engineering-visual/`
-- `decks/okf-introduction/`、`decks/okf-knowledge-share/`
+- `decks/_archive/okf/03-okf-visual/`（旧21枚版。**温存対象**）
+- `decks/_archive/graph-engineering/01-graph-engineering/` および `decks/_archive/graph-engineering/02-graph-engineering-visual/`
+- `decks/_archive/okf/01-okf-introduction/`、`decks/_archive/okf/02-okf-knowledge-share/`
 - `knowledge/` 配下（ナレッジは今回変更しない）
 - `tools/build_deck.py`、`templates/`（image_text タイプは実装・検証済み。バグを見つけた場合だけ報告してよいが、勝手に仕様変更しない）
 
 ### あなたが触ってよいもの
 
-- `decks/okf-visual-v2/assets/*.png`（**全19枚を差し替える**のが主タスク）
-- `decks/okf-visual-v2/deck.json` の `style` / `caption` / 微修正（**§6 の範囲内でのみ**）
-- `decks/okf-visual-v2/build/`（ビルド生成物。直接編集はせず再ビルドで更新）
+- `decks/07-okf-visual-guide/assets/*.png`（**全19枚を差し替える**のが主タスク）
+- `decks/07-okf-visual-guide/deck.json` の `style` / `caption` / 微修正（**§6 の範囲内でのみ**）
+- `decks/07-okf-visual-guide/build/`（ビルド生成物。直接編集はせず再ビルドで更新）
 
 ---
 
@@ -104,7 +104,7 @@
 2. 試作3枚をデッキに入れてビルドし、**524×378px に縮小された状態で識別できるか**を実際のプレビューPNGで確認する（ここで潰れるなら要素を減らす）
 3. 画風が固まってから残り16枚を生成する
 4. 対（ペア）の図は連続して生成する：**#4↔#5（Before/After）** と **#7・#8（バラバラ→整列／箱→本棚）** は構図の一貫性が命
-5. 生成した画像は `decks/okf-visual-v2/assets/` に**同じファイル名で上書き**する（deck.json のパスは変更不要）
+5. 生成した画像は `decks/07-okf-visual-guide/assets/` に**同じファイル名で上書き**する（deck.json のパスは変更不要）
 
 ### ImageGen へ渡す共通プロンプト骨子（日本語で書いてあるが、英語で投げてよい）
 
@@ -162,17 +162,17 @@
 
 ビルド・検証は**あなたのローカル CLI セッションで完結させる**こと（クラウドサンドボックスでは python-pptx / Playwright / 画像目視ができないため、その場合は正直に「実行できなかった」と報告する）。python3 は `/opt/homebrew/bin/python3`。
 
-- [ ] 19枚すべてを 4:3 で新規生成し、`decks/okf-visual-v2/assets/` に上書きした
+- [ ] 19枚すべてを 4:3 で新規生成し、`decks/07-okf-visual-guide/assets/` に上書きした
 - [ ] 全19枚に**文字が入っていない**ことを目視確認した
 - [ ] 19枚を並べて見て、画風・配色・線の太さが統一されていることを確認した
-- [ ] `python3 tools/build_deck.py decks/okf-visual-v2` が成功
-- [ ] `python3 tools/preview_deck.py decks/okf-visual-v2` で全35枚をPNG化し、**35枚すべてを実際に開いて目視**した
+- [ ] `python3 tools/build_deck.py decks/07-okf-visual-guide` が成功
+- [ ] `python3 tools/preview_deck.py decks/07-okf-visual-guide` で全35枚をPNG化し、**35枚すべてを実際に開いて目視**した
 - [ ] 目視で「文字切れ・要素の重なり・本文の枠外はみ出し・表の縦溢れ・図とキャプションの配置破綻」がないことを確認した
 - [ ] 図が縮小表示（524×378px）でも識別できることを確認した
-- [ ] `unzip -t decks/okf-visual-v2/build/okf-visual-v2.pptx` がエラーなし
+- [ ] `unzip -t decks/07-okf-visual-guide/build/okf-visual-v2.pptx` がエラーなし
 - [ ] python-pptx の `Presentation()` で再パースでき、**スライド数が35**
 - [ ] 全スライドで `has_notes_slide` が **False**（スピーカーノート混入は Keynote 互換性を破壊する）
-- [ ] `decks/okf-visual/`（旧版）と他デッキに変更が入っていないことを `git status` で確認した
+- [ ] `decks/_archive/okf/03-okf-visual/`（旧版）と他デッキに変更が入っていないことを `git status` で確認した
 
 ### 報告に含めること
 

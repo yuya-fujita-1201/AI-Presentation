@@ -2,7 +2,7 @@
 
 **依頼日**: 2026-08-15
 **依頼元**: Claude Code（パイプライン工程。骨格・文章・レイアウトまで作成済み）
-**対象デッキ**: `decks/ai-eng-04-loop-engineering/`（全35枚。`deck.json` は完成済み）
+**対象デッキ**: `decks/04-loop-engineering/`（全35枚。`deck.json` は完成済み）
 **あなたの担当**: **挿絵20枚の生成（ImageGen）と、それを入れた状態での最終ビルド・目視検証**
 
 ---
@@ -11,7 +11,7 @@
 
 1. 本ファイル（全体）
 2. `AGENTS.md` の「ビルド・検証手順」
-3. `decks/ai-eng-04-loop-engineering/deck.json`（各 `image_text` スライドの `title` / `punch` / `bullets` / `caption` を必ず読んでから絵を設計すること）
+3. `decks/04-loop-engineering/deck.json`（各 `image_text` スライドの `title` / `punch` / `bullets` / `caption` を必ず読んでから絵を設計すること）
 4. `docs/deck-schema.md` の `image_text` の項（領域サイズ・画像比率の目安）
 
 ---
@@ -22,25 +22,25 @@
 
 `deck.json` の35枚のうち20枚が `image_text` タイプで作られている。`docs/deck-schema.md` はこのタイプの役割を「画像だけ・文章だけのページに分離せず、メッセージと図解を1枚に載せたいときはこのタイプを使う」と定義しており、1枚の中に見出し→パンチライン（一目で伝える一文）→箇条書き本文→図→キャプションが同居する構成になっている。**つまり図は、ページを飾るイメージカットではなく、隣の文章の内容を視覚的に理解させる図解でなければならない。** ここが今回の最重要ポイントである。
 
-各 `image_text` スライドの図の設計（モチーフ指定）は、`pipeline/staging/draft/draft.md` の該当スライドの `figure:` 行にすでに書き起こされている。あなたの仕事は、その指定に沿って実際の画像を生成し、`decks/ai-eng-04-loop-engineering/assets/` に配置し、デッキ全体をビルド・検証することである。
+各 `image_text` スライドの図の設計（モチーフ指定）は、`pipeline/staging/draft/draft.md` の該当スライドの `figure:` 行にすでに書き起こされている。あなたの仕事は、その指定に沿って実際の画像を生成し、`decks/04-loop-engineering/assets/` に配置し、デッキ全体をビルド・検証することである。
 
 ### 変更禁止（絶対に触らないこと）
 
-- 他のすべてのデッキ: `decks/okf-introduction/`、`decks/okf-knowledge-share/`、`decks/okf-visual/`、`decks/okf-visual-v2/`、`decks/graph-engineering/`、`decks/graph-engineering-visual/`、`decks/ai-eng-01-prompt-engineering/`、`decks/ai-eng-02-context-engineering/`、`decks/ai-eng-02-context-engineering-v2/`、`decks/ai-eng-03-harness-engineering/`（今回の対象は `ai-eng-04-loop-engineering` のみ）
+- 他のすべてのデッキ: `decks/_archive/okf/01-okf-introduction/`、`decks/_archive/okf/02-okf-knowledge-share/`、`decks/_archive/okf/03-okf-visual/`、`decks/07-okf-visual-guide/`、`decks/_archive/graph-engineering/01-graph-engineering/`、`decks/_archive/graph-engineering/02-graph-engineering-visual/`、`decks/01-prompt-engineering/`、`decks/02-context-engineering/`、`decks/02-context-engineering/`、`decks/03-harness-engineering/`（今回の対象は `ai-eng-04-loop-engineering` のみ）
 - `knowledge/` 配下全体（ナレッジは今回変更しない）
-- `decks/ai-eng-04-loop-engineering/deck.json` の `title` / `punch` / `bullets` / `notes` / スライドの追加・削除・順序変更・`meta.theme` 以外の `meta` 項目（文言は発注者要望を反映して確定済み。触れてよい範囲は次項「あなたが触ってよいもの」に限定される）
+- `decks/04-loop-engineering/deck.json` の `title` / `punch` / `bullets` / `notes` / スライドの追加・削除・順序変更・`meta.theme` 以外の `meta` 項目（文言は発注者要望を反映して確定済み。触れてよい範囲は次項「あなたが触ってよいもの」に限定される）
 - `tools/build_deck.py`、`templates/`（`image_text` タイプは実装・検証済み。バグを見つけた場合だけ報告してよいが、勝手に仕様変更しない）
 - `pipeline/` 配下全体（このデッキの挿絵制作とは無関係）
 
 ### あなたが触ってよいもの
 
-- `decks/ai-eng-04-loop-engineering/assets/*.png`（**全20枚を差し替える**のが主タスク。ファイル名は変更不要、既存パスに上書きする）
-- `decks/ai-eng-04-loop-engineering/deck.json` の `style` / `caption` の微修正。範囲は次の3点のみ:
+- `decks/04-loop-engineering/assets/*.png`（**全20枚を差し替える**のが主タスク。ファイル名は変更不要、既存パスに上書きする）
+- `decks/04-loop-engineering/deck.json` の `style` / `caption` の微修正。範囲は次の3点のみ:
   - 画像を入れた結果、キャプションと図の内容が食い違った場合の `caption` の修正
   - 図が大きすぎ/小さすぎる場合の該当スライドの `style.img` の調整（例: `{"img": {"w": 500, "h": 360}}`）
   - 本文が枠から溢れた場合の `style.body.size` / `style.body.gap` の微調整
   - **やってはいけないこと**: スライドの追加・削除・順序変更、`title` / `punch` / `bullets` の書き換え、テーマ変更、`templates/` の編集。文章に問題を見つけた場合は、直さずに**報告だけ**すること（発注者が判断する）
-- `decks/ai-eng-04-loop-engineering/build/`（ビルド生成物。直接編集はせず再ビルドで更新）
+- `decks/04-loop-engineering/build/`（ビルド生成物。直接編集はせず再ビルドで更新）
 
 ---
 
@@ -51,7 +51,7 @@
 | サイズ・比率 | **4:3 前後（1024×768 px 推奨）**。`docs/deck-schema.md` も「画像は4:3前後（例: 1024×768）が最も収まりが良い」としている。表示領域が 524×378px なので、極端な横長・縦長は letterbox になり破綻する |
 | 文字 | **画像内に文字を入れない**（日本語が崩れる／PPTXで拡大縮小時に読めなくなるため）。ラベルが要る場合はアイコンや記号で表現する |
 | 画風 | フラットベクターイラスト風。立体的な3Dレンダリングやフォトリアルは不可。線は細め、面はソリッド |
-| 配色 | 現行テーマ `accenture-purple`（`decks/ai-eng-04-loop-engineering/deck.json` の `meta.theme`）の配色に統一する。基調 `#460073`（濃紫・primary）、アクセント `#A100FF`（明るい紫・accent）、補助に薄紫 `#F7F0FC`（surface）と白。紫以外の色相は原則使わない。**清書時に `meta.theme` を切り替えれば別テーマの配色に変更できる**ため、今回は現行テーマの配色に合わせて生成すればよく、テーマそのものを変更する必要はない |
+| 配色 | 現行テーマ `accenture-purple`（`decks/04-loop-engineering/deck.json` の `meta.theme`）の配色に統一する。基調 `#460073`（濃紫・primary）、アクセント `#A100FF`（明るい紫・accent）、補助に薄紫 `#F7F0FC`（surface）と白。紫以外の色相は原則使わない。**清書時に `meta.theme` を切り替えれば別テーマの配色に変更できる**ため、今回は現行テーマの配色に合わせて生成すればよく、テーマそのものを変更する必要はない |
 | 背景 | 白または極薄い紫のフラット背景。写真的な背景・グラデーションの多用は不可（スライド背景が白なので、なじませる） |
 | 余白 | 図の四辺に十分な余白。要素を端まで詰めない |
 | 密度 | **1枚につき伝える概念は1つだけ**。要素は5〜7個までに抑える。情報を詰め込むと 524px 幅で潰れて読めない |
@@ -59,7 +59,7 @@
 
 ### 現在の20枚はプレースホルダーである
 
-`decks/ai-eng-04-loop-engineering/assets/fig-le-01.png` 〜 `fig-le-20.png` は現在すべて、紫の枠線と対角線の×印だけが描かれた仮画像（プレースホルダー）である（実際に1枚を目視確認済み）。**20枚すべてを本番の挿絵として新規生成し、同じファイル名で上書きすること。** `deck.json` 側のパスは変更不要。
+`decks/04-loop-engineering/assets/fig-le-01.png` 〜 `fig-le-20.png` は現在すべて、紫の枠線と対角線の×印だけが描かれた仮画像（プレースホルダー）である（実際に1枚を目視確認済み）。**20枚すべてを本番の挿絵として新規生成し、同じファイル名で上書きすること。** `deck.json` 側のパスは変更不要。
 
 ### 進め方（推奨）
 
@@ -67,7 +67,7 @@
 2. 試作3枚をデッキに入れてビルドし、**524×378px に縮小された状態で識別できるか**を実際のプレビューPNGで確認する（ここで潰れるなら要素を減らす）
 3. 画風が固まってから残り17枚を生成する
 4. 対応表（§4）を見ると分かるとおり、**1枚の画像の中に左右（または上下）の対比構図を含む図案が多い**（例: fig-le-05, 10, 11, 12, 15, 16, 18, 19）。左右で画風・線の太さ・人物の描き方がずれないよう、1枚の中の一貫性にも注意する
-5. 生成した画像は `decks/ai-eng-04-loop-engineering/assets/` に**同じファイル名で上書き**する
+5. 生成した画像は `decks/04-loop-engineering/assets/` に**同じファイル名で上書き**する
 
 ---
 
@@ -126,12 +126,12 @@
 
 クラウドサンドボックスでは python-pptx / 画像目視ができないため、その場合は正直に「実行できなかった」と報告すること。python3 は `/opt/homebrew/bin/python3`。
 
-1. 20枚すべてを4:3で新規生成し、`decks/ai-eng-04-loop-engineering/assets/` に上書きする
-2. `python3 tools/build_deck.py decks/ai-eng-04-loop-engineering` を実行しビルドが成功することを確認する
-3. `python3 tools/preview_deck.py decks/ai-eng-04-loop-engineering` で全35枚をPNG化し、**35枚すべてを実際に開いて目視**する
+1. 20枚すべてを4:3で新規生成し、`decks/04-loop-engineering/assets/` に上書きする
+2. `python3 tools/build_deck.py decks/04-loop-engineering` を実行しビルドが成功することを確認する
+3. `python3 tools/preview_deck.py decks/04-loop-engineering` で全35枚をPNG化し、**35枚すべてを実際に開いて目視**する
 4. 目視で「文字切れ・要素の重なり・本文の枠外はみ出し・表の縦溢れ・図とキャプションの配置破綻」がないことを確認する
 5. 図が縮小表示（524×378px）でも識別できることを確認する
-6. `unzip -t decks/ai-eng-04-loop-engineering/build/ai-eng-04-loop-engineering.pptx` がエラーなく通ることを確認する
+6. `unzip -t decks/04-loop-engineering/build/ai-eng-04-loop-engineering.pptx` がエラーなく通ることを確認する
 7. python-pptx の `Presentation()` で再パースでき、**スライド数が35**であることを確認する
 8. 全スライドで `has_notes_slide` が **False** であることを確認する（PPTX にスピーカーノートを絶対に入れない。python-pptx の `notes_slide` は Keynote 互換性を破壊する既知の問題があるため、`notes` フィールドの内容を PPTX へ書き込む操作は一切行わないこと。`notes` は HTML でのみ表示される仕様のままでよい）
 9. `git status` で、他デッキ（§1の変更禁止リスト）と `knowledge/` に変更が入っていないことを確認する
@@ -140,11 +140,11 @@
 
 ## 7. 完了チェックリスト（あなた自身が実行して結果を報告する）
 
-- [ ] 20枚すべてを4:3で新規生成し、`decks/ai-eng-04-loop-engineering/assets/` に上書きした
+- [ ] 20枚すべてを4:3で新規生成し、`decks/04-loop-engineering/assets/` に上書きした
 - [ ] 全20枚に**文字が入っていない**ことを目視確認した
 - [ ] 20枚を並べて見て、画風・配色・線の太さが統一されていることを確認した
-- [ ] `python3 tools/build_deck.py decks/ai-eng-04-loop-engineering` が成功した
-- [ ] `python3 tools/preview_deck.py decks/ai-eng-04-loop-engineering` で全35枚をPNG化し、35枚すべてを実際に開いて目視した
+- [ ] `python3 tools/build_deck.py decks/04-loop-engineering` が成功した
+- [ ] `python3 tools/preview_deck.py decks/04-loop-engineering` で全35枚をPNG化し、35枚すべてを実際に開いて目視した
 - [ ] 目視で「文字切れ・要素の重なり・本文の枠外はみ出し・表の縦溢れ・図とキャプションの配置破綻」がないことを確認した
 - [ ] 図が縮小表示（524×378px）でも識別できることを確認した
 - [ ] `unzip -t` が対象PPTXでエラーなしだった
