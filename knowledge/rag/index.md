@@ -8,15 +8,15 @@
 
 入口は [overview.md](./overview.md)（一言定義・なぜ必要か・よくある5つの誤解・バンドルの地図）。以下は overview.md の順序表と同じ並びで、各ファイルの見出し語だけを挙げる。**番号はファイルの並び順であり、読む順番ではない**（読む順番は overview.md の「読む順番の提案」を参照）。内容説明と読む順番の根拠は overview.md 側で一元管理しており、ここでは重複させない。
 
-1. [rag-origin-and-definition.md](./rag-origin-and-definition.md) — RAGの原点と定義
-2. [rag-pipeline-stages.md](./rag-pipeline-stages.md) — パイプラインの段階
-3. [chunking-and-embedding.md](./chunking-and-embedding.md) — チャンク分割と埋め込み
-4. [retrieval-and-reranking.md](./retrieval-and-reranking.md) — 検索とリランキング
-5. [failure-modes.md](./failure-modes.md) — どこで壊れるか
-6. [evaluation.md](./evaluation.md) — できているかをどう測るか
-7. [build-or-buy.md](./build-or-buy.md) — 作るか借りるか
-8. [governance-and-adoption.md](./governance-and-adoption.md) — 入れる前と入れた後
-9. [rag-and-neighbors.md](./rag-and-neighbors.md) — 隣接概念との切り分け
+1. [rag-origin-and-definition.md](./rag-origin-and-definition.md) — RAGの原点と定義。原典（Lewis 2020）が提案したもの、現在の用法との距離、原典が保証していない範囲
+2. [rag-pipeline-stages.md](./rag-pipeline-stages.md) — パイプラインの段階。3段・4段・5段という数え方の食い違いを1つの図に統合する
+3. [chunking-and-embedding.md](./chunking-and-embedding.md) — チャンク分割と埋め込み。取り込み側の設計。分割・オーバーラップ・文脈付加・埋め込みモデル選定
+4. [retrieval-and-reranking.md](./retrieval-and-reranking.md) — 検索とリランキング。検索側の設計。ハイブリッド検索・クエリ変換・リランキング・再現率と適合率
+5. [failure-modes.md](./failure-modes.md) — どこで壊れるか。7つの失敗点（FP1〜FP7）と、PoCでは出ず本番で出る5つの失敗
+6. [evaluation.md](./evaluation.md) — できているかをどう測るか。Ragasの3指標と、平均点ではなく致命傷を探す検証設計
+7. [build-or-buy.md](./build-or-buy.md) — 作るか借りるか。マネージド・OSSエンジン・自作・ローカル完結の4択を「何が手に残るか」で比較
+8. [governance-and-adoption.md](./governance-and-adoption.md) — 入れる前と入れた後。正本の一元化・情報の外出し判断・導入レベル・育てる運用
+9. [rag-and-neighbors.md](./rag-and-neighbors.md) — 隣接概念との切り分け。ファインチューニング・会話メモリ・圧縮・キャッシュ・エージェント的検索との切り分け
 
 ## 読む順番
 

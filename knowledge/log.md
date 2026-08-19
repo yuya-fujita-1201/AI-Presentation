@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-19（rag 採点指摘の修正 improve_k run:0819185771）
+
+- **Fix (f1)**: evaluation.md:107 の評価セット規模「30〜50問」がCitations節の4出典（Ragas／kentarok／Seven Failure Points／TodoONada）のいずれにも根拠がなく、出典なしの数値が手順に置かれていた。数値を削除し「壊れやすい条件を優先して仕込む」のみに留めた
+- **Fix (f2)**: failure-modes.md のFP1〜FP7が、原典の適用範囲（英語・研究/教育/バイオメディカルの3領域限定のケーススタディ）に触れないまま日本の社内RAGへ適用されていた。evaluation.mdが既に持つ同種の留保（英語データセットの但し書き）に揃え、FP表の直後に留保文を追加
+- **Fix (f3)**: governance-and-adoption.md／build-or-buy.mdの「5段階」（Ollama動画）が、rag-pipeline-stages.mdで統合済みの7工程と接続されないまま提示されていた。5段階が7工程のうち格納・再ランクを明示的に区別しない数え方である旨をgovernance-and-adoption.mdに橋渡し文として追加
+- **Fix (f4)**: index.mdの9項目リストがファイル名と見出し語のみで内容一覧として機能していなかった。overview.mdの表（読む順番の地図）から1行要約を転記
+- **Fix (f5)**: governance-and-adoption.md:30とbuild-or-buy.md:107で、RAGFlow動画の「入れる文書の質／整理は導入前にやる方が結局早い」がほぼ逐語で重複していた。本籍をgovernance-and-adoption.mdに置き、build-or-buy.md側は1行のポインタへ圧縮
+- **Defer (f6, out_of_scope)**: overview.mdとrag-pipeline-stages.mdでauto字幕由来の帰属表記（「auto字幕からの聞き取り」「（聞き取り）」「表記なし」）が事実として揺れていることは確認したが、fix_hintが求める「9コンセプト全体への一括適用」は許可パス外の7ファイルにも及ぶため本工程の範囲では対応できない
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認（生出力は pipeline/logs/run-0819185771.md に記録）
+
 ## 2026-08-19（rag 採点指摘の修正 improve_k run:0819151577）
 
 - **Fix (f1)**: rag-origin-and-definition.md:25-32 で seq2seqトランスフォーマー・密ベクトルインデックス・DPR・「エンドツーエンドで微調整」が無定義のまま使われていた。密ベクトルインデックスに補足句、seq2seqトランスフォーマー／ニューラルレトリーバー／DPRに平易な言い換えを括弧内追加、fine-tuneに補足句を追加

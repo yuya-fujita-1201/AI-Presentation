@@ -28,6 +28,8 @@ Barnett et al. (2024) は、RAGシステムを実装する際に生じる典型�
 | FP6 | Incorrect Specificity | 回答は返るが、粒度が合わない（具体的すぎる／抽象的すぎる） |
 | FP7 | Incomplete | コンテキスト内に情報があるのに一部しか拾えず、回答が不完全になる |
 
+なお、この7分類は英語文献における研究・教育・バイオメディカルの3領域限定のケーススタディで実証されたものであり、日本語の社内RAGにそのまま当てはまる保証はない点は留保しておきたい。
+
 論文はFP4について、ノイズや矛盾する情報が多い場合に発生しやすいとしている。FP7については「Incomplete answers are not incorrect but miss some of the information even though that information was in the context」と述べ、**誤りではなく欠落**である点を強調している（[Seven Failure Points When Engineering a RAG System](../sources/article-rag-seven-failure-points.md)）。この区別は実務では見過ごせない。間違ったことを言われれば気づけるが、言われなかったことには気づけないからである。
 
 ## 7つを3つの層に畳む
