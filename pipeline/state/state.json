@@ -19,10 +19,10 @@
     ],
     "series_index": 0
   },
-  "phase": "grade_d",
+  "phase": "improve_d",
   "generation": 18,
-  "active_run_id": "08200457da",
-  "input_commit": "6ca503dab6e5",
+  "active_run_id": "082005156f",
+  "input_commit": "ba853f7db04d",
   "phase_started_at": null,
   "phase_attempts": 0,
   "run_counts": {
@@ -36,7 +36,7 @@
     "improve_k": 5,
     "draft": 1,
     "deck": 1,
-    "grade_d": 4,
+    "grade_d": 5,
     "improve_d": 3
   },
   "scan_fallback_done": false,
@@ -58,19 +58,19 @@
       }
     },
     "deck": {
-      "iter": 4,
+      "iter": 5,
       "repair_count": 2,
       "pass_streak": 0,
       "retry_used": false,
       "last_unmet": [
-        5
+        4
       ],
       "last_scores": {
         "1": 8,
         "2": 9,
-        "3": 9,
-        "4": 8,
-        "5": 7,
+        "3": 8,
+        "4": 7,
+        "5": 8,
         "6": 9
       }
     }
@@ -78,8 +78,8 @@
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-17T23:25:22+09:00",
-  "last_started_at": "2026-08-20T04:57:12+09:00",
-  "last_successful_transition_at": "2026-08-20T05:01:04+09:00",
+  "last_started_at": "2026-08-20T05:15:05+09:00",
+  "last_successful_transition_at": "2026-08-20T05:22:08+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
