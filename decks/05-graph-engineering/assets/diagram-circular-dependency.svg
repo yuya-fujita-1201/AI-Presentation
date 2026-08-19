@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+<defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3527"/></marker>
+<marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#B44A32"/></marker></defs>
+<rect width="1024" height="768" fill="#FFF9F3"/>
+
+<!-- 上の弧：見積書 → 承認 -->
+<path d="M 380 240 Q 512 118 640 240" fill="none" stroke="#7C3527" stroke-width="5" marker-end="url(#a1)"/>
+<text x="512" y="140" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="19" font-weight="700" fill="#7C3527">承認後でないと出せない</text>
+
+<!-- 下の弧：承認 → 見積書 -->
+<path d="M 640 300 Q 512 432 380 300" fill="none" stroke="#B44A32" stroke-width="5" marker-end="url(#a2)"/>
+<text x="512" y="418" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="19" font-weight="700" fill="#B44A32">見積書を見てからでないとできない</text>
+
+<!-- 2つのノード -->
+<rect x="120" y="220" width="260" height="110" rx="20" fill="#7C3527"/>
+<text x="250" y="285" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="32" font-weight="800" fill="#FFFFFF">見積書</text>
+<rect x="644" y="220" width="260" height="110" rx="20" fill="#B44A32"/>
+<text x="774" y="285" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="32" font-weight="800" fill="#FFFFFF">承認</text>
+
+<!-- 中央の循環バッジ -->
+<circle cx="512" cy="275" r="48" fill="#FFFFFF" stroke="#B44A32" stroke-width="4"/>
+<text x="512" y="284" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#B44A32">循環</text>
+
+<!-- 下帯 -->
+<rect x="32" y="546" width="960" height="186" rx="26" fill="#7C3527"/>
+<text x="512" y="602" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#FFFFFF">循環していると、動かす前に設計の矛盾がわかります</text>
+<text x="512" y="654" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">直し方は2つ：共通の判断を別ノードへ出す</text>
+<text x="512" y="694" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="22" font-weight="700" fill="#FADFD5">／どちらかの依存を外す</text>
+</svg>

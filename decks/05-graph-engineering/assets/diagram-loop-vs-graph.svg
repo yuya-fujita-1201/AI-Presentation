@@ -40,7 +40,7 @@
   <text x="758" y="200" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="600" fill="#6F5C52">何人かで、分けて受け渡す</text>
 
   <rect x="668" y="228" width="180" height="60" rx="16" fill="#7C3527"/>
-  <text x="758" y="266" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="700" fill="#FFFFFF">配る役</text>
+  <text x="758" y="266" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="700" fill="#FFFFFF">割り振る</text>
 
   <path d="M 758 288 V 324 H 608 V 350" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#arwP)"/>
   <path d="M 758 288 V 350" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#arwP)"/>
