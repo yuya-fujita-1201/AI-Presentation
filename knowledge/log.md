@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-19（rag 採点指摘の修正 improve_k run:0819151577）
+
+- **Fix (f1)**: rag-origin-and-definition.md:25-32 で seq2seqトランスフォーマー・密ベクトルインデックス・DPR・「エンドツーエンドで微調整」が無定義のまま使われていた。密ベクトルインデックスに補足句、seq2seqトランスフォーマー／ニューラルレトリーバー／DPRに平易な言い換えを括弧内追加、fine-tuneに補足句を追加
+- **Fix (f2)**: chunking-and-embedding.md:45 でContextual BM25が初出するが、BM25自体の定義（retrieval-and-reranking.md）へのリンクがなかった。初出箇所に「キーワードの完全一致を見る伝統的な検索手法」の補足句とリンクを追加
+- **Fix (f3)**: index.md:11-19 の「## 内容」連番リストがファイル並び順であり、実際の推奨読了順（1→2→5→3→4→6→7→8→9）と異なっていた。リスト直前に「番号は読む順番ではない」旨を明記し、overview.mdの「読む順番の提案」へ誘導
+- **Fix (f4)**: build-or-buy.md:88-94 と governance-and-adoption.md:43-49 で、Ollama動画の「5段階のうち何段を外部任せにしたか」という締めくくりと外出し判断指針がほぼ同内容で重複していた。外出し判断の本籍をgovernance-and-adoption.md側に定め、build-or-buy.md側は1文＋リンクに縮約（Citations記載も整合）
+- **Fix (f5)**: overview.md:55-59 と governance-and-adoption.md:81 で「最初は便利だったが物足りない」「使っても賢くならない」という同一引用が再掲されていた。governance-and-adoption.md側の引用を削り、overview.mdの「誤解1」への参照に絞った
+- **Defer (f6, out_of_scope)**: 「〜が効く」「——」挿入句等の文体反復（9ファイル横断）は事実として確認したが、修正には9ファイル全体のリライトが必要で本工程のスコープを超えるため見送り
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認（生出力は pipeline/logs/run-0819151577.md に記録）
+
 ## 2026-08-19（rag採点 repair上限の手動修正・重複の一本化）
 
 - **Add**: 9月シリーズ第1弾として `knowledge/rag/` を新設（コンセプト10本・ソース台帳15本＝動画5・記事10）。既存の context-engineering と重複しないよう、検索の作り方・失敗の直し方・評価に軸を置いた

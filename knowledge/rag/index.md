@@ -6,7 +6,7 @@
 
 ## 内容
 
-入口は [overview.md](./overview.md)（一言定義・なぜ必要か・よくある5つの誤解・バンドルの地図）。以下は overview.md の順序表と同じ並びで、各ファイルの見出し語だけを挙げる。内容説明と読む順番の根拠は overview.md 側で一元管理しており、ここでは重複させない。
+入口は [overview.md](./overview.md)（一言定義・なぜ必要か・よくある5つの誤解・バンドルの地図）。以下は overview.md の順序表と同じ並びで、各ファイルの見出し語だけを挙げる。**番号はファイルの並び順であり、読む順番ではない**（読む順番は overview.md の「読む順番の提案」を参照）。内容説明と読む順番の根拠は overview.md 側で一元管理しており、ここでは重複させない。
 
 1. [rag-origin-and-definition.md](./rag-origin-and-definition.md) — RAGの原点と定義
 2. [rag-pipeline-stages.md](./rag-pipeline-stages.md) — パイプラインの段階

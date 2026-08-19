@@ -42,7 +42,7 @@ Anthropicが提案するContextual Retrievalは、埋め込み生成および検
 
 > This chunk is from an SEC filing on ACME corp's performance in Q2 2023; the previous quarter's revenue was $314 million. The company's revenue grew by 3% over the previous quarter.
 
-手法は2つのサブ技術からなる。チャンクの前に50〜100トークン程度の説明文を追加する**Contextual Embeddings**と、同じ説明文脈を語彙マッチング用のインデックスにも追加する**Contextual BM25**である。
+手法は2つのサブ技術からなる。チャンクの前に50〜100トークン程度の説明文を追加する**Contextual Embeddings**と、同じ説明文脈を語彙マッチング用のインデックスにも追加する**Contextual BM25**（BM25はキーワードの完全一致を見る伝統的な検索手法。詳細は[検索とリランキング](retrieval-and-reranking.md)）である。
 
 現実的な疑問は「そんな注釈を人手で書けるのか」だろう。Anthropicも手動でのチャンク注釈は非現実的だとしており、Claude 3 Haikuに文脈記述を自動生成させる方式を採っていると説明している。コストについては、プロンプトキャッシングを使えば参照文書をチャンクごとに読み込み直す必要がなく（「You simply load the document into the cache once」）、**100万ドキュメントトークンあたり$1.02という一度きりの処理コスト**で実装可能だとしている（[Contextual Retrieval in AI Systems](../sources/article-rag-anthropic-contextual-retrieval.md)）。
 

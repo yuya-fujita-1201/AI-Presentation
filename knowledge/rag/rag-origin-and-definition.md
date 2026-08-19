@@ -22,14 +22,14 @@ RAGという略称・アーキテクチャの起源は、Patrick Lewisらによ�
 
 論文の核となる発想は、性質の異なる2つの記憶を1つのモデルの中で組み合わせることにある。
 
-- **parametric memory（パラメトリックな記憶）**: 事前学習済みのseq2seqトランスフォーマー。モデルの重みそのものに埋め込まれた知識にあたる
-- **non-parametric memory（ノンパラメトリックな記憶）**: 事前学習済みニューラルレトリーバーでアクセスする、Wikipediaの密ベクトルインデックス
+- **parametric memory（パラメトリックな記憶）**: 事前学習済みのseq2seqトランスフォーマー（文章を生成するモデル）。モデルの重みそのものに埋め込まれた知識にあたる
+- **non-parametric memory（ノンパラメトリックな記憶）**: 事前学習済みニューラルレトリーバー（検索を担うモデル）でアクセスする、Wikipediaの密ベクトルインデックス（意味を数値で表した検索用の索引。詳細は[RAGのパイプライン](rag-pipeline-stages.md)）
 
-原文では「the parametric memory is a pre-trained seq2seq transformer, and the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever」と記述されており、この2種類の記憶をエンドツーエンドで微調整（fine-tune）する仕組みが提案されている（[Lewis 2020 解説](../sources/article-rag-lewis-2020-arxiv.md)）。
+原文では「the parametric memory is a pre-trained seq2seq transformer, and the non-parametric memory is a dense vector index of Wikipedia, accessed with a pre-trained neural retriever」と記述されており、この2種類の記憶をエンドツーエンドで微調整（fine-tune、個別に学習し直すのではなく検索と生成をまとめて調整すること）する仕組みが提案されている（[Lewis 2020 解説](../sources/article-rag-lewis-2020-arxiv.md)）。
 
 論文は単一の方式だけを示したのではなく、検索結果を生成シーケンス全体で共有する方式と、生成の途中で異なる文書を使える方式とを比較している（[Lewis 2020 台帳（CE版）](../sources/paper-ce-rag-lewis-2020.md)）。前者がRAG-Sequence、後者がRAG-Tokenと呼ばれるものにあたる。
 
-具体的な部品としては、検索部分にDense Passage Retriever（DPR）が使われたと動画は紹介している。生成部分については、字幕上は「BR」と聞こえるものの原論文の構成からBART系のモデルを指すと考えられ、正確なモデル名は判別できない（聞き取り）とされている（[RAGの歴史・仕組み・限界](../sources/video-rag-history-mechanism-limits.md)）。
+具体的な部品としては、検索部分にDense Passage Retriever（DPR、密ベクトルによる検索器）が使われたと動画は紹介している。生成部分については、字幕上は「BR」と聞こえるものの原論文の構成からBART系のモデルを指すと考えられ、正確なモデル名は判別できない（聞き取り）とされている（[RAGの歴史・仕組み・限界](../sources/video-rag-history-mechanism-limits.md)）。
 
 ## なぜ2つに分けたのか
 
