@@ -11,7 +11,7 @@
   <text x="512" y="345" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">AI</text>
   <text x="512" y="383" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">AGENT</text>
   <rect x="70" y="140" width="250" height="150" rx="24" fill="#FFF2E8" stroke="#F0B498" stroke-width="3"/>
-  <text x="195.0" y="188" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="700" fill="#7C3527">FILES</text>
+  <text x="195.0" y="188" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="700" fill="#7C3527">ファイル</text>
   <text x="195.0" y="232" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="500" fill="#6F5C52">&#x8AAD;&#x3080;</text>
   <text x="195.0" y="262" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="500" fill="#6F5C52">&#x9650;&#x5B9A;&#x3057;&#x3066;&#x66F8;&#x304F;</text>
   <line x1="404" y1="300" x2="300" y2="215" stroke="#247F7A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
@@ -26,7 +26,7 @@
   <text x="195.0" y="602" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="500" fill="#6F5C52">&#x660E;&#x793A;&#x7684;&#x306A;&#x5F15;&#x6570;</text>
   <line x1="404" y1="420" x2="300" y2="555" stroke="#247F7A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
   <rect x="704" y="480" width="250" height="150" rx="24" fill="#FADFD5" stroke="#F0B498" stroke-width="3"/>
-  <text x="829.0" y="528" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="700" fill="#7C3527">BROWSER</text>
+  <text x="829.0" y="528" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="700" fill="#7C3527">ブラウザ</text>
   <text x="829.0" y="572" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="500" fill="#6F5C52">&#x5BFE;&#x8C61;&#x30B5;&#x30A4;&#x30C8;</text>
   <text x="829.0" y="602" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="500" fill="#6F5C52">&#x78BA;&#x8A8D;&#x30DD;&#x30A4;&#x30F3;&#x30C8;</text>
   <line x1="620" y1="420" x2="724" y2="555" stroke="#247F7A" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
