@@ -21,7 +21,7 @@ REFERENCE = DECK_ROOT / "01-prompt-engineering"
 TARGETS = {
     "03-harness-engineering": 66,
     "04-loop-engineering": 55,
-    "05-graph-engineering": 48,
+    "05-graph-engineering": 49,
 }
 INTRO_TYPES = ["title", "image_text", "image_text", "section"]
 FIVE_LAYER_LABELS = (

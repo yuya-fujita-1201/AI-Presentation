@@ -74,7 +74,7 @@ def main():
             for m in merged:
                 if m.get("item") == fd.get("item") and str(m.get("where")) == str(fd.get("where")):
                     a, b = tokens(m.get("claim")), tokens(fd.get("claim"))
-                    if a and b and len(a & b) / min(len(a), len(b)) >= 0.4:
+                    if a and b and (len(a & b) / min(len(a), len(b)) >= 0.3 or (m.get("severity") == fd.get("severity") == "大")):
                         hit = m
                         break
             if hit:

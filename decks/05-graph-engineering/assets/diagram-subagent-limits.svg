@@ -16,7 +16,7 @@
 <line x1="700" y1="392" x2="884" y2="480" stroke="#6F5C52" stroke-width="9" stroke-linecap="round" opacity="0.6"/>
 <line x1="884" y1="392" x2="700" y2="480" stroke="#6F5C52" stroke-width="9" stroke-linecap="round" opacity="0.6"/>
 <text x="660" y="406" text-anchor="end" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#6F5C52">入れ子は</text>
-<text x="660" y="442" text-anchor="end" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#6F5C52">原則できない</text>
+<text x="660" y="442" text-anchor="end" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="800" fill="#6F5C52">現状は原則できない</text>
 <text x="660" y="478" text-anchor="end" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="19" font-weight="600" fill="#6F5C52">（実質2階層まで）</text>
 <rect x="32" y="546" width="960" height="186" rx="26" fill="#7C3527"/>
 <text x="512" y="606" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">今日はじめて来た人に、経緯を伝えずに1件だけ頼むようなもの</text>
