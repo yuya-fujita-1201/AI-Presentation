@@ -437,11 +437,11 @@ def main() -> None:
 
     body = t(512, 64, "ループを使うか決める5つの問い", 34, PRIMARY, 800)
     questions = [
-        ("1", "品質が安定しない？", "NO → 他の層へ"),
-        ("2", "手順を書き下せない？", "NO → スクリプト"),
-        ("3", "合否を返すものがある？", "NO → 先に作る"),
-        ("4", "毎手順に人の判断が要る？", "YES → 不向き"),
-        ("5", "小さく区切れる？", "YES → 小さく開始"),
+        ("1", "品質が安定しない？", "NO いいえ → 他の層へ"),
+        ("2", "手順を書き下せない？", "NO いいえ → スクリプト"),
+        ("3", "合否を返すものがある？", "NO いいえ → 先に作る"),
+        ("4", "毎手順に人の判断が要る？", "YES はい → 不向き"),
+        ("5", "小さく区切れる？", "YES はい → 小さく開始"),
     ]
     for i, (num, q, branch) in enumerate(questions):
         y = 122 + i * 112
@@ -449,9 +449,9 @@ def main() -> None:
         body += t(110, y + 44, num, 24, WHITE, 800)
         body += rect(170, y, 520, 72, WHITE, GOLD, 3, 20)
         body += t(195, y + 47, q, 23, TEXT, 700, "start")
-        body += rect(730, y, 220, 72, ACCENT_SOFT if i == 4 else SAND,
+        body += rect(730, y, 260, 72, ACCENT_SOFT if i == 4 else SAND,
                      ACCENT if i == 4 else GOLD, 3, 20)
-        body += t(840, y + 47, branch, 20, ACCENT if i == 4 else MUTED, 800)
+        body += t(860, y + 47, branch, 20, ACCENT if i == 4 else MUTED, 800)
     save("diagram-loop-fit-filter.svg", body)
 
     grid(
@@ -530,7 +530,7 @@ def main() -> None:
         [("自動化", "Automation｜誰が起動する"), ("作業分離", "Worktree｜作業が衝突しない"),
          ("規約", "Skills｜規約を毎周守る"), ("接続", "Connectors｜外部へ触れる"),
          ("分業", "Sub-agents｜作る／見るを分ける"), ("記憶", "Memory｜学びを次へ残す")],
-        "メモリーがないと、長いループは毎回ふりだしに戻ります",
+        "部品の多くは一度作れば、繰り返し使い回せます",
         cols=3,
     )
 
@@ -540,7 +540,7 @@ def main() -> None:
         [("発見", "Connectors"), ("受け渡し", "Skills"), ("検証", "Sub-agents"),
          ("記憶", "Memory"), ("予定", "Automation")],
         highlight=2,
-        footer="道具を増やす前に、真ん中の「確かめる」があるかを見ます",
+        footer="止まった場所が分かれば、直す部品も決まります",
     )
 
     compare(
