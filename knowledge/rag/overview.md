@@ -68,7 +68,7 @@ TodoONada株式会社は、RAGの精度を決めるのはLLM本体ではなく�
 
 ### 誤解4: ベクトル検索を入れれば意味で拾える
 
-ベクトル検索は言い換えに強い。「疲れた」で検索して「体が重たい」を拾えるのがその強みである（[Supabase自作RAG](../sources/video-rag-supabase-diy-chatbot.md)、auto字幕からの聞き取り）。しかし裏返しに、**型番・固有名詞・略語の完全一致には弱い**。「XR-2000」と「XR-3000」を混同するようなことが起きる（[社内文書RAGの作り方2026](../sources/article-rag-todoonada-pipeline-guide.md)）。だからキーワード検索との併用が実務標準になる。
+ベクトル検索は言い換えに強い。「疲れた」で検索して「体が重たい」を拾えるのがその強みである（[Supabase自作RAG](../sources/video-rag-supabase-diy-chatbot.md)、auto字幕からの聞き取り）。しかし裏返しに、**型番・固有名詞・略語の完全一致には弱い**。だからキーワード検索との併用が実務標準になる（取り違えの実例と対処は[検索とリランキング](retrieval-and-reranking.md)で扱う）。
 
 ### 誤解5: 「自社データで学習させる」＝RAG
 

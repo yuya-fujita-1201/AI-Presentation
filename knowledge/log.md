@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-19（rag採点 repair上限の手動修正・重複の一本化）
+
+- **Add**: 9月シリーズ第1弾として `knowledge/rag/` を新設（コンセプト10本・ソース台帳15本＝動画5・記事10）。既存の context-engineering と重複しないよう、検索の作り方・失敗の直し方・評価に軸を置いた
+- **Fix**: 採点者が指摘した「同じ主張が複数ファイルに全文再掲される」問題に対し、主張ごとに本籍ファイルを1つ決めて他は要約＋リンクに縮約。①「精度を決めるのはモデルではなくパイプライン設計」を `chunking-and-embedding.md` に一本化 ②SSOT/GIGO を `governance-and-adoption.md` に一本化 ③「会話用LLMと埋め込みモデルは別物」を `chunking-and-embedding.md` に一本化 ④XR-2000/XR-3000 の型番取り違え例を `retrieval-and-reranking.md` に一本化
+- **Fix**: `rag-pipeline-stages.md` に混入していた編集方針の説明（auto字幕をどう帰属表記するかというメタ記述）を削除。読者向け本文に編集ルールが露出していた
+- **Fix**: `rag-pipeline-stages.md` のパースツール比較（Docling / YomiToku / VLM直読みとライセンス条件）は調達側の判断のため `build-or-buy.md` へ寄せ、1文＋リンクに縮約
+- **Fix**: `video-rag-history-mechanism-limits.md` の活用先が、rag-pipeline-stages.md に対してチャンク分割・再ランクの記述を挙げていたが、実際にそれらを書いているのは chunking-and-embedding.md と retrieval-and-reranking.md だった。双方向の記述ずれを実態に合わせて訂正
+- **Fix**: リンク欠落2件を追加（overview.md 誤解4 → retrieval-and-reranking.md、failure-modes.md → governance-and-adoption.md）
+- **Note**: 採点は 8/7/7/7/7 → 8/8/8/7/7 → 8/8/8/9/7 → 8/8/7/8/7 で repair 3回を使い切り stuck(repair_exhausted)。未達は③構成と⑤文章品質で、原因は共通して「重複」と診断されたため上記を手動修正し `reset-phase.sh grade_k` で再開
+
 ## 2026-08-19（rag 採点指摘の修正 improve_k run:0819124573）
 
 - **Fix (f1)**: build-or-buy.md:109 が「RAG全体が砂上の楼閣になります」という警告をrag-pipeline-stages.md:53と逐語で重複していた。build-or-buy.md側をrag-pipeline-stages.mdへのリンク付き要約に置き換え。なおchunking-and-embedding.md:79とevaluation.md:101は既に1文＋リンクの委譲済みで修正不要だった
