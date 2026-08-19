@@ -73,7 +73,7 @@ TodoONada株式会社は、これを選択肢の1つではなく**実務標準**
 
 リランキング後に何件をLLMへ渡すかも設計項目である。Anthropicは推奨設定として、取得チャンク数は5や10よりも**20の方が効果的**だとしている（[Contextual Retrieval in AI Systems](../sources/article-rag-anthropic-contextual-retrieval.md)）。
 
-ただし無制限に増やせるものではない。検索件数を増やすとコストも処理時間も増えるため、そこは微調整が必要だとされている（[Supabase自作RAG](../sources/video-rag-supabase-diy-chatbot.md)）。さらに、渡す量を増やすと今度は**LLMが読み落とす**という別種の失敗が出てくる。この境目については[RAGはどこで壊れるか](failure-modes.md)で扱う。
+ただし無制限に増やせるものではない。検索件数を増やすとコストも処理時間も増えるため、そこは微調整が必要だとされている（[Supabase自作RAG](../sources/video-rag-supabase-diy-chatbot.md)）。さらに、渡す量を増やすと今度は**LLMが読み落とす**という別種の失敗が出てくる。この境目は[どこで壊れるか](failure-modes.md)で見たFP3・FP7の話である。
 
 ## さらに上の手
 

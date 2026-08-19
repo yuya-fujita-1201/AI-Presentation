@@ -38,6 +38,11 @@ RAGは、事前学習済みのparametric memory（seq2seqトランスフォー�
 
 > 引用: 「RAG models generate more specific, diverse and factual language than a state-of-the-art parametric-only seq2seq baseline.」
 
+# 適用範囲と留保
+
+- 2020年発表の原典論文であり、実験は3つのオープンドメイン質問応答タスクと言語生成タスクに限定される。2020年時点のモデル構成（seq2seqトランスフォーマー＋Wikipedia密ベクトルインデックス）に基づく結果であり、Contextual Retrievalなど後続の改良手法の性能を保証するものではない
+- 著者ら自身による実験結果であり、独立した第三者による追試データではない
+
 # 活用先
 
 - [../rag/rag-origin-and-definition.md](../rag/rag-origin-and-definition.md) — 書誌情報（arXiv 2005.11401 / NeurIPS 2020）、parametric memoryとnon-parametric memoryの組み合わせという提案の核、3タスクでのSOTA達成と「more specific, diverse and factual」という主張の主根拠

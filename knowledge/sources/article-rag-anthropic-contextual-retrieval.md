@@ -38,6 +38,12 @@ Anthropicは、コードベース・小説・ArXivペーパー・科学論文と
 
 > 引用: 「With prompt caching, you don't need to pass in the reference document for every chunk. You simply load the document into the cache once. / Reranked Contextual Embedding and Contextual BM25 reduces the top-20-chunk retrieval failure rate by 67%.」
 
+# 適用範囲と留保
+
+- 検索失敗率5.7%→1.9%等の数値は、自社製品（Claude・プロンプトキャッシング）を用いたAnthropic自身の実験に基づくベンダー自己申告値であり、独立した第三者による追試ではない
+- 実験はコードベース・小説・ArXivペーパー・科学論文という特定ドメインで行われたものであり、日本語の社内文書ドメインでの再現性は示されていない
+- Claude 3 Haikuの利用や$1.02／100万ドキュメントトークンというコスト、推奨埋め込みモデル（Voyage／Gemini）は取得時点（2026-08-18）の記述であり、モデル世代交代や価格改定で変わりうる
+
 # 活用先
 
 - [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — チャンクの文脈欠落問題とSEC提出書類の例、Contextual Embeddings／Contextual BM25の定義、50〜100トークンの説明文前置、Claude 3 Haikuによる自動生成とプロンプトキャッシング（$1.02／100万ドキュメントトークン）、検索失敗率5.7%→3.7%（35%削減）、埋め込みモデルはVoyage／Geminiが最高性能という推奨

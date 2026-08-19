@@ -73,3 +73,4 @@ generated:
 - [../rag/chunking-and-embedding.md](../rag/chunking-and-embedding.md) — チャンクサイズのトレードオフ（小さすぎると文脈喪失／大きすぎると情報が薄まる）、セマンティックチャンキングとオーバーラップの有効性（auto字幕・帰属付き）
 - [../rag/retrieval-and-reranking.md](../rag/retrieval-and-reranking.md) — 再現率と適合率のトレードオフ（auto字幕・帰属付き・聞き取り）、クロスエンコーダーによる2段階戦略、ハイブリッド検索によるBM25併用、クエリ変換・Parent Document Retriever・Self-RAGというアドバンストRAGの技術群
 - [../rag/overview.md](../rag/overview.md) — 「知識のカットオフ」と「ハルシネーション」という2つの動機、外部の信頼できる情報源を都度参照するのがRAGの基本的な考え方であること、「RAGはLLMを賢くする魔法ではなく、あくまで良質な外部知識へのアクセス手段を提供する技術」という位置づけ（auto字幕・帰属付き・聞き取り）
+- [../rag/build-or-buy.md](../rag/build-or-buy.md) — 高度なRAGシステムの構築・運用にかかるコスト（ベクトルデータベースの運用コスト、エンベディングや再ランキングモデルの計算コスト、パイプライン全体を最適化する専門知識、性能評価の難しさ）（auto字幕・帰属付き）

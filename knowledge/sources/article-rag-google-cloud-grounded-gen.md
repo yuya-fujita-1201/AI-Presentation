@@ -42,6 +42,12 @@ APIのレスポンスには、0〜1の範囲のgrounding score、回答を支え
 
 > 引用: 「If the prediction score is greater than or equal to the threshold, the answer is grounded with Google Search.」
 
+# 適用範囲と留保
+
+- Google Cloud公式ドキュメントであり、自社製品（Agent Search／Answer Generation API）の機能仕様説明が中心で、精度や性能に関する第三者検証データではない
+- しきい値のデフォルト値0.7、接地ソースの上限数（最大10個）、対応言語コード等の仕様値は取得時点（2026-08-18）のものであり、API改定で変更されうる
+- 採用時は必ず現行の公式ドキュメントでパラメータ仕様を確認すること
+
 # 活用先
 
 - [../rag/rag-origin-and-definition.md](../rag/rag-origin-and-definition.md) — 現在のベンダー定義における「事実を取得し、それを用いて根拠のある回答を生成する」2段階プロセスという定義。原典の特定構成と現在の総称的用法との距離を示す根拠

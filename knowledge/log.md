@@ -1,5 +1,14 @@
 # 変更履歴
 
+## 2026-08-19（rag 採点指摘の修正 improve_k run:08191015f7）
+
+- **Fix (f1)**: sources/video-rag-history-mechanism-limits.md の活用先に build-or-buy.md:84（高度なRAGの構築・運用コスト言及）が抜けていた。活用先へ1行追加
+- **Fix (f2)**: sources/video-rag-sme-adoption-guide.md:78 の活用先が rag-and-neighbors.md を挙げるが、同ファイル:49は「誤解1」の内容をoverview.mdへ委譲するのみで直接引用していなかった。活用先からrag-and-neighbors.mdの行を削除しoverview.md側の記載に集約
+- **Fix (f3)**: chunking-and-embedding.md:55・retrieval-and-reranking.md:76の「後で述べる」「この境目については〜で扱う」という前方参照が、推奨読了順（5:failure-modesが3:chunking-and-embedding・4:retrieval-and-rerankingより先）と矛盾していた。両箇所をfailure-modes.mdへのリンク付き既読前提の表現に修正
+- **Fix (f4)**: sources/article-rag-*.md のうちanthropic-contextual-retrieval／google-cloud-grounded-gen／openai-file-search／lewis-2020-arxiv／ragas-eval／seven-failure-pointsの6本に「適用範囲と留保」節が欠落していた（既存3本のtodoonada／knowledgesense／qiitaのみ保有）。各記事の内容に応じた留保（ベンダー自己申告値である旨、評価データセットの限定範囲、取得時点の記述である旨）を追加
+- **Fix (f5)**: failure-modes.md:66 と governance-and-adoption.md:32 が「組織内情報の分立と件数偏り」の説明をほぼ同文で重複展開していた。failure-modes.md側を本体として残し、governance-and-adoption.md側を1文要約+リンクに圧縮
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認（生出力は pipeline/logs/run-08191015f7.md に記録）
+
 ## 2026-08-19（rag 採点指摘の修正 improve_k run:08190745da）
 
 - **Update**: 採点findings（9件）を実ファイル照合のうえ全件fixedとして反映。rag-pipeline-stages.md のパース節にパースツール3系統（Docling／YomiToku／VLM直読み）比較とマルチモーダルRAGへの言及を追加、「分割」「ベクトル化」「再ランク」の説明をchunking-and-embedding.md／retrieval-and-reranking.mdへの1〜2文要約＋リンクに圧縮

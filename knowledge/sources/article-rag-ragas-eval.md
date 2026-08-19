@@ -38,6 +38,11 @@ Ragasは、Faithfulness（忠実性）・Answer Relevance（回答関連性）�
 
 > 引用: 「faster evaluation cycles」
 
+# 適用範囲と留保
+
+- 人間評価との一致率（0.95／0.78／0.70）は、Wikipediaの50ページから構築した英語データセットWikiEvalでの検証結果であり、日本語文書や社内文書ドメインでの再現性は示されていない
+- 著者ら自身による評価であり、独立した第三者による追試ではない
+
 # 活用先
 
 - [../rag/evaluation.md](../rag/evaluation.md) — reference-free評価という設計思想と「faster evaluation cycles」の引用、Faithfulness／Answer Relevance／Context Relevanceの定義と算出手順、各指標の狙い（幻覚回避・不完全/冗長な回答への罰・長コンテキストによる効果低下の防止）、WikiEvalでの人間評価一致率0.95／0.78／0.70とGPT Score・GPT Rankingとの比較
