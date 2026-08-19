@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-19（rag 採点指摘の修正 improve_k run:0819124573）
+
+- **Fix (f1)**: build-or-buy.md:109 が「RAG全体が砂上の楼閣になります」という警告をrag-pipeline-stages.md:53と逐語で重複していた。build-or-buy.md側をrag-pipeline-stages.mdへのリンク付き要約に置き換え。なおchunking-and-embedding.md:79とevaluation.md:101は既に1文＋リンクの委譲済みで修正不要だった
+- **Fix (f2)**: rag-pipeline-stages.md:71 のベクトル検索「疲れた」/「体が重たい」の例が retrieval-and-reranking.md:19 とほぼ同一の全文説明を重複していた。retrieval-and-reranking.mdを本拠とし、rag-pipeline-stages.md側をリンク付き要約に圧縮。overview.md:71は既に簡潔な1文のみで修正不要だった
+- **Fix (f3)**: overview.md:67・rag-pipeline-stages.md:26・chunking-and-embedding.md:15で「RAG精度を決めるのはLLM本体ではなく、パイプライン設計です」という同一引用が逐語反復していた。chunking-and-embedding.mdを引用の本拠とし、他2ファイルは引用符を外して要旨＋リンクに変更
+- **Fix (f4)**: chunking-and-embedding.md:71とbuild-or-buy.md:67で国産埋め込みモデル（Ruri v3・PLaMo-embedding-1b）の紹介と「完全ローカルのままOpenAI API級の検索品質」「2026年の大きな変化」がほぼ逐語で重複していた。chunking-and-embedding.md側に紹介を残し、build-or-buy.md側を1文＋リンクに圧縮
+- **Fix (f5)**: 「たいてい／ほぼ確実に誤解する→反転」という同型の導入修辞がoverview.md:13・rag-pipeline-stages.md:13・rag-and-neighbors.md:13で反復していた。3ファイルとも場面提示から入る書き出しに変更（chunking-and-embedding.md:13も類似構造だが未変更のまま残置。findingsのwhereに含まれていたfailure-modes.md:13-16は診断名の比喩から入る異なる書き出しで該当せず、修正対象から除外）
+- **Fix (f6)**: build-or-buy.md:111 が governance-and-adoption.md を「運用とガバナンス」と参照していたが実タイトルは「入れる前と入れた後」だった。実タイトルに統一
+- **Check**: `tools/validate_okf.py knowledge` を実行し errors: 0 / warnings: 0 を確認（生出力は pipeline/logs/run-0819124573.md に記録）
+
 ## 2026-08-19（rag 採点指摘の修正 improve_k run:08191015f7）
 
 - **Fix (f1)**: sources/video-rag-history-mechanism-limits.md の活用先に build-or-buy.md:84（高度なRAGの構築・運用コスト言及）が抜けていた。活用先へ1行追加
