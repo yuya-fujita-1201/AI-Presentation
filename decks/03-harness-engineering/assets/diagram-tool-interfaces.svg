@@ -8,8 +8,7 @@
   <rect width="1024" height="768" fill="#FFF9F3"/>
   <text x="512" y="62" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="33" font-weight="800" fill="#7C3527">Step 3&#xFF5C;&#x9053;&#x5177;&#x306F;&#x300C;&#x591A;&#x3055;&#x300D;&#x3088;&#x308A;&#x3001;&#x72ED;&#x304F;&#x660E;&#x78BA;&#x306A;&#x64CD;&#x4F5C;&#x53E3;</text>
   <circle cx="512" cy="360" r="104" fill="#7C3527" stroke="#7C3527" stroke-width="0"/>
-  <text x="512" y="345" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">AI</text>
-  <text x="512" y="383" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">AGENT</text>
+  <text x="512" y="369" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#FFFFFF">&#x30A8;&#x30FC;&#x30B8;&#x30A7;&#x30F3;&#x30C8;</text>
   <rect x="70" y="140" width="250" height="150" rx="24" fill="#FFF2E8" stroke="#F0B498" stroke-width="3"/>
   <text x="195.0" y="188" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="28" font-weight="700" fill="#7C3527">ファイル</text>
   <text x="195.0" y="232" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="21" font-weight="500" fill="#6F5C52">&#x8AAD;&#x3080;</text>
