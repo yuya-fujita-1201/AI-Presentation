@@ -255,16 +255,6 @@ def main() -> None:
         footer="最後は「1ページ・1つのチェック」まで落とします",
     )
 
-    flow(
-        "diagram-what-is-loop.svg",
-        "「繰り返し」から「ループ」へ",
-        [("日常の繰り返し", "洗って｜干して｜また洗う"),
-         ("仕事の繰り返し", "作って｜見てもらい｜直す"),
-         ("この資料のループ", "AIが作って｜自分で確かめて｜直し続ける")],
-        highlight=2,
-        footer="どれも同じ繰り返しで、違うのは誰が回しているかだけです",
-    )
-
     compare(
         "diagram-chat-vs-agent.svg",
         "チャットAIとエージェントの違い",
@@ -294,7 +284,7 @@ def main() -> None:
         "「打つ人」から「打つ仕組み」へ",
         ("これまで", ["人が次を指示", "人が出来を読む", "人が終わりを判断"]),
         ("ループ", ["条件が次を起動", "チェックが合否を返す", "停止条件で終わる"]),
-        "AIに任せるのは、繰り返しを回す役目のほうです",
+        "左の3つが、右では仕組みに置き換わります",
     )
 
     compare(
@@ -302,7 +292,7 @@ def main() -> None:
         "チャットAIとループ：入れ替わる3か所",
         ("チャット", ["次を始める：人", "出来を判定：人", "終わりを決める：人"]),
         ("ループ", ["次を始める：条件", "出来を判定：信号", "終わりを決める：停止条件"]),
-        "輪の形は同じで、担い手だけが入れ替わります",
+        "いちばん効くのは「終わりを決める」です",
     )
 
     body = t(512, 68, "輪の中にいる状態と、輪の外から見る状態", 34, PRIMARY, 800)
@@ -329,15 +319,16 @@ def main() -> None:
     )
 
     body = t(512, 68, "層の入れ子（前の層を内側に含む）", 34, PRIMARY, 800)
-    for r, label, fill, stroke in [
-        (280, "LOOP｜反復", ACCENT_SOFT, ACCENT),
-        (215, "HARNESS｜環境", SAND, GOLD),
-        (150, "CONTEXT｜情報", PEACH, TERRACOTTA),
-        (88, "PROMPT｜指示", PRIMARY, PRIMARY),
+    for r, label_en, label_ja, fill, stroke in [
+        (280, "LOOP", "反復", ACCENT_SOFT, ACCENT),
+        (215, "HARNESS", "環境", SAND, GOLD),
+        (150, "CONTEXT", "情報", PEACH, TERRACOTTA),
+        (88, "PROMPT", "指示", PRIMARY, PRIMARY),
     ]:
+        color = WHITE if fill == PRIMARY else stroke
         body += circle(512, 385, r, fill, stroke, 5)
-        body += t(512, 385 - r + 44, label.split("｜")[0], 23,
-                  WHITE if fill == PRIMARY else stroke, 800)
+        body += t(512, 385 - r + 38, label_en, 21, color, 800)
+        body += t(512, 385 - r + 60, label_ja, 15, color, 700)
     body += t(512, 402, "1周ごとに動く", 25, WHITE, 800)
     body += t(512, 710, "下の層の質の差は、周回するほど大きくなります", 24, TERRACOTTA, 800)
     save("diagram-nested-layers.svg", body)
@@ -420,7 +411,7 @@ def main() -> None:
         [("申告", "完了しました｜という一言"), ("操作", "実際に｜実行したこと"), ("出力", "戻り値・記録"),
          ("画面", "見える成果物"), ("状態", "最後に｜どうなったか")],
         highlight=4,
-        footer="自己申告で終わらせず、後から追える結果を残します",
+        footer="左から右へ、証拠が積み上がっていく流れです",
     )
 
     body = t(512, 66, "作った側が採点すると何が起きるか", 34, PRIMARY, 800)
@@ -439,8 +430,8 @@ def main() -> None:
     compare(
         "diagram-maker-checker-separation.svg",
         "作る役と採点する役を分ける2つの方法",
-        ("Maker", ["生成・編集を行う", "書き込み権限あり", "量をこなす"]),
-        ("Checker", ["判定と根拠だけ返す", "書き込みの権限を持たない", "まず対象の性質を判定"]),
+        ("Maker（作る役）", ["生成・編集を行う", "書き込み権限あり", "量をこなす"]),
+        ("Checker（採点する役）", ["判定と根拠だけ返す", "書き込みの権限を持たない", "まず対象の性質を判定"]),
         "直せない採点役は、甘い判定へ流れにくくなります",
     )
 
@@ -448,9 +439,9 @@ def main() -> None:
     questions = [
         ("1", "品質が安定しない？", "NO → 他の層へ"),
         ("2", "手順を書き下せない？", "NO → スクリプト"),
-        ("3", "観察源がある？", "NO → 先に作る"),
+        ("3", "合否を返すものがある？", "NO → 先に作る"),
         ("4", "毎手順に人の判断が要る？", "YES → 不向き"),
-        ("5", "1ページまで切れる？", "YES → 小さく開始"),
+        ("5", "小さく区切れる？", "YES → 小さく開始"),
     ]
     for i, (num, q, branch) in enumerate(questions):
         y = 122 + i * 112
@@ -475,16 +466,17 @@ def main() -> None:
 
     body = t(512, 66, "最小構成の3ファイル", 34, PRIMARY, 800)
     files = [
-        ("CLAUDE.md", "停止条件・禁止事項", TERRACOTTA, PEACH),
-        ("settings.json", "チェック・編集時の自動検査", ACCENT, ACCENT_SOFT),
-        ("fixer.md", "行き詰まりを解く・別のエージェント", GOLD, SAND),
+        ("規約ファイル", "CLAUDE.md", "停止条件・禁止事項", TERRACOTTA, PEACH),
+        ("設定ファイル", "settings.json", "チェック・編集時の自動検査", ACCENT, ACCENT_SOFT),
+        ("別エージェント", "fixer.md", "行き詰まりを解く相談役", GOLD, SAND),
     ]
-    for i, (name, sub, stroke, fill) in enumerate(files):
+    for i, (name, fname, sub, stroke, fill) in enumerate(files):
         x = 95 + i * 305
         body += rect(x, 190, 250, 330, fill, stroke, 4, 26)
-        body += f'<path d="M {x+58} 245 h 95 l 40 40 v 142 h -135 z" fill="{WHITE}" stroke="{stroke}" stroke-width="4"/>'
-        body += t(x + 125, 355, name, 24, stroke, 800)
-        body += lines(x + 125, 420, sub.split("・"), 19, MUTED, 650, "middle", 28)
+        body += t(x + 125, 230, name, 24, stroke, 800)
+        body += f'<path d="M {x+58} 256 h 95 l 40 40 v 131 h -135 z" fill="{WHITE}" stroke="{stroke}" stroke-width="4"/>'
+        body += t(x + 125, 348, fname, 16, MUTED, 700)
+        body += lines(x + 125, 415, sub.split("・"), 18, MUTED, 650, "middle", 27)
     body += t(512, 620, "足りなくなってから、接続・隔離・メモリーを足していきます", 25, ACCENT, 800)
     save("diagram-three-file-start.svg", body)
 
@@ -535,9 +527,9 @@ def main() -> None:
     grid(
         "diagram-loop-six-parts.svg",
         "ループを支える5+1の部品",
-        [("Automation", "誰が起動する"), ("Worktree", "作業が衝突しない"),
-         ("Skills", "規約を毎周守る"), ("Connectors", "外部へ触れる"),
-         ("Sub-agents", "作る／見るを分ける"), ("Memory", "学びを次へ残す")],
+        [("自動化", "Automation｜誰が起動する"), ("作業分離", "Worktree｜作業が衝突しない"),
+         ("規約", "Skills｜規約を毎周守る"), ("接続", "Connectors｜外部へ触れる"),
+         ("分業", "Sub-agents｜作る／見るを分ける"), ("記憶", "Memory｜学びを次へ残す")],
         "メモリーがないと、長いループは毎回ふりだしに戻ります",
         cols=3,
     )
@@ -545,7 +537,7 @@ def main() -> None:
     flow(
         "diagram-actions-to-parts.svg",
         "5つのアクションと、対応する部品",
-        [("発見", "Automation"), ("受け渡し", "Skills"), ("検証", "Sub-agents"),
+        [("発見", "Connectors"), ("受け渡し", "Skills"), ("検証", "Sub-agents"),
          ("記憶", "Memory"), ("予定", "Automation")],
         highlight=2,
         footer="道具を増やす前に、真ん中の「確かめる」があるかを見ます",
