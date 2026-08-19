@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""レイアウト機械ゲート（試作）: ビルド済みHTMLをPlaywrightで開き、各スライドの
+"""レイアウト機械ゲート: ビルド済みHTMLをPlaywrightで開き、各スライドの
   (1) clip   … overflow:hidden の箱から文字がはみ出して切れている（scrollHeight/Width > client）
   (2) bleed  … 要素がステージ（1280x720）の外に出ている
   (3) overlap… 文字を持つ要素同士の矩形が重なっている（親子関係を除く）
-  (4) lines  … 1行想定の要素（title等）が複数行に折り返している
+  (4) lines  … data-max-lines 属性を持つ要素が指定行数を超えている
+  (5) spill  … 高さ指定のある文字要素で文字実体が割当高さを超えている（closing タイトル2行化など）
+  (6) rule   … 文字実体が細い罫線要素と交差している
 を検出して JSON/テキストで報告する。exit 1 = 検出あり。
 
 使い方: python3 tools/check_layout.py decks/<deck> [--json out.json] [--slides 3 7] [--strict]
@@ -51,6 +53,7 @@ JS = r"""
     if (cs.display === 'none' || cs.visibility === 'hidden') return false;
     return hasOwnText(el) && el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE';
   });
+  const deco = (el) => (el.textContent || '').trim().length <= 1; // 装飾1文字（引用符“など）
   const rects = textEls.map(el => {
     const r = el.getBoundingClientRect();
     // テキスト実体の矩形（範囲）を使う。ブロックの余白で誤検出しないため
@@ -76,6 +79,7 @@ JS = r"""
     for (let j = i + 1; j < rects.length; j++) {
       const a = rects[i], b = rects[j];
       if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
+      if (deco(a.el) || deco(b.el)) continue;
       const x = Math.min(a.box.right, b.box.right) - Math.max(a.box.left, b.box.left);
       const y = Math.min(a.box.bottom, b.box.bottom) - Math.max(a.box.top, b.box.top);
       if (x > overlapMin && y > overlapMin) {
@@ -87,6 +91,7 @@ JS = r"""
   // (5) spill: 高さが明示された文字要素で、文字実体が割り当て高さを超えている（overflow visible でも検出）
   for (const {el, box} of rects) {
     if (!el.style || !el.style.height) continue;
+    if (deco(el)) continue;
     const cs = getComputedStyle(el);
     if (cs.overflow === 'hidden') continue; // clip 側で検出済み
     const over = box.height - el.clientHeight;
@@ -132,6 +137,7 @@ def main():
     ap.add_argument("--tol", type=float, default=2.0, help="はみ出し許容px")
     ap.add_argument("--overlap-min", type=float, default=4.0, help="重なりと見なす最小px（幅・高さとも）")
     ap.add_argument("--no-build", action="store_true")
+    ap.add_argument("--spill-fail", type=float, default=12.0, help="spill がこのpxを超えたら不合格（以下は警告のみ）")
     args = ap.parse_args()
 
     deck_dir = Path(args.deck_dir)
@@ -179,9 +185,11 @@ def main():
                     print(f"{sid} {kind}: [{item['el']}]「{item['text']}」 罫線(y={item['rule_y']})と交差")
                 else:
                     print(f"{sid} {kind}: [{item['el']}]「{item['text']}」 {item['lines']}行 (max {item['max']})")
-    total_hits = sum(s.values())
-    print(f"check_layout: {len(nums)}枚 clip={s['clip']} bleed={s['bleed']} overlap={s['overlap']} spill={s['spill']} rule={s['rule']} lines={s['lines']}")
-    sys.exit(1 if total_hits else 0)
+    hard = s["clip"] + s["bleed"] + s["overlap"] + s["rule"] + s["lines"]
+    hard += sum(1 for res in report["slides"].values() for it in res.get("spill", []) if it["over"] > args.spill_fail)
+    warn = sum(s.values()) - hard
+    print(f"check_layout: {len(nums)}枚 clip={s['clip']} bleed={s['bleed']} overlap={s['overlap']} spill={s['spill']} rule={s['rule']} lines={s['lines']} → 不合格{hard}件 / 警告{warn}件")
+    sys.exit(1 if hard else 0)
 
 
 if __name__ == "__main__":

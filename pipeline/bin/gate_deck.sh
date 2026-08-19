@@ -1,6 +1,7 @@
 #!/bin/bash
 # デッキ機械ゲート。失敗種別ごとの個別exit code:
 #   10=build失敗 11=PPTX破損(unzip) 12=再パース失敗 13=枚数不一致 14=notes_slide混入 15=preview不一致
+#   16=レイアウト破綻(check_layout: はみ出し/重なり/罫線交差) 17=SVG明朝体フォールバック(check_svg_fonts) 18=文言リント不合格(lint_deck_text: closing字数/Markdown残留/ページ参照)
 set -uo pipefail
 export PATH="/opt/homebrew/bin:/usr/bin:/bin"
 DECK_DIR="${1:?usage: gate_deck.sh <deck_dir>}"
@@ -50,5 +51,9 @@ N_PNG=$(ls "$DECK_DIR"/build/preview/slide-*.png 2>/dev/null | wc -l | tr -d ' '
 if [ "$N_PNG" != "$N_JSON" ]; then
   echo "preview count mismatch png=$N_PNG json=$N_JSON"; exit 15
 fi
+# レイアウト・フォント・文言の機械ゲート（loop-learnings.md §3。2026-08-20 追加）
+$PY tools/check_layout.py "$DECK_DIR" --no-build || exit 16
+$PY tools/check_svg_fonts.py "$DECK_DIR" || exit 17
+$PY tools/lint_deck_text.py "$DECK_DIR" | grep -E "^NG|^lint_deck_text" ; [ "${PIPESTATUS[0]}" -eq 0 ] || exit 18
 echo "gate_deck OK: $N_JSON slides"
 exit 0

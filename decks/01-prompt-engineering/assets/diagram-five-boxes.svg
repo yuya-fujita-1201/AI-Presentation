@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820">
-  <defs><style>.t{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;fill:#2B211D}.h{font-weight:700}.s{font-size:24px;fill:#6F5C52}.w{fill:#fff}.arr{stroke:#B44A32;stroke-width:5;fill:none;stroke-linecap:round}</style></defs>
+  <defs><style>text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif}.t{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;fill:#2B211D}.h{font-weight:700}.s{font-size:24px;fill:#6F5C52}.w{fill:#fff}.arr{stroke:#B44A32;stroke-width:5;fill:none;stroke-linecap:round}</style></defs>
   <rect width="1200" height="820" rx="46" fill="#FFF9F3"/>
   <text x="600" y="76" class="t h" font-size="38" text-anchor="middle">AIへの仕事依頼書</text>
   <g transform="translate(55 122)">

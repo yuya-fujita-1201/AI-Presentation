@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
   <defs>
     <style>
-      .t{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;fill:#2B211D}
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif}.t{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;fill:#2B211D}
       .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFF9F3}
     </style>
     <marker id="arrow" markerWidth="14" markerHeight="14" refX="7" refY="7" orient="auto">
