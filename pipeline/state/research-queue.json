@@ -484,7 +484,8 @@
   "web": {
     "subtopics_done": [
       "official-skills",
-      "official-mcp"
+      "official-mcp",
+      "jp-practice"
     ],
     "candidates": [
       {
@@ -576,6 +577,40 @@
         "subtopic": "official-mcp",
         "status": "verified",
         "cache_dir": "pipeline/cache/web/official-mcp"
+      },
+      {
+        "url": "https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2",
+        "title": "Claude Code Skillの作り方｜21個運用して分かった設計と育て方",
+        "publisher": "Zenn（yamato_snow）",
+        "retrieved": "2026-08-20",
+        "extract": "見出し構造は「Skillの構造→Skillの配置と読み込みの仕組み→Skillの入手方法→自作Skillの設計と作成→よくある失敗パターン→知っておくと便利な仕組み→運用環境の具体例」。著者は21個のSkillを運用しており、うち16個は自作。内訳は執筆系6個、開発系5個、運用系5個、公式プラグイン5個だが、毎週使用するのは5〜6個のみと明かす。Skillファイルの基本構造はYAMLフロントマター付きのMarkdownファイル（SKILL.md）で、最小構成はname（識別子、小文字・ハイフン・数字のみ、最大64文字）とdescription。descriptionについて著者は「250文字で切り詰められるため、重要なキーワードは前半に入れるのがコツ」と指摘する。フロントマターの主要フィールドとしてdisable-model-invocation（デプロイ等副作用のあるSkillに必須）、context: fork（サブエージェント実行で履歴汚染を防止）、paths（Globパターンで自動発動条件を限定）を紹介。配置優先順位は「Enterprise > Personal > Project」で上位が優先され、Personal（~/.claude/skills/）は全プロジェクト、Project（.claude/skills/）はそのプロジェクトのみに適用される。自作にあたっては手書きではなく/skill-creatorでの生成を推奨し、「正しいフォーマットのSKILL.mdを自動生成してくれます」と述べる。/skill-creatorにはCreate（対話形式で新規作成）・Eval（A/Bテストで品質検証）・Improve（description自動最適化）・Benchmark（Pass rate・実行時間・トークン数を計測）の4モードがあり、著者はEvalモード適用後の評価をB+レベルとし、Improveモード適用後は「6つのドキュメント作成スキルのうち5つでトリガー精度が改善」したと報告する。運用面では月1回程度のSkill見直し、モデル更新時のBenchmark実行、不要なSkillの定期削除という「引き算のメンテナンス」を実践しているという。よくある失敗パターンとして、①詰め込みすぎ（複数役割を1つに→1 Skill = 1目的に分割で対策）、②description曖昧（「便利なスキル」のみ→『何をするか』＋『いつ使うか』を具体化）、③テストなし（作って満足→Evalモードで必ず検証）、④放置（モデル更新後に未対応→定期的にBenchmark実行）の4つを挙げる。便利な仕組みとして、`!<command>`構文でシェルコマンド結果をSkillに動的注入できるが「Claude Codeがプロンプトを読む前にシェル上で実行」される点に注意を促す。総括として著者は「Skillは『自分専用のClaude Code』を育てることに近い」と述べ、「最初はnameとdescriptionだけのシンプルなSKILL.mdで十分。使いながら育てていくのが一番のコツ」と推奨する。",
+        "quote": "「Skillは『自分専用のClaude Code』を育てることに近い」",
+        "claims": [
+          "著者は21個のSkill運用経験から、1 Skill = 1目的の原則とdescriptionの具体化がSkill設計の要だと主張している。",
+          "著者は、/skill-creatorのEval・Improve・Benchmarkモードを使った検証と定期的な見直しがSkill運用の質を保つと主張している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:zenn.dev/yamato_snow",
+        "subtopic": "jp-practice",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/jp-practice"
+      },
+      {
+        "url": "https://www.m-totsu.com/1202/",
+        "title": "Claude Code から Codex CLI を呼び出すなら MCP と SKILL/BASH どっちがいい？実際に使って感じたこと",
+        "publisher": "とつブログ（m-totsu.com）",
+        "retrieved": "2026-08-20",
+        "extract": "見出し構造は「はじめに（2つの選択肢：MCP vs SKILL/BASH）→MCP試行（期待と現実のギャップ）→MCPが得意な用途はCRUD操作→SKILL/BASHへの切り替え→比較表→発展Tips：codex exec --jsonの活用→まとめ・使い分け指針」。著者はClaude CodeからCodex CLIを呼び出す方法としてMCPとSKILL/BASHの両方を実際に試し比較している。MCP経由の評価としては、データベース検索・カレンダー操作・Slack連携など『即レスポンスが返る』CRUD処理に向くとしつつ、コード生成のような重い処理では『処理が非常に重く、数分～数十分待たされることがあった』と指摘し、進捗が見えないブラックボックス感を課題として挙げる。トークン消費量については5サーバー58ツールの構成で約55,000トークンを消費したという具体的な実測値を報告している。一方SKILL/BASH（codex exec）はコード生成・テスト実行・長時間タスクに向き、利点としてリアルタイムで進捗確認できる点、軽快さ、コンテキスト消費の少なさを挙げる。ただし既知バグとして、exit code 0を失敗時にも返すケース（Issue #15536）があると注意喚起している。具体的な活用手法として、`codex exec --json`モードではJSONL形式で出力され各フェーズの成功/失敗をプログラム的に判定可能であり、イベント例としてthread.started、item.completed、turn.failedを紹介する。`--full-auto`オプションについては『ワークスペース内のファイル読み書き・コマンド実行を許可（OSレベルのサンドボックスで保護）』と説明し、リトライ機能として`codex exec resume <セッションID> --full-auto`や`codex exec resume --last --full-auto`のコマンド例を挙げ、コンテキストと承認設定が保持されるとする。著者の最終推奨は現時点では『SKILL/BASHが実用的』というものだが、MCPのTasksプリミティブ（2025年11月実装）が安定化すれば将来的に判断が変わる可能性があるとも付言している。",
+        "quote": "「処理が非常に重く、数分～数十分待たされることがあった」",
+        "claims": [
+          "著者は、CRUD的な即時応答が求められる処理はMCP、コード生成や長時間タスクはSKILL/BASH（codex exec）が適すると主張している。",
+          "著者は、5サーバー58ツールの構成でMCPが約55,000トークンを消費した実測から、MCPのコンテキストコストの重さを指摘している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:m-totsu.com",
+        "subtopic": "jp-practice",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/jp-practice"
       }
     ]
   }
