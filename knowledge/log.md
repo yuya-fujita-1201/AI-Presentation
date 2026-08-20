@@ -1,5 +1,9 @@
 # 変更履歴
 
+## 2026-08-20（tools 動画ソース台帳1本追加 research_ledger run:08201857ae）
+
+- **Add**: `knowledge/sources/video-tools-claude-skills-beginner-guide.md` — 「【Claude Skills入門】自分専用のClaude Skillsを作成する方法やSkillsで何ができるのかなどAIのプロがわかりやすく解説します」（いまにゅのAIプログラミング塾）の台帳。SKILL.mdのディスクリプション段階読み込み、MCPとのトークン消費差、図解・アルゴリズミックアート・IBスタイルExcelの実演、.skill形式での配布方法を主張テーブル6行で整理
+
 ## 2026-08-20（tools 動画ソース台帳2本追加 research_ledger run:0820174571）
 
 - **Add**: `knowledge/sources/video-tools-webmcp-browser-proposal.md` — 「WebMCPとは何か ブラウザ側で動くMCPの提案」（chronoit）の台帳。4要素構成、サーバー側MCPとの使い分け、Cloudflareのベンダー実装、主要AI製品の対応未確認を主張テーブル5行で整理

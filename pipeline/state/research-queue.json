@@ -187,7 +187,7 @@
       "trust": "unknown",
       "score": 7,
       "score_detail": "適合+3 初心者+2 新しさ+1 trust+0 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -222,7 +222,8 @@
           "impact": "normal"
         }
       ],
-      "summary": "Claude Skillsの仕組み(SKILL.mdの段階的読み込み・スクリプト同梱)と配布方法を実演形式で解説。MCPとの違いには触れるが4手段の使い分け全体は扱わない"
+      "summary": "Claude Skillsの仕組み(SKILL.mdの段階的読み込み・スクリプト同梱)と配布方法を実演形式で解説。MCPとの違いには触れるが4手段の使い分け全体は扱わない",
+      "ledger_path": "knowledge/sources/video-tools-claude-skills-beginner-guide.md"
     },
     {
       "id": "2pc9uCOe8aA",

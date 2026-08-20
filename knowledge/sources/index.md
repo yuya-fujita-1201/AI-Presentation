@@ -146,6 +146,7 @@
 
 - [video-tools-webmcp-browser-proposal.md](./video-tools-webmcp-browser-proposal.md) — 「WebMCPとは何か ブラウザ側で動くMCPの提案」（chronoit）。WebサイトがAIエージェントに操作をツールとして構造化公開する仕組みの4要素構成、サーバー側MCPとの役割分担、Cloudflareのベンダー実装、主要AI製品の対応未確認という現状を解説
 - [video-tools-google-skills-marketplace.md](./video-tools-google-skills-marketplace.md) — 「【Anthropicの標準にGoogleが乗った】google/skillsで何が変わるのか」（クロノITチャンネル）。109個のSKILL.mdの規模とprogressive disclosure、Claude Codeプラグインmarketplace経由の導入、Apache-2.0ライセンス、Copybaraによる自動運用の実態を解説
+- [video-tools-claude-skills-beginner-guide.md](./video-tools-claude-skills-beginner-guide.md) — 「【Claude Skills入門】自分専用のClaude Skillsを作成する方法やSkillsで何ができるのかなどAIのプロがわかりやすく解説します」（いまにゅのAIプログラミング塾）。SKILL.mdのディスクリプション段階読み込み、MCPとのトークン消費差、図解・アルゴリズミックアート・IBスタイルExcelの実演、.skill形式での配布方法を解説
 
 ## 動画（RAG）
 
