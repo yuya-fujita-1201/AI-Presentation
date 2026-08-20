@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-20（tools 記事ソース台帳2本追加 web_ledger run:08202257d3）
+
+- **Add**: `knowledge/sources/article-tools-agent-skills-overview.md` — Anthropic公式「Agent Skills」の台帳。Skillsの定義とプロンプトとの違い、Pre-built/Custom Skillsの違い、Level1〜3のprogressive disclosure構造、SKILL.mdのfrontmatter必須要件、セキュリティ上の注意点を解説
+- **Add**: `knowledge/sources/article-tools-agent-skills-best-practices.md` — Anthropic公式「Skill authoring best practices」の台帳。自由度の3段階設計、gerund形の命名規則、三人称description記述法、SKILL.md500行未満の分割規則、評価駆動開発の5ステップ、MCPツール完全修飾名の必要性を解説
+- **Note**: `knowledge/sources/index.md` に新セクション「記事（AIツール活用：Skills/MCP/CLI/プロンプト）」を追加
+
 ## 2026-08-20（tools 動画ソース台帳1本追加 research_ledger run:08201857ae）
 
 - **Add**: `knowledge/sources/video-tools-claude-skills-beginner-guide.md` — 「【Claude Skills入門】自分専用のClaude Skillsを作成する方法やSkillsで何ができるのかなどAIのプロがわかりやすく解説します」（いまにゅのAIプログラミング塾）の台帳。SKILL.mdのディスクリプション段階読み込み、MCPとのトークン消費差、図解・アルゴリズミックアート・IBスタイルExcelの実演、.skill形式での配布方法を主張テーブル6行で整理

@@ -148,6 +148,11 @@
 - [video-tools-google-skills-marketplace.md](./video-tools-google-skills-marketplace.md) — 「【Anthropicの標準にGoogleが乗った】google/skillsで何が変わるのか」（クロノITチャンネル）。109個のSKILL.mdの規模とprogressive disclosure、Claude Codeプラグインmarketplace経由の導入、Apache-2.0ライセンス、Copybaraによる自動運用の実態を解説
 - [video-tools-claude-skills-beginner-guide.md](./video-tools-claude-skills-beginner-guide.md) — 「【Claude Skills入門】自分専用のClaude Skillsを作成する方法やSkillsで何ができるのかなどAIのプロがわかりやすく解説します」（いまにゅのAIプログラミング塾）。SKILL.mdのディスクリプション段階読み込み、MCPとのトークン消費差、図解・アルゴリズミックアート・IBスタイルExcelの実演、.skill形式での配布方法を解説
 
+## 記事（AIツール活用：Skills/MCP/CLI/プロンプト）
+
+- [article-tools-agent-skills-overview.md](./article-tools-agent-skills-overview.md) — Anthropic公式「Agent Skills」。Skillsの定義とプロンプトとの違い、Pre-built/Custom Skillsの違い、Level1〜3のprogressive disclosure構造、SKILL.mdのfrontmatter必須要件、セキュリティ上の注意点を解説
+- [article-tools-agent-skills-best-practices.md](./article-tools-agent-skills-best-practices.md) — Anthropic公式「Skill authoring best practices」。自由度の3段階設計、gerund形の命名規則、三人称description記述法、SKILL.md500行未満の分割規則、評価駆動開発の5ステップ、MCPツール完全修飾名の必要性を解説
+
 ## 動画（RAG）
 
 - [video-rag-history-mechanism-limits.md](./video-rag-history-mechanism-limits.md) — 「検索拡張生成(RAG)とは？LLMの嘘と知識不足を克服する仕組みを歴史から最新技術まで解説」（AIの履歴書）。知識のカットオフとハルシネーションという2課題からの誕生経緯、標準パイプラインの4段階（インデクシング・リトリーバル・ランキング・ジェネレーション）、リコール/プレシジョンのトレードオフ、アドバンストRAG各技術を歴史・仕組み・現状と限界・これからの4章で解説

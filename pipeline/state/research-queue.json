@@ -503,8 +503,9 @@
         "source_tier": "secondary",
         "origin": "web:claude.com",
         "subtopic": "official-skills",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-skills"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-skills",
+        "ledger_path": "knowledge/sources/article-tools-agent-skills-overview.md"
       },
       {
         "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
@@ -521,8 +522,9 @@
         "source_tier": "secondary",
         "origin": "web:claude.com",
         "subtopic": "official-skills",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-skills"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-skills",
+        "ledger_path": "knowledge/sources/article-tools-agent-skills-best-practices.md"
       },
       {
         "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
