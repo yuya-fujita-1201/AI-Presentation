@@ -22,8 +22,9 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3 初心者+2 新しさ+1 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "rejected",
+      "reject_reason": "vote_failed",
+      "subs": "auto"
     },
     {
       "id": "mkIUQtHvQow",
@@ -37,8 +38,37 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+0",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[00:00]",
+          "text": "WebMCPはWebサイトがAIエージェントに操作をツールとして構造化して公開する仕組みの提案である",
+          "impact": "high"
+        },
+        {
+          "ts": "[02:00]",
+          "text": "WebMCPのツールはname・description・inputSchema・executeの4要素で構成される",
+          "impact": "high"
+        },
+        {
+          "ts": "[06:00]",
+          "text": "画面の状態や訪問者の権限を使いたい場合はWebMCP、ブラウザを開かず外部からサービスに繋ぐ場合はサーバー側MCPが向く",
+          "impact": "normal"
+        },
+        {
+          "ts": "[10:00]",
+          "text": "ChromeにおけるWebMCPのorigin trial対象はChrome 149から156である",
+          "impact": "high"
+        },
+        {
+          "ts": "[13:00]",
+          "text": "Claude・ChatGPT・Gemini・PerplexityがWebMCPを呼べるかどうかは公式に確認できていない",
+          "impact": "high"
+        }
+      ],
+      "summary": "WebMCP（サイト側がツールを公開するブラウザ内MCP）の仕組みと、サーバー側MCPとの使い分けを解説する動画"
     },
     {
       "id": "NjXzO-b_ceg",
@@ -52,8 +82,9 @@
       "trust": "expert",
       "score": 8,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "rejected",
+      "reject_reason": "vote_failed",
+      "subs": "auto"
     },
     {
       "id": "3KhJCMYxRs0",
