@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- コンテキスト全体の枠（＝コンテキストエンジニアリングが整える範囲） -->
+  <rect x="40" y="30" width="944" height="456" rx="28" fill="#DDEFEA" fill-opacity="0.55" stroke="#247F7A" stroke-width="6"/>
+  <text x="512" y="80" text-anchor="middle" class="h" font-size="32" fill="#247F7A">コンテキスト</text>
+  <text x="512" y="116" text-anchor="middle" class="m" font-size="21">＝ AIが答えを作るときに見ている情報ぜんぶ</text>
+
+  <!-- 左：プロンプト（＝プロンプトエンジニアリングが整える範囲） -->
+  <rect x="64" y="148" width="316" height="312" rx="22" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/>
+  <rect x="84" y="164" width="276" height="44" rx="12" fill="#B44A32"/>
+  <text x="222" y="194" text-anchor="middle" class="h w" font-size="22" fill="#FFFFFF">あなたが都度渡す</text>
+  <text x="222" y="262" text-anchor="middle" class="h" font-size="29" fill="#B44A32">プロンプト</text>
+  <text x="222" y="316" text-anchor="middle" font-size="21">質問・指示・作業手順</text>
+  <text x="222" y="352" text-anchor="middle" font-size="21">形式・禁止事項・例</text>
+  <text x="222" y="388" text-anchor="middle" font-size="21">材料・画像・ファイル</text>
+  <text x="222" y="440" text-anchor="middle" class="m" font-size="18">シリーズ01で学んだ範囲</text>
+
+  <!-- 右：システムが裏で足す -->
+  <rect x="412" y="148" width="548" height="312" rx="22" fill="#FFFFFF" stroke="#247F7A" stroke-width="5"/>
+  <rect x="432" y="164" width="508" height="44" rx="12" fill="#247F7A"/>
+  <text x="686" y="194" text-anchor="middle" class="h w" font-size="22" fill="#FFFFFF">頼まなくても自動で入る（裏で足される）</text>
+  <text x="686" y="248" text-anchor="middle" font-size="21">システム指示（役割の設定）</text>
+  <text x="686" y="282" text-anchor="middle" font-size="21">設定ファイル（CLAUDE.md など）</text>
+  <text x="686" y="316" text-anchor="middle" font-size="21">これまでの会話履歴</text>
+  <text x="686" y="350" text-anchor="middle" font-size="21">メモリ（保存された前提）</text>
+  <text x="686" y="384" text-anchor="middle" font-size="21">プロジェクト内に置いた資料</text>
+  <text x="686" y="418" text-anchor="middle" font-size="21">検索結果・ツールの実行結果</text>
+
+  <!-- プロンプトエンジニアリングのブラケット：プロンプトの箱の幅だけ -->
+  <path d="M 64 512 L 64 528 L 380 528 L 380 512" fill="none" stroke="#B44A32" stroke-width="5"/>
+  <line x1="222" y1="528" x2="222" y2="542" stroke="#B44A32" stroke-width="5"/>
+  <text x="222" y="576" text-anchor="middle" class="h" font-size="26" fill="#B44A32">プロンプトエンジニアリング</text>
+  <text x="222" y="606" text-anchor="middle" class="m" font-size="19">「プロンプト」の箱を整える</text>
+
+  <!-- コンテキストエンジニアリングのブラケット：箱ぜんぶ -->
+  <path d="M 40 636 L 40 652 L 984 652 L 984 636" fill="none" stroke="#247F7A" stroke-width="5"/>
+  <line x1="512" y1="652" x2="512" y2="666" stroke="#247F7A" stroke-width="5"/>
+  <text x="512" y="700" text-anchor="middle" class="h" font-size="26" fill="#247F7A">コンテキストエンジニアリング</text>
+  <text x="512" y="730" text-anchor="middle" class="m" font-size="19">箱ぜんぶ（プロンプト＋裏で足す情報）を整える</text>
+</svg>

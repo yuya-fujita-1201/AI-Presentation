@@ -20,7 +20,7 @@
   <text x="512" y="398" text-anchor="middle" class="m" font-size="22">一緒に働く</text>
 
   <text x="270" y="463" text-anchor="middle" class="m" font-size="24">何をしてほしいか</text>
-  <text x="754" y="463" text-anchor="middle" class="m" font-size="24">何を知って考えるか</text>
+  <text x="754" y="463" text-anchor="middle" class="m" font-size="24">何を前提に考えるか</text>
 
   <rect x="164" y="626" width="696" height="92" rx="26" fill="#7C3527"/>
   <text x="512" y="683" text-anchor="middle" class="h w" font-size="31" fill="#FFFFFF">置き換えではなく、重なって働く</text>

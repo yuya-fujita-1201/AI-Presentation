@@ -11,9 +11,9 @@
   <rect width="1024" height="768" fill="#FFF9F3"/>
 
   <!-- 見出し -->
-  <text x="248" y="64" text-anchor="middle" class="h" font-size="27" fill="#B44A32">PEの5つの要素</text>
+  <text x="248" y="64" text-anchor="middle" class="h" font-size="27" fill="#B44A32">プロンプトの5つの要素</text>
   <text x="248" y="98" text-anchor="middle" class="m" font-size="20">依頼文の「書く欄」</text>
-  <text x="776" y="64" text-anchor="middle" class="h" font-size="27" fill="#247F7A">CEの5項目</text>
+  <text x="776" y="64" text-anchor="middle" class="h" font-size="27" fill="#247F7A">コンテキストの5項目</text>
   <text x="776" y="98" text-anchor="middle" class="m" font-size="20">欄に入れる「中身」を探す観点</text>
 
   <!-- 対応する3組 -->
@@ -38,7 +38,7 @@
   <!-- PE側に残る2欄 -->
   <rect x="96" y="404" width="304" height="88" rx="16" fill="#FFFFFF" stroke="#C9BAB2" stroke-width="3" stroke-dasharray="10 7"/>
   <text x="248" y="441" text-anchor="middle" class="h" font-size="24" fill="#6F5C52">やること・返し方</text>
-  <text x="248" y="474" text-anchor="middle" class="m" font-size="19">頼み方の欄のまま（PEの担当）</text>
+  <text x="248" y="474" text-anchor="middle" class="m" font-size="19">プロンプト側の欄のまま</text>
 
   <!-- CEで新登場 -->
   <rect x="624" y="404" width="304" height="88" rx="16" fill="#DDEFEA" stroke="#247F7A" stroke-width="4" stroke-dasharray="12 8"/>

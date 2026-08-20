@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="740" viewBox="0 0 1024 740">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans',Arial,sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="740" fill="#FFF9F3"/>
+
+  <!-- 同じ指示 -->
+  <rect x="292" y="24" width="440" height="100" rx="22" fill="#7C3527"/>
+  <text x="512" y="62" text-anchor="middle" class="h" font-size="19" fill="#F4CDBD">同じ指示</text>
+  <text x="512" y="100" text-anchor="middle" class="h w" font-size="27" fill="#FFFFFF">「例の件、まとめておいて」</text>
+  <path d="M512 124V150" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round"/>
+  <path d="M512 150H262V166" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+  <path d="M512 150H762V166" fill="none" stroke="#B44A32" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+
+  <!-- 左パネル：新入社員（コンテキストなし） -->
+  <rect x="48" y="176" width="428" height="470" rx="24" fill="#FADFD5" stroke="#A63D32" stroke-width="3"/>
+  <text x="262" y="222" text-anchor="middle" class="h" font-size="28">新入社員</text>
+  <rect x="172" y="236" width="180" height="32" rx="16" fill="#A63D32"/>
+  <text x="262" y="258" text-anchor="middle" class="h w" font-size="17" fill="#FFFFFF">コンテキストなし</text>
+  <text x="262" y="298" text-anchor="middle" class="m" font-size="19">「たぶん、こういう感じですかね…？」</text>
+
+  <!-- 新入社員の人物（アウトライン） -->
+  <circle cx="126" cy="376" r="26" fill="#FFFFFF" stroke="#A63D32" stroke-width="3.5"/>
+  <rect x="86" y="410" width="80" height="42" rx="21" fill="#FFFFFF" stroke="#A63D32" stroke-width="3.5"/>
+  <!-- 思考バブル（中身が空） -->
+  <circle cx="168" cy="366" r="5" fill="none" stroke="#A63D32" stroke-width="2.5"/>
+  <circle cx="184" cy="350" r="7" fill="none" stroke="#A63D32" stroke-width="2.5"/>
+  <rect x="200" y="318" width="252" height="128" rx="20" fill="#FFFFFF" stroke="#A63D32" stroke-width="3" stroke-dasharray="10 8"/>
+  <text x="220" y="360" font-size="19">部署の常識</text>
+  <text x="430" y="361" text-anchor="end" class="h" font-size="22" fill="#A63D32">？</text>
+  <text x="220" y="394" font-size="19">顧客の事情</text>
+  <text x="430" y="395" text-anchor="end" class="h" font-size="22" fill="#A63D32">？</text>
+  <text x="220" y="428" font-size="19">先週の決定事項</text>
+  <text x="430" y="429" text-anchor="end" class="h" font-size="22" fill="#A63D32">？</text>
+  <text x="262" y="480" text-anchor="middle" class="h" font-size="17" fill="#A63D32">判断材料が空っぽ</text>
+
+  <!-- 新入社員の答え -->
+  <rect x="76" y="496" width="372" height="128" rx="20" fill="#FFFFFF" stroke="#A63D32" stroke-width="3" stroke-dasharray="10 8"/>
+  <text x="262" y="540" text-anchor="middle" class="h" font-size="21">それっぽいが、ふわっとした答え</text>
+  <text x="262" y="576" text-anchor="middle" class="m" font-size="16">背景を知らないまま推測で埋めるので</text>
+  <text x="262" y="602" text-anchor="middle" class="m" font-size="16">意図とズレた的外れな内容になる</text>
+
+  <!-- 右パネル：ベテラン社員（コンテキストあり） -->
+  <rect x="548" y="176" width="428" height="470" rx="24" fill="#E1F2F0" stroke="#247F7A" stroke-width="3"/>
+  <text x="762" y="222" text-anchor="middle" class="h" font-size="28">ベテラン社員</text>
+  <rect x="672" y="236" width="180" height="32" rx="16" fill="#247F7A"/>
+  <text x="762" y="258" text-anchor="middle" class="h w" font-size="17" fill="#FFFFFF">コンテキストあり</text>
+  <text x="762" y="298" text-anchor="middle" class="h" font-size="19" fill="#247F7A">「ああ、あの件ね」</text>
+
+  <!-- ベテランの人物（塗りつぶし） -->
+  <circle cx="626" cy="376" r="26" fill="#247F7A"/>
+  <rect x="586" y="410" width="80" height="42" rx="21" fill="#247F7A"/>
+  <!-- 思考バブル（中身が詰まっている） -->
+  <circle cx="668" cy="366" r="5" fill="#247F7A"/>
+  <circle cx="684" cy="350" r="7" fill="#247F7A"/>
+  <rect x="700" y="318" width="252" height="128" rx="20" fill="#FFFFFF" stroke="#247F7A" stroke-width="3"/>
+  <text x="720" y="360" font-size="19">部署の常識</text>
+  <text x="930" y="361" text-anchor="end" class="h" font-size="22" fill="#247F7A">✓</text>
+  <text x="720" y="394" font-size="19">顧客の事情</text>
+  <text x="930" y="395" text-anchor="end" class="h" font-size="22" fill="#247F7A">✓</text>
+  <text x="720" y="428" font-size="19">先週の決定事項</text>
+  <text x="930" y="429" text-anchor="end" class="h" font-size="22" fill="#247F7A">✓</text>
+  <text x="762" y="480" text-anchor="middle" class="h" font-size="17" fill="#247F7A">判断材料がそろっている</text>
+
+  <!-- ベテランの答え -->
+  <rect x="576" y="496" width="372" height="128" rx="20" fill="#FFFFFF" stroke="#247F7A" stroke-width="4"/>
+  <text x="762" y="540" text-anchor="middle" class="h" font-size="21">意図にぴったり合った答え</text>
+  <text x="762" y="576" text-anchor="middle" class="m" font-size="16">背景を踏まえて判断できるので</text>
+  <text x="762" y="602" text-anchor="middle" class="m" font-size="16">そのまま仕事に使える</text>
+
+  <text x="512" y="706" text-anchor="middle" class="h" font-size="23" fill="#7C3527">AIは毎回“入社初日”。コンテキストを渡して初めて、ベテランの動きになる</text>
+</svg>
