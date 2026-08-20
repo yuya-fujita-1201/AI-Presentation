@@ -483,7 +483,8 @@
   ],
   "web": {
     "subtopics_done": [
-      "official-skills"
+      "official-skills",
+      "official-mcp"
     ],
     "candidates": [
       {
@@ -539,6 +540,42 @@
         "subtopic": "official-skills",
         "status": "verified",
         "cache_dir": "pipeline/cache/web/official-skills"
+      },
+      {
+        "url": "https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture",
+        "title": "Architecture overview - Model Context Protocol",
+        "publisher": "Model Context Protocol (公式ドキュメント)",
+        "retrieved": "2026-08-20",
+        "extract": "【Scope】公式ドキュメントはMCPを構成するプロジェクトとして、MCP Specification（クライアント・サーバーの実装要件を定める仕様書）、MCP SDKs（各言語向けSDK）、MCP Development Tools（MCP Inspectorなど開発ツール）、MCP Reference Server Implementations（サーバーのリファレンス実装）の4つを挙げる。注記として「MCP focuses solely on the protocol for context exchange—it does not dictate how AI applications use LLMs or manage the provided context.」とあり、MCPはコンテキスト交換のプロトコルのみを規定し、LLMの利用方法までは規定しないと明言されている。\n\n【参加者（Participants）】MCPはクライアント・サーバー型アーキテクチャを採る。「MCP follows a client-server architecture where an MCP host — an AI application like Claude Code or Claude Desktop — establishes connections to one or more MCP servers. The MCP host accomplishes this by creating one MCP client for each MCP server. Each MCP client maintains a dedicated connection with its corresponding MCP server.」つまりMCP Host（Claude Code・Claude Desktop等のAIアプリ）が複数のMCP Serverに接続するとき、サーバーごとに専用のMCP Clientを1つずつ生成し、各Clientはそのサーバーと専用コネクションを維持する。ローカルサーバー（STDIO transport利用）は通常単一クライアントに、リモートサーバー（Streamable HTTP transport利用）は通常複数クライアントに対応する（「Local MCP servers that use the STDIO transport typically serve a single MCP client, whereas remote MCP servers that use the Streamable HTTP transport will typically serve many MCP clients.」）。具体例としてVS Codeがホストとなり、Sentry MCP serverとlocal filesystem serverそれぞれに別個のMCP Clientオブジェクトを生成する例が挙げられている。MCP Serverはローカル/リモート問わず「プログラムそのもの」を指す点も明記（Claude DesktopのFilesystem serverはSTDIOでローカル実行、Sentry MCP serverはStreamable HTTPでリモート実行の例）。\n\n【2層構造】MCPは data layer（内側）と transport layer（外側）の2層からなる。data layerは「JSON-RPC based protocol for client-server communication, including capability and version discovery, and core primitives, such as tools, resources, prompts and notifications」を定義し、transport layerは「transport-specific connection establishment, message framing, and authorization」を含む通信手段を定義する。data layerの内訳: Discovery（`server/discover` requestでバージョン・capability・identityを問い合わせ）、Server features（tools/resources/promptsの提供）、Client features（elicitation。samplingはprotocol version 2026-07-28でdeprecated）、Utility features（notifications・progress tracking）。\n\n【Transport】2種類。「Stdio transport: Uses standard input/output streams for direct process communication between local processes on the same machine, providing optimal performance with no network overhead.」「Streamable HTTP transport: Uses HTTP POST for client-to-server messages with optional Server-Sent Events for streaming capabilities. This transport enables remote server communication and supports standard HTTP authentication methods including bearer tokens, API keys, and custom headers. MCP recommends using OAuth to obtain authentication tokens.」transport layerが通信詳細を抽象化することで、どのtransportでも同一のJSON-RPC 2.0メッセージ形式が使える。\n\n【ステートレス性とプリミティブ】MCPは「stateless protocol」であり、各リクエストは`_meta`フィールドにprotocol versionと関連capabilityを含めて送られ、サーバーは過去のリクエストに依存せず処理できる。サーバーは必須の`server/discover` requestでサポートするバージョンとcapabilityを広告する。サーバー側が提供する3大プリミティブ: Tools（実行可能な関数、例: ファイル操作・API呼び出し・DB問い合わせ）、Resources（コンテキストデータ、例: ファイル内容・DBレコード）、Prompts（対話テンプレート）。各プリミティブは`*/list`（発見）、`*/get`（取得）、場合により`tools/call`（実行）のメソッドを持つ。クライアント側が提供するプリミティブはElicitation（`elicitation/create`でユーザーに追加情報を要求）。SamplingとLoggingは protocol version 2026-07-28 で非推奨化され、「New implementations should integrate directly with LLM provider APIs」「New implementations should log to stderr (stdio transport) or use OpenTelemetry」と明記。\n\n【具体例（JSON-RPCサンプル）】ページ末尾では discovery→tools/list→tools/call→subscriptions/listen（notifications/tools/list_changed）という一連のJSON-RPC 2.0メッセージ例が示され、`server/discover`のレスポンスにはsupportedVersions・capabilities（例: `\"tools\": {\"listChanged\": true}`）・ttlMs（キャッシュ有効期限、例300000ms=5分）が含まれることが具体的に示されている。",
+        "quote": "MCP follows a client-server architecture where an MCP host — an AI application like Claude Code or Claude Desktop — establishes connections to one or more MCP servers. The MCP host accomplishes this by creating one MCP client for each MCP server.",
+        "claims": [
+          "MCPはMCP Host・MCP Client・MCP Serverの3者からなるクライアント・サーバー型アーキテクチャであり、HostはServerごとに専用のClientを1つ生成する。",
+          "MCPはdata layer（JSON-RPC 2.0による通信内容の規定）とtransport layer（stdioまたはStreamable HTTPによる通信経路の規定）の2層に分離されている。",
+          "MCPはステートレスなプロトコルであり、各リクエストがprotocol versionとcapabilityを`_meta`に含めて自己完結的に処理される設計になっている。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:modelcontextprotocol.io",
+        "subtopic": "official-mcp",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-mcp"
+      },
+      {
+        "url": "https://modelcontextprotocol.io/docs/develop/build-server",
+        "title": "Build an MCP server - Model Context Protocol",
+        "publisher": "Model Context Protocol (公式ドキュメント)",
+        "retrieved": "2026-08-20",
+        "extract": "【概要】公式クイックスタートは「we'll build a simple MCP weather server and connect it to a host, Claude for Desktop」として、Claude for Desktopと接続する天気情報サーバーの構築手順を解説する。作るサーバーは2つのツール `get_alerts` と `get_forecast` を公開する。注記として「Servers can connect to any client. We've chosen Claude for Desktop here for simplicity」とあり、サーバーは任意のクライアントに接続可能でClaude for Desktopは説明の簡便さのために選ばれているに過ぎない。\n\n【Core MCP Concepts】MCPサーバーが提供できる3種類の機能として次を明記: 「1. Resources: File-like data that can be read by clients (like API responses or file contents) 2. Tools: Functions that can be called by the LLM (with user approval) 3. Prompts: Pre-written templates that help users accomplish specific tasks」。このチュートリアルは主にToolsに焦点を当てるとしている。\n\n【前提知識・システム要件】Python版の前提知識は「Python」「LLMs like Claude」のみ。システム要件は「Python 3.10 or higher installed」および「You must use the Python MCP SDK 2.0.0 or higher」と明記されている。\n\n【ロギングの注意】STDIOベースのサーバーでは標準出力(stdout)への書き込みが厳禁とされる。「For STDIO-based servers: Never write to stdout. Writing to stdout will corrupt the JSON-RPC messages and break your server. The print() function writes to stdout by default, so keep it out of a STDIO server entirely.」一方「For HTTP-based servers: Standard output logging is fine since it doesn't interfere with HTTP responses.」ベストプラクティスとして標準ライブラリの`logging`モジュール（stderrに書き込む）を使い、`logging.getLogger(__name__)`でモジュールごとにロガーを作ることが推奨されている。\n\n【環境構築】`uv`パッケージマネージャのインストール（`curl -LsSf https://astral.sh/uv/install.sh | sh`）から始め、`uv init weather`でプロジェクト作成、`uv venv`で仮想環境作成、`uv add \"mcp[cli]\"`で依存関係インストール、という手順が示されている。\n\n【実装手順】サーバーファイル冒頭でMCPサーバーインスタンスを初期化し（`mcp = MCPServer(\"weather\")`）、定数として`NWS_API_BASE = \"https://api.weather.gov\"`（米国国立気象局APIのベースURL）を定義。ヘルパー関数`make_nws_request`でHTTPリクエストとエラーハンドリングを行い、`format_alert`で警報データを整形。ツール実装は`@mcp.tool()`デコレータを使い、`get_alerts(state: str)`は米国の州コード（例: CA, NY）を受け取り警報一覧を返す。`get_forecast(latitude: float, longitude: float)`は緯度経度を受け取り、まずpointsエンドポイントで予報グリッドURLを取得し、次に実際の予報データを取得、直近5期間分（`periods[:5]`）を整形して返す。サーバー起動は`mcp.run(transport=\"stdio\")`で行う。\n\n【Claude for Desktopとの接続】設定ファイルは`~/Library/Application Support/Claude/claude_desktop_config.json`（macOS）に置き、`mcpServers`キー配下にサーバー定義を追加する。設定例: `{\"mcpServers\": {\"weather\": {\"command\": \"uv\", \"args\": [\"--directory\", \"/ABSOLUTE/PATH/TO/PARENT/FOLDER/weather\", \"run\", \"weather.py\"]}}}`。注記として「You may need to put the full path to the uv executable in the command field. You can get this by running which uv on macOS/Linux」とあり、絶対パス指定が必要な場合がある点が警告されている。設定後はClaude for Desktopの再起動が必要。",
+        "quote": "MCP servers can provide three main types of capabilities: 1. Resources: File-like data that can be read by clients (like API responses or file contents) 2. Tools: Functions that can be called by the LLM (with user approval) 3. Prompts: Pre-written templates that help users accomplish specific tasks",
+        "claims": [
+          "公式クイックスタートでは、MCPサーバーが提供する機能をResources・Tools・Promptsの3種類に整理している。",
+          "STDIOトランスポートを使うMCPサーバーは標準出力への書き込みが禁止されており、ログは標準エラー出力（stderr）に書く必要がある。",
+          "サーバー構築にはPython 3.10以上とPython MCP SDK 2.0.0以上が必要で、Claude for DesktopとはローカルJSON設定ファイル（claude_desktop_config.json）のmcpServersキーで接続する。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:modelcontextprotocol.io",
+        "subtopic": "official-mcp",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-mcp"
       }
     ]
   }
