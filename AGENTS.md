@@ -39,9 +39,11 @@
 
 ## 依頼中のタスク
 
-- **OKF ビジュアルガイド v2 の挿絵制作**（2026-08-09 依頼）: 指示書は `docs/codex-brief-okf-visual-v2.md`。`decks/07-okf-visual-guide/`（35枚、deck.json は完成済み）の挿絵19枚を **4:3・文字なし・紫系フラットベクター**で ImageGen 生成し、`assets/` に上書き → ビルド・全35枚の目視・PPTX 3点検証まで完結させる。旧版 `decks/_archive/okf/03-okf-visual/` は**変更禁止（温存）**
+（現在なし）
 
 ## 完了済みタスク
+
+- **06-RAG / 07-OKF デッキの正本化（清書）**（2026-08-21 完了）: T-MAX評議会の裁定（`docs/seisho-0607-ruling-2026-08-21.md`）に基づき、両デッキを warm-terracotta へ移行し 50枚／47枚に全面清書。図版は構造図=SVG（`assets/diagram-*.svg`）＋情景=画像生成（`assets/warm-*.png`）の二本立てで、発注仕様は各デッキの `assets/figure-ledger.md` に恒久化。旧 `docs/codex-brief-ai-topics-01-rag.md`・`docs/codex-brief-okf-visual-v2.md` の挿絵依頼（紫系）はこの清書で**上書き完了扱い**（構図仕様のみ figure-ledger に継承）
 
 - **デッキ正本の番号整理と旧グラフ版のアーカイブ**（2026-08-20 完了）: 現行正本を `decks/01-*`〜`decks/07-*` に整理。旧グラフ2版は `decks/_archive/graph-engineering/` に退避し、現行正本は `decks/05-graph-engineering/`
 - **PE超入門デッキ（改訂版）の挿絵差し替え・最終チェック・正本整理**（2026-08-14 完了）: 現在の正本は `decks/01-prompt-engineering/`（現行53枚）。旧たたき台と不採用の自動生成35枚版は `decks/_archive/ai-eng-01/` に退避済み。最新版の判定は `decks/README.md` を参照

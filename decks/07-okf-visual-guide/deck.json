@@ -686,7 +686,7 @@
       "type": "section",
       "number": "02",
       "title": "書き方は「3つの約束」だけ",
-      "subtitle": "①1話題1ファイル ②背表紙ラベル ③リンクでつなぐ",
+      "subtitle": "1話題1ファイルに分け、先頭に背表紙ラベルを書き、リンクでつなぐ。覚えるのはこの3つだけです",
       "notes": "仕様書は存在しますが、人間が覚えるべきことは3つに要約できます。難しい用語はAIに任せてよい部分です。"
     },
     {
@@ -777,7 +777,7 @@
       ],
       "image_side": "left",
       "path": "assets/warm-okf-09.png",
-      "caption": "仕様の決まりというより、使いやすくするための現場の目安です",
+      "caption": "目安はここまで。次のページで、この章を一言にまとめます",
       "style": {
         "body": {
           "size": 18,
@@ -789,7 +789,7 @@
     {
       "type": "quote",
       "text": "ルールで縛るのは最小限。書き手は自由に、読み手は寛容に。",
-      "attribution": "OKFの設計思想 — 必須項目は「種類（type）」ただ1つ",
+      "attribution": "OKF仕様・公式ブログの設計原則（本資料による要約）— 必須項目は「種類（type）」ただ1つ",
       "notes": "仕様が要求するのはtype1つだけ。残りは現場が使いやすいように決めてよい。この「緩さ」が、書きながら育てる運用を可能にしています。次の章では、この知識が「今も信じていいか」を確かめる仕組みを見ます。"
     },
     {
@@ -808,12 +808,12 @@
         "半年前のメモ、まだ有効？",
         "この数字、誰が確認した？",
         "元ネタはどの資料？",
-        "v0.2はこの疑問に答える「5つの記入欄」を追加した",
+        "公開後まもなく改定されたv0.2は、この疑問に答える「5つの記入欄」を追加した",
         "書くのは大変ではない。背表紙ラベルに数行足すだけ"
       ],
       "image_side": "right",
       "path": "assets/warm-okf-10.png",
-      "caption": "出所・信頼性・鮮度・状態・検算の5つの観点",
+      "caption": "出所・確認者・期限・状態・検算の5つの観点",
       "notes": "「知識に根拠をつける」とは、この5つの疑問への答えを知識ファイル自身に書いておく、という意味です。次は、この5つの記入欄を具体的に見ます。"
     },
     {
@@ -985,7 +985,7 @@
     {
       "type": "quote",
       "text": "AIの答えを「疑う仕組み」ごと、知識の置き場に組み込む。",
-      "attribution": "OKF v0.2 が追加したのは、信頼のための語彙",
+      "attribution": "OKF v0.2 仕様の設計方針（本資料による要約）",
       "notes": "v0.2の追加はルールではなく語彙（記入欄）。書ける欄から書けばよく、既存ファイルはそのまま有効です。次の章では、OKFと周辺の標準との関係を見ます。"
     },
     {
@@ -1001,9 +1001,21 @@
       "title": "役割分担の地図",
       "punch": "OKFは「荷物の中身の書き方」です。運ぶ道路（接続）は別にあります。",
       "bullets": [
-        "MCP＝道路・配送網。AIとデータをつなぐ「接続」の規格",
-        "OKF＝荷物の中身。知識そのものの「書き方」",
-        "llms.txt＝看板。「知識はここにあります」と場所を示す",
+        {
+          "text": "MCP",
+          "bold": true,
+          "children": ["道路・配送網。AIとデータをつなぐ「接続」の規格"]
+        },
+        {
+          "text": "OKF",
+          "bold": true,
+          "children": ["荷物の中身。知識そのものの「書き方」"]
+        },
+        {
+          "text": "llms.txt",
+          "bold": true,
+          "children": ["看板。「知識はここにあります」と場所を示す"]
+        },
         {
           "text": "AIはMCPなどの接続を通って、OKFの知識棚を読みに来る",
           "bold": true
@@ -1086,7 +1098,7 @@
       "image_side": "right",
       "path": "assets/diagram-aso-concept.svg",
       "caption": "OKFで知識を整えることは、AIに選ばれるための備えにもなります",
-      "notes": "ここまでのMCP・llms.txtに加えて、まだ確立した標準ではありませんが、2本の解説動画が独自に紹介している考え方を1つ補足します。次は、こうしたエコシステムがもたらす価値を見ます。"
+      "notes": "ここまでのMCP・llms.txtに加えて、まだ確立した標準ではありませんが、1本の解説動画が独自に紹介している考え方を1つ補足します。次は、こうしたエコシステムがもたらす価値を見ます。"
     },
     {
       "type": "image_text",
@@ -1229,9 +1241,9 @@
       "type": "code",
       "eyebrow": "05｜実物からの抜粋①",
       "title": "この資料の元ネタも、OKFで書かれている",
-      "lead": "実物からの抜粋：勉強会ナレッジベースの実際のフォルダ構成です",
+      "lead": "実物からの抜粋：勉強会ナレッジベースの主要フォルダの抜粋です（テーマは増え続けています）",
       "language": "text",
-      "code": "knowledge/\n├── index.md          # バンドル直下だけ okf_version を宣言できる\n├── log.md             # バンドル全体の変更履歴\n├── okf/                # このデッキの元ネタ\n├── prompt-engineering/\n├── context-engineering/\n├── harness-engineering/\n├── loop-engineering/\n├── graph-engineering/\n├── rag/\n├── slide-system/\n└── sources/            # 1ソース1ファイルの出典台帳",
+      "code": "knowledge/\n├── index.md          # バンドル直下だけ okf_version を宣言できる\n├── log.md             # バンドル全体の変更履歴\n├── okf/                # このデッキの元ネタ\n├── prompt-engineering/\n├── context-engineering/\n├── harness-engineering/\n├── loop-engineering/\n├── graph-engineering/\n├── agent-capabilities/\n├── rag/\n├── slide-system/\n└── sources/            # 1ソース1ファイルの出典台帳",
       "notes": "ここからは実物です。このスライドの元になっているナレッジベース自体が、実在するOKFバンドルとして書かれています。次は、その中の1ファイルの背表紙ラベルを見ます。"
     },
     {
@@ -1388,10 +1400,10 @@
           "15",
           "各フォルダの目次ファイル・入口index.mdのokf_version例外",
           {
-            "text": "OKF v0.1ガイド（Classmethod）",
-            "url": "https://dev.classmethod.jp/articles/open-knowledge-format-okf-v01-guide/"
+            "text": "OKF仕様書 v0.2（SPEC.md）",
+            "url": "https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md"
           },
-          "記事"
+          "一次"
         ],
         [
           "16",
