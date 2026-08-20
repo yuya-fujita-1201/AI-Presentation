@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """複数採点者の findings-v2 JSON を集約する（docs/ai-eng-series-rubric-v2.md の採点方式）。
 
-- 採点者ごとの項目スコア = 100 − Σ(大25・中5・小1)、下限0
+- 採点者ごとの項目スコア = 100 − Σ(大20・中5・小1)、下限0
 - 項目スコア = 採点者の中央値。spread = 最大−最小（≥25 は「採点者が割れた」）
 - findings は和集合。同一 (item, where) で claim の語の重なりが大きいものは統合し、重大度は多数決（同数なら重い方）
 - 合格 = 全項目 ≥ target（既定80）
@@ -16,7 +16,7 @@ import re
 import statistics as st
 from pathlib import Path
 
-W = {"大": 25, "中": 5, "小": 1, "high": 25, "mid": 5, "low": 1}
+W = {"大": 20, "中": 5, "小": 1, "high": 20, "mid": 5, "low": 1}
 RANK = {"大": 3, "中": 2, "小": 1}
 
 

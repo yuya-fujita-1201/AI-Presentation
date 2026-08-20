@@ -5,9 +5,9 @@
   - closing.title が 22 字超（固定 72px 枠で 2 行化→罫線貫通の事故）
   - Markdown 記法の残留（**強調** / `code` / 行頭 # ）が表示フィールドにある
   - 「N枚目」「Nページ目」直書きが総枚数を超える、または存在しないスライドを指す
+  - AI 定型句が表示フィールドに 1 件でもある（2026-08-20 に全デッキ 0 件を達成済み。回帰防止として不合格に昇格）
 警告（件数と箇所を表示。exit に影響しない。rubric の減点材料）:
   - punch が --punch-max 字超（既定80＝正本01の最大。01/02 も2行折り返しが常態なので長さ自体は問題にしない）
-  - AI 定型句（rubric-ai-eng-tone の一覧）の出現箇所
   - 「AではなくB」型（「ではなく」）、全角ダッシュ「——」、丸数字①②③ の出現回数
   - 半角コロン「:」と全角コロン「：」の混在（日本語文中の半角コロン）
   - 表示テキスト中の英字のみラベル（図の英語ラベルの検出は SVG 側を別途）
@@ -81,7 +81,7 @@ def main():
                 c = text.count(ph)
                 if c:
                     stats["ai_phrase"] += c
-                    warns.append(f"{sid} {path} AI定型句「{ph}」×{c}: 「{text[:40]}」")
+                    errors.append(f"{sid} {path} AI定型句「{ph}」×{c}: 「{text[:40]}」")
             stats["dewanaku"] += text.count("ではなく")
             stats["dash"] += text.count("——") + text.count("—")
             stats["circled"] += len(re.findall(r"[①-⑳]", text))
