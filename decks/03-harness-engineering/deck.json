@@ -543,7 +543,7 @@
           "bold": true,
           "color": "accent",
           "children": [
-            "完了は自己申告ではなく、外部の証拠で確かめる"
+            "完了の判定は、外部の証拠を根拠にする"
           ]
         },
         {
@@ -965,7 +965,7 @@
             "bold": true,
             "color": "accent",
             "children": [
-              "CLAUDE.mdからimport、またはsymlinkで連携"
+              "CLAUDE.mdからimport、またはsymlink（別の場所の実体を指す近道）で連携"
             ]
           }
         ]
@@ -1457,7 +1457,7 @@
           "定期的に整理・削除し、鮮度と必要性を再評価"
         ]
       ],
-      "notes": "特に『完了』は自己申告ではなく外部状態で確認します。保守は定期整理をタスク化しないと後回しになりがちです。",
+      "notes": "特に『完了』は、外部状態を根拠に確認します。保守は定期整理をタスク化しないと後回しになりがちです。",
       "style": {
         "table": {
           "col_widths": [
@@ -1684,7 +1684,7 @@
           "重要な前提が人の頭だけにある",
           "ツールが広すぎる／逆に必要操作がない",
           "本番と開発が同じ資格情報",
-          "自己申告を完了扱い",
+          "外部確認なしに完了扱い",
           {
             "text": "結果：人が毎回穴を埋める",
             "bold": true,
@@ -1920,7 +1920,8 @@
         {
           "text": "モデルへ『しないで』と伝える",
           "children": [
-            "試行を減らすが、確率的な行動誘導"
+            "試行を減らすが、確率的な行動誘導",
+            "誤解・過剰な自発性・注入攻撃という3つの弱さが残る"
           ]
         },
         {
@@ -2026,7 +2027,7 @@
           "S15・S19（付録S54-55）"
         ]
       ],
-      "notes": "用語解説は本編を軽くするために付録へ集約しました。スライド番号は本resshuffle後の番号です。",
+      "notes": "前半は、CLAUDE.md／AGENTS.mdからパーミッション・フック・スキル・MCPまで、権限や自動実行に関わる入口の用語をまとめました。",
       "style": {
         "table": {
           "col_widths": [
@@ -2077,7 +2078,7 @@
           "S21・S32"
         ]
       ],
-      "notes": "用語解説は本編を軽くするために付録へ集約しました。スライド番号は本resshuffle後の番号です。",
+      "notes": "後半は、隔離（Sandbox・branch/worktree）と検証（テスト・リンター・schema）まわりの用語をまとめました。証拠ループを支える実行環境の語彙です。",
       "style": {
         "table": {
           "col_widths": [
@@ -2378,7 +2379,7 @@
           "CLIは一時的なsession override"
         ]
       ],
-      "notes": "2026-08-15時点のClaude Code公式仕様です。優先順は単一値の原則で、配列は原則結合・重複排除、Permissionはscope横断merge、一部keyは別の合成規則を持ちます。\n\n根拠: HE-S11, HE-S12",
+      "notes": "設定のscope（誰に効くか）を軸にした整理です。単一値の原則（Managed > CLI > Local > Project > User）は、この4層のどこが最終的に勝つかを決めるルールです。\n\n根拠: HE-S11, HE-S12",
       "style": {
         "table": {
           "col_widths": [
@@ -2419,7 +2420,7 @@
           "実装時は現行公式のkey別規則を確認"
         ]
       ],
-      "notes": "2026-08-15時点のClaude Code公式仕様です。優先順は単一値の原則で、配列は原則結合・重複排除、Permissionはscope横断merge、一部keyは別の合成規則を持ちます。\n\n根拠: HE-S11, HE-S12",
+      "notes": "同じscopeの階層でも、値の種類（単一値／配列／Permission／Security）によって合成の仕方が変わることを示します。配列は結合、Permissionはscope横断でmergeします。\n\n根拠: HE-S11, HE-S12",
       "style": {
         "table": {
           "col_widths": [
@@ -2537,7 +2538,7 @@
           "配布元・起動command・更新経路を審査"
         ]
       ],
-      "notes": "MCP公式はtoken passthrough、SSRF、scope minimization、local server compromiseを整理しています。直接stdioは接続面を狭めやすい一方、proxy構成のprocess spawnはRCE経路になり得るため別途確認します。外部ツール結果からの命令注入はMCPに限らない共通の信頼境界です。\n\n根拠: HE-S08, HE-S17",
+      "notes": "3つのリスクは互いに独立です。権限を絞っても短命tokenでなければ漏洩時の被害は残り、tokenを絞ってもローカルserver自体が任意codeを実行できれば意味がありません。\n\n根拠: HE-S08, HE-S17",
       "style": {
         "table": {
           "col_widths": [
@@ -2578,7 +2579,7 @@
           "HTTPS、redirect検査、通信許可リスト／proxy"
         ]
       ],
-      "notes": "MCP公式はtoken passthrough、SSRF、scope minimization、local server compromiseを整理しています。直接stdioは外部通信面を狭めやすい一方、proxy構成のprocess spawnはRCE経路になり得るため別途確認します。外部ツール結果からの命令注入はMCPに限らない共通の信頼境界です。\n\n根拠: HE-S08, HE-S17",
+      "notes": "直接stdioとproxyは同じMCPでも露出面が異なります。命令注入とSSRFは、token管理を万全にしても別途防ぐ必要がある通信経路側の脅威です。\n\n根拠: HE-S08, HE-S17",
       "style": {
         "table": {
           "col_widths": [
@@ -2686,7 +2687,7 @@
           "DBに予約が存在／画面が更新"
         ]
       ],
-      "notes": "Anthropicのeval記事の用語整理に基づきます。agent harnessはモデルをagentとして動かす仕組み、evaluation harnessはそのagentを評価する基盤です。\n\n根拠: HE-S05",
+      "notes": "課題・試行・最終状態を分けるのは、同じ課題でも試行によって結果が揺らぐ場合、どこまでが再現する失敗でどこからが偶然かを見分けるためです。\n\n根拠: HE-S05",
       "style": {
         "table": {
           "col_widths": [
@@ -2727,7 +2728,7 @@
           "agent harnessそのものとは別"
         ]
       ],
-      "notes": "Anthropicのeval記事の用語整理に基づきます。agent harnessはモデルをagentとして動かす仕組み、evaluation harnessはそのagentを評価する基盤です。\n\n根拠: HE-S05",
+      "notes": "実行履歴・採点器・評価ハーネスを分けるのは、『何が起きたか』の記録と『合格かどうか』の判定を別レイヤーに保ち、判定基準だけを差し替えられるようにするためです。\n\n根拠: HE-S05",
       "style": {
         "table": {
           "col_widths": [
