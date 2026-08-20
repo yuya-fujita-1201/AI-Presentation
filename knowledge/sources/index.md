@@ -156,6 +156,7 @@
 - [article-tools-mcp-architecture-overview.md](./article-tools-mcp-architecture-overview.md) — MCP公式ドキュメント「Architecture overview」。Host/Client/Serverのクライアント・サーバー構造、data layer/transport layerの2層設計、stdio/Streamable HTTPの2 transport、ステートレスなプロトコル設計を解説
 - [article-tools-mcp-build-server.md](./article-tools-mcp-build-server.md) — MCP公式クイックスタート「Build an MCP server」。Resources/Tools/Promptsの3大機能、Python版の環境構築とツール実装手順、STDIOサーバーの標準出力書き込み禁止、Claude for Desktopとの接続設定を解説
 - [article-tools-claude-code-skill-design.md](./article-tools-claude-code-skill-design.md) — Zenn（yamato_snow）「Claude Code Skillの作り方｜21個運用して分かった設計と育て方」。21個運用の内訳、SKILL.mdのfrontmatter主要フィールド、配置優先順位、/skill-creatorの4モード、よくある失敗パターン4つを解説
+- [article-tools-codex-cli-mcp-vs-skill-bash.md](./article-tools-codex-cli-mcp-vs-skill-bash.md) — とつブログ「Claude Code から Codex CLI を呼び出すなら MCP と SKILL/BASH どっちがいい？」。CRUD処理にはMCP・コード生成や長時間タスクにはSKILL/BASH（codex exec）という使い分け、5サーバー58ツールで約55,000トークンという実測値、`codex exec --json`によるプログラム的成否判定と`--full-auto`のリトライ活用を解説
 
 ## 動画（RAG）
 

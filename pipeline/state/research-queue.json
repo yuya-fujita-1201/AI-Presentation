@@ -615,8 +615,9 @@
         "source_tier": "secondary",
         "origin": "web:m-totsu.com",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-tools-codex-cli-mcp-vs-skill-bash.md"
       }
     ]
   }

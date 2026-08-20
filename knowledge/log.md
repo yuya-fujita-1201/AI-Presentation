@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-21（tools 記事ソース台帳1本追加 web_ledger run:0821005753）
+
+- **Add**: `knowledge/sources/article-tools-codex-cli-mcp-vs-skill-bash.md` — とつブログ「Claude Code から Codex CLI を呼び出すなら MCP と SKILL/BASH どっちがいい？実際に使って感じたこと」の台帳。CRUD処理はMCP・コード生成/長時間タスクはSKILL/BASH（codex exec）という使い分け、5サーバー58ツールで約55,000トークンという実測値、既知バグ（exit code 0を失敗時にも返すケース）、`codex exec --json`によるプログラム的成否判定、`--full-auto`とresumeによるリトライ活用、MCPのTasksプリミティブ安定化後の判断転換可能性を解説
+- **Note**: `knowledge/sources/index.md` の「記事（AIツール活用：Skills/MCP/CLI/プロンプト）」節に上記1件を追加
+
 ## 2026-08-21（tools 記事ソース台帳2本追加 web_ledger run:082100456d）
 
 - **Add**: `knowledge/sources/article-tools-mcp-build-server.md` — MCP公式クイックスタート「Build an MCP server」の台帳。MCPサーバーの3大機能（Resources/Tools/Prompts）、Python版の前提要件（Python 3.10以上・MCP SDK 2.0.0以上）、天気情報サーバーの環境構築・実装手順、STDIOサーバーの標準出力書き込み禁止とロギング推奨、Claude for Desktopとの接続設定を解説
