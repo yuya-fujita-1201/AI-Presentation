@@ -214,7 +214,7 @@ def grid(name: str, heading: str, items: list[tuple[str, str]],
 
 
 def cycle(name: str, heading: str, labels: list[str], center: list[str],
-          footer: str = "") -> None:
+          footer: str = "", highlight: int | None = None) -> None:
     import math
 
     body = t(512, 66, heading, 34, PRIMARY, 800)
@@ -226,10 +226,17 @@ def cycle(name: str, heading: str, labels: list[str], center: list[str],
     for i, (x, y) in enumerate(points):
         nx, ny = points[(i + 1) % len(points)]
         body += arrow(x, y, nx, ny, MUTED, 5)
+    # highlight を指定した場合はそのノードだけ最濃色（TERRACOTTA塗り＋白文字）にし、
+    # 残りは全て薄色に統一する。未指定時は従来どおり最初と最後をACCENTで軽く強調する。
+    soft_focus = set() if highlight is not None else {0, len(labels) - 1}
     for i, ((x, y), label) in enumerate(zip(points, labels)):
-        color = ACCENT if i in (0, len(labels) - 1) else TERRACOTTA
-        body += circle(x, y, 72, ACCENT_SOFT if color == ACCENT else PEACH, color, 4)
-        body += lines(x, y - 5, label.split("｜"), 20, color, 800, "middle", 26)
+        if i == highlight:
+            body += circle(x, y, 72, TERRACOTTA, TERRACOTTA, 4)
+            body += lines(x, y - 5, label.split("｜"), 20, WHITE, 800, "middle", 26)
+        else:
+            color = ACCENT if i in soft_focus else TERRACOTTA
+            body += circle(x, y, 72, ACCENT_SOFT if color == ACCENT else PEACH, color, 4)
+            body += lines(x, y - 5, label.split("｜"), 20, color, 800, "middle", 26)
     body += circle(cx, cy, 105, PRIMARY)
     body += lines(cx, cy - 17, center, 25, WHITE, 800, "middle", 34)
     if footer:
@@ -339,6 +346,7 @@ def main() -> None:
         ["Intent｜意図", "Context｜文脈", "Action｜行動", "Observation｜観察", "Adjustment｜調整"],
         ["合格 / 不合格", "を次へ渡す"],
         "つまずきやすいのは観察です。機械が読める信号を置きます",
+        highlight=3,
     )
 
     body = t(512, 52, "インナーループとアウターループ", 34, PRIMARY, 800)
