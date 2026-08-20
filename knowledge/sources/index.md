@@ -142,6 +142,11 @@
 - [article-rag-knowledgesense-retrieval-techniques.md](./article-rag-knowledgesense-retrieval-techniques.md) — Zenn（株式会社ナレッジセンス／門脇篤志）。LlamaIndexのRAGチートシート翻訳・解説。ドキュメント抽出精度を高める7テクニック（チャンク分割最適化・ハイブリッド検索・HyDE・情報構造化・メタデータ付加・ナレッジグラフ・埋め込みファインチューニング）を解説
 - [article-rag-qiita-kentarok-poc-production-gap.md](./article-rag-qiita-kentarok-poc-production-gap.md) — Qiita（kentarok）。組織内情報集約RAGのPoCが本番展開で頓挫する根本原因は検証設計・評価の見方のズレにあるという立場から、規程・Wiki・Slack・メールへの分散という組織内情報の構造的課題と、本番展開時に顕在化する5つの失敗パターン（古い情報の使用・最新版の見落とし・矛盾の無視・文書の取り違え・ハルシネーション）を解説
 
+## 動画（AIツール活用：Skills/MCP/CLI/プロンプト）
+
+- [video-tools-webmcp-browser-proposal.md](./video-tools-webmcp-browser-proposal.md) — 「WebMCPとは何か ブラウザ側で動くMCPの提案」（chronoit）。WebサイトがAIエージェントに操作をツールとして構造化公開する仕組みの4要素構成、サーバー側MCPとの役割分担、Cloudflareのベンダー実装、主要AI製品の対応未確認という現状を解説
+- [video-tools-google-skills-marketplace.md](./video-tools-google-skills-marketplace.md) — 「【Anthropicの標準にGoogleが乗った】google/skillsで何が変わるのか」（クロノITチャンネル）。109個のSKILL.mdの規模とprogressive disclosure、Claude Codeプラグインmarketplace経由の導入、Apache-2.0ライセンス、Copybaraによる自動運用の実態を解説
+
 ## 動画（RAG）
 
 - [video-rag-history-mechanism-limits.md](./video-rag-history-mechanism-limits.md) — 「検索拡張生成(RAG)とは？LLMの嘘と知識不足を克服する仕組みを歴史から最新技術まで解説」（AIの履歴書）。知識のカットオフとハルシネーションという2課題からの誕生経緯、標準パイプラインの4段階（インデクシング・リトリーバル・ランキング・ジェネレーション）、リコール/プレシジョンのトレードオフ、アドバンストRAG各技術を歴史・仕組み・現状と限界・これからの4章で解説

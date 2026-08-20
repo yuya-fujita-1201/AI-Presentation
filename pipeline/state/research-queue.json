@@ -38,7 +38,7 @@
       "trust": "expert",
       "score": 9,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+0",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -68,7 +68,8 @@
           "impact": "high"
         }
       ],
-      "summary": "WebMCP（サイト側がツールを公開するブラウザ内MCP）の仕組みと、サーバー側MCPとの使い分けを解説する動画"
+      "summary": "WebMCP（サイト側がツールを公開するブラウザ内MCP）の仕組みと、サーバー側MCPとの使い分けを解説する動画",
+      "ledger_path": "knowledge/sources/video-tools-webmcp-browser-proposal.md"
     },
     {
       "id": "NjXzO-b_ceg",
@@ -130,7 +131,7 @@
       "trust": "expert",
       "score": 7,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+2 再生+0",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -155,7 +156,8 @@
           "impact": "high"
         }
       ],
-      "summary": "Googleが公開したgoogle/skillsリポジトリの構造（SKILL.md・references・progressive disclosure）と、プラグインmarketplace経由での組織的な配布・運用方法を解説する動画"
+      "summary": "Googleが公開したgoogle/skillsリポジトリの構造（SKILL.md・references・progressive disclosure）と、プラグインmarketplace経由での組織的な配布・運用方法を解説する動画",
+      "ledger_path": "knowledge/sources/video-tools-google-skills-marketplace.md"
     },
     {
       "id": "EvB9HIsGv2I",

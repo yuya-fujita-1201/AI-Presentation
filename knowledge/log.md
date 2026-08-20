@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-20（tools 動画ソース台帳2本追加 research_ledger run:0820174571）
+
+- **Add**: `knowledge/sources/video-tools-webmcp-browser-proposal.md` — 「WebMCPとは何か ブラウザ側で動くMCPの提案」（chronoit）の台帳。4要素構成、サーバー側MCPとの使い分け、Cloudflareのベンダー実装、主要AI製品の対応未確認を主張テーブル5行で整理
+- **Add**: `knowledge/sources/video-tools-google-skills-marketplace.md` — 「【Anthropicの標準にGoogleが乗った】google/skillsで何が変わるのか」（クロノITチャンネル）の台帳。109個のSKILL.md規模、progressive disclosure、プラグインmarketplace導入、Apache-2.0ライセンスを主張テーブル4行で整理
+- **Note**: `knowledge/sources/index.md` に新セクション「動画（AIツール活用：Skills/MCP/CLI/プロンプト）」を追加（テーマ ai-topics-02-skills-mcp-cli 向けの初回投入）
+
 ## 2026-08-20（ragデッキ採点 停滞の手動修正）
 
 - **Fix**: `decks/06-rag/deck.json` の採点指摘を修正。①slide-34の対比表と slide-20 で「ファインチューニング」に初出説明（モデルの重み自体を変える）を追加（severity high。チャット型AIしか使っていない読者に対比の意味が通らなかった）②slide-12の「パース」に初出説明を付け、slide-11の工程名を「取り込み・パース」に揃えて語の揺れを解消 ③slide-22のleadに「コンテキスト＝LLMに一度に渡せる文章のまとまり」を一度だけ補足 ④本文行末の泣き別れ（13枚で発生）に対し `meta.layout_overrides.image_text.body_size` を17に調整
