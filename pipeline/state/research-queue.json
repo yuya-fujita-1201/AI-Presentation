@@ -579,8 +579,9 @@
         "source_tier": "primary",
         "origin": "web:modelcontextprotocol.io",
         "subtopic": "official-mcp",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-mcp"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-mcp",
+        "ledger_path": "knowledge/sources/article-tools-mcp-build-server.md"
       },
       {
         "url": "https://zenn.dev/yamato_snow/articles/3cd6ed9ac340a2",
@@ -596,8 +597,9 @@
         "source_tier": "secondary",
         "origin": "web:zenn.dev/yamato_snow",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-tools-claude-code-skill-design.md"
       },
       {
         "url": "https://www.m-totsu.com/1202/",

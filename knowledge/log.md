@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-21（tools 記事ソース台帳2本追加 web_ledger run:082100456d）
+
+- **Add**: `knowledge/sources/article-tools-mcp-build-server.md` — MCP公式クイックスタート「Build an MCP server」の台帳。MCPサーバーの3大機能（Resources/Tools/Prompts）、Python版の前提要件（Python 3.10以上・MCP SDK 2.0.0以上）、天気情報サーバーの環境構築・実装手順、STDIOサーバーの標準出力書き込み禁止とロギング推奨、Claude for Desktopとの接続設定を解説
+- **Add**: `knowledge/sources/article-tools-claude-code-skill-design.md` — Zenn（yamato_snow）「Claude Code Skillの作り方｜21個運用して分かった設計と育て方」の台帳。21個運用の内訳と常用数のギャップ、SKILL.mdのfrontmatter主要フィールド（disable-model-invocation・context: fork・paths）、配置優先順位、/skill-creatorの4モードとEval/Improveの効果、よくある失敗パターン4つ、「引き算のメンテナンス」を解説
+- **Note**: `knowledge/sources/index.md` の「記事（AIツール活用：Skills/MCP/CLI/プロンプト）」節に上記2件を追加
+
 ## 2026-08-20（tools 記事ソース台帳2本追加 web_ledger run:0820234556）
 
 - **Add**: `knowledge/sources/article-tools-agent-skills-equipping-real-world.md` — Anthropicエンジニアリングブログ「Equipping agents for the real world with Agent Skills」の台帳。Skills開発の動機（procedural knowledgeとorganizational contextの不足）、progressive disclosureの3段階構造、トークン生成よりコード実行が適する場面、開発ガイドライン4点、信頼できるソース限定というセキュリティ指針を解説

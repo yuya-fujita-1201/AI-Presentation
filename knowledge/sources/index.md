@@ -154,6 +154,8 @@
 - [article-tools-agent-skills-best-practices.md](./article-tools-agent-skills-best-practices.md) — Anthropic公式「Skill authoring best practices」。自由度の3段階設計、gerund形の命名規則、三人称description記述法、SKILL.md500行未満の分割規則、評価駆動開発の5ステップ、MCPツール完全修飾名の必要性を解説
 - [article-tools-agent-skills-equipping-real-world.md](./article-tools-agent-skills-equipping-real-world.md) — Anthropicエンジニアリングブログ「Equipping agents for the real world with Agent Skills」。Skills開発の動機とprogressive disclosureの3段階構造、トークン生成よりコード実行が適する場面、信頼できるソース限定というセキュリティ指針を解説
 - [article-tools-mcp-architecture-overview.md](./article-tools-mcp-architecture-overview.md) — MCP公式ドキュメント「Architecture overview」。Host/Client/Serverのクライアント・サーバー構造、data layer/transport layerの2層設計、stdio/Streamable HTTPの2 transport、ステートレスなプロトコル設計を解説
+- [article-tools-mcp-build-server.md](./article-tools-mcp-build-server.md) — MCP公式クイックスタート「Build an MCP server」。Resources/Tools/Promptsの3大機能、Python版の環境構築とツール実装手順、STDIOサーバーの標準出力書き込み禁止、Claude for Desktopとの接続設定を解説
+- [article-tools-claude-code-skill-design.md](./article-tools-claude-code-skill-design.md) — Zenn（yamato_snow）「Claude Code Skillの作り方｜21個運用して分かった設計と育て方」。21個運用の内訳、SKILL.mdのfrontmatter主要フィールド、配置優先順位、/skill-creatorの4モード、よくある失敗パターン4つを解説
 
 ## 動画（RAG）
 
