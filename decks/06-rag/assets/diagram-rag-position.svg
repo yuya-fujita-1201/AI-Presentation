@@ -1,1 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 768"><rect width="1024" height="768" fill="#FFF2E8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="pos-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <text x="246" y="112" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="800" fill="#7C3527">5層モデル（このシリーズの整理）</text>
+
+  <g id="layer-1">
+    <rect x="56" y="150" width="380" height="84" rx="16" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+    <text x="92" y="202" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="700" fill="#6F5C52">1｜プロンプト</text>
+  </g>
+  <g id="layer-2">
+    <rect x="56" y="244" width="380" height="84" rx="16" fill="#F0B498" stroke="#B44A32" stroke-width="4"/>
+    <text x="92" y="296" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">2｜コンテキスト</text>
+  </g>
+  <g id="layer-3">
+    <rect x="56" y="338" width="380" height="84" rx="16" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+    <text x="92" y="390" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="700" fill="#6F5C52">3｜ハーネス</text>
+  </g>
+  <g id="layer-4">
+    <rect x="56" y="432" width="380" height="84" rx="16" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+    <text x="92" y="484" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="700" fill="#6F5C52">4｜ループ</text>
+  </g>
+  <g id="layer-5">
+    <rect x="56" y="526" width="380" height="84" rx="16" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+    <text x="92" y="578" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="700" fill="#6F5C52">5｜グラフ</text>
+  </g>
+
+  <!-- ズームレンズ：左のコンテキスト層を右パネルへ拡大 -->
+  <circle cx="470" cy="286" r="28" fill="#FFF2E8" stroke="#B44A32" stroke-width="4"/>
+  <line x1="490" y1="306" x2="512" y2="328" stroke="#B44A32" stroke-width="6" stroke-linecap="round"/>
+  <line x1="498" y1="266" x2="566" y2="230" stroke="#B44A32" stroke-width="2.5" stroke-dasharray="6 6"/>
+  <line x1="498" y1="306" x2="566" y2="560" stroke="#B44A32" stroke-width="2.5" stroke-dasharray="6 6"/>
+  <text x="500" y="410" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="800" fill="#B44A32">深掘り</text>
+  <path d="M 480 425 L 520 425" stroke="#B44A32" stroke-width="4" marker-end="url(#pos-arw)"/>
+
+  <text x="781" y="112" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="800" fill="#7C3527">コンテキスト層の3つの経路</text>
+
+  <g id="path-auto">
+    <rect x="566" y="230" width="132" height="220" rx="18" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+    <circle cx="632" cy="278" r="20" fill="#FFFFFF" stroke="#6F5C52" stroke-width="2.5"/>
+    <path d="M 624 270 A 10 10 0 1 1 622 288" fill="none" stroke="#6F5C52" stroke-width="2.5"/>
+    <path d="M 620 286 L 622 292 L 628 288 Z" fill="#6F5C52"/>
+    <text x="632" y="336" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="700" fill="#6F5C52">自動ロード</text>
+    <text x="632" y="368" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="13" fill="#6F5C52">ルール・メモリ</text>
+  </g>
+  <g id="path-retrieve">
+    <rect x="714" y="230" width="132" height="220" rx="18" fill="#B44A32" stroke="#7C3527" stroke-width="4"/>
+    <circle cx="780" cy="278" r="16" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+    <line x1="791" y1="289" x2="804" y2="302" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+    <text x="780" y="336" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="800" fill="#FFFFFF">必要時に取得</text>
+    <text x="780" y="368" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="13" fill="#FFEDE3">スキル・検索</text>
+  </g>
+  <g id="path-manual">
+    <rect x="862" y="230" width="132" height="220" rx="18" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+    <path d="M 912 278 H 944" stroke="#6F5C52" stroke-width="3" marker-end="url(#pos-arw)"/>
+    <rect x="944" y="266" width="20" height="24" rx="3" fill="#FFFFFF" stroke="#6F5C52" stroke-width="2"/>
+    <text x="928" y="336" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="700" fill="#6F5C52">今回渡す</text>
+    <text x="928" y="368" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="13" fill="#6F5C52">プロンプト</text>
+  </g>
+
+  <text x="512" y="694" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">5層モデル・3経路とも本シリーズ独自の整理です</text>
+</svg>

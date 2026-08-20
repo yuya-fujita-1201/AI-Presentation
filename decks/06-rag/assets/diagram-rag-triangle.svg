@@ -1,1 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 768"><rect width="1024" height="768" fill="#FFF2E8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="tri-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3527"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <text x="512" y="100" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" font-weight="700" fill="#6F5C52">3者の関係だけで測る（正解データなし）</text>
+
+  <g id="edge-context-relevance">
+    <path d="M 472 224 L 322 540" stroke="#7C3527" stroke-width="4" marker-start="url(#tri-arw)" marker-end="url(#tri-arw)"/>
+    <rect x="322" y="356" width="150" height="40" rx="20" fill="#FFF9F3" stroke="#F0B498" stroke-width="2"/>
+    <text x="397" y="382" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="800" fill="#7C3527">文脈の妥当性</text>
+  </g>
+
+  <g id="edge-answer-relevance">
+    <path d="M 552 224 L 700 540" stroke="#7C3527" stroke-width="4" marker-start="url(#tri-arw)" marker-end="url(#tri-arw)"/>
+    <rect x="552" y="356" width="150" height="40" rx="20" fill="#FFF9F3" stroke="#F0B498" stroke-width="2"/>
+    <text x="627" y="382" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="800" fill="#7C3527">回答の妥当性</text>
+  </g>
+
+  <g id="edge-faithfulness">
+    <path d="M 372 596 L 652 596" stroke="#B44A32" stroke-width="7" marker-start="url(#tri-arw)" marker-end="url(#tri-arw)"/>
+    <rect x="437" y="612" width="150" height="40" rx="20" fill="#FFF9F3" stroke="#B44A32" stroke-width="2.5"/>
+    <text x="512" y="638" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="800" fill="#B44A32">忠実性</text>
+  </g>
+
+  <g id="vertex-question">
+    <circle cx="512" cy="180" r="54" fill="#FADFD5" stroke="#7C3527" stroke-width="3"/>
+    <text x="512" y="196" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="38" font-weight="800" fill="#7C3527">?</text>
+    <text x="512" y="256" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="800" fill="#7C3527">質問</text>
+  </g>
+
+  <g id="vertex-document">
+    <rect x="253" y="548" width="70" height="92" rx="6" fill="#FFEDE3" stroke="#B44A32" stroke-width="2" transform="rotate(-6 288 594)"/>
+    <rect x="265" y="540" width="70" height="92" rx="6" fill="#F6E6CF" stroke="#B44A32" stroke-width="2.5" transform="rotate(5 300 586)"/>
+    <line x1="278" y1="566" x2="318" y2="562" stroke="#7C3527" stroke-width="2.5" transform="rotate(5 300 586)"/>
+    <line x1="278" y1="580" x2="318" y2="576" stroke="#7C3527" stroke-width="2.5" transform="rotate(5 300 586)"/>
+    <line x1="278" y1="594" x2="308" y2="591" stroke="#7C3527" stroke-width="2.5" transform="rotate(5 300 586)"/>
+    <text x="300" y="672" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="800" fill="#7C3527">資料</text>
+  </g>
+
+  <g id="vertex-answer">
+    <path d="M 654 550 H 774 A 16 16 0 0 1 790 566 V 606 A 16 16 0 0 1 774 622 H 706 L 700 640 L 694 622 H 654 A 16 16 0 0 1 638 606 V 566 A 16 16 0 0 1 654 550 Z" fill="#F0B498" stroke="#7C3527" stroke-width="3"/>
+    <text x="714" y="596" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="30" font-weight="800" fill="#7C3527">…</text>
+    <text x="714" y="672" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="800" fill="#7C3527">答え</text>
+  </g>
+
+  <text x="512" y="712" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">質問・資料・答えの整合性だけを見る、3つの指標</text>
+</svg>

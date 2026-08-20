@@ -1,1 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 768"><rect width="1024" height="768" fill="#FFF2E8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="qr-arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3527"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <g id="bubble-question">
+    <path d="M 84 320 H 260 A 24 24 0 0 1 284 344 V 424 A 24 24 0 0 1 260 448 H 130 L 96 448 L 118 420 H 84 A 24 24 0 0 1 60 396 V 344 A 24 24 0 0 1 84 320 Z" fill="#FFF2E8" stroke="#6F5C52" stroke-width="3"/>
+    <text x="172" y="366" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="800" fill="#6F5C52">曖昧な質問</text>
+    <text x="172" y="398" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="13" fill="#6F5C52">「去年の経費のやつ</text>
+    <text x="172" y="418" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="13" fill="#6F5C52">どうなった?」</text>
+  </g>
+
+  <path d="M 288 360 C 360 320 400 260 416 232" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#qr-arw)"/>
+  <g id="card-rewrite">
+    <rect x="420" y="168" width="210" height="112" rx="14" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+    <text x="525" y="204" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" font-weight="800" fill="#7C3527">① クエリ変換</text>
+    <text x="525" y="234" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="14" font-weight="700" fill="#6F5C52">検索向けの言葉に</text>
+    <text x="525" y="256" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="14" font-weight="700" fill="#6F5C52">書き換える</text>
+  </g>
+  <path d="M 634 232 C 690 260 730 290 758 322" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#qr-arw)"/>
+
+  <path d="M 288 408 C 360 448 400 500 416 528" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#qr-arw)"/>
+  <g id="card-hyde">
+    <rect x="420" y="468" width="210" height="112" rx="14" fill="#FADFD5" stroke="#F0B498" stroke-width="3"/>
+    <text x="525" y="504" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" font-weight="800" fill="#7C3527">② HyDE</text>
+    <text x="525" y="534" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="14" font-weight="700" fill="#6F5C52">仮の回答を作り</text>
+    <text x="525" y="556" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="14" font-weight="700" fill="#6F5C52">その文で検索する</text>
+  </g>
+  <path d="M 634 516 C 690 490 730 450 758 418" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#qr-arw)"/>
+
+  <g id="search-window">
+    <circle cx="832" cy="370" r="86" fill="#B44A32" stroke="#7C3527" stroke-width="5"/>
+    <circle cx="832" cy="370" r="60" fill="none" stroke="#F0B498" stroke-width="3"/>
+    <line x1="892" y1="430" x2="950" y2="488" stroke="#7C3527" stroke-width="16" stroke-linecap="round"/>
+    <text x="832" y="702" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" font-weight="800" fill="#B44A32">検索窓（共通の入口）</text>
+  </g>
+
+  <text x="512" y="90" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">2つの経路は、どちらも同じ検索窓に合流する</text>
+</svg>

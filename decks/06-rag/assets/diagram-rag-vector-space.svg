@@ -1,1 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 768"><rect width="1024" height="768" fill="#FFF2E8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <rect x="80" y="140" width="864" height="520" rx="28" fill="#FFF2E8" stroke="#FADFD5" stroke-width="2"/>
+  <text x="512" y="118" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" font-weight="700" fill="#6F5C52">意味の近さで散らばる平面（イメージ図）</text>
+
+  <g id="point-paraphrase-1">
+    <line x1="280" y1="320" x2="360" y2="380" stroke="#7C3527" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <circle cx="280" cy="320" r="14" fill="#7C3527" stroke="#FFFFFF" stroke-width="2"/>
+  </g>
+  <g id="point-paraphrase-2">
+    <line x1="300" y1="452" x2="360" y2="380" stroke="#7C3527" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <circle cx="300" cy="452" r="14" fill="#7C3527" stroke="#FFFFFF" stroke-width="2"/>
+  </g>
+  <g id="point-paraphrase-3">
+    <line x1="432" y1="298" x2="360" y2="380" stroke="#7C3527" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <circle cx="432" cy="298" r="14" fill="#7C3527" stroke="#FFFFFF" stroke-width="2"/>
+  </g>
+  <g id="point-paraphrase-4">
+    <line x1="452" y1="444" x2="360" y2="380" stroke="#7C3527" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <circle cx="452" cy="444" r="14" fill="#7C3527" stroke="#FFFFFF" stroke-width="2"/>
+  </g>
+  <text x="366" y="256" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="800" fill="#7C3527">言い換え（意味が近い）</text>
+
+  <g id="point-question">
+    <rect x="340" y="360" width="34" height="34" fill="#B44A32" stroke="#7C3527" stroke-width="3" transform="rotate(45 357 377)"/>
+    <text x="357" y="424" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" font-weight="800" fill="#B44A32">質問</text>
+    <text x="357" y="448" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="14" font-weight="700" fill="#6F5C52">「有給って何日?」</text>
+  </g>
+
+  <g id="point-mismatch-a">
+    <circle cx="750" cy="506" r="50" fill="none" stroke="#A63D32" stroke-width="2.5" stroke-dasharray="6 5"/>
+    <text x="750" y="430" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="800" fill="#A63D32">型番違いを取り違える</text>
+    <line x1="700" y1="466" x2="736" y2="498" stroke="#A63D32" stroke-width="1.5"/>
+    <circle cx="740" cy="500" r="16" fill="#A63D32" stroke="#7C3527" stroke-width="2.5"/>
+    <text x="696" y="462" text-anchor="end" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" font-weight="800" fill="#A63D32">XR-2000</text>
+  </g>
+  <g id="point-mismatch-b">
+    <line x1="804" y1="548" x2="766" y2="514" stroke="#A63D32" stroke-width="1.5"/>
+    <circle cx="762" cy="512" r="16" fill="#A63D32" stroke="#7C3527" stroke-width="2.5"/>
+    <text x="808" y="554" text-anchor="start" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" font-weight="800" fill="#A63D32">XR-3000</text>
+  </g>
+
+  <text x="512" y="694" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">言い換えは拾えるが、ほぼ同じ位置の別物は取り違える</text>
+</svg>

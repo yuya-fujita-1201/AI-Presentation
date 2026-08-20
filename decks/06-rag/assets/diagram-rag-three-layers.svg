@@ -1,1 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 768"><rect width="1024" height="768" fill="#FFF2E8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+  <path d="M 270 150 L 512 92 L 754 150 Z" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+  <rect x="280" y="655" width="464" height="14" fill="#6F5C52"/>
+
+  <g id="floor-3">
+    <rect x="280" y="150" width="464" height="160" fill="#F6E6CF" stroke="#F0B498" stroke-width="3"/>
+    <rect x="330" y="248" width="120" height="14" rx="4" fill="#7C3527"/>
+    <rect x="345" y="200" width="90" height="48" rx="4" fill="#FFFFFF" stroke="#7C3527" stroke-width="2.5"/>
+    <line x1="360" y1="214" x2="420" y2="214" stroke="#7C3527" stroke-width="2"/>
+    <line x1="360" y1="228" x2="420" y2="228" stroke="#7C3527" stroke-width="2"/>
+    <line x1="452" y1="230" x2="452" y2="190" stroke="#7C3527" stroke-width="4"/>
+    <path d="M 452 190 A 22 22 0 0 1 474 168 L 490 178 L 466 208 Z" fill="#F0B498" stroke="#7C3527" stroke-width="2.5"/>
+    <text x="520" y="234" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">層3｜読書机</text>
+  </g>
+
+  <g id="floor-2">
+    <rect x="280" y="320" width="464" height="160" fill="#FADFD5" stroke="#F0B498" stroke-width="3"/>
+    <rect x="330" y="395" width="180" height="16" rx="8" fill="#7C3527"/>
+    <circle cx="340" cy="403" r="12" fill="#FFFFFF" stroke="#7C3527" stroke-width="3"/>
+    <circle cx="500" cy="403" r="12" fill="#FFFFFF" stroke="#7C3527" stroke-width="3"/>
+    <rect x="368" y="374" width="46" height="30" rx="4" fill="#FFFFFF" stroke="#7C3527" stroke-width="2.5"/>
+    <path d="M 520 403 H 546" stroke="#7C3527" stroke-width="3" stroke-dasharray="5 5"/>
+    <text x="520" y="404" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">層2｜コンベア</text>
+  </g>
+
+  <g id="floor-1">
+    <rect x="280" y="490" width="464" height="160" fill="#B44A32" stroke="#7C3527" stroke-width="4"/>
+    <line x1="330" y1="580" x2="470" y2="580" stroke="#FFEDE3" stroke-width="4"/>
+    <rect x="340" y="530" width="26" height="50" rx="3" fill="#FFEDE3"/>
+    <rect x="374" y="522" width="26" height="58" rx="3" fill="#F0B498"/>
+    <rect x="440" y="526" width="26" height="54" rx="3" fill="#FFEDE3"/>
+    <rect x="405" y="524" width="30" height="56" rx="3" fill="none" stroke="#FFEDE3" stroke-width="2.5" stroke-dasharray="5 5"/>
+    <text x="520" y="574" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">層1｜本棚</text>
+  </g>
+
+  <g id="defect-3">
+    <line x1="744" y1="230" x2="800" y2="230" stroke="#A63D32" stroke-width="2.5" stroke-dasharray="4 4"/>
+    <circle cx="826" cy="230" r="26" fill="#FFF9F3" stroke="#A63D32" stroke-width="3"/>
+    <text x="826" y="239" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="800" fill="#A63D32">!</text>
+    <text x="862" y="236" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" font-weight="800" fill="#A63D32">取り出せない</text>
+  </g>
+  <g id="defect-2">
+    <line x1="744" y1="400" x2="800" y2="400" stroke="#A63D32" stroke-width="2.5" stroke-dasharray="4 4"/>
+    <circle cx="826" cy="400" r="26" fill="#FFF9F3" stroke="#A63D32" stroke-width="3"/>
+    <text x="826" y="409" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="800" fill="#A63D32">!</text>
+    <text x="862" y="406" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" font-weight="800" fill="#A63D32">届かない</text>
+  </g>
+  <g id="defect-1">
+    <line x1="744" y1="570" x2="800" y2="570" stroke="#7C3527" stroke-width="2.5" stroke-dasharray="4 4"/>
+    <circle cx="826" cy="570" r="26" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="826" y="579" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="800" fill="#FFFFFF">!</text>
+    <text x="862" y="576" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" font-weight="800" fill="#7C3527">資料が無い</text>
+  </g>
+
+  <text x="512" y="710" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">まず1階を確認する——資料の有無で、直す場所は半分に絞れる</text>
+</svg>

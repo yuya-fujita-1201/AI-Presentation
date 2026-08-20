@@ -1,1 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 768"><rect width="1024" height="768" fill="#FFF2E8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="okfArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 支える関係を示す縦の背骨線（土台から最上段へ） -->
+  <line x1="44" y1="546" x2="44" y2="91" stroke="#B44A32" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="44" cy="546" r="7" fill="#B44A32"/>
+
+  <!-- 第5層: 処理のつながり（グラフ） -->
+  <g id="layer-5">
+    <rect x="90" y="50" width="880" height="82" rx="20" fill="#FCE9DC" stroke="#F0B498" stroke-width="3"/>
+    <line x1="44" y1="91" x2="90" y2="91" stroke="#B44A32" stroke-width="3.5" marker-end="url(#okfArrow)"/>
+    <text x="140" y="100" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">処理のつながり（グラフ）</text>
+    <text x="560" y="98" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">順序・分岐・役割分担</text>
+  </g>
+
+  <!-- 第4層: 確認の繰り返し（ループ） -->
+  <g id="layer-4">
+    <rect x="90" y="146" width="880" height="82" rx="20" fill="#FCE9DC" stroke="#F0B498" stroke-width="3"/>
+    <line x1="44" y1="187" x2="90" y2="187" stroke="#B44A32" stroke-width="3.5" marker-end="url(#okfArrow)"/>
+    <text x="140" y="196" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">確認の繰り返し（ループ）</text>
+    <text x="560" y="194" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">作る→確かめる→直す</text>
+  </g>
+
+  <!-- 第3層: 安全な環境（ハーネス） -->
+  <g id="layer-3">
+    <rect x="90" y="242" width="880" height="82" rx="20" fill="#FCE9DC" stroke="#F0B498" stroke-width="3"/>
+    <line x1="44" y1="283" x2="90" y2="283" stroke="#B44A32" stroke-width="3.5" marker-end="url(#okfArrow)"/>
+    <text x="140" y="292" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">安全な環境（ハーネス）</text>
+    <text x="560" y="290" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">権限・ツール・実行環境</text>
+  </g>
+
+  <!-- 第2層: 渡す情報（コンテキスト） -->
+  <g id="layer-2">
+    <rect x="90" y="338" width="880" height="82" rx="20" fill="#FCE9DC" stroke="#F0B498" stroke-width="3"/>
+    <line x1="44" y1="379" x2="90" y2="379" stroke="#B44A32" stroke-width="3.5" marker-end="url(#okfArrow)"/>
+    <text x="140" y="388" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">渡す情報（コンテキスト）</text>
+    <text x="560" y="386" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">資料・前提を渡す</text>
+  </g>
+
+  <!-- 第1層: 頼み方（プロンプト） -->
+  <g id="layer-1">
+    <rect x="90" y="434" width="880" height="82" rx="20" fill="#FCE9DC" stroke="#F0B498" stroke-width="3"/>
+    <line x1="44" y1="475" x2="90" y2="475" stroke="#B44A32" stroke-width="3.5" marker-end="url(#okfArrow)"/>
+    <text x="140" y="484" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">頼み方（プロンプト）</text>
+    <text x="560" y="482" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">AIへの指示の出し方</text>
+  </g>
+
+  <!-- 土台: OKF＝知識の書き方（最濃） -->
+  <g id="okf-foundation">
+    <rect x="90" y="546" width="880" height="110" rx="22" fill="#B44A32" stroke="#7C3527" stroke-width="4"/>
+    <text x="512" y="597" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF">OKF＝知識の書き方</text>
+    <text x="512" y="631" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#FFEDE3">すべての層が読み書きする土台</text>
+  </g>
+
+  <text x="512" y="712" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">※5層モデルは教材向けの整理であり、業界標準ではありません</text>
+</svg>

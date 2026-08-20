@@ -1,1 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 768"><rect width="1024" height="768" fill="#FFF2E8"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="asoArrowMuted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6F5C52"/>
+    </marker>
+    <marker id="asoArrowBold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 左: SEO経路（人間の検索エンジン向け） -->
+  <g id="path-seo">
+    <rect x="60" y="260" width="300" height="220" rx="24" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <circle cx="152" cy="312" r="22" fill="none" stroke="#7C3527" stroke-width="5"/>
+    <line x1="168" y1="328" x2="188" y2="348" stroke="#7C3527" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="262" cy="300" r="15" fill="#7C3527"/>
+    <path d="M 240 340 Q 262 316 284 340 L 284 352 L 240 352 Z" fill="#7C3527"/>
+    <text x="210" y="400" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="30" font-weight="800" fill="#7C3527">SEO</text>
+    <text x="210" y="430" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#6F5C52">人間の検索エンジン向け</text>
+    <text x="210" y="455" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="15" fill="#6F5C52">キーワード・構造化</text>
+    <path d="M 360 370 H 383" fill="none" stroke="#6F5C52" stroke-width="4" marker-end="url(#asoArrowMuted)"/>
+  </g>
+
+  <!-- 中央: 見つけてもらう知識（共通ゴール） -->
+  <rect x="387" y="315" width="250" height="110" rx="24" fill="#F6E6CF" stroke="#7C3527" stroke-width="3"/>
+  <text x="512" y="368" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">見つけてもらう知識</text>
+  <text x="512" y="398" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="15" fill="#6F5C52">両方の対策で見つけてもらう</text>
+
+  <!-- 右: ASO経路（AIエージェント向け・最濃） -->
+  <g id="path-aso">
+    <rect x="664" y="260" width="300" height="220" rx="24" fill="#B44A32" stroke="#7C3527" stroke-width="4"/>
+    <rect x="738" y="298" width="60" height="52" rx="10" fill="#FFFFFF"/>
+    <circle cx="752" cy="320" r="5" fill="#B44A32"/>
+    <circle cx="784" cy="320" r="5" fill="#B44A32"/>
+    <line x1="768" y1="298" x2="768" y2="286" stroke="#FFFFFF" stroke-width="4"/>
+    <circle cx="768" cy="282" r="5" fill="#FFFFFF"/>
+    <rect x="850" y="296" width="46" height="58" rx="6" fill="#FFFFFF"/>
+    <rect x="860" y="308" width="26" height="5" fill="#B44A32"/>
+    <rect x="860" y="320" width="26" height="5" fill="#B44A32"/>
+    <rect x="860" y="332" width="18" height="5" fill="#B44A32"/>
+    <text x="814" y="400" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="30" font-weight="800" fill="#FFFFFF">ASO</text>
+    <text x="814" y="430" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#FFEDE3">AIエージェント向け</text>
+    <text x="814" y="455" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="15" fill="#FFEDE3">見つけやすさ対策</text>
+    <path d="M 664 370 H 641" fill="none" stroke="#B44A32" stroke-width="6" marker-end="url(#asoArrowBold)"/>
+
+    <rect x="664" y="500" width="300" height="54" rx="18" fill="#FADFD5" stroke="#B44A32" stroke-width="2"/>
+    <text x="814" y="533" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" font-weight="700" fill="#7C3527">解説動画が独自に紹介</text>
+  </g>
+
+  <text x="512" y="650" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">※ASOは業界で確立した標準用語ではありません（解説動画の紹介にもとづく）</text>
+</svg>
