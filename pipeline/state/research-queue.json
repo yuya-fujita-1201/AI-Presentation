@@ -482,7 +482,64 @@
     }
   ],
   "web": {
-    "subtopics_done": [],
-    "candidates": []
+    "subtopics_done": [
+      "official-skills"
+    ],
+    "candidates": [
+      {
+        "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview",
+        "title": "Agent Skills",
+        "publisher": "Anthropic (Claude Platform Docs)",
+        "retrieved": "2026-08-20",
+        "extract": "【Why use Skills】Skillsは「reusable, filesystem-based resources that give Claude domain-specific expertise: workflows, context, and best practices」であり、会話単位の一時的指示であるプロンプトとの違いは「Skills load on demand, so you don't have to repeat the same guidance across conversations」という再利用性にある。利点は Specialize Claude / Reduce repetition / Compose capabilities の3点。\n\n【Using Skills】事前構築の Pre-built Agent Skills（PowerPoint=pptx, Excel=xlsx, Word=docx, PDF=pdf の4種）は claude.ai・Claude API・Claude Platform on AWS・Microsoft Foundry（Hosted on Anthropicデプロイのみ）で利用可。Custom Skillsは Claude Code・Claude API・claude.ai settingsのいずれでも作成でき「once a Skill is available in your environment, Claude uses it automatically when relevant to your request」という点は両者共通。\n\n【How Skills work】SkillsはClaudeの仮想マシン内のfilesystemアクセスを土台に、progressive disclosure（段階的開示）を実現する。「organized like an onboarding guide you'd create for a new team member」という比喩が使われる。3階層構造は次の通り（本文の表より）：\n- Level 1 Metadata：常時ロード、約100トークン/Skill、YAML frontmatterのname/description。「until a Skill is triggered, only its name and description occupy context」\n- Level 2 Instructions：トリガー時にロード、目安5,000トークン未満、SKILL.md本文のワークフロー・ベストプラクティス\n- Level 3+ Resources：必要時のみロード、未アクセス時のトークンコストはゼロ。参照ファイルは読むとコンテキストに入るが、スクリプトはbash実行されその出力のみが入り「the script code itself never enters context」\n\nこの設計により「no practical limit on bundled content」（未使用ファイルはコンテキストコストゼロ）とされる。読み込みの実例として、pdf-processingスキルは (1)起動時にname/descriptionがシステムプロンプトに入る (2)ユーザー要求に一致すると `bash: cat pdf-processing/SKILL.md` でロード (3)Claudeがフォーム入力不要と判断すればFORMS.mdは読まない、という流れが示されている。\n\n【Skill structure】SKILL.mdはYAML frontmatterが必須で、必須フィールドは name と description のみ。nameは「Maximum 64 characters」「Must contain only lowercase letters, numbers, and hyphens」「Cannot contain XML tags」「Cannot contain reserved words: \"anthropic\", \"claude\"」。descriptionは「Must be non-empty」「Maximum 1024 characters」「Cannot contain XML tags」で、「must say both what the Skill does and when to use it」。\n\n【Where Skills work】Claude APIでは `container` パラメータに `skill_id`（pptx/xlsx/docx/pdf）を指定し code execution tool が必須、サンドボックスは「no network access and no runtime package installation」。Claude Codeでは `~/.claude/skills/`（personal）または `.claude/skills/`（project）にディレクトリを置くだけでAPIアップロード不要、フルネットワークアクセスあり。claude.aiではSettings > Featuresからzipでアップロード（Pro/Max/Team/Enterprise、code execution有効時）、個人単位で組織全体共有・admin管理は不可。「Custom Skills do not sync across surfaces」という制約が明記されている。\n\n【Security considerations】「Use Skills only from trusted sources: those you created yourself or obtained from Anthropic」と警告し、「a malicious Skill can direct Claude to invoke tools or execute code in ways that don't match the Skill's stated purpose」と説明。外部URLを取得するSkillは特にリスクが高いとされ、Enterprise版では custom Skillsに対する「Skill content scanning」機能がある（Skills APIやConsole経由のアップロードは対象外）。",
+        "quote": "Skills are reusable, filesystem-based resources that give Claude domain-specific expertise: workflows, context, and best practices that turn a general-purpose agent into a specialist.",
+        "claims": [
+          "Anthropicの公式ドキュメントは、SkillsがLevel1メタデータ（常時ロード・約100トークン）→Level2 SKILL.md本文（トリガー時ロード・5k トークン未満目安）→Level3以降の参照ファイル・スクリプト（必要時のみ・未使用ならゼロコスト）という3段階のprogressive disclosureで構成されると規定している。",
+          "SKILL.mdのYAML frontmatterで必須なのはnameとdescriptionの2フィールドのみで、nameは64文字以内・小文字英数字とハイフンのみ・予約語anthropic/claude禁止、descriptionは1024文字以内で「何を・いつ使うか」を含める必要があると定められている。",
+          "Custom SkillsはclaudeAI・Claude API・Claude Codeの各サーフェス間で同期せず、それぞれ個別にアップロード・配置する必要があるとAnthropicは明記している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:claude.com",
+        "subtopic": "official-skills",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-skills"
+      },
+      {
+        "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "title": "Skill authoring best practices",
+        "publisher": "Anthropic (Claude Platform Docs)",
+        "retrieved": "2026-08-20",
+        "extract": "【Core principles】「Good Skills are concise, well-structured, and tested with real usage」が冒頭の原則。コンテキストウィンドウは「a public good」であり、システムプロンプト・会話履歴・他Skillのメタデータ・実際の要求と共有される。デフォルト前提は「Claude is already very smart」であり、Claudeが既知の説明は書かない。具体例として、約50トークンの簡潔版（pdfplumberのコード例のみ）と、約150トークンの冗長版（PDFとは何かの説明から始まる）が対比され、簡潔版が推奨されている。\n\n【Set appropriate degrees of freedom】タスクの脆弱性・多様性に応じて指示の具体性を変える。High freedom（複数の妥当なアプローチがある場合）はテキストによる一般的指示、Medium freedomは擬似コードやパラメータ付きスクリプト、Low freedom（操作が壊れやすく一貫性が重要な場合。例：データベースマイグレーション）は「Run exactly this script」と特定のスクリプトを厳密指定する。比喩として「narrow bridge with cliffs on both sides（低自由度）」と「open field with no hazards（高自由度）」が使われる。\n\n【Test with all models】SkillはHaiku（十分なガイダンスがあるか）・Sonnet（明確で効率的か）・Opus（過剰説明していないか）それぞれでテストすべきとされる。\n\n【Naming conventions】Skill名はgerund形（動詞+ing、例：processing-pdfs, analyzing-spreadsheets）が推奨され、helper/utils/toolsのような曖昧な名前や予約語（anthropic-helper等）は避ける。\n\n【Writing effective descriptions】「Always write in third person」と明記され、「I can help you...」のような一人称は discovery問題を起こすため避ける。description例：「Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.」逆に「Helps with documents」のような曖昧な記述はNG。Claudeは100以上のSkillの中からdescriptionだけで選択するとされる。\n\n【Progressive disclosure patterns】「Keep SKILL.md body under 500 lines for optimal performance」「Split content into separate files when approaching this limit」という具体的な行数上限が示される。参照ファイルはSKILL.mdから1階層のみ（Avoid deeply nested references）とし、100行を超える参照ファイルには目次（Table of Contents）を付けるべきとされる。理由は「Claude may partially read files when they're referenced from other referenced files」（`head -100`等での部分読みになりうるため）。\n\n【Workflows and feedback loops】複雑なタスクにはチェックリスト形式のワークフローを、品質が重要なタスクには「Run validator → fix errors → repeat」のフィードバックループを組み込むことが推奨される。\n\n【Evaluation and iteration】「Create evaluations BEFORE writing extensive documentation」と明記され、評価駆動開発の5ステップ（gaps特定→3シナリオ作成→ベースライン測定→最小限の指示作成→反復）が示される。開発手法として「Claude A（Skill設計を手伝うインスタンス）」と「Claude B（実際にSkillを使ってタスクを行うインスタンス）」を役割分担させる手法が紹介されている。\n\n【Anti-patterns】Windows形式のパス（バックスラッシュ）は避け常にフォワードスラッシュを使う。選択肢を並べすぎない（例：pypdf/pdfplumber/PyMuPDF...と列挙せず、デフォルト+エスケープハッチ形式にする）。\n\n【MCP tool references】SkillがMCPツールを使う場合は必ず完全修飾名 `ServerName:tool_name`（例：`BigQuery:bigquery_schema`）を使うべきとされ、サーバー名を省略すると「tool not found」エラーになりうるとされる。\n\n【Checklist】公開前チェックリストには「Description is specific and includes key terms」「SKILL.md body is under 500 lines」「File references are one level deep」「Tested with Haiku, Sonnet, and Opus」「At least three evaluations created」などが含まれる。",
+        "quote": "The 'name' and 'description' in your Skill's metadata are particularly critical. Claude uses these when determining whether to trigger the Skill in response to the current task.",
+        "claims": [
+          "Anthropicのベストプラクティスガイドは、SKILL.md本文を500行未満に抑え、参照ファイルはSKILL.mdから1階層のみリンクすることを推奨し、超える場合は複数ファイルに分割すべきとしている。",
+          "description欄は必ず三人称で書き「何をするか」と「いつ使うべきか」の両方を含めるべきで、Claudeは100以上のSkillの中からこのdescriptionのみを手がかりに選択判断を行うとされる。",
+          "Skill開発は「評価をドキュメント作成より先に作る」評価駆動アプローチと、設計担当（Claude A）と実行担当（Claude B）に役割を分けて観察・反復する手法が推奨されている。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:claude.com",
+        "subtopic": "official-skills",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-skills"
+      },
+      {
+        "url": "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+        "title": "Equipping agents for the real world with Agent Skills",
+        "publisher": "Anthropic (Engineering Blog)",
+        "retrieved": "2026-08-20",
+        "extract": "【背景と課題意識】Anthropicは2025年10月16日にAgent Skillsを発表した。記事は開発動機を「Claude is powerful, but real work requires procedural knowledge and organizational context」と述べ、モデル能力の向上によりローカルコード実行やファイルシステムと相互作用する汎用エージェントの構築が可能になった一方で「we need more composable, scalable, and portable ways to equip them with domain-specific expertise」という課題が生じたと説明している。\n\n【設計思想：progressive disclosure】中核設計原理はprogressive disclosureであり、「Like a well-organized manual that starts with a table of contents, then specific chapters, and finally a detailed appendix, skills let Claude load information only as needed」と説明される。段階構造はドキュメントページと同様に、(1) SKILL.mdのYAMLメタデータ（name/description）がシステムプロンプトに事前ロードされ使うべきスキルの判断材料になる、(2) 関連性が確認されるとSKILL.md全体がコンテキストに入る、(3) 追加の参照ファイル（reference.md, forms.md等）が必要に応じてオンデマンドで読まれる、という3段階。この設計により「the amount of context that can be bundled into a skill is effectively unbounded」という利点が生まれるとしている。\n\n【Skillの構成要素】SKILL.mdファイル（YAMLフロントマター＋詳細説明）、関連ファイル群、実行可能コードの3種で構成される。PDF編集スキルの例では、Claudeは既に「PDFの理解」に長けているが「manipulate them directly (e.g. to fill out a form)」という能力が不足しており、Skillsはこのギャップを埋めるものと位置づけられている。\n\n【コード実行の役割】記事は「Large language models excel at many tasks, but certain operations are better suited for traditional code execution」と述べ、例として「sorting a list via token generation is far more expensive than simply running a sorting algorithm」を挙げる。また「many applications require the deterministic reliability that only code can provide」と、決定論的な信頼性の観点でのコード実行の価値を強調する。Claudeはスクリプトをコンテキストに読み込まずに実行でき「this workflow is consistent and repeatable」とされる。\n\n【既存アプローチとの位置づけ】記事は「Instead of building fragmented, custom-designed agents for each use case」という従来の課題を挙げ、Skillsによって「anyone can now specialize their agents with composable capabilities by capturing and sharing their procedural knowledge」という再利用可能・構成可能なコンポーネント化を実現するとする（ファインチューニングやRAGとの直接比較・ベンチマーク数値は記事内に掲載されていない）。\n\n【開発ガイドライン】(1) 評価から始める：「Identify specific gaps in your agents' capabilities by running them on representative tasks」、(2) スケール設計：SKILL.mdが大きくなったら内容を分離し相互参照、(3) Claudeの視点で考える：スキル名と説明への注意、実使用パターンのモニタリング、(4) Claudeとの反復：「ask Claude to capture its successful approaches and common mistakes into reusable context」。\n\n【セキュリティ】「malicious skills may introduce vulnerabilities in the environment where they're used or direct Claude to exfiltrate data」とリスクを明示し、対策として「installing skills only from trusted sources」を推奨。特に「code dependencies and bundled resources like images or scripts」や、外部の信頼できないネットワーク先へ接続させる指示・コードへの警戒を促している。\n\n【提供範囲と今後】発表時点でClaude.ai・Claude Code・Claude Agent SDK・Claude Developer Platformで対応。今後数週間でスキル作成・編集・検出・共有・使用のライフサイクル機能を追加予定とし、MCPサーバーとの補完的活用の検討、将来的には「enable agents to create, edit, and evaluate Skills on their own」という展望も述べられている。設計哲学として「Skills are a simple concept with a correspondingly simple format」「Building a skill for an agent is like putting together an onboarding guide for a new hire」という比喩で締めくくられる。",
+        "quote": "Like a well-organized manual that starts with a table of contents, then specific chapters, and finally a detailed appendix, skills let Claude load information only as needed.",
+        "claims": [
+          "Anthropicはこのブログ記事で、Agent Skillsの開発動機を「モデル能力向上で汎用エージェント構築は可能になったが、ドメイン固有の専門知識を構成可能・スケーラブル・可搬な形で与える手段が不足していた」ことにあると説明している。",
+          "記事はコード実行の価値を、トークン生成よりアルゴリズム実行の方が効率的である点と、決定論的な信頼性が必要なタスクに向いている点の2軸で説明し、具体的なベンチマーク数値は示していない。",
+          "セキュリティ面では信頼できるソース以外からのSkillインストールにはコード依存関係・バンドルされた画像やスクリプト・外部ネットワーク接続指示への監査が必要だと警告している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:anthropic.com",
+        "subtopic": "official-skills",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-skills"
+      }
+    ]
   }
 }
