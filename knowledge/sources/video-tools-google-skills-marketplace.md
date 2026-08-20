@@ -85,4 +85,4 @@ GoogleがAnthropic発の仕様であるAgent Skillsに乗り、Google Cloud・Fi
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/progressive-disclosure.md](../agent-capabilities/progressive-disclosure.md) — 109個中59個がreferencesフォルダを持つ構成、BigQueryの8 references、726行と30行台という厚みのばらつきを、段階的開示が実物にどう現れるかの実例として使用（auto字幕由来のため帰属＋（聞き取り））

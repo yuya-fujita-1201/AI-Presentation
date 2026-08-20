@@ -54,4 +54,6 @@ Skillは、YAMLフロントマターと詳細説明を含むSKILL.mdファイル
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/overview.md](../agent-capabilities/overview.md) — 「real work requires procedural knowledge and organizational context」とコード実行の価値（ソートの例）を、能力をモデルの外側に置く理由として使用。ファインチューニング/RAGとの比較が記事内にないことも誤解の節で明示
+- [../agent-capabilities/what-are-agent-skills.md](../agent-capabilities/what-are-agent-skills.md) — 開発動機（composable/scalable/portable）、PDF編集における「分かってはいるができない」ギャップ、Skillの3構成要素、コード実行の2つの価値（コストと決定論的信頼性）、onboarding guideの比喩の根拠
+- [../agent-capabilities/progressive-disclosure.md](../agent-capabilities/progressive-disclosure.md) — 段階的開示のマニュアル比喩の引用と「effectively unbounded」の根拠

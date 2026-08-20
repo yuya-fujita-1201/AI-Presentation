@@ -58,4 +58,4 @@ Skillファイルの基本構造はYAMLフロントマター付きのMarkdownフ
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/what-are-agent-skills.md](../agent-capabilities/what-are-agent-skills.md) — 「最初はnameとdescriptionだけのシンプルなSKILL.mdで十分」という始め方のハードルの低さを、必須2フィールドという公式仕様と併せて提示（帰属を明示）

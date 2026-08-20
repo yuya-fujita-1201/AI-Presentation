@@ -84,3 +84,4 @@ Claude Codeのサブエージェント機能を前編・後編の2本立てで�
 
 - [../graph-engineering/subagent-design-in-practice.md](../graph-engineering/subagent-design-in-practice.md) — サブエージェントの定義と独立したコンテキスト、フロントマターの設定項目（name/description必須、model継承、tools/disallowedToolsと拒否リスト優先、skills非継承、memory、color）、ツール未指定時の全ツール継承、4通りの呼び出し方、メインから受け取る5つの情報と会話履歴が渡らないこと、最終結果のみが返る設計、ネスト不可・横のつながりなし・同一ファイル並列編集の競合という3制約、Anthropic公式ブログ由来として紹介される使用/回避場面の主根拠。auto字幕由来のimpact:high主張のため、コンセプト側では帰属＋（聞き取り）で記述している
 - [../graph-engineering/handoffs-and-ownership.md](../graph-engineering/handoffs-and-ownership.md) — サブエージェントの中間処理はメインに渡らず最終結果のみが返るという設計をマネージャー型（所有権がメインに残る）の実例として使用。会話履歴・他サブエージェント出力が共有されないこと、同一ファイル並列編集で競合が発生しうるという注意を、作業対象の所有権が必要になる理由として使用（聞き取り）
+- [../agent-capabilities/overview.md](../agent-capabilities/overview.md) — Claude Codeの機能を「実行主体／能力（スキルとMCP）／ルール・環境（CLAUDE.mdやフック）」の3つに整理する私見を、4手段の分類が実務側の整理と一致することの傍証として使用（auto字幕由来のため帰属＋（聞き取り））

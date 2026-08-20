@@ -48,4 +48,6 @@ Anthropicは「Use Skills only from trusted sources: those you created yourself 
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/overview.md](../agent-capabilities/overview.md) — Skillsとプロンプトの違い（「Skills load on demand...」の引用）を4手段を区別する第1の理由として使用
+- [../agent-capabilities/what-are-agent-skills.md](../agent-capabilities/what-are-agent-skills.md) — Skillの公式定義の引用、name/descriptionの制約（64文字・予約語・1024文字・what+when）、自動起動の挙動、Pre-built 4種と環境別の制約表、surface間で同期しないという明記の根拠
+- [../agent-capabilities/progressive-disclosure.md](../agent-capabilities/progressive-disclosure.md) — 3階層とトークン数（Level1約100トークン・Level2 5,000トークン未満・Level3ゼロ）、「the script code itself never enters context」「no practical limit on bundled content」、pdf-processingの読み込み手順の根拠
