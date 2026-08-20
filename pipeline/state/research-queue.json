@@ -541,8 +541,9 @@
         "source_tier": "secondary",
         "origin": "web:anthropic.com",
         "subtopic": "official-skills",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-skills"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-skills",
+        "ledger_path": "knowledge/sources/article-tools-agent-skills-equipping-real-world.md"
       },
       {
         "url": "https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture",
@@ -559,8 +560,9 @@
         "source_tier": "primary",
         "origin": "web:modelcontextprotocol.io",
         "subtopic": "official-mcp",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-mcp"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-mcp",
+        "ledger_path": "knowledge/sources/article-tools-mcp-architecture-overview.md"
       },
       {
         "url": "https://modelcontextprotocol.io/docs/develop/build-server",

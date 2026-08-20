@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-20（tools 記事ソース台帳2本追加 web_ledger run:0820234556）
+
+- **Add**: `knowledge/sources/article-tools-agent-skills-equipping-real-world.md` — Anthropicエンジニアリングブログ「Equipping agents for the real world with Agent Skills」の台帳。Skills開発の動機（procedural knowledgeとorganizational contextの不足）、progressive disclosureの3段階構造、トークン生成よりコード実行が適する場面、開発ガイドライン4点、信頼できるソース限定というセキュリティ指針を解説
+- **Add**: `knowledge/sources/article-tools-mcp-architecture-overview.md` — MCP公式ドキュメント「Architecture overview」の台帳。MCP Host/Client/Serverのクライアント・サーバー構造（サーバーごとに専用Clientを1つ生成）、data layer（JSON-RPC）/transport layer（stdio・Streamable HTTP）の2層設計、ステートレスなプロトコル設計、Tools/Resources/Promptsの3大プリミティブを解説
+- **Note**: `knowledge/sources/index.md` の「記事（AIツール活用：Skills/MCP/CLI/プロンプト）」節に上記2件を追加
+
 ## 2026-08-20（tools 記事ソース台帳2本追加 web_ledger run:08202257d3）
 
 - **Add**: `knowledge/sources/article-tools-agent-skills-overview.md` — Anthropic公式「Agent Skills」の台帳。Skillsの定義とプロンプトとの違い、Pre-built/Custom Skillsの違い、Level1〜3のprogressive disclosure構造、SKILL.mdのfrontmatter必須要件、セキュリティ上の注意点を解説

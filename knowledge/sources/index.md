@@ -152,6 +152,8 @@
 
 - [article-tools-agent-skills-overview.md](./article-tools-agent-skills-overview.md) — Anthropic公式「Agent Skills」。Skillsの定義とプロンプトとの違い、Pre-built/Custom Skillsの違い、Level1〜3のprogressive disclosure構造、SKILL.mdのfrontmatter必須要件、セキュリティ上の注意点を解説
 - [article-tools-agent-skills-best-practices.md](./article-tools-agent-skills-best-practices.md) — Anthropic公式「Skill authoring best practices」。自由度の3段階設計、gerund形の命名規則、三人称description記述法、SKILL.md500行未満の分割規則、評価駆動開発の5ステップ、MCPツール完全修飾名の必要性を解説
+- [article-tools-agent-skills-equipping-real-world.md](./article-tools-agent-skills-equipping-real-world.md) — Anthropicエンジニアリングブログ「Equipping agents for the real world with Agent Skills」。Skills開発の動機とprogressive disclosureの3段階構造、トークン生成よりコード実行が適する場面、信頼できるソース限定というセキュリティ指針を解説
+- [article-tools-mcp-architecture-overview.md](./article-tools-mcp-architecture-overview.md) — MCP公式ドキュメント「Architecture overview」。Host/Client/Serverのクライアント・サーバー構造、data layer/transport layerの2層設計、stdio/Streamable HTTPの2 transport、ステートレスなプロトコル設計を解説
 
 ## 動画（RAG）
 
