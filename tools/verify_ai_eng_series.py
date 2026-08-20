@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DECK_ROOT = ROOT / "decks"
 REFERENCE = DECK_ROOT / "01-prompt-engineering"
 TARGETS = {
-    "03-harness-engineering": 66,
+    "03-harness-engineering": 68,
     "04-loop-engineering": 55,
     "05-graph-engineering": 49,
 }
