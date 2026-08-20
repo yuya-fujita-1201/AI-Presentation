@@ -22,17 +22,17 @@
   <text x="166" y="245" text-anchor="middle" class="h" font-size="24">3</text>
   <text x="200" y="245" class="h" font-size="27">安全な環境（ハーネス）</text>
 
-  <rect x="166" y="274" width="692" height="334" rx="26" fill="#FADFD5" stroke="#B44A32" stroke-width="5"/>
-  <circle cx="208" cy="318" r="21" fill="#FFFFFF" stroke="#B44A32" stroke-width="4"/>
-  <text x="208" y="327" text-anchor="middle" class="h accent" font-size="25" fill="#B44A32">2</text>
-  <text x="244" y="328" class="h accent" font-size="30" fill="#B44A32">渡す情報（コンテキスト）</text>
-  <text x="684" y="328" class="h accent" font-size="23" fill="#B44A32">資料・前提</text>
+  <rect x="166" y="274" width="692" height="334" rx="26" fill="#B44A32" stroke="#7C3527" stroke-width="4"/>
+  <circle cx="208" cy="318" r="21" fill="#FFFFFF"/>
+  <text x="208" y="327" text-anchor="middle" class="h" font-size="25" fill="#B44A32">2</text>
+  <text x="244" y="328" class="h w" font-size="30" fill="#FFFFFF">渡す情報（コンテキスト）</text>
+  <text x="684" y="328" class="h w" font-size="23" fill="#FFFFFF">資料・前提</text>
 
-  <rect x="236" y="402" width="552" height="152" rx="24" fill="#7C3527"/>
-  <circle cx="314" cy="478" r="25" fill="#FFFFFF"/>
-  <text x="314" y="489" text-anchor="middle" class="h" font-size="30" fill="#7C3527">1</text>
-  <text x="362" y="476" class="h w" font-size="36" fill="#FFFFFF">頼み方（プロンプト）</text>
-  <text x="362" y="516" class="w" font-size="23" fill="#FFFFFF">1回の指示</text>
+  <rect x="236" y="402" width="552" height="152" rx="24" fill="#FCE9DC" stroke="#F0B498" stroke-width="3"/>
+  <circle cx="314" cy="478" r="25" fill="#FFFFFF" stroke="#F0B498" stroke-width="3"/>
+  <text x="314" y="489" text-anchor="middle" class="h" font-size="30" fill="#2B211D">1</text>
+  <text x="362" y="476" class="h" font-size="36" fill="#2B211D">頼み方（プロンプト）</text>
+  <text x="362" y="516" class="m" font-size="23" fill="#6F5C52">1回の指示</text>
 
   <g>
     <rect x="686" y="208" width="206" height="54" rx="27" fill="#B44A32"/>
