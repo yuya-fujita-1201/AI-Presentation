@@ -40,6 +40,8 @@ generated:
 | **MCP** | 外部サービスへの接続口（ツール・データ） | 別プロセスのサーバー | 接続中は常にツール一覧が載る |
 | **CLI** | 既存のコマンドライン道具 | OSにインストール済み | AIがコマンドを打った時だけ |
 
+CLIには他の3つと違い専用のコンセプトファイルがない。「CLIとは何か」の定義は[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)の冒頭にまとめている。
+
 表が5行あるのは、プロンプトを「その場の指示」と「常設化したルール」に分けて示したためである。この2つは実体としては同じ「言葉で指示する」手段であり、本バンドルでは4手段のうちの「プロンプト」として1本のコンセプト（[prompts-and-project-rules.md](./prompts-and-project-rules.md)）でまとめて扱う。
 
 この4分類は本バンドル独自の切り口ではなく、実務側の整理ともおおむね一致している。[サブエージェント解説動画](../sources/video-ge-subagent-overview-basics.md)は、Claude Codeの機能を「実行主体（メインセッション・サブエージェント）」「能力（スキルとMCP）」「ルール・環境（CLAUDE.mdやフック）」の3つに整理すると分かりやすい、という見方を私見として述べている（聞き取り）。ここで**スキルとMCPが同じ「能力」の箱に並び、CLAUDE.mdが別の箱に置かれている**点が、上の表と対応する。
@@ -52,11 +54,7 @@ generated:
 
 ### 理由1: 会話をまたいで残るかどうか
 
-[Anthropicの公式ドキュメント](../sources/article-tools-agent-skills-overview.md)は、Skillsとプロンプトの違いを再利用性の一点で説明している。
-
-> 引用: 「Skills load on demand, so you don't have to repeat the same guidance across conversations.」
-
-プロンプトは会話単位の一時的な指示であり、次の会話には残らない。同じ説明を毎回書いているなら、それはプロンプトで済ませるべきではない仕事だ、という判断基準になる。
+[Anthropicの公式ドキュメント](../sources/article-tools-agent-skills-overview.md)は、Skillsとプロンプトの違いを再利用性の一点で説明している。プロンプトは会話単位の一時的な指示であり、次の会話には残らない。同じ説明を毎回書いているなら、それはプロンプトで済ませるべきではない仕事だ、という判断基準になる。公式の引用と詳しい根拠は[prompts-and-project-rules.md](./prompts-and-project-rules.md)を参照。
 
 ### 理由2: 結果が毎回ブレるかどうか
 
@@ -66,12 +64,12 @@ generated:
 
 ### 理由3: コンテキストを食う量が違う
 
-同動画は、コンテキストウィンドウ（1回のやり取りで扱える情報量）には上限があり、能力を全部最初から読み込んでしまうとこれを圧迫すると説明している（[13:00]〜[14:00]、聞き取り）。ここが4手段の実務上の最大の分かれ目になる。プロジェクトルールは常に全文が載り、MCPは接続中ずっとツール定義が載り、Skillは名前と説明だけが載る——この差が、能力を増やしたときの「重さ」の差になる。仕組みは[progressive-disclosure.md](./progressive-disclosure.md)で、実際の選び方は[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)で扱う。
+コンテキストウィンドウ（1回のやり取りで扱える情報量）には上限があり、能力を全部最初から読み込んでしまうとこれを圧迫する。ここが4手段の実務上の最大の分かれ目になる。プロジェクトルールは常に全文が載り、MCPは接続中ずっとツール定義が載り、Skillは名前と説明だけが載る——この差が、能力を増やしたときの「重さ」の差になる。仕組みは[progressive-disclosure.md](./progressive-disclosure.md)で、実際の選び方は[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)で扱う。
 
 ## よくある誤解
 
 - **SkillはMCPの進化形ではない**: 前掲の入門動画は、SkillはMCPからの単純な進化形というわけではなく、そもそもの概念が異なるものだと補足している（聞き取り）。実際、MCPは「外部サービスに繋ぐ通信規格」、Skillは「ファイルに置いた手順書」であり、解いている問題が違う。両方を同時に使う構成が普通である
-- **4つは排他ではない**: 上に見たとおりAgent SDKは4つとも同時に提供する。「MCPを入れたからSkillは要らない」といった関係にはない
+- **4つは排他ではない**: 上に見たとおりAgent SDKは4つとも同時に提供する。「MCPを入れたからSkillは要らない」といった関係にはない。[Anthropicのエンジニアリングブログ](../sources/article-tools-agent-skills-equipping-real-world.md)もSkillの発表時点でMCPサーバーとの補完的な活用の検討に触れており、公式側もSkillとMCPを対立する選択肢としてではなく組み合わせるものとして位置づけている
 - **Skillは特定製品の機能名ではなくなりつつある**: 入門動画は、この仕組みを最初に搭載したのはAnthropicのClaudeであり、その後ChatGPTのCodex、Antigravity、Gemini、Manusなど各社の生成AIツールにも同様の概念が広がっていると述べている（聞き取り）。実際にGoogleが同じ形式でスキル集を公開している件は[distribution-and-governance.md](./distribution-and-governance.md)で扱う
 - **「能力を足す」＝モデルを再学習させることではない**: ファインチューニングやRAGとの直接比較は本バンドルの主根拠には含まれていない（[Anthropicのエンジニアリングブログ](../sources/article-tools-agent-skills-equipping-real-world.md)にも比較・ベンチマークの記載はない）。ここで扱うのはあくまで、モデルを変えずに外側から渡す手段である
 
@@ -90,7 +88,7 @@ generated:
 
 ## 読む順番の提案
 
-- **まず全体像だけ掴みたい**: 本ファイル → [what-are-agent-skills.md](./what-are-agent-skills.md) → [what-is-mcp.md](./what-is-mcp.md) の3本で、4手段のうち2つの実体が分かる
+- **まず全体像だけ掴みたい**: 本ファイル → [prompts-and-project-rules.md](./prompts-and-project-rules.md) → [what-are-agent-skills.md](./what-are-agent-skills.md) → [what-is-mcp.md](./what-is-mcp.md) の4本で、最も手前の手段（プロンプト）を含む4手段のうち3つの実体が分かる
 - **明日から自分で何か作りたい**: 上の3本の後、[prompts-and-project-rules.md](./prompts-and-project-rules.md) → [writing-good-skills.md](./writing-good-skills.md)。実際に手を動かす順もこの並びで、プロンプトで試す→効いた指示をルールに常設化する→手順が長くなったらSkillに切り出す、が最も無駄が少ない
 - **導入判断・技術選定をする立場**: [progressive-disclosure.md](./progressive-disclosure.md) → [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) → [distribution-and-governance.md](./distribution-and-governance.md)。コスト構造・使い分け・ガバナンスの3点が判断材料になる
 - **[webmcp-and-frontier.md](./webmcp-and-frontier.md) は最後でよい**: 提案段階の話であり、確定していない論点を多く含む

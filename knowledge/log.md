@@ -1,5 +1,17 @@
 # 変更履歴
 
+## 2026-08-21（agent-capabilities 採点指摘の修正 improve_k run:082115153b）
+
+- **Fix**: 採点findings 12件（severity mid5/low7）を全件修正
+  - 台帳の反映漏れを追加: `distribution-and-governance.md`（google/skillsのカテゴリ内訳・別リポジトリの件）、`writing-good-skills.md`（`/skill-creator`のCreateモード起点作成推奨・`!<command>`構文・開発ガイドライン4点・文章修正傾向）、`what-are-agent-skills.md`（図クリエイトチャットの実演例）
+  - 番号・構造の矛盾を解消: `overview.md`（「まず全体像だけ掴みたい」コースを4本に改め`prompts-and-project-rules.md`を含める。地図番号自体はf7の指摘との整合のため据え置き）、`choosing-skill-mcp-or-cli.md`（「CLIとは何か」節を新設し4手段中CLIだけ専用の居場所がない状態を解消、`overview.md`表からリンク）
+  - 未定義語の手当て: `writing-good-skills.md`（MCPツール完全修飾名の箇所に`what-is-mcp.md`へのリンクを追加）、`choosing-skill-mcp-or-cli.md`（サブエージェントの一文定義を追加し4手段外の補助的選択肢と明記）
+  - 重複の解消: 「Skills load on demand」「do not sync across surfaces」「誤起動注意」「引き算のメンテナンス」「コンテキストウィンドウ上限」の5主張について一次担当ファイル（順に`prompts-and-project-rules.md`/`what-are-agent-skills.md`/`writing-good-skills.md`/`distribution-and-governance.md`/`progressive-disclosure.md`）を決め、`overview.md`含む他ファイルは1文要約＋リンクに置換
+  - タイムスタンプの補完: auto字幕由来の引用・言及に欠けていたタイムスタンプ（`.skill形式`[30:00]、規模[01:00]、プラグイン数[06:00]、ライセンス[08:00]、誤起動[19:00]、サブエージェントが受け取る5情報[22:00]、全ツール継承[08:00]）をソース側で検証のうえ補完
+  - 文体の反復緩和: 「〜しておけばよい」型の文末定型が`what-is-mcp.md`に3箇所連続していたため2箇所を通常の断定文に書き換え、`progressive-disclosure.md`の同型1箇所も書き換え
+  - 制作メモの露出を修正: `index.md`から「overview.md側で一元管理しており、ここでは重複させない」等の編集方針の文言を削除し、読者向けの一言案内に置き換え
+- **Note**: `/opt/homebrew/bin/python3 tools/validate_okf.py knowledge` で errors: 0, warnings: 0 を確認
+
 ## 2026-08-21（agent-capabilities 採点指摘の修正 improve_k run:082112577c）
 
 - **Fix**: 採点findings 14件のうち13件を修正（残り1件は範囲外としてdeferred）

@@ -20,17 +20,15 @@ Skillが1つ書けると、次に来るのは「これ、チームにも配り�
 
 [Skillの正体は指示書とスクリプトを束ねたフォルダである](./what-are-agent-skills.md)。この一点が、配布のしやすさをそのまま決めている。フォルダなので、コピーでも、zipでも、Gitリポジトリでも配れる。特別な配布基盤が要らない。
 
-実際の入口は、使う場所によって分かれる。[Anthropicの公式ドキュメント](../sources/article-tools-agent-skills-overview.md)によれば、Claude Code では `~/.claude/skills/`（personal）または `.claude/skills/`（project）にディレクトリを置くだけでよく、APIへのアップロードは不要である。claude.ai では Settings > Features から zip でアップロードする方式（Pro/Max/Team/Enterprise、code execution 有効時）になる。[Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)は、完成したSkillを `.skill` 形式のファイルとしてダウンロードでき、受け取った側は設定画面からアップロードすれば同じSkillを使えるようになると説明している（聞き取り）。
+実際の入口は、使う場所によって分かれる。[Anthropicの公式ドキュメント](../sources/article-tools-agent-skills-overview.md)によれば、Claude Code では `~/.claude/skills/`（personal）または `.claude/skills/`（project）にディレクトリを置くだけでよく、APIへのアップロードは不要である。claude.ai では Settings > Features から zip でアップロードする方式（Pro/Max/Team/Enterprise、code execution 有効時）になる。[Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)は、完成したSkillを `.skill` 形式のファイルとしてダウンロードでき、受け取った側は設定画面からアップロードすれば同じSkillを使えるようになると説明している（[30:00]、聞き取り）。
 
-ただし、ここに**最初につまずくポイント**がある。同公式ドキュメントは次のように明記している。
-
-> 引用: 「Custom Skills do not sync across surfaces」
-
-claude.ai にアップロードしたSkillが Claude Code でも使えるようになる、といったことは起きない。さらに claude.ai 方式は個人単位での利用であり、**組織全体での共有やadmin管理はできない**と同ドキュメントは述べている。「1人が作って全社に配る」を素朴に期待すると、ここで止まる。組織配布をやりたいなら、次に見るリポジトリ＋プラグインという経路になる。
+ただし、ここに**最初につまずくポイント**がある。同公式ドキュメントは、Custom Skillsは環境をまたいで同期しないと明記している（引用は[what-are-agent-skills.md](./what-are-agent-skills.md)を参照）。claude.ai にアップロードしたSkillが Claude Code でも使えるようになる、といったことは起きない。さらに claude.ai 方式は個人単位での利用であり、**組織全体での共有やadmin管理はできない**と同ドキュメントは述べている。「1人が作って全社に配る」を素朴に期待すると、ここで止まる。組織配布をやりたいなら、次に見るリポジトリ＋プラグインという経路になる。
 
 ## リポジトリで配る——google/skills という実例
 
-大規模に配っている実物を見るのが早い。[google/skills解説動画](../sources/video-tools-google-skills-marketplace.md)は、GoogleがAnthropic発のAgent Skills仕様に乗り、Google Cloud・Google Ads・Google Analytics等の操作手順をスキル集として公開したと紹介している。同動画は、SKILL.mdが109個あり全部を足すと2万3千行を超える、Claude Codeのプラグインmarketplaceには16個のプラグインが登録されている、と述べている（いずれも聞き取り）。
+大規模に配っている実物を見るのが早い。[google/skills解説動画](../sources/video-tools-google-skills-marketplace.md)は、GoogleがAnthropic発のAgent Skills仕様に乗り、Google Cloud・Google Ads・Google Analytics等の操作手順をスキル集として公開したと紹介している。同動画は、SKILL.mdが109個あり全部を足すと2万3千行を超える（[01:00]、聞き取り）、Claude Codeのプラグインmarketplaceには16個のプラグインが登録されている（[06:00]、聞き取り）、と述べている。
+
+規模の内訳も同動画は示している（聞き取り）。カテゴリ別ではAI/ML系18個・Infrastructure系28個（うちAgent Platform関連13個）・Databases系10個、単一製品でなく複数製品を組み合わせる横断スキルが9個、Google Cloud以外にもGoogle Ads APIが12個・Google Analytics APIが2個ある。一方でFirebase・Flutter・Android・Genkitはこの109個には含まれず、それぞれ別のリポジトリ（`firebase/agent-skills` 等）で製品チーム側が管理しているとされる。**「配る」は1つのリポジトリに全部詰め込むことではなく、製品チームごとに分けて配ることも含む**——ここも実例から読み取れる設計判断である。
 
 導入は2ステップだと同動画は説明している（聞き取り）。
 
@@ -58,7 +56,7 @@ claude plugin install <名前>@google-plugins
 
 ## ライセンスと「正」の所在
 
-配られているものを社内向けに改変してよいかは、ライセンス次第である。同動画は、google/skills のライセンスは Apache-2.0 であり、社内向けに削ったり書き換えたりするのは自由だとしている（聞き取り）。
+配られているものを社内向けに改変してよいかは、ライセンス次第である。同動画は、google/skills のライセンスは Apache-2.0 であり、社内向けに削ったり書き換えたりするのは自由だとしている（[08:00]、聞き取り）。
 
 一方で、**直したものを上流に返す経路は細い**とも同動画は指摘する。中身はGoogleの社内リポジトリから Copybara という仕組みで自動エクスポートされており、リポジトリの「正」はGoogle社内側にある。GitHub上のコントリビューターは6人で、うち自動化アカウントが203コミットを入れており、人が集まって育てるOSSというよりGoogle社内のミラーに近い、タグやリリース、Discussionsも用意されていない、と評している（聞き取り）。
 
@@ -90,7 +88,7 @@ claude plugin install <名前>@google-plugins
 
 [Claude Code Skillを21個運用した記事](../sources/article-tools-claude-code-skill-design.md)の著者は、21個のうち16個は自作だとしたうえで、実際に毎週使うのは5〜6個のみだと明かしている。同記事はこれを受けて、月1回程度の見直し・モデル更新時のBenchmark実行・不要なSkillの定期削除という**「引き算のメンテナンス」**を実践しているとしている。
 
-減らす理由は精神論ではない。Skillの起動判定は description だけで行われるため（[progressive-disclosure.md](./progressive-disclosure.md)）、**似たSkillが増えるほど誤起動が起きやすくなる**。[Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)も、似たようなスキルが複数有効になっているとAIがどちらを読み込むべきか判断できず誤ったスキルが呼び出される場合があるため、使わないスキルはオフにしておくべきだと述べている（聞き取り）。[google/skills解説動画](../sources/video-tools-google-skills-marketplace.md)も、発火判定の精度は description の質で決まり、書き方が曖昧だと誤ったスキルが発火することがあるとしている（聞き取り）。
+減らす理由は精神論ではない。Skillの起動判定は description だけで行われるため（[progressive-disclosure.md](./progressive-disclosure.md)）、**似たSkillが増えるほど誤起動が起きやすくなる**。誤起動が起きる仕組みと避け方は[writing-good-skills.md](./writing-good-skills.md)にまとめている。
 
 **組織のSkillカタログは、増やす管理より減らす管理のほうが難しく、効果が大きい。** 誰が棚卸しするかを決めていない状態で配布だけ始めると、半年後に「入っているが誰も使っていないSkill」が誤起動の温床になる。書き方そのものの指針は[writing-good-skills.md](./writing-good-skills.md)を参照してほしい。
 

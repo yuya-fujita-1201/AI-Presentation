@@ -53,11 +53,13 @@ generated:
 
 さらに、Claudeはスクリプトをコンテキストに読み込まずに実行できるため「this workflow is consistent and repeatable」であるとも述べている。**同じスクリプトを走らせれば同じ結果が出る**という当たり前の性質が、生成のたびに揺れるLLMの出力と組み合わさることで効いてくる。
 
+[Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)の講師は、この効き方を自作した「図クリエイトチャット」というSkillで実演している。YouTube動画用の図解を、依頼のたびに色味や雰囲気が変わることなく、一貫したフォーマットで作成できるようにしたものだという（聞き取り）。指示書だけを渡していた頃はアウトプットが依頼ごとにブレていたのに対し、スクリプトをセットで持たせることでこの一貫性が得られた、という具体例になっている。
+
 ## 素のプロンプトとの違い、GPTs/Gemsとの違い
 
 Skillの位置づけは、比較対象を2つ置くと分かりやすい。
 
-**素のプロンプトとの違いは「残るかどうか」である。** [公式ドキュメント](../sources/article-tools-agent-skills-overview.md)は、プロンプトが会話単位の一時的な指示であるのに対し、Skillsは「Skills load on demand, so you don't have to repeat the same guidance across conversations」——必要に応じて読み込まれるので同じ指示を会話ごとに繰り返さずに済む——と説明している。同ドキュメントはSkillsの利点として、Claudeの専門化・重複の削減・能力の合成の3点を挙げている。
+**素のプロンプトとの違いは「残るかどうか」である。**[公式ドキュメント](../sources/article-tools-agent-skills-overview.md)は、プロンプトが会話単位の一時的な指示であるのに対しSkillsは必要に応じて読み込まれるので同じ指示を会話ごとに繰り返さずに済むと説明している（引用と詳しい根拠は[prompts-and-project-rules.md](./prompts-and-project-rules.md)を参照）。同ドキュメントはSkillsの利点として、Claudeの専門化・重複の削減・能力の合成の3点を挙げている。
 
 **GPTsやGemsとの違いは「スクリプトを持てるかどうか」である。** [Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)の講師は、従来のGPTsやGemsがマークダウン形式の指示書（カスタム指示）しか保持できなかったのに対し、Skillは指示書に加えてパワーポイント作成やExcel作成、図作成のための実際のプログラムをセットで保持できる点が異なると説明している（[01:00]〜[02:00]、聞き取り）。同氏はこれによって「同じような精度・品質を保ったアウトプット」を作れるようになるとしている（聞き取り）。前節で見た公式ブログの「deterministic reliability」の説明と、方向としては同じことを指している。
 
@@ -65,7 +67,7 @@ Skillの位置づけは、比較対象を2つ置くと分かりやすい。
 
 [公式ドキュメント](../sources/article-tools-agent-skills-overview.md)は「once a Skill is available in your environment, Claude uses it automatically when relevant to your request」と述べている。ユーザーが「このSkillを使え」と指定する必要はなく、要求内容に関連するとAIが判断すれば自動で読まれる。
 
-これは便利であると同時に、**「起動されるかどうかはdescriptionの書き方で決まる」**という設計上の重心を生む。同ドキュメントは、Skillが起動されるまでコンテキストを占めるのは名前と説明だけだとしており、AIは実質そこだけを手がかりに選ぶことになる。入門動画も、似たようなスキルが複数有効になっているとAIがどちらを読み込むべきか判断できず誤ったスキルが呼び出される場合があるため、使わないスキルはオフにしておくべきだと注意している（[19:00]、聞き取り）。この論点は[writing-good-skills.md](./writing-good-skills.md)に集約する。
+これは便利であると同時に、**「起動されるかどうかはdescriptionの書き方で決まる」**という設計上の重心を生む。同ドキュメントは、Skillが起動されるまでコンテキストを占めるのは名前と説明だけだとしており、AIは実質そこだけを手がかりに選ぶことになる。書き方を誤ると似たSkill同士で誤起動が起きる点は[writing-good-skills.md](./writing-good-skills.md)に集約する。
 
 ## どこで使えるか——環境ごとに制約が違う
 
