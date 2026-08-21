@@ -166,6 +166,48 @@ def scope_of(theme_id):
     return CFG.get("theme_scope", {}).get(theme_id, "full")
 
 
+def pause_is_stale():
+    """PAUSEの外し忘れを自動判定する。
+
+    PAUSEは別レーンが手作業前に `touch pipeline/PAUSE` で置く保護（RUNBOOK参照）だが、
+    作業終了後の削除を忘れると、パイプラインが何時間も空振りし続ける（2026-08-18に17時間、
+    08-21に6時間半の停止が実際に発生）。そこで「置かれてから十分経過し、かつ直近に
+    リポジトリを触った形跡がない」場合のみ失効とみなして自動解除する。
+    作業中のレーンを踏まないことが最優先なので、痕跡が1つでもあれば解除しない。
+
+    完走PAUSE（advance_themeが理由文を書き込む）は中身があるので対象外。
+    """
+    if not os.path.exists(PAUSE):
+        return False
+    try:
+        if os.path.getsize(PAUSE) > 0:      # 理由文つき = 完走PAUSE等。触らない
+            return False
+        stale_min = CFG.get("pause_stale_min", 90)
+        activity_min = CFG.get("pause_activity_min", 30)
+        now = time.time()
+        if now - os.path.getmtime(PAUSE) < stale_min * 60:
+            return False
+        # 直近の他レーン活動を探す（パイプライン自身の出力は除外）
+        skip = ("pipeline/logs", "pipeline/state", "pipeline/staging", ".git/")
+        for root, dirs, files in os.walk(ROOT):
+            dirs[:] = [d for d in dirs if d not in (".git", "node_modules", "build", "DerivedData")]
+            rel = os.path.relpath(root, ROOT)
+            if any(rel.startswith(s) for s in skip):
+                continue
+            for f in files:
+                try:
+                    if now - os.path.getmtime(os.path.join(root, f)) < activity_min * 60:
+                        return False   # 誰かが作業中 → 解除しない
+                except OSError:
+                    continue
+        os.remove(PAUSE)
+        log_activity(f"⏸→▶ PAUSEの外し忘れを自動解除（{stale_min}分以上経過・"
+                     f"直近{activity_min}分の作業痕跡なし）")
+        return True
+    except OSError:
+        return False
+
+
 def advance_theme(state, queue, note):
     """テーマ完了時の遷移。次テーマがあればstate/queueを初期化して自走継続、無ければ完走PAUSE"""
     series = state["theme"]["series"]
@@ -1541,7 +1583,7 @@ def cycle():
         save_state(state)
         return 2
     state = load_state()
-    if os.path.exists(PAUSE):
+    if os.path.exists(PAUSE) and not pause_is_stale():
         log_activity("⏸ PAUSE中（pipeline/PAUSE を削除で再開）")
         return 0
     if state.get("stuck"):

@@ -88,5 +88,7 @@
     "evals": "full",
     "sec": "full",
     "aidocs": "full"
-  }
+  },
+  "pause_stale_min": 90,
+  "pause_activity_min": 30
 }
