@@ -45,7 +45,7 @@ generated:
 | `name` | 最大64文字。小文字・数字・ハイフンのみ。`anthropic`・`claude`といった予約語を含んではならない |
 | `description` | 空は不可。最大1024文字。**「何をするか」と「いつ使うか」の両方**を書かなければならない |
 
-必須が2つだけ、というのは実務上かなり重要な性質である。前掲の入門動画も「最初はnameとdescriptionだけのシンプルなSKILL.mdで十分」という立場を紹介している——正確には[21個運用の実務記事](../sources/article-tools-claude-code-skill-design.md)側の主張だが、始めるハードルの低さは両者に共通する見立てである。詳細は[writing-good-skills.md](./writing-good-skills.md)を参照。
+必須が2つだけ、というのは実務上かなり重要な性質である。[21個運用の実務記事](../sources/article-tools-claude-code-skill-design.md)も「最初はnameとdescriptionだけのシンプルなSKILL.mdで十分。使いながら育てていくのが一番のコツ」と述べており、始めるハードルの低さを実務側からも裏付けている。詳細は[writing-good-skills.md](./writing-good-skills.md)を参照。
 
 ### スクリプトを同梱できることが効く
 
@@ -59,7 +59,7 @@ Skillの位置づけは、比較対象を2つ置くと分かりやすい。
 
 **素のプロンプトとの違いは「残るかどうか」である。** [公式ドキュメント](../sources/article-tools-agent-skills-overview.md)は、プロンプトが会話単位の一時的な指示であるのに対し、Skillsは「Skills load on demand, so you don't have to repeat the same guidance across conversations」——必要に応じて読み込まれるので同じ指示を会話ごとに繰り返さずに済む——と説明している。同ドキュメントはSkillsの利点として、Claudeの専門化・重複の削減・能力の合成の3点を挙げている。
 
-**GPTsやGemsとの違いは「スクリプトを持てるかどうか」である。** [Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)の講師は、従来のGPTsやGemsがマークダウン形式の指示書（カスタム指示）しか保持できなかったのに対し、Skillは指示書に加えてパワーポイント作成やExcel作成、図作成のための実際のプログラムをセットで保持できる点が異なると説明している（[01:00]〜[02:00]、聞き取り）。同氏はこれによって「同じような精度・品質を保ったアウトプット」を作れるようになるとしている（聞き取り）。前節で見た公式ブログの「decisive reliability」の説明と、方向としては同じことを指している。
+**GPTsやGemsとの違いは「スクリプトを持てるかどうか」である。** [Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)の講師は、従来のGPTsやGemsがマークダウン形式の指示書（カスタム指示）しか保持できなかったのに対し、Skillは指示書に加えてパワーポイント作成やExcel作成、図作成のための実際のプログラムをセットで保持できる点が異なると説明している（[01:00]〜[02:00]、聞き取り）。同氏はこれによって「同じような精度・品質を保ったアウトプット」を作れるようになるとしている（聞き取り）。前節で見た公式ブログの「deterministic reliability」の説明と、方向としては同じことを指している。
 
 ## 起動は自動である
 

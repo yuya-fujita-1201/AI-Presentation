@@ -1,5 +1,17 @@
 # 変更履歴
 
+## 2026-08-21（agent-capabilities 採点指摘の修正 improve_k run:082112577c）
+
+- **Fix**: 採点findings 14件のうち13件を修正（残り1件は範囲外としてdeferred）
+  - 誤記・帰属の訂正: `what-are-agent-skills.md`（「decisive reliability」誤記、実務記事への帰属を単独化）、`what-is-mcp.md`（出所不明の「圧倒的に」を除去）
+  - 出所マーカー統一: `progressive-disclosure.md` / `distribution-and-governance.md` の google/skills動画由来箇所に「（聞き取り）」を補完
+  - 台帳の反映漏れを追加: `writing-good-skills.md`（frontmatter3フィールド・Use when/Don't use when・チェックリスト型ワークフロー）、`choosing-skill-mcp-or-cli.md`（gcloud help安全弁・`--full-auto`/resumeリトライ）、`what-is-mcp.md`（MCPを構成する4プロジェクト）
+  - 矛盾・重複の解消: `overview.md`（読む順番の提案を`prompts-and-project-rules.md`の主張と整合）、`progressive-disclosure.md`（プロジェクトルールとの重複節を圧縮し`prompts-and-project-rules.md`に一本化）
+  - 事実誤りの訂正: `index.md`（資料内訳を実測値に修正）、`webmcp-and-frontier.md`（「ここまでの7本」→「8本」）
+  - 見出し構造の統一: 9ファイルの見出しから番号を除去し、「一言定義」節・末尾「次に読む」節を共通の型に揃えた（`overview.md`はバンドル入口としての性質上「読む順番の提案」を維持）
+- **Deferred(out_of_scope)**: 太字強調の多用（各ファイル18〜50箇所）を「各節の結論のみ」に絞る修正は、9ファイル全体・数百箇所規模の主観的リライトを要するため本工程の局所修正の範囲外と判断
+- **Note**: `/opt/homebrew/bin/python3 tools/validate_okf.py knowledge` で errors: 0, warnings: 0 を確認
+
 ## 2026-08-21（agent-capabilities バンドル新設・完成 knowledge run:0821025734 → 082110103b → 08211057a5）
 
 - **Creation**: `knowledge/agent-capabilities/` を新設し、テーマ「AIに能力を足す4つの手段（Skills / MCP / CLI / プロンプト）」のコンセプト8本＋入口1本＝計9ファイルを執筆。台帳13本（Anthropic公式3本・MCP公式2本・実務記事3本・解説動画3本・ハーネス系公式/記事2本）を根拠とし、3ランに分けて段階実装した

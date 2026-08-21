@@ -1,6 +1,6 @@
 # agent-capabilities — AIに能力を足す4つの手段についてのナレッジ
 
-チャット型AIを使ったことはあるが、エージェント的な活用は未経験——という読者を想定して、「AIに能力を足す」とは何をすることかを、**プロンプト・Skill・MCP・CLI**という4つの手段に分けて整理したディレクトリ。Anthropic公式ドキュメント（Agent Skills / Skill authoring best practices / Agent SDK）とMCP公式ドキュメント（Architecture overview / Build an MCP server）を一次側の根拠に、日本語の解説動画3本と実務記事3本を突き合わせている。台帳は [../sources/index.md](../sources/index.md) の「動画（AIツール活用：Skills/MCP/CLI/プロンプト）」「記事（AIツール活用：Skills/MCP/CLI/プロンプト）」の節を参照。
+チャット型AIを使ったことはあるが、エージェント的な活用は未経験——という読者を想定して、「AIに能力を足す」とは何をすることかを、**プロンプト・Skill・MCP・CLI**という4つの手段に分けて整理したディレクトリ。Anthropic公式ドキュメント（Agent Skills / Skill authoring best practices / Agent SDK）3本とAnthropicエンジニアリングブログ1本、MCP公式ドキュメント（Architecture overview / Build an MCP server）2本を一次側の根拠に、日本語の解説動画4本と実務記事3本を突き合わせている。台帳は [../sources/index.md](../sources/index.md) の「動画（AIツール活用：Skills/MCP/CLI/プロンプト）」「記事（AIツール活用：Skills/MCP/CLI/プロンプト）」の節を参照。
 
 自動生成字幕のみを出所とする主張は、本バンドル内では帰属を明示し「（聞き取り）」を付けて記述している。断定的な定義・数値・仕様は公式ドキュメント側で裏を取ったもののみ。
 

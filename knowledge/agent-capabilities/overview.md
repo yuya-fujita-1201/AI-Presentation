@@ -91,6 +91,6 @@ generated:
 ## 読む順番の提案
 
 - **まず全体像だけ掴みたい**: 本ファイル → [what-are-agent-skills.md](./what-are-agent-skills.md) → [what-is-mcp.md](./what-is-mcp.md) の3本で、4手段のうち2つの実体が分かる
-- **明日から自分で何か作りたい**: 上の3本の後、[writing-good-skills.md](./writing-good-skills.md) → [prompts-and-project-rules.md](./prompts-and-project-rules.md)。最初に触るべきはSkillとプロジェクトルールで、どちらもファイルを1つ置くだけで始められる
+- **明日から自分で何か作りたい**: 上の3本の後、[prompts-and-project-rules.md](./prompts-and-project-rules.md) → [writing-good-skills.md](./writing-good-skills.md)。実際に手を動かす順もこの並びで、プロンプトで試す→効いた指示をルールに常設化する→手順が長くなったらSkillに切り出す、が最も無駄が少ない
 - **導入判断・技術選定をする立場**: [progressive-disclosure.md](./progressive-disclosure.md) → [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) → [distribution-and-governance.md](./distribution-and-governance.md)。コスト構造・使い分け・ガバナンスの3点が判断材料になる
 - **[webmcp-and-frontier.md](./webmcp-and-frontier.md) は最後でよい**: 提案段階の話であり、確定していない論点を多く含む
