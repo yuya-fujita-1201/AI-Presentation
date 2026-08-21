@@ -133,4 +133,4 @@ Claude for Desktop の場合、macOSでは `~/Library/Application Support/Claude
 
 - [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) — 同じ用事にSkill・MCP・CLIのどれを選ぶか
 - [progressive-disclosure.md](./progressive-disclosure.md) — 「常に載る」ことがなぜコストなのかの前提
-- `webmcp-and-frontier.md`（未執筆） — ブラウザ側でツールを公開するというMCPの拡張提案
+- [webmcp-and-frontier.md](./webmcp-and-frontier.md) — ブラウザ側でツールを公開するというMCPの拡張提案

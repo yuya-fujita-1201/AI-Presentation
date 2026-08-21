@@ -79,7 +79,7 @@ Custom Skillsを置く場所と制約は環境によって異なる。
 | **Claude API** | `container`パラメータに`skill_id`を指定。code execution toolが必須 | サンドボックスは「no network access and no runtime package installation」 |
 | **claude.ai** | Settings > Features からzipでアップロード（Pro/Max/Team/Enterprise、code execution有効時） | 個人単位。組織全体共有やadmin管理は不可 |
 
-同ドキュメントは加えて「Custom Skills do not sync across surfaces」と明記している。**claude.aiにアップロードしたSkillがClaude Codeでも使えるようになる、といったことは起きない**。組織で配る話は`distribution-and-governance.md`（未執筆）で扱う。
+同ドキュメントは加えて「Custom Skills do not sync across surfaces」と明記している。**claude.aiにアップロードしたSkillがClaude Codeでも使えるようになる、といったことは起きない**。組織で配る話は[distribution-and-governance.md](./distribution-and-governance.md)で扱う。
 
 新入社員がまず触るなら、フォルダを置くだけで動きネットワークも使えるClaude Codeが最も試しやすい、というのが上表から読み取れる実務上の結論である。
 

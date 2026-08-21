@@ -77,3 +77,4 @@ generated:
 - [../agent-capabilities/writing-good-skills.md](../agent-capabilities/writing-good-skills.md) — ディスクリプションにいつ・どんな場面で使うかを明記しないと類似スキルで誤起動する注意（[43:00]）、作成時に言語化すべき3点（インプット・処理・アウトプット）とレビュー→改善のサイクル（[47:00]〜[48:00]）を、公式ベストプラクティスと同じ論点を実務側からも支持する材料として使用（帰属＋（聞き取り））
 - [../agent-capabilities/what-is-mcp.md](../agent-capabilities/what-is-mcp.md) — MCPは毎回余計な情報も読み込むためトークン消費が大きいという指摘（[17:00]）と、SkillはMCPの単純な進化形ではないという補足を、公式の `*/list` 設計と整合する傍証として使用（帰属＋（聞き取り））
 - [../agent-capabilities/choosing-skill-mcp-or-cli.md](../agent-capabilities/choosing-skill-mcp-or-cli.md) — 同じくMCPのトークン消費の指摘（[17:00]）を、実測55,000トークンおよび公式の2段構え設計と突き合わせる3つ目の出所として使用（帰属＋（聞き取り））
+- [../agent-capabilities/distribution-and-governance.md](../agent-capabilities/distribution-and-governance.md) — `.skill` 形式でダウンロードし設定画面からアップロードして配布できること（[30:00]）と、似たスキルが複数有効だとAIが判断できず誤ったスキルが読み込まれるため使わないスキルはオフにすべきという運用（[19:00]）を、配布経路と「増やしすぎない」運用の根拠として使用（auto字幕由来のため帰属＋（聞き取り））

@@ -60,3 +60,5 @@ Skillファイルの基本構造はYAMLフロントマター付きのMarkdownフ
 
 - [../agent-capabilities/what-are-agent-skills.md](../agent-capabilities/what-are-agent-skills.md) — 「最初はnameとdescriptionだけのシンプルなSKILL.mdで十分」という始め方のハードルの低さを、必須2フィールドという公式仕様と併せて提示（帰属を明示）
 - [../agent-capabilities/writing-good-skills.md](../agent-capabilities/writing-good-skills.md) — description 250文字上限と重要キーワード前置き、よくある失敗4パターン（詰め込みすぎ・description曖昧・テストなし・放置）とその対策、`/skill-creator` の Eval/Improve/Benchmark と「6つのうち5つでトリガー精度が改善」、21個保有・毎週使うのは5〜6個、「引き算のメンテナンス」、「最初はnameとdescriptionだけで十分」「自分専用のClaude Codeを育てる」の根拠（いずれも著者個人の実践としてコンセプト側で帰属を明示）
+- [../agent-capabilities/prompts-and-project-rules.md](../agent-capabilities/prompts-and-project-rules.md) — Skillの配置優先順位（Enterprise > Personal > Project）と Personal（`~/.claude/skills/`）＝全プロジェクト / Project（`.claude/skills/`）＝当該プロジェクトのみという適用範囲を、ルールファイルのスコープ使い分けの参照点として使用（著者の解説として帰属を明示）
+- [../agent-capabilities/distribution-and-governance.md](../agent-capabilities/distribution-and-governance.md) — 21個運用中16個が自作・実際に毎週使うのは5〜6個という内訳と、月1回の見直し・モデル更新時のBenchmark・不要Skillの定期削除という「引き算のメンテナンス」を、カタログを増やしすぎない運用の根拠として使用（著者個人の実践として帰属を明示）

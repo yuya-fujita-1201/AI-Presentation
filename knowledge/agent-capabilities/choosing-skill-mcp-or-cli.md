@@ -110,6 +110,6 @@ MCPとの関係で実務的に効くのが、**ツール設定を省略すると
 
 ## 次に読む
 
-- `prompts-and-project-rules.md`（未執筆） — そもそも仕組みを作らず、指示だけで済む場合の判断
+- [prompts-and-project-rules.md](./prompts-and-project-rules.md) — そもそも仕組みを作らず、指示だけで済む場合の判断
 - [writing-good-skills.md](./writing-good-skills.md) — Skillを選んだ場合の書き方
-- `distribution-and-governance.md`（未執筆） — 作ったものを組織で配る段階の論点
+- [distribution-and-governance.md](./distribution-and-governance.md) — 作ったものを組織で配る段階の論点

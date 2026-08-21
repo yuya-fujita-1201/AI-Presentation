@@ -73,4 +73,4 @@ generated:
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/webmcp-and-frontier.md](../agent-capabilities/webmcp-and-frontier.md) — 主根拠（本ファイルはWebMCPに関する唯一の出所であり、コンセプト側で帰属＋（聞き取り）を明示している）。DOM/文言からの推測に依存する従来方式の壊れやすさ（[00:00]〜[02:00]）、`document.modelContext` の `registerTool` と name/description/inputSchema/execute の4要素（[02:00]）、ツールの動的増減と `AbortSignal`、宣言型および `getTools`/`executeTool` が未確定（TODO）であること（[04:00]）、「接続先」「実行場所」という2軸でのサーバー側MCPとの使い分け（[06:00]）、Cloudflareの Agent Readiness > Labs / HTMLRewriter による `bridge.js` 挿入と2種のTool packs（Content Credentials・Site MCP server）がいずれも標準ではないこと（[06:00]〜[08:00]）、iframe生成元と `allow` 属性による `tools` 委譲・Permissions Policy・`exposedTo` 案が未確定であること・副作用操作の確認責任が未決であること・悪意あるページが説明や戻り値で判断を誘導する懸念（[08:00]〜[10:00]）、origin trial対象がChrome 149〜156でありChrome 146は古い記述だという訂正・flags画面と `navigator.modelContextTesting` が試験専用の入口であること（[10:00]〜[11:00]）、Claude・ChatGPT・Gemini・PerplexityのWebMCP対応は公式に確認できないという明言（[11:00]〜[13:00]）の根拠

@@ -1,5 +1,17 @@
 # 変更履歴
 
+## 2026-08-21（agent-capabilities バンドル新設・完成 knowledge run:0821025734 → 082110103b → 08211057a5）
+
+- **Creation**: `knowledge/agent-capabilities/` を新設し、テーマ「AIに能力を足す4つの手段（Skills / MCP / CLI / プロンプト）」のコンセプト8本＋入口1本＝計9ファイルを執筆。台帳13本（Anthropic公式3本・MCP公式2本・実務記事3本・解説動画3本・ハーネス系公式/記事2本）を根拠とし、3ランに分けて段階実装した
+  - run:0821025734 — 全9本を設計（`pipeline/staging/knowledge/plan.json`）し、`overview.md` / `what-are-agent-skills.md` / `progressive-disclosure.md` を執筆
+  - run:082110103b — `writing-good-skills.md` / `what-is-mcp.md` / `choosing-skill-mcp-or-cli.md` を執筆
+  - run:08211057a5 — `prompts-and-project-rules.md` / `distribution-and-governance.md` / `webmcp-and-frontier.md` を執筆し、バンドルを完成させた
+- **Creation**: `knowledge/agent-capabilities/index.md` を作成（内容一覧・読む順番は `overview.md` の地図表に一元化し重複させない方針）
+- **Update**: ルート `knowledge/index.md` に `agent-capabilities/` を1行登録
+- **Update**: 台帳13本の「# 活用先」にコンセプト側からの被参照を追記し、コンセプトの出典インラインリンクと双方向で対応させた（本ランでは10本に計12行を追加。`video-tools-webmcp-browser-proposal.md` のプレースホルダ「（コンセプト昇華時に追記）」も実リンクへ差し替え）
+- **Fix**: 未執筆コンセプトへの先行言及を `` `ファイル名`（未執筆） `` として退避していた12箇所を、実ファイル作成に伴い Markdownリンク形式（`[ファイル名]` ＋ 相対パス）へ復元（`overview.md` 8・`choosing-skill-mcp-or-cli.md` 2・`what-are-agent-skills.md` 1・`what-is-mcp.md` 1）
+- **Note**: 出所が自動生成字幕のみの主張は、コンセプト側で帰属＋「（聞き取り）」を付して断定を避けた。特に `webmcp-and-frontier.md` は WebMCP に関する出所が解説動画1本に限られるため、その旨を本文冒頭に明記したうえで、主要AI製品の対応可否は「公式に確認できていない」という動画の明言をそのまま採用している
+
 ## 2026-08-21（tools 記事ソース台帳1本追加 web_ledger run:0821005753）
 
 - **Add**: `knowledge/sources/article-tools-codex-cli-mcp-vs-skill-bash.md` — とつブログ「Claude Code から Codex CLI を呼び出すなら MCP と SKILL/BASH どっちがいい？実際に使って感じたこと」の台帳。CRUD処理はMCP・コード生成/長時間タスクはSKILL/BASH（codex exec）という使い分け、5サーバー58ツールで約55,000トークンという実測値、既知バグ（exit code 0を失敗時にも返すケース）、`codex exec --json`によるプログラム的成否判定、`--full-auto`とresumeによるリトライ活用、MCPのTasksプリミティブ安定化後の判断転換可能性を解説

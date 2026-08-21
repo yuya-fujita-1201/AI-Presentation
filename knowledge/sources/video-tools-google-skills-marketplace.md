@@ -86,3 +86,4 @@ GoogleがAnthropic発の仕様であるAgent Skillsに乗り、Google Cloud・Fi
 # 活用先
 
 - [../agent-capabilities/progressive-disclosure.md](../agent-capabilities/progressive-disclosure.md) — 109個中59個がreferencesフォルダを持つ構成、BigQueryの8 references、726行と30行台という厚みのばらつきを、段階的開示が実物にどう現れるかの実例として使用（auto字幕由来のため帰属＋（聞き取り））
+- [../agent-capabilities/distribution-and-governance.md](../agent-capabilities/distribution-and-governance.md) — 主根拠。SKILL.md 109個・2万3千行超という規模（[01:00]）、プラグインmarketplaceに16個登録（[06:00]）と `claude plugin marketplace add` → `claude plugin install` の2ステップ導入、プラグインがスキルとMCPサーバーのセットであること、`references/setup/` にツール別導入手順を置き差を吸収する作法、`npx skills add`（main最新）と marketplace（refでピン止め）の対比と本番運用の推奨、Apache-2.0ライセンスと社内改変の自由（[08:00]）、Copybaraによる社内ミラー運用・コントリビューター6人中自動化アカウント203コミット・タグ/リリース/Discussions不在という「正はGoogle社内側」の実態、自作すべきは自社ルール（命名規約・ネットワーク設計・IAMポリシー）で製品の使い方は配布元に任せるという線引きと `bigquery-basics` 前後にvalidationを挟む例、発火判定がdescriptionの質で決まり曖昧だと誤発火する点の根拠（いずれもauto字幕由来のため帰属＋（聞き取り））
