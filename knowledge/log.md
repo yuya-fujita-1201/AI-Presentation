@@ -1,5 +1,20 @@
 # 変更履歴
 
+## 2026-08-21（agent-capabilities 採点指摘の修正 improve_k run:0821174539）
+
+- **Fix**: 採点findings 16件のうち13件を修正、3件は範囲外としてdeferred
+  - 無帰属の断定を帰属付きに修正: `overview.md`（「接続中は常にツール一覧が載る」を実測記事＋動画由来と明示し表と本文を修正）、`choosing-skill-mcp-or-cli.md`（「3つの独立した出所が整合する」を「公式設計と矛盾しない・出所2本」に弱める）
+  - 未収録の留保を追加: `choosing-skill-mcp-or-cli.md`（MCP仕様のUtility features（進捗通知）に触れ、「進捗が見えない」は実装・体験の話だと明示）
+  - 引用記法の誤りを修正: `prompts-and-project-rules.md`（「〜と筆者は述べている」を含む要約文が引用ブロックになっていた箇所を地の文に統一）
+  - 構造の不整合を解消: `index.md`（初学者向け起点として`prompts-and-project-rules.md`を1行案内）、`overview.md`（「読む順番の提案」2コース目の本数誤記と`prompts-and-project-rules.md`重複指定を修正、CLIの定義を表直後に新設）
+  - 導線の欠落を補完: `progressive-disclosure.md`/`choosing-skill-mcp-or-cli.md`の「次に読む」に`overview.md`への1行を追加（`distribution-and-governance.md`は本findingsのwhere外のため対象外）
+  - 反復緩和: `what-is-mcp.md`の太字締め5箇所のうち3箇所を地の文に戻し2箇所に絞った
+  - 重複の要約化: `overview.md`（コード実行の2価値・「SkillはMCPの進化形ではない」を`what-are-agent-skills.md`/`what-is-mcp.md`への参照に畳んだ）
+  - 引用の出典補完: `progressive-disclosure.md`のマニュアル比喩の引用に出典リンクを追加
+  - 活用先の反映漏れを追加: `sources/video-tools-google-skills-marketplace.md`（`writing-good-skills.md`3箇所・`choosing-skill-mcp-or-cli.md`2箇所）、`sources/article-tools-agent-skills-equipping-real-world.md`（`writing-good-skills.md`のSkill開発指針4点）
+  - **deferred(out_of_scope)** 3件: `sources/video-tools-google-skills-marketplace.md`の「9割以上Markdown」主張と「プラグインの中身は別リポジトリ参照」の未収録、`sources/article-tools-agent-skills-equipping-real-world.md`の発表時期・将来展望の未収録——いずれも修正には`what-are-agent-skills.md`等の非対象ファイルへの追記が必要なため本工程の範囲外
+- **Note**: `/opt/homebrew/bin/python3 tools/validate_okf.py knowledge` で errors: 0, warnings: 0 を確認
+
 ## 2026-08-21（agent-capabilities 採点指摘の修正 improve_k run:082115153b）
 
 - **Fix**: 採点findings 12件（severity mid5/low7）を全件修正

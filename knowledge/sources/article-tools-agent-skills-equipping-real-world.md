@@ -58,3 +58,4 @@ Skillは、YAMLフロントマターと詳細説明を含むSKILL.mdファイル
 - [../agent-capabilities/what-are-agent-skills.md](../agent-capabilities/what-are-agent-skills.md) — 開発動機（composable/scalable/portable）、PDF編集における「分かってはいるができない」ギャップ、Skillの3構成要素、コード実行の2つの価値（コストと決定論的信頼性）、onboarding guideの比喩の根拠
 - [../agent-capabilities/progressive-disclosure.md](../agent-capabilities/progressive-disclosure.md) — 段階的開示のマニュアル比喩の引用と「effectively unbounded」の根拠
 - [../agent-capabilities/distribution-and-governance.md](../agent-capabilities/distribution-and-governance.md) — 「malicious skills may introduce vulnerabilities in the environment where they're used or direct Claude to exfiltrate data」の引用と、警戒対象（コード依存関係・同梱リソース・外部の信頼できないネットワーク先へ接続させる指示/コード）、信頼できる入手元のみからインストールすべきという推奨を、公式ドキュメントとは独立した2本目の出所としてセキュリティ節に使用
+- [../agent-capabilities/writing-good-skills.md](../agent-capabilities/writing-good-skills.md) — Skill開発の指針4点（評価から始める・スケールを見て設計する・Claudeの視点で考える・Claudeと反復する）を、公式ベストプラクティスと並行する2本目の出所として使用

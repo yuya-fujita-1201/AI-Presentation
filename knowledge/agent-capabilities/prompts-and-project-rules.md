@@ -73,8 +73,6 @@ generated:
 
 `CLAUDE.md` にすべてを書き切る必要はない。同記事は、DBスキーマは `docs/schema.md`、APIドキュメントは `docs/api.md`、複雑なドメインルールは `docs/domain-rules.md` のように詳細を別ファイルへ分け、`CLAUDE.md` にはその場所と概要だけを書く設計を推奨している。
 
-> 引用: 「詳細情報は別ファイルに分離し、CLAUDE.mdには場所だけ案内する『段階的開示』の設計が推奨されると筆者は述べている」
-
 これは Skill の設計原理とまったく同じ考え方である（[progressive-disclosure.md](./progressive-disclosure.md)）。**段階的開示は Skill だけの仕組みではなく、コンテキストという有限資源を扱うときの一般解**だと捉えるとよい。
 
 スコープの使い分けも整理しておく。[Claude Code Skillの運用記事](../sources/article-tools-claude-code-skill-design.md)は、Skill の配置優先順位を「Enterprise > Personal > Project」の順で上位が優先されるとし、Personal（`~/.claude/skills/`）は全プロジェクトに、Project（`.claude/skills/`）はそのプロジェクトのみに適用されると説明している。ルールファイルも同じ発想で、全プロジェクト共通の作法はホーム配下、そのリポジトリ固有の罠はリポジトリ内、という置き分けになる。加えて[CLAUDE.md運用の実務記事](../sources/article-he-claude-md-best-practices.md)は、Claude Code が親・サブディレクトリの `CLAUDE.md` も自動探索する特性を使い、モノレポではルートに共通ルール・各パッケージ配下に固有ルールを置く構成や、個人用設定をコミットせず `claude.local.md`（`.gitignore` 対象）に書く運用を紹介している。

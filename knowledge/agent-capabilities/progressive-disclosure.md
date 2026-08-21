@@ -18,7 +18,7 @@ Skillを100個置いても動作が重くならない。この一点がSkillと�
 
 [Anthropicのエンジニアリングブログ](../sources/article-tools-agent-skills-equipping-real-world.md)は、この設計を次の比喩で説明している。
 
-> 引用: 「Like a well-organized manual that starts with a table of contents, then specific chapters, and finally a detailed appendix, skills let Claude load information only as needed.」
+> 引用: 「Like a well-organized manual that starts with a table of contents, then specific chapters, and finally a detailed appendix, skills let Claude load information only as needed.」（[Anthropicのエンジニアリングブログ](../sources/article-tools-agent-skills-equipping-real-world.md)）
 
 よく整理されたマニュアルが、目次から始まり、章があり、最後に詳細な付録がある——その構造をそのままAIの読み込みに適用したものだ、という説明である。
 
@@ -93,3 +93,4 @@ Level 3 のスクリプトにはさらに特別な性質がある。スクリプ
 - [writing-good-skills.md](./writing-good-skills.md) — 500行制限やファイル分割規則を実際にどう書くか
 - [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) — 常時ロードされる手段（MCP）との対比
 - [prompts-and-project-rules.md](./prompts-and-project-rules.md) — 同じ設計をプロジェクトルールに適用する場合の詳細
+- [overview.md](./overview.md) — 4手段の全体地図に戻る

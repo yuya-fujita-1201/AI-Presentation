@@ -26,7 +26,7 @@ generated:
 
 なぜ外側なのか。[Anthropicのエンジニアリングブログ](../sources/article-tools-agent-skills-equipping-real-world.md)は、モデルの能力が上がっても「real work requires procedural knowledge and organizational context」——実務には手続き的な知識と組織固有の文脈が要る——と述べている。汎用モデルは「PDFとは何か」を知っているが、「わが社の見積書テンプレートの3ページ目に何を書くか」は知らない。後者はモデルの学習ではなく、外側から渡すしかない。
 
-もうひとつ、外側でなければならない現実的な理由がある。手を動かす能力（コマンドを実行する、APIを叩く）はモデルの中には存在しない。同ブログは「certain operations are better suited for traditional code execution」とし、リストのソートをトークン生成でやるのはソートアルゴリズムを走らせるより遥かに高コストだという例を挙げている。決定論的な信頼性が要る処理は、コードに任せた方がよい。
+もうひとつ、外側でなければならない現実的な理由がある。手を動かす能力（コマンドを実行する、APIを叩く）はモデルの中には存在しない。同ブログは「certain operations are better suited for traditional code execution」としている。コード実行が持つ2つの価値（コスト・決定論的信頼性）の詳細は[what-are-agent-skills.md](./what-are-agent-skills.md)を参照。決定論的な信頼性が要る処理は、コードに任せた方がよい。
 
 ## 4つの手段
 
@@ -37,10 +37,10 @@ generated:
 | **プロンプト** | その場かぎりの指示 | 会話（入力欄） | 毎回、その会話の中だけ |
 | **プロジェクトルール**（CLAUDE.md等） | 常に効かせたい前提・規約 | リポジトリ内のファイル | セッション開始時に自動で全文 |
 | **Skill** | 手順書＋補助ファイル＋スクリプト一式 | ファイルシステム上のフォルダ | 関連しそうな時だけ、必要な深さまで |
-| **MCP** | 外部サービスへの接続口（ツール・データ） | 別プロセスのサーバー | 接続中は常にツール一覧が載る |
+| **MCP** | 外部サービスへの接続口（ツール・データ） | 別プロセスのサーバー | 接続中はツール一覧が載り続けるとされる（実測記事・動画） |
 | **CLI** | 既存のコマンドライン道具 | OSにインストール済み | AIがコマンドを打った時だけ |
 
-CLIには他の3つと違い専用のコンセプトファイルがない。「CLIとは何か」の定義は[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)の冒頭にまとめている。
+**CLIとは、AIに標準搭載されたコマンド実行機能を使って、OSに既にインストール済みの道具（`gh`・`aws`・`docker`・`ffmpeg`等）をそのまま呼ばせることである。**Skill・MCPと違い、新しく用意するものが何もない。CLIには他の3つと違い専用のコンセプトファイルがなく、設計論点（hallucination対策など）は[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)の冒頭にまとめている。
 
 表が5行あるのは、プロンプトを「その場の指示」と「常設化したルール」に分けて示したためである。この2つは実体としては同じ「言葉で指示する」手段であり、本バンドルでは4手段のうちの「プロンプト」として1本のコンセプト（[prompts-and-project-rules.md](./prompts-and-project-rules.md)）でまとめて扱う。
 
@@ -64,11 +64,11 @@ CLIには他の3つと違い専用のコンセプトファイルがない。「C
 
 ### 理由3: コンテキストを食う量が違う
 
-コンテキストウィンドウ（1回のやり取りで扱える情報量）には上限があり、能力を全部最初から読み込んでしまうとこれを圧迫する。ここが4手段の実務上の最大の分かれ目になる。プロジェクトルールは常に全文が載り、MCPは接続中ずっとツール定義が載り、Skillは名前と説明だけが載る——この差が、能力を増やしたときの「重さ」の差になる。仕組みは[progressive-disclosure.md](./progressive-disclosure.md)で、実際の選び方は[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)で扱う。
+コンテキストウィンドウ（1回のやり取りで扱える情報量）には上限があり、能力を全部最初から読み込んでしまうとこれを圧迫する。ここが4手段の実務上の最大の分かれ目になる。プロジェクトルールは常に全文が載り、Skillは名前と説明だけが載る——これは公式ドキュメントが明記している。MCPについては、接続中はツール定義が載り続けるという指摘が実測記事とauto字幕動画にあり（公式の`*/list`設計から自然に導かれる推論でもある）、能力を増やしたときの「重さ」の差はここに表れる。仕組みは[progressive-disclosure.md](./progressive-disclosure.md)で、実際の選び方は[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)で扱う。
 
 ## よくある誤解
 
-- **SkillはMCPの進化形ではない**: 前掲の入門動画は、SkillはMCPからの単純な進化形というわけではなく、そもそもの概念が異なるものだと補足している（聞き取り）。実際、MCPは「外部サービスに繋ぐ通信規格」、Skillは「ファイルに置いた手順書」であり、解いている問題が違う。両方を同時に使う構成が普通である
+- **SkillはMCPの進化形ではない**: MCPは「外部サービスに繋ぐ通信規格」、Skillは「ファイルに置いた手順書」であり、解いている問題が違う（詳しくは[what-is-mcp.md](./what-is-mcp.md)）。両方を同時に使う構成が普通である
 - **4つは排他ではない**: 上に見たとおりAgent SDKは4つとも同時に提供する。「MCPを入れたからSkillは要らない」といった関係にはない。[Anthropicのエンジニアリングブログ](../sources/article-tools-agent-skills-equipping-real-world.md)もSkillの発表時点でMCPサーバーとの補完的な活用の検討に触れており、公式側もSkillとMCPを対立する選択肢としてではなく組み合わせるものとして位置づけている
 - **Skillは特定製品の機能名ではなくなりつつある**: 入門動画は、この仕組みを最初に搭載したのはAnthropicのClaudeであり、その後ChatGPTのCodex、Antigravity、Gemini、Manusなど各社の生成AIツールにも同様の概念が広がっていると述べている（聞き取り）。実際にGoogleが同じ形式でスキル集を公開している件は[distribution-and-governance.md](./distribution-and-governance.md)で扱う
 - **「能力を足す」＝モデルを再学習させることではない**: ファインチューニングやRAGとの直接比較は本バンドルの主根拠には含まれていない（[Anthropicのエンジニアリングブログ](../sources/article-tools-agent-skills-equipping-real-world.md)にも比較・ベンチマークの記載はない）。ここで扱うのはあくまで、モデルを変えずに外側から渡す手段である
@@ -89,6 +89,6 @@ CLIには他の3つと違い専用のコンセプトファイルがない。「C
 ## 読む順番の提案
 
 - **まず全体像だけ掴みたい**: 本ファイル → [prompts-and-project-rules.md](./prompts-and-project-rules.md) → [what-are-agent-skills.md](./what-are-agent-skills.md) → [what-is-mcp.md](./what-is-mcp.md) の4本で、最も手前の手段（プロンプト）を含む4手段のうち3つの実体が分かる
-- **明日から自分で何か作りたい**: 上の3本の後、[prompts-and-project-rules.md](./prompts-and-project-rules.md) → [writing-good-skills.md](./writing-good-skills.md)。実際に手を動かす順もこの並びで、プロンプトで試す→効いた指示をルールに常設化する→手順が長くなったらSkillに切り出す、が最も無駄が少ない
+- **明日から自分で何か作りたい**: 上の4本の後、[writing-good-skills.md](./writing-good-skills.md)へ。実際に手を動かす順もこの並びで、プロンプトで試す→効いた指示をルールに常設化する→手順が長くなったらSkillに切り出す、が最も無駄が少ない
 - **導入判断・技術選定をする立場**: [progressive-disclosure.md](./progressive-disclosure.md) → [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) → [distribution-and-governance.md](./distribution-and-governance.md)。コスト構造・使い分け・ガバナンスの3点が判断材料になる
 - **[webmcp-and-frontier.md](./webmcp-and-frontier.md) は最後でよい**: 提案段階の話であり、確定していない論点を多く含む

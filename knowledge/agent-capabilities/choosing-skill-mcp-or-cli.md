@@ -54,7 +54,7 @@ Skillの側は[Anthropicの公式ドキュメント](../sources/article-tools-ag
 
 この固定費が実際どれくらいかを実測した報告がある。[Claude CodeからCodex CLIを呼ぶ手段を比較した記事](../sources/article-tools-codex-cli-mcp-vs-skill-bash.md)は、5サーバー58ツールという構成で**約55,000トークンを消費した**としている。1サーバーあたり1万トークン強、1ツールあたり1,000トークン弱という計算になる。
 
-この数字の意味を掴むために並べてみる。同じ枠にSkillなら約550個の name+description が入る。**「便利そうだからMCPサーバーを5つ繋いでおく」は、Skillを550個置くのと同じコストを毎回払っている**ということである。[Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)がMCPは毎回余計な情報も読み込むためトークン消費が大きくなる問題があったと指摘している（[17:00]、聞き取り）のは、この構造を指している。動画側はauto字幕由来だが、公式の2段構え設計と実測記事の55,000トークンが同じ方向を向いており、**3つの独立した出所が整合する**。
+この数字の意味を掴むために並べてみる。同じ枠にSkillなら約550個の name+description が入る。**「便利そうだからMCPサーバーを5つ繋いでおく」は、Skillを550個置くのと同じコストを毎回払っている**ということである。[Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)がMCPは毎回余計な情報も読み込むためトークン消費が大きくなる問題があったと指摘している（[17:00]、聞き取り）のは、この構造を指している。動画側はauto字幕由来だが、**公式の2段構え設計と矛盾しない**。断定的な数値の裏付けとしては、実測記事の55,000トークンと動画の指摘という2本の出所がある。
 
 ### 実務的な帰結
 
@@ -72,7 +72,7 @@ Skillの側は[Anthropicの公式ドキュメント](../sources/article-tools-ag
 
 > 引用: 「処理が非常に重く、数分～数十分待たされることがあった」（[MCP vs SKILL/BASH 比較記事](../sources/article-tools-codex-cli-mcp-vs-skill-bash.md)）
 
-同記事は加えて、処理中は進捗が見えない**ブラックボックス感**も課題として挙げている。数十分待たされる間、何が起きているか分からない状態は実用に耐えない。
+同記事は加えて、処理中は進捗が見えない**ブラックボックス感**も課題として挙げている。数十分待たされる間、何が起きているか分からない状態は実用に耐えない。ただし、[MCP公式ドキュメント](../sources/article-tools-mcp-architecture-overview.md)はnotifications・progress trackingを扱うUtility featuresを規格の一部として定義しており、**規格そのものに進捗通知の枠組みがないわけではない**。同記事が指摘しているのはあくまで実装・体験面の話であり、規格の欠陥と体験の欠陥は分けて考える必要がある。
 
 **SKILL/BASH（CLIを叩く形）が向くもの。**同記事は切り替え先として `codex exec` をCLIから叩く方式を試し、コード生成・テスト実行・長時間タスクに向くとして、①リアルタイムで進捗を確認できる ②動作が軽快 ③コンテキスト消費が少ない、の3点を利点に挙げている。著者の最終的な推奨は**現時点ではSKILL/BASHが実用的**というものである。
 
@@ -125,3 +125,4 @@ MCPとの関係で実務的に効くのが、**ツール設定を省略すると
 - [prompts-and-project-rules.md](./prompts-and-project-rules.md) — そもそも仕組みを作らず、指示だけで済む場合の判断
 - [writing-good-skills.md](./writing-good-skills.md) — Skillを選んだ場合の書き方
 - [distribution-and-governance.md](./distribution-and-governance.md) — 作ったものを組織で配る段階の論点
+- [overview.md](./overview.md) — 4手段の全体地図に戻る
