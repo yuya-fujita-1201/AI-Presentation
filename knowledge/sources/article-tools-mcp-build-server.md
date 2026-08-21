@@ -50,4 +50,4 @@ STDIOトランスポートを使うMCPサーバーには標準出力への書き
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/what-is-mcp.md](../agent-capabilities/what-is-mcp.md) — 主根拠。3大プリミティブの定義引用（Resources/Tools/Prompts、Toolsの「with user approval」）、天気サーバー（get_alerts / get_forecast）の実装手順と `@mcp.tool()` デコレータ・`mcp.run(transport="stdio")`、前提知識2点とPython 3.10以上・MCP SDK 2.0.0以上、STDIOサーバーで stdout に書いてはならない理由の引用と logging（stderr）推奨、claude_desktop_config.json の設定例と `which uv` の注記、「Servers can connect to any client」の根拠

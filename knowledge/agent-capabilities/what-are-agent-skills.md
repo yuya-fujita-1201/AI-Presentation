@@ -10,7 +10,7 @@ generated:
 
 # Skillとは何か
 
-4つの手段（[overview.md](./overview.md)）のうち、いま最も動きが速いのがSkillである。このファイルではSkillの定義・構成要素・「素のプロンプトとどう違うのか」・どこで使えるのかを押さえる。書き方の作法は`writing-good-skills.md`（未執筆）、読み込みの仕組みは[progressive-disclosure.md](./progressive-disclosure.md)に分けている。
+4つの手段（[overview.md](./overview.md)）のうち、いま最も動きが速いのがSkillである。このファイルではSkillの定義・構成要素・「素のプロンプトとどう違うのか」・どこで使えるのかを押さえる。書き方の作法は[writing-good-skills.md](./writing-good-skills.md)、読み込みの仕組みは[progressive-disclosure.md](./progressive-disclosure.md)に分けている。
 
 ## 一言定義
 
@@ -45,7 +45,7 @@ generated:
 | `name` | 最大64文字。小文字・数字・ハイフンのみ。`anthropic`・`claude`といった予約語を含んではならない |
 | `description` | 空は不可。最大1024文字。**「何をするか」と「いつ使うか」の両方**を書かなければならない |
 
-必須が2つだけ、というのは実務上かなり重要な性質である。前掲の入門動画も「最初はnameとdescriptionだけのシンプルなSKILL.mdで十分」という立場を紹介している——正確には[21個運用の実務記事](../sources/article-tools-claude-code-skill-design.md)側の主張だが、始めるハードルの低さは両者に共通する見立てである。詳細は`writing-good-skills.md`（未執筆）を参照。
+必須が2つだけ、というのは実務上かなり重要な性質である。前掲の入門動画も「最初はnameとdescriptionだけのシンプルなSKILL.mdで十分」という立場を紹介している——正確には[21個運用の実務記事](../sources/article-tools-claude-code-skill-design.md)側の主張だが、始めるハードルの低さは両者に共通する見立てである。詳細は[writing-good-skills.md](./writing-good-skills.md)を参照。
 
 ### スクリプトを同梱できることが効く
 
@@ -65,7 +65,7 @@ Skillの位置づけは、比較対象を2つ置くと分かりやすい。
 
 [公式ドキュメント](../sources/article-tools-agent-skills-overview.md)は「once a Skill is available in your environment, Claude uses it automatically when relevant to your request」と述べている。ユーザーが「このSkillを使え」と指定する必要はなく、要求内容に関連するとAIが判断すれば自動で読まれる。
 
-これは便利であると同時に、**「起動されるかどうかはdescriptionの書き方で決まる」**という設計上の重心を生む。同ドキュメントは、Skillが起動されるまでコンテキストを占めるのは名前と説明だけだとしており、AIは実質そこだけを手がかりに選ぶことになる。入門動画も、似たようなスキルが複数有効になっているとAIがどちらを読み込むべきか判断できず誤ったスキルが呼び出される場合があるため、使わないスキルはオフにしておくべきだと注意している（[19:00]、聞き取り）。この論点は`writing-good-skills.md`（未執筆）に集約する。
+これは便利であると同時に、**「起動されるかどうかはdescriptionの書き方で決まる」**という設計上の重心を生む。同ドキュメントは、Skillが起動されるまでコンテキストを占めるのは名前と説明だけだとしており、AIは実質そこだけを手がかりに選ぶことになる。入門動画も、似たようなスキルが複数有効になっているとAIがどちらを読み込むべきか判断できず誤ったスキルが呼び出される場合があるため、使わないスキルはオフにしておくべきだと注意している（[19:00]、聞き取り）。この論点は[writing-good-skills.md](./writing-good-skills.md)に集約する。
 
 ## どこで使えるか——環境ごとに制約が違う
 
@@ -86,5 +86,5 @@ Custom Skillsを置く場所と制約は環境によって異なる。
 ## 次に読む
 
 - 「なぜ大量に置いても重くならないのか」——[progressive-disclosure.md](./progressive-disclosure.md)
-- 「実際に起動されるSkillをどう書くか」——`writing-good-skills.md`（未執筆）
-- 「MCPと何が違い、どちらを選ぶのか」——`what-is-mcp.md`（未執筆） と `choosing-skill-mcp-or-cli.md`（未執筆）
+- 「実際に起動されるSkillをどう書くか」——[writing-good-skills.md](./writing-good-skills.md)
+- 「MCPと何が違い、どちらを選ぶのか」——[what-is-mcp.md](./what-is-mcp.md) と [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)

@@ -74,3 +74,6 @@ generated:
 - [../agent-capabilities/overview.md](../agent-capabilities/overview.md) — アウトプットが毎回ブレる問題・GPTs/Gemsとの違い・コンテキストウィンドウの上限・「SkillはMCPの進化形ではない」補足・他社への波及を、4手段を区別する理由と誤解の節で使用（auto字幕由来のため帰属＋（聞き取り）で記述）
 - [../agent-capabilities/what-are-agent-skills.md](../agent-capabilities/what-are-agent-skills.md) — SKILL.mdとスクリプト群という構成、GPTs/Gemsとの差分、類似スキル併存時の誤起動注意の根拠（同、帰属＋（聞き取り））
 - [../agent-capabilities/progressive-disclosure.md](../agent-capabilities/progressive-disclosure.md) — ディスクリプションのみ先読み→本文という2段階の説明と、コンテキストウィンドウ圧迫の指摘。公式の3階層と数え方が異なる点の対比材料として使用（同、帰属＋（聞き取り））
+- [../agent-capabilities/writing-good-skills.md](../agent-capabilities/writing-good-skills.md) — ディスクリプションにいつ・どんな場面で使うかを明記しないと類似スキルで誤起動する注意（[43:00]）、作成時に言語化すべき3点（インプット・処理・アウトプット）とレビュー→改善のサイクル（[47:00]〜[48:00]）を、公式ベストプラクティスと同じ論点を実務側からも支持する材料として使用（帰属＋（聞き取り））
+- [../agent-capabilities/what-is-mcp.md](../agent-capabilities/what-is-mcp.md) — MCPは毎回余計な情報も読み込むためトークン消費が大きいという指摘（[17:00]）と、SkillはMCPの単純な進化形ではないという補足を、公式の `*/list` 設計と整合する傍証として使用（帰属＋（聞き取り））
+- [../agent-capabilities/choosing-skill-mcp-or-cli.md](../agent-capabilities/choosing-skill-mcp-or-cli.md) — 同じくMCPのトークン消費の指摘（[17:00]）を、実測55,000トークンおよび公式の2段構え設計と突き合わせる3つ目の出所として使用（帰属＋（聞き取り））

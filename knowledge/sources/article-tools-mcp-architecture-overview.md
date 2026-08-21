@@ -50,4 +50,5 @@ MCPは「stateless protocol」であり、各リクエストは`_meta`フィー�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/what-is-mcp.md](../agent-capabilities/what-is-mcp.md) — 主根拠。MCPが規定する範囲の限定（「focuses solely on the protocol for context exchange」）、Host/Client/Serverの3者とサーバーごとに1Client生成、ローカル=単一クライアント/リモート=複数クライアント、data layer と transport layer の2層、Stdio と Streamable HTTP の使い分けとOAuth推奨、ステートレス性と `server/discover`（supportedVersions・capabilities・ttlMs）、3大プリミティブと `*/list`→`tools/call` の2段構え、Elicitation と Sampling/Logging の非推奨化の根拠
+- [../agent-capabilities/choosing-skill-mcp-or-cli.md](../agent-capabilities/choosing-skill-mcp-or-cli.md) — 各プリミティブが `*/list`（発見）→`tools/call`（実行）の2段構えであることを、接続中はツール定義が常時コンテキストに載る＝固定費であるという判断軸の構造的根拠として使用

@@ -84,9 +84,9 @@ Level 3 のスクリプトにはさらに特別な性質がある。スクリプ
 
 ## 限界と注意点
 
-- **起動されなければ意味がない**: Level 1 に載るのは`name`と`description`だけである。裏を返せば、descriptionが曖昧だと本文は永久に読まれない。段階的開示の恩恵は、descriptionの質に全面的に依存する（`writing-good-skills.md`（未執筆））
+- **起動されなければ意味がない**: Level 1 に載るのは`name`と`description`だけである。裏を返せば、descriptionが曖昧だと本文は永久に読まれない。段階的開示の恩恵は、descriptionの質に全面的に依存する（[writing-good-skills.md](./writing-good-skills.md)）
 - **「置いておけばタダ」ではない**: Level 1 の約100トークンは常時かかる。100個置けば約1万トークンが恒常的に占有される計算になる。無制限なのは Level 3 の分量であって、Skillの個数ではない
-- **常時ロードされる手段には効かない**: MCPのように接続中ずっとツール定義が載る手段には、この仕組みはそのままでは働かない。手段ごとのコスト構造の違いは`choosing-skill-mcp-or-cli.md`（未執筆）で扱う
+- **常時ロードされる手段には効かない**: MCPのように接続中ずっとツール定義が載る手段には、この仕組みはそのままでは働かない。手段ごとのコスト構造の違いは[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)で扱う
 
 ## 実務への含意
 

@@ -42,4 +42,4 @@ MCPの課題を踏まえ、著者はSKILL/BASH（`codex exec`）への切り替�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/choosing-skill-mcp-or-cli.md](../agent-capabilities/choosing-skill-mcp-or-cli.md) — 主根拠。5サーバー58ツールで約55,000トークンという実測値、MCPが向くCRUD用途（DB検索・カレンダー・Slack）、重い処理での「数分～数十分待たされる」引用とブラックボックス感、SKILL/BASH（codex exec）の3利点（進捗の可視化・軽快さ・コンテキスト消費の少なさ）、`codex exec --json` によるプログラム的な成否判定とイベント例、exit code 0 を失敗時にも返す既知バグ（Issue #15536）、「現時点ではSKILL/BASHが実用的」という結論とTasksプリミティブ安定化による将来の変化という留保の根拠

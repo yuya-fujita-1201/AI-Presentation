@@ -59,3 +59,4 @@ Skillファイルの基本構造はYAMLフロントマター付きのMarkdownフ
 # 活用先
 
 - [../agent-capabilities/what-are-agent-skills.md](../agent-capabilities/what-are-agent-skills.md) — 「最初はnameとdescriptionだけのシンプルなSKILL.mdで十分」という始め方のハードルの低さを、必須2フィールドという公式仕様と併せて提示（帰属を明示）
+- [../agent-capabilities/writing-good-skills.md](../agent-capabilities/writing-good-skills.md) — description 250文字上限と重要キーワード前置き、よくある失敗4パターン（詰め込みすぎ・description曖昧・テストなし・放置）とその対策、`/skill-creator` の Eval/Improve/Benchmark と「6つのうち5つでトリガー精度が改善」、21個保有・毎週使うのは5〜6個、「引き算のメンテナンス」、「最初はnameとdescriptionだけで十分」「自分専用のClaude Codeを育てる」の根拠（いずれも著者個人の実践としてコンセプト側で帰属を明示）

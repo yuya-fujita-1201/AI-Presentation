@@ -52,4 +52,5 @@ Windows形式のパス（バックスラッシュ）を避けフォワードス�
 
 # 活用先
 
-（コンセプト昇華時に追記）
+- [../agent-capabilities/writing-good-skills.md](../agent-capabilities/writing-good-skills.md) — 主根拠。コンテキストを「a public good」とする基本姿勢、50/150トークンの簡潔版・冗長版の対比、description三人称・what+when・良い例/悪い例、gerund形の命名と避けるべき名前、High/Medium/Low自由度と「崖のある細い橋」の比喩、SKILL.md 500行上限・参照ファイル1階層・100行超の目次、部分読み（head -100）になりうる理由、評価駆動開発の5ステップとHaiku/Sonnet/Opusのテスト観点、Claude A/B分担、アンチパターン（Windowsパス・選択肢の並べすぎ・MCP完全修飾名）、公開前チェックリストの根拠
+- [../agent-capabilities/choosing-skill-mcp-or-cli.md](../agent-capabilities/choosing-skill-mcp-or-cli.md) — SkillからMCPツールを呼ぶ際は完全修飾名 `ServerName:tool_name` を使うべきという記述を、SkillとMCPの併用が公式に想定されていることの根拠として使用

@@ -66,7 +66,7 @@ generated:
 
 ### 理由3: コンテキストを食う量が違う
 
-同動画は、コンテキストウィンドウ（1回のやり取りで扱える情報量）には上限があり、能力を全部最初から読み込んでしまうとこれを圧迫すると説明している（[13:00]〜[14:00]、聞き取り）。ここが4手段の実務上の最大の分かれ目になる。プロジェクトルールは常に全文が載り、MCPは接続中ずっとツール定義が載り、Skillは名前と説明だけが載る——この差が、能力を増やしたときの「重さ」の差になる。仕組みは[progressive-disclosure.md](./progressive-disclosure.md)で、実際の選び方は`choosing-skill-mcp-or-cli.md`（未執筆）で扱う。
+同動画は、コンテキストウィンドウ（1回のやり取りで扱える情報量）には上限があり、能力を全部最初から読み込んでしまうとこれを圧迫すると説明している（[13:00]〜[14:00]、聞き取り）。ここが4手段の実務上の最大の分かれ目になる。プロジェクトルールは常に全文が載り、MCPは接続中ずっとツール定義が載り、Skillは名前と説明だけが載る——この差が、能力を増やしたときの「重さ」の差になる。仕組みは[progressive-disclosure.md](./progressive-disclosure.md)で、実際の選び方は[choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)で扱う。
 
 ## よくある誤解
 
@@ -81,16 +81,16 @@ generated:
 |---|---|---|---|
 | 1 | [what-are-agent-skills.md](./what-are-agent-skills.md) | Skillの定義・構成要素・素のプロンプトとの違い | 公式＋動画 |
 | 2 | [progressive-disclosure.md](./progressive-disclosure.md) | 段階的開示の3階層とトークンコストの実際 | 公式＋動画 |
-| 3 | `writing-good-skills.md`（未執筆） | 起動されるSkillの書き方・500行の壁・失敗パターン | 公式＋実務記事 |
-| 4 | `what-is-mcp.md`（未執筆） | MCPの構造・3大プリミティブ・サーバーの実像 | 公式（primary） |
-| 5 | `choosing-skill-mcp-or-cli.md`（未執筆） | 同じ用事にどれを選ぶか。コストと制御性の判断 | 実測記事＋公式 |
+| 3 | [writing-good-skills.md](./writing-good-skills.md) | 起動されるSkillの書き方・500行の壁・失敗パターン | 公式＋実務記事 |
+| 4 | [what-is-mcp.md](./what-is-mcp.md) | MCPの構造・3大プリミティブ・サーバーの実像 | 公式（primary） |
+| 5 | [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) | 同じ用事にどれを選ぶか。コストと制御性の判断 | 実測記事＋公式 |
 | 6 | `prompts-and-project-rules.md`（未執筆） | プロンプトとCLAUDE.mdの設計指針 | 実務記事＋公式 |
 | 7 | `distribution-and-governance.md`（未執筆） | 配布・バージョン管理・ライセンス・悪意あるSkill | 動画＋公式 |
 | 8 | `webmcp-and-frontier.md`（未執筆） | ブラウザ側MCPという提案と未確定の論点 | 動画＋公式 |
 
 ## 読む順番の提案
 
-- **まず全体像だけ掴みたい**: 本ファイル → [what-are-agent-skills.md](./what-are-agent-skills.md) → `what-is-mcp.md`（未執筆） の3本で、4手段のうち2つの実体が分かる
-- **明日から自分で何か作りたい**: 上の3本の後、`writing-good-skills.md`（未執筆） → `prompts-and-project-rules.md`（未執筆）。最初に触るべきはSkillとプロジェクトルールで、どちらもファイルを1つ置くだけで始められる
-- **導入判断・技術選定をする立場**: [progressive-disclosure.md](./progressive-disclosure.md) → `choosing-skill-mcp-or-cli.md`（未執筆） → `distribution-and-governance.md`（未執筆）。コスト構造・使い分け・ガバナンスの3点が判断材料になる
+- **まず全体像だけ掴みたい**: 本ファイル → [what-are-agent-skills.md](./what-are-agent-skills.md) → [what-is-mcp.md](./what-is-mcp.md) の3本で、4手段のうち2つの実体が分かる
+- **明日から自分で何か作りたい**: 上の3本の後、[writing-good-skills.md](./writing-good-skills.md) → `prompts-and-project-rules.md`（未執筆）。最初に触るべきはSkillとプロジェクトルールで、どちらもファイルを1つ置くだけで始められる
+- **導入判断・技術選定をする立場**: [progressive-disclosure.md](./progressive-disclosure.md) → [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) → `distribution-and-governance.md`（未執筆）。コスト構造・使い分け・ガバナンスの3点が判断材料になる
 - **`webmcp-and-frontier.md`（未執筆） は最後でよい**: 提案段階の話であり、確定していない論点を多く含む
