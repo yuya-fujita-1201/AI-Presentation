@@ -40,7 +40,7 @@ generated:
 - **「何をするか」と「いつ使うか」の両方を書く**。良い例として挙げられているのは「Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.」——前半が機能、後半（Use when〜）が発動条件である
 - **曖昧な記述は不可**。「Helps with documents」は悪い例として明示されている
 
-実務側からも同じ指摘が出ている。[21個のSkillを運用した記事](../sources/article-tools-claude-code-skill-design.md)は、よくある失敗の2つ目として「description曖昧」——「便利なスキル」といった記述で済ませてしまう問題——を挙げ、対策は『何をするか』＋『いつ使うか』を具体化することだとしている。加えて同記事は、description は250文字で切り詰められるため**重要なキーワードは前半に入れるのがコツ**だと述べている（この文字数上限は同記事の記述であり、公式ドキュメント側の記載としては確認していない）。
+実務側からも同じ指摘が出ている。[21個のSkillを運用した記事](../sources/article-tools-claude-code-skill-design.md)は、よくある失敗の2つ目として「description曖昧」——「便利なスキル」といった記述で済ませてしまう問題——を挙げ、対策は『何をするか』＋『いつ使うか』を具体化することだとしている。加えて同記事は、description は250文字で切り詰められるため**重要なキーワードは前半に入れるのがコツ**だと述べている（この文字数上限は同記事の記述であり、公式ドキュメント側の記載としては確認していない）。公式が定める上限は1024文字（[what-are-agent-skills.md](./what-are-agent-skills.md)）であり、ここでいう250文字はそれとは別に、起動判定時にAIが実際に参照する範囲についての著者の観測である。
 
 [Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)も、いつ・どのような場面で使うスキルなのかを明示しておかないと、類似のスキルが複数存在する場合にAIが誤ったスキルを読み込んでしまうことがあると注意を促している（[43:00]、聞き取り）。**公式・実務記事・入門動画の3つが、独立に同じ一点を指している。**同動画は運用面の対策として、似たようなスキルが複数有効になっているとAIがどちらを読み込むべきか判断できず誤ったスキルが呼び出される場合があるため、**使わないスキルはオフにしておくべき**だとも述べている（[19:00]、聞き取り）。
 

@@ -17,6 +17,8 @@
 7. [distribution-and-governance.md](./distribution-and-governance.md) — 配布・バージョン管理・ライセンス・セキュリティ
 8. [webmcp-and-frontier.md](./webmcp-and-frontier.md) — ブラウザ側MCPという提案と未確定の論点
 
+なお「4つの手段」のうちCLIだけは専用ファイルを設けていない（新しく用意するものがないため）。定義・設計論点は5. [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) の冒頭にまとめている。
+
 ## 読む順番
 
-[overview.md](./overview.md) の「このバンドルの地図」節にある8本の順序表と「読む順番の提案」（全体像だけ掴む／自分で作る／導入判断をする、の3コース）に従うこと。初学者はまず[prompts-and-project-rules.md](./prompts-and-project-rules.md)（最も手前の手段）から読むとよい。
+初学者はまず [overview.md](./overview.md) → [prompts-and-project-rules.md](./prompts-and-project-rules.md) → [what-are-agent-skills.md](./what-are-agent-skills.md) → [what-is-mcp.md](./what-is-mcp.md) の4本で全体像を掴むとよい。「自分で作る」「導入判断をする」の残り2コースは [overview.md](./overview.md) の「読む順番の提案」節を参照。

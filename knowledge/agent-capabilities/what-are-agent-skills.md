@@ -73,12 +73,12 @@ Skillの位置づけは、比較対象を2つ置くと分かりやすい。
 
 [公式ドキュメント](../sources/article-tools-agent-skills-overview.md)は、Skillを事前構築済みのPre-builtとユーザーが作るCustomに分けている。Pre-builtはPowerPoint（pptx）・Excel（xlsx）・Word（docx）・PDF（pdf）の4種類が用意されており、claude.ai・Claude API・Claude Platform on AWS・Microsoft Foundry（Hosted on Anthropicデプロイのみ）で利用できるとしている。
 
-Custom Skillsを置く場所と制約は環境によって異なる。
+Custom Skillsを置く場所と制約は環境によって異なる。なお下表の「Claude API」行にある`skill_id`（pptx/xlsx/docx/pdf）はPre-built Skills 4種を呼び出す際の識別子であり、Custom SkillをAPI経由で使う具体的な置き場所はソース記事に明記されていない。
 
 | 環境 | 置き方 | 制約 |
 |---|---|---|
 | **Claude Code** | `~/.claude/skills/`（個人）または`.claude/skills/`（プロジェクト）にフォルダを置くだけ | APIアップロード不要。**フルネットワークアクセスあり** |
-| **Claude API** | `container`パラメータに`skill_id`を指定。code execution toolが必須 | サンドボックスは「no network access and no runtime package installation」 |
+| **Claude API**（Pre-built呼び出し） | `container`パラメータに`skill_id`（pptx/xlsx/docx/pdf）を指定。code execution toolが必須 | サンドボックスは「no network access and no runtime package installation」 |
 | **claude.ai** | Settings > Features からzipでアップロード（Pro/Max/Team/Enterprise、code execution有効時） | 個人単位。組織全体共有やadmin管理は不可 |
 
 同ドキュメントは加えて「Custom Skills do not sync across surfaces」と明記している。**claude.aiにアップロードしたSkillがClaude Codeでも使えるようになる、といったことは起きない**。組織で配る話は[distribution-and-governance.md](./distribution-and-governance.md)で扱う。

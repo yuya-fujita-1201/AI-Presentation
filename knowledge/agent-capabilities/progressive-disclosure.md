@@ -10,7 +10,7 @@ generated:
 
 # 段階的開示（progressive disclosure）
 
-Skillを100個置いても動作が重くならない。この一点がSkillという仕組みの核心であり、それを支えているのが段階的開示（progressive disclosure）という設計である。[what-are-agent-skills.md](./what-are-agent-skills.md)でSkillの実体を見たので、ここではその読まれ方を扱う。
+Skillを100個置いても本文までは読み込まれない。この一点がSkillという仕組みの核心であり、それを支えているのが段階的開示（progressive disclosure）という設計である。[what-are-agent-skills.md](./what-are-agent-skills.md)でSkillの実体を見たので、ここではその読まれ方を扱う。
 
 ## 一言定義
 

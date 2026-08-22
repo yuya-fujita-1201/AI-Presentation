@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-22（agent-capabilities 採点指摘の修正 improve_k run:08221515e8）
+
+- **Fix (f1)**: `what-are-agent-skills.md` の「Custom Skillsを置く場所と制約」表で、Claude API行の`skill_id`がPre-built 4種（pptx/xlsx/docx/pdf）の識別子である旨を明記し、Custom Skillの説明と区別
+- **Fix (f2)**: `writing-good-skills.md` の「250文字で切り詰め」に、`what-are-agent-skills.md` の「上限1024文字」との関係（別概念であること）を1文で接続
+- **Fix (f3)**: `what-is-mcp.md` 末尾の結論文「MCPは定額のコストを払う」の留保を、`overview.md` と同じ強度（実測記事・動画の指摘、公式`*/list`設計との整合）に揃えた
+- **Fix (f4)**: `progressive-disclosure.md` 冒頭の「Skillを100個置いても動作が重くならない」を、限界節の「Level 1コストは常時かかる」と矛盾しない表現（「本文までは読み込まれない」）に修正
+- **Fix (f5)**: `overview.md` の「導入判断・技術選定をする立場」コースの先頭に `what-are-agent-skills.md` を追加し、`progressive-disclosure.md` の既読前提と揃えた
+- **Fix (f6)**: `index.md` の内容一覧に、CLIが専用ファイルを持たない旨と choosing-skill-mcp-or-cli.md への導線を1行追加
+- **Fix (f7)**: `index.md` の「読む順番」節を、overview.md への外部参照と独自推奨の二重構造から、初学者向け1コースを直接示す形に一本化
+
 ## 2026-08-22（tools採点 repair上限の手動修正）
 
 - **Add**: 9月シリーズ第2弾として `knowledge/agent-capabilities/` を新設（コンセプト9本・ソース台帳10本＝動画3・記事7）。Skills / MCP / CLI / プロンプトの4手段の使い分けを主題とし、Agent Skills公式仕様とMCP仕様の一次資料を確保

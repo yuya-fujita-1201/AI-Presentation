@@ -138,7 +138,7 @@ Claude for Desktop の場合、macOSでは `~/Library/Application Support/Claude
 
 一方で、MCPには構造上のコストがある。[Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)は、MCPは毎回余計な情報も読み込まなければならないため、それだけでトークン消費が大きくなる問題が発生していたと説明している（[17:00]、聞き取り）。この指摘自体はauto字幕由来だが、**接続中のサーバーのツール一覧が常にコンテキストに載る**という前述の構造（`*/list` で発見してから呼ぶ設計）と整合的である。同動画は同時に、SkillはMCPからの単純な進化形ではなくそもそも概念が異なるものだと補足している（聞き取り）。
 
-どちらを選ぶかの判断は [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)で扱う。ここでは**MCPは「外部サービスに繋ぐ」ときの手段であり、接続している間ずっと定額のコストを払う**という性質だけ持ち帰ればよい。
+どちらを選ぶかの判断は [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md)で扱う。ここでは**MCPは「外部サービスに繋ぐ」ときの手段であり、接続している間ずっと定額のコストを払うとされる（実測記事・動画が指摘しており、公式の`*/list`設計とも整合する）**という性質だけ持ち帰ればよい。
 
 ## 次に読む
 
