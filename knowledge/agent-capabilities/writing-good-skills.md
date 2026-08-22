@@ -83,7 +83,7 @@ generated:
 公式ドキュメントは「Keep SKILL.md body under 500 lines for optimal performance」と具体的な行数上限を示し、この上限に近づく場合は複数ファイルに分割すべきとしている。分割にも規則がある。
 
 - **参照ファイルはSKILL.mdから1階層のみ**（深いネストは避ける）
-- **100行を超える参照ファイルには目次を付ける**
+- 100行を超える参照ファイルには目次を付ける
 
 1階層に制限する理由が実務的で重要だ。同ドキュメントは「Claude may partially read files when they're referenced from other referenced files」——参照ファイルからさらに参照されたファイルは部分的にしか読まれないことがある——と述べ、`head -100` のような部分読みになりうる点を挙げている。**深い階層に置いた重要な指示は、読まれない可能性がある。**目次を付けるべき理由も同じで、部分読みされても全体像が分かるようにするためである。
 
@@ -91,7 +91,7 @@ generated:
 
 ## 評価を先に作る
 
-公式ドキュメントの中でも見落とされやすいのが開発手順の指定である。同ドキュメントは「Create evaluations BEFORE writing extensive documentation」と明記し、①ギャップの特定 → ②3シナリオ作成 → ③ベースライン測定 → ④最小限の指示作成 → ⑤反復、という5ステップの評価駆動開発を示している。ドキュメントを厚く書いてから検証するのではなく、**測る仕組みを先に用意して、必要最小限の指示から足していく**。
+公式ドキュメントの中でも見落とされやすいのが開発手順の指定である。同ドキュメントは「Create evaluations BEFORE writing extensive documentation」と明記し、①ギャップの特定 → ②3シナリオ作成 → ③ベースライン測定 → ④最小限の指示作成 → ⑤反復、という5ステップの評価駆動開発を示している。ドキュメントを厚く書いてから検証するのではなく、測る仕組みを先に用意して、必要最小限の指示から足していく。
 
 テストは全モデルで行うべきだとされている。Haiku（十分なガイダンスがあるか）・Sonnet（明確で効率的か）・Opus（過剰説明していないか）と、モデルごとに見る観点が違う点が面白い。小さいモデルでは不足を、大きいモデルでは過剰を検出する。
 
@@ -107,13 +107,13 @@ generated:
 
 公式ドキュメントが挙げるものと、実務記事が挙げるものを並べる。
 
-**公式（[best practices](../sources/article-tools-agent-skills-best-practices.md)）:**
+公式（[best practices](../sources/article-tools-agent-skills-best-practices.md)）:
 
 - **Windows形式のパス（バックスラッシュ）**を使う。フォワードスラッシュを常用すべき
 - **選択肢を並べすぎる**。pypdf / pdfplumber / PyMuPDF のように並列に示すのではなく、デフォルト＋エスケープハッチ（例外時の逃げ道）の形にする
-- **MCPツールの名前を省略する**。Skillから[MCP](./what-is-mcp.md)のツールを使う場合は必ず完全修飾名 `ServerName:tool_name`（例: `BigQuery:bigquery_schema`）を使う。サーバー名を省略すると「tool not found」エラーになりうる
+- **MCPツールの名前を省略する**。Skillから[MCP](./what-is-mcp.md)のツールを使う場合は必ず完全修飾名 `ServerName:tool_name`（例: `BigQuery:bigquery_schema`）を使う。サーバー名を省略すると「tool not found」エラーになりうる（MCPの完全修飾名については[MCPとは何か](./what-is-mcp.md)で扱う。先に読んでおくと分かりやすい）
 
-**実務（[21個運用した記事](../sources/article-tools-claude-code-skill-design.md)）:**
+実務（[21個運用した記事](../sources/article-tools-claude-code-skill-design.md)）:
 
 - **詰め込みすぎ**——複数の役割を1つに詰め込む。対策は 1 Skill = 1目的に分割すること
 - **放置**——モデル更新後に未対応のまま放置する。対策は定期的に Benchmark（Pass rate・実行時間・トークン数の計測）を実行すること
@@ -138,7 +138,7 @@ generated:
 
 **1回目で完成させようとしない。descriptionだけ書いて動かし、外したところを直す。**これが公式の「評価を先に作る」と実務の「使いながら育てる」が合流する地点である。
 
-作り始めの一歩も、[21個運用した記事](../sources/article-tools-claude-code-skill-design.md)は具体的に示している。著者は手書きではなく `/skill-creator` での生成を勧めており、対話形式で新規作成するCreateモードから始めれば「正しいフォーマットのSKILL.mdを自動生成してくれます」と述べている。前述のEval・Improve・Benchmarkの各モードも、この同じ `/skill-creator` の機能である。**育て方の最初の一歩は白紙に書き始めることではなく、ツールに雛形を作らせて直していくことである。**
+作り始めの一歩も、[21個運用した記事](../sources/article-tools-claude-code-skill-design.md)は具体的に示している。著者は手書きではなく `/skill-creator` での生成を勧めており、対話形式で新規作成するCreateモードから始めれば「正しいフォーマットのSKILL.mdを自動生成してくれます」と述べている。前述のEval・Improve・Benchmarkの各モードも、この同じ `/skill-creator` の機能である。育て方の最初の一歩は白紙に書き始めることではなく、ツールに雛形を作らせて直していくことである。
 
 もう一つ、知っておくと効く仕組みがある。SKILL.mdの中で `!<command>` という構文を使うと、シェルコマンドの実行結果をSkillに動的に注入できる。ただし同記事は「Claude Codeがプロンプトを読む前にシェル上で実行」される点に注意を促している。**実行されるのはモデルが読む前のタイミング**であり、この順序を取り違えると、注入されるはずの値が空になったり意図しないコマンドが走ったりする。
 

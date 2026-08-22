@@ -6,7 +6,7 @@
 
 ## 内容
 
-入口は [overview.md](./overview.md)（「能力を足す」の定義・4手段の比較表・バンドルの地図）。以下は overview.md の地図の表と同じ並びで、各ファイルの見出し語だけを挙げる。詳しい内容説明と読む順番は overview.md にある。
+入口は [overview.md](./overview.md)（「能力を足す」の定義・4手段の比較表・バンドルの地図）。以下は overview.md の地図の表と同じ並びで、各ファイルの見出し語だけを挙げる。**この番号は地図上の位置であって読む順番ではない**（読む順番は overview.md 側で管理し、初学者向けの入口は下の「読む順番」節に示す）。詳しい内容説明は overview.md にある。
 
 1. [what-are-agent-skills.md](./what-are-agent-skills.md) — Skillとは何か（指示書＋スクリプトのフォルダ）
 2. [progressive-disclosure.md](./progressive-disclosure.md) — 段階的開示の3階層とトークンコスト

@@ -1,5 +1,15 @@
 # 変更履歴
 
+## 2026-08-22（tools採点 repair上限の手動修正）
+
+- **Add**: 9月シリーズ第2弾として `knowledge/agent-capabilities/` を新設（コンセプト9本・ソース台帳10本＝動画3・記事7）。Skills / MCP / CLI / プロンプトの4手段の使い分けを主題とし、Agent Skills公式仕様とMCP仕様の一次資料を確保
+- **Fix (f1)**: CLIの定義が `overview.md` と `choosing-skill-mcp-or-cli.md` にほぼ同内容で重複していた。4手段のうちCLIだけ専用ファイルを持たない構成なので、定義と設計論点は choosing 側に集約し overview は1行＋リンクに縮約
+- **Fix (f2)**: `index.md` の1〜8の並びと「初学者はプロンプト（6番）から」という推奨が食い違っていた。番号は地図上の位置であって読む順番ではない旨を明示
+- **Fix (f3)**: `writing-good-skills.md` がMCPの完全修飾名という後続ファイルの概念を前提にしていたため、先に読む導線を追加
+- **Fix (f4)**: 「コンテキスト汚染」とワーキングメモリの比喩が同一出典から2ファイルで完全に書き下されていた。行数の目安を持つ `prompts-and-project-rules.md` を本籍とし、`progressive-disclosure.md` 側は結論1文＋リンクに圧縮
+- **Fix (f5)**: 節末を太字1文で締める型が反復していたため、各ファイル2箇所までに絞り9箇所の強調を通常文に戻した
+- **Note**: 採点は 7/7/7/9/7 → 9/7/7/8/7 → 8/8/7/8/7 で repair 3回を使い切り stuck(repair_exhausted)。2026-08-21 22:54 から約16時間、stuck解除の担い手が不在で全スロットが空転した
+
 ## 2026-08-21（agent-capabilities 採点指摘の修正 improve_k run:0821174539）
 
 - **Fix**: 採点findings 16件のうち13件を修正、3件は範囲外としてdeferred
