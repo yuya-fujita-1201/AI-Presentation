@@ -208,6 +208,55 @@ def pause_is_stale():
         return False
 
 
+def auto_accept_stuck(state, queue):
+    """採点の行き詰まりを一定時間後に最良周の水準で受理し、自走を再開する。
+
+    採点者が独立に評価する設計上、同一内容でも項目スコアが7↔9で振れる。そのため
+    repair上限や停滞に到達しても、指摘が実質的でない限り人が受理してきた（pe/le/ge の
+    manual_override はいずれもこの判断）。だが受理の担い手が不在だと全スロットが空転する
+    （2026-08-21 22:54 から約16時間の停止が実際に発生）。そこで、時間で受理を自動化する。
+
+    対象は採点の揺れに起因する2種類（repair_exhausted / stagnation）のみ。
+    needs_human やゲート破損など、内容に実害がある stuck は自動受理しない。
+    """
+    st = state.get("stuck") or {}
+    reason = st.get("reason")
+    if reason not in ("repair_exhausted", "stagnation"):
+        return False
+    hours = CFG.get("stuck_auto_accept_hours", 3)
+    try:
+        at = datetime.datetime.fromisoformat(st.get("at", ""))
+    except ValueError:
+        return False
+    if (datetime.datetime.now().astimezone() - at).total_seconds() < hours * 3600:
+        return False
+    phase = state.get("phase")
+    kind = "k" if phase in ("grade_k", "improve_k") else "d" if phase in ("grade_d", "improve_d") else None
+    if kind is None:
+        return False
+    g = state["grade"]["knowledge" if kind == "k" else "deck"]
+    scores = g.get("last_scores") or {}
+    scores_str = "/".join(str(scores[k]) for k in sorted(scores, key=lambda x: int(x))) or "不明"
+    state["manual_override"] = {"at": now_iso(), "phase": phase, "scores": scores,
+                                "by": "auto", "reason": f"{reason}が{hours}時間継続"}
+    state["stuck"] = None
+    state["stuck_notified_at"] = None
+    state["phase_attempts"] = 0
+    state["phase_started_at"] = None
+    g.update({"repair_count": 0, "pass_streak": 0, "retry_used": False,
+              "last_unmet": None, "last_scores": scores})
+    state["generation"] = state.get("generation", 1) + 1
+    note = f"{state['theme']['id']} {phase} を自動受理（{reason} / {hours}時間経過 / 最終 {scores_str}）"
+    if kind == "k" and scope_of(state["theme"]["id"]) == "knowledge":
+        advance_theme(state, queue, note)
+        save_queue(queue)
+    else:
+        state["phase"] = "draft" if kind == "k" else "brief"
+    log_activity(f"⚖️ 自動受理: {note} → {state['phase']}")
+    notify(state, "pipeline: 採点を自動受理", note + f"\n次工程: {state['phase']}")
+    return True
+
+
 def advance_theme(state, queue, note):
     """テーマ完了時の遷移。次テーマがあればstate/queueを初期化して自走継続、無ければ完走PAUSE"""
     series = state["theme"]["series"]
@@ -1587,12 +1636,15 @@ def cycle():
         log_activity("⏸ PAUSE中（pipeline/PAUSE を削除で再開）")
         return 0
     if state.get("stuck"):
-        if not state.get("stuck_notified_at"):
+        if auto_accept_stuck(state, load_queue()):
+            save_state(state)
+        elif not state.get("stuck_notified_at"):
             set_stuck(state, state["stuck"]["reason"], state["stuck"].get("note", "(再通知)"))
             save_state(state)
+            return 0
         else:
             log_activity(f"🛑 stuck({state['stuck']['reason']})のため待機中。復帰: reset-phase.sh")
-        return 0
+            return 0
     if state["phase"] in ("done", "awaiting_user"):
         log_activity(f"✅ phase={state['phase']}（ユーザー判断待ち）")
         return 0

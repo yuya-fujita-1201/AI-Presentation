@@ -90,5 +90,6 @@
     "aidocs": "full"
   },
   "pause_stale_min": 90,
-  "pause_activity_min": 30
+  "pause_activity_min": 30,
+  "stuck_auto_accept_hours": 3
 }
