@@ -39,6 +39,8 @@ claude plugin install <名前>@google-plugins
 
 プラグインごとに選んで入れられ、後から外せる。ここで重要なのは、**プラグインがSkillとMCPサーバーのセットになっている**点である（同動画・聞き取り）。配布の単位は「Skill 1つ」ではなく「その仕事に必要な能力一式」になりうる。[MCP](./what-is-mcp.md)とSkillは競合ではなく同梱される、という実務上の実態がここに出ている。
 
+なお同動画は、プラグインの中身はgoogle/skills本体ではなくgemini-cli-extensionsやGoogleCloudPlatform配下の別リポジトリを参照しており、google/skills自体はそれらへの入口となるカタログの位置づけだと説明している（聞き取り）。
+
 同動画はまた、firebase-basics の `references/setup/` 配下に `claude_code.md`・`gemini_cli.md`・`cursor.md`・`github_copilot.md`・`antigravity.md` といったツールごとの導入手順が用意されており、ツール間の差を配布側が吸収していると紹介している（聞き取り）。**配る側が「どのツールで使うか」の差を引き受ける**——これは社内配布でも真似する価値のある作法である。
 
 ## バージョン管理——「最新を追う」は本番では危ない

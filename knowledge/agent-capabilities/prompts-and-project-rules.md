@@ -75,7 +75,7 @@ generated:
 
 これは Skill の設計原理とまったく同じ考え方である（[progressive-disclosure.md](./progressive-disclosure.md)）。**段階的開示は Skill だけの仕組みではなく、コンテキストという有限資源を扱うときの一般解**だと捉えるとよい。
 
-スコープの使い分けも整理しておく。[Claude Code Skillの運用記事](../sources/article-tools-claude-code-skill-design.md)は、Skill の配置優先順位を「Enterprise > Personal > Project」の順で上位が優先されるとし、Personal（`~/.claude/skills/`）は全プロジェクトに、Project（`.claude/skills/`）はそのプロジェクトのみに適用されると説明している。ルールファイルも同じ発想で、全プロジェクト共通の作法はホーム配下、そのリポジトリ固有の罠はリポジトリ内、という置き分けになる。加えて[CLAUDE.md運用の実務記事](../sources/article-he-claude-md-best-practices.md)は、Claude Code が親・サブディレクトリの `CLAUDE.md` も自動探索する特性を使い、モノレポではルートに共通ルール・各パッケージ配下に固有ルールを置く構成や、個人用設定をコミットせず `claude.local.md`（`.gitignore` 対象）に書く運用を紹介している。
+スコープの使い分けも整理しておく。Skillにも同じ置き分けがある（詳細は[what-are-agent-skills.md](./what-are-agent-skills.md)）。ルールファイルも同じ発想で、全プロジェクト共通の作法はホーム配下、そのリポジトリ固有の罠はリポジトリ内、という置き分けになる。加えて[CLAUDE.md運用の実務記事](../sources/article-he-claude-md-best-practices.md)は、Claude Code が親・サブディレクトリの `CLAUDE.md` も自動探索する特性を使い、モノレポではルートに共通ルール・各パッケージ配下に固有ルールを置く構成や、個人用設定をコミットせず `claude.local.md`（`.gitignore` 対象）に書く運用を紹介している。
 
 なお同記事は、Claude Code のシステムメッセージに「`CLAUDE.md` の文脈はタスクと無関係な場合がある」という前提が含まれており、状況によって一部が意図的に無視されることがあるとも述べている。**ルールに書けば必ず守られる、という保証はない。** そのうえで、LLMは入力の先頭と末尾を強く重み付ける傾向があるため、本当に守ってほしいことは冒頭に書き、「IMPORTANT」などで明示的に強調するのが有効だとしている。
 

@@ -1,5 +1,16 @@
 # 変更履歴
 
+## 2026-08-22（agent-capabilities 採点指摘の修正 improve_k run:082220158b）
+
+- **Fix (f1)**: `progressive-disclosure.md` の「実物で確かめる」節に、google/skillsの中身は9割以上がMarkdown散文でPythonは一部の付随スクリプトのみという実物補正を1文追加
+- **Fix (f2)**: `distribution-and-governance.md` の導入2ステップ直後に、プラグインが参照するのはgemini-cli-extensions等の別リポジトリでありgoogle/skills自体はカタログの位置づけである旨を1文追加
+- **Fix (f3)**: `what-are-agent-skills.md`「なぜ生まれたのか」冒頭にAgent Skillsの発表日（2025-10-16）を追加。`webmcp-and-frontier.md` 冒頭に「エージェント自身がSkillを作成・編集・評価できるようにする」という公式の展望を追加
+- **Fix (f4)**: `overview.md`「導入判断・技術選定をする立場」コースに `what-is-mcp.md` を `choosing-skill-mcp-or-cli.md` の直前として挿入し、判断材料を5点に修正（choosing-skill-mcp-or-cli.mdがMCPプリミティブの構造を前提としているため）
+- **Fix (f5)**: `overview.md` の「4つの手段のうち3つがファイルを読ませる性質を利用している」という記述を、Skill/プロジェクトルール（ファイルを読ませる性質）とCLI（コマンド実行の性質）の2つに分けた記述に修正
+- **Fix (f6)**: `prompts-and-project-rules.md` のSkill未習者向けにSkillの配置優先順位を詳述していた段落を、前方参照を圧縮した1文に修正
+- **Fix (f7)**: `overview.md` のGPTs/Gems比較を圧縮し、詳細説明は `what-are-agent-skills.md` に一本化
+- **Fix (f8)**: `writing-good-skills.md` と `choosing-skill-mcp-or-cli.md` の一言定義を、見出しの言い換えではなく持ち帰れる命題に置き換え
+
 ## 2026-08-22（agent-capabilities 採点指摘の修正 improve_k run:08221515e8）
 
 - **Fix (f1)**: `what-are-agent-skills.md` の「Custom Skillsを置く場所と制約」表で、Claude API行の`skill_id`がPre-built 4種（pptx/xlsx/docx/pdf）の識別子である旨を明記し、Custom Skillの説明と区別

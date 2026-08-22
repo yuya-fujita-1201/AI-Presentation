@@ -18,7 +18,7 @@ generated:
 
 > 引用: 「An agent is an application that completes a task by planning its own steps and calling tools that read files, run commands, or edit code.」（[Agent SDK overview](../sources/article-he-agent-sdk-overview.md)）
 
-つまり、**自分で手順を計画し、ファイルを読み、コマンドを実行し、コードを編集する**アプリケーションである。チャット欄で文章を返してくるAIではなく、こちらの手元のファイルを実際に触るAIを想定している。この前提の違いが、以降のすべての話の出発点になる。ファイルを触れるということは、逆に言えば**「ファイルに書いて置いておけば、AIがそれを読んで従う」**という道が開けるということでもある。4つの手段のうち3つ（Skill・プロジェクトルール・CLI）は、この性質を利用している。
+つまり、**自分で手順を計画し、ファイルを読み、コマンドを実行し、コードを編集する**アプリケーションである。チャット欄で文章を返してくるAIではなく、こちらの手元のファイルを実際に触るAIを想定している。この前提の違いが、以降のすべての話の出発点になる。ファイルを触れるということは、逆に言えば**「ファイルに書いて置いておけば、AIがそれを読んで従う」**という道が開けるということでもある。ファイルに置いて読ませる手段（Skillとプロジェクトルール）はこの性質を、CLIはもう一方の**コマンドを実行できる**という性質を利用している。
 
 ## 一言定義
 
@@ -58,7 +58,7 @@ CLIだけは他の3つと違い、新しく用意するものが何もない（�
 
 ### 理由2: 結果が毎回ブレるかどうか
 
-[Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)の講師は、ChatGPTやClaudeに同じような依頼をしても、依頼するたびにアウトプットの傾向（デザインの色味や雰囲気など）が変わってしまう問題があったと指摘し、Skillとは「必ずAIがマニュアルを見てその指示通りに処理を行っていくことができるようになった」仕組みだとしている（[01:00]、聞き取り）。同動画は、従来のGPTsやGemsがマークダウン形式の指示書しか保持できなかったのに対し、Skillは指示書に加えて実際のプログラム（スクリプト）をセットで保持できる点が違いだと説明している（聞き取り）。
+[Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)の講師は、ChatGPTやClaudeに同じような依頼をしても、依頼するたびにアウトプットの傾向（デザインの色味や雰囲気など）が変わってしまう問題があったと指摘し、Skillとは「必ずAIがマニュアルを見てその指示通りに処理を行っていくことができるようになった」仕組みだとしている（[01:00]、聞き取り）。スクリプトを持てる点が従来のGPTsやGemsとの差である（詳細は[what-are-agent-skills.md](./what-are-agent-skills.md)）。
 
 言い換えると、**言葉で頼む限り出力は毎回生成されるので揺れるが、スクリプトを走らせれば同じ結果が出る**。品質の一貫性が要る仕事なら、手段の選択がそのまま品質に効く。
 
@@ -90,5 +90,5 @@ CLIだけは他の3つと違い、新しく用意するものが何もない（�
 
 - **まず全体像だけ掴みたい**: 本ファイル → [prompts-and-project-rules.md](./prompts-and-project-rules.md) → [what-are-agent-skills.md](./what-are-agent-skills.md) → [what-is-mcp.md](./what-is-mcp.md) の4本で、最も手前の手段（プロンプト）を含む4手段のうち3つの実体が分かる
 - **明日から自分で何か作りたい**: 上の4本の後、[writing-good-skills.md](./writing-good-skills.md)へ。実際に手を動かす順もこの並びで、プロンプトで試す→効いた指示をルールに常設化する→手順が長くなったらSkillに切り出す、が最も無駄が少ない
-- **導入判断・技術選定をする立場**: [what-are-agent-skills.md](./what-are-agent-skills.md) → [progressive-disclosure.md](./progressive-disclosure.md) → [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) → [distribution-and-governance.md](./distribution-and-governance.md)。Skillの実体・コスト構造・使い分け・ガバナンスの4点が判断材料になる
+- **導入判断・技術選定をする立場**: [what-are-agent-skills.md](./what-are-agent-skills.md) → [progressive-disclosure.md](./progressive-disclosure.md) → [what-is-mcp.md](./what-is-mcp.md) → [choosing-skill-mcp-or-cli.md](./choosing-skill-mcp-or-cli.md) → [distribution-and-governance.md](./distribution-and-governance.md)。Skillの実体・コスト構造・MCPの構造・使い分け・ガバナンスの5点が判断材料になる
 - **[webmcp-and-frontier.md](./webmcp-and-frontier.md) は最後でよい**: 提案段階の話であり、確定していない論点を多く含む

@@ -26,7 +26,7 @@ generated:
 
 ## なぜ生まれたのか
 
-同エンジニアリングブログは、開発動機を「Claude is powerful, but real work requires procedural knowledge and organizational context」と述べている。モデル自体の能力が上がってローカルでコードを実行しファイルシステムと相互作用する汎用エージェントが作れるようになった一方で、「we need more composable, scalable, and portable ways to equip them with domain-specific expertise」——構成可能・スケーラブル・可搬な形で専門知識を与える手段が足りない——という課題が生じた、というのがSkills登場の背景である。
+Agent Skillsは2025年10月16日に発表された。同エンジニアリングブログは、開発動機を「Claude is powerful, but real work requires procedural knowledge and organizational context」と述べている。モデル自体の能力が上がってローカルでコードを実行しファイルシステムと相互作用する汎用エージェントが作れるようになった一方で、「we need more composable, scalable, and portable ways to equip them with domain-specific expertise」——構成可能・スケーラブル・可搬な形で専門知識を与える手段が足りない——という課題が生じた、というのがSkills登場の背景である。
 
 同ブログはPDF編集を例に、埋めるべきギャップを具体的に示している。Claudeは既に「PDFの理解」には長けているが、「manipulate them directly (e.g. to fill out a form)」——直接操作してフォームを埋めるといった能力——が不足している。Skillsはこの**「分かってはいるが、できない」の隙間**を埋めるものだと位置づけられている。
 

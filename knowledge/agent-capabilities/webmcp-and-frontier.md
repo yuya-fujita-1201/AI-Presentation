@@ -12,6 +12,8 @@ generated:
 
 本バンドルの最後のファイルは、**まだ確定していない話**を扱う。ここまでの8本は、今日インストールして今日使える仕組みの説明だった。WebMCPはそうではない。提案段階であり、未決の論点を多く抱えている。それでも扱う理由は、この提案が「AIに能力を足す」という問いの**次の面**——足す側が誰か——を示しているからである。
 
+Skill自体にも、まだ確定していない未来の話がある。[Anthropicのエンジニアリングブログ](../sources/article-tools-agent-skills-equipping-real-world.md)は、将来的に「enable agents to create, edit, and evaluate Skills on their own」——エージェント自身がSkillを作成・編集・評価できるようにする——という展望に触れている。
+
 **読むにあたっての注意**: 本ファイルのWebMCPに関する記述は、原則として[WebMCP解説動画](../sources/video-tools-webmcp-browser-proposal.md)1本に依拠している。同動画の字幕は自動生成であり、仕様の細部（名称・数値・可否）は一次資料での確認が必要である。以下では出所を明示し、断定を避けて記述する。対比の軸としてのみ、[MCP公式ドキュメント](../sources/article-tools-mcp-architecture-overview.md)を併用する。
 
 ## 一言定義
