@@ -1,5 +1,13 @@
 # 変更履歴
 
+## 2026-08-22（agent-capabilities 採点指摘の修正 improve_k run:0822234571）
+
+- **Fix (f1)**: `writing-good-skills.md:114` の完全修飾名の解説先リンクを、実際に内容がある `choosing-skill-mcp-or-cli.md` に差し替え、同一文中の重複リンクを1本化
+- **Fix (f2)**: `prompts-and-project-rules.md` のスコープ節に、Skillの配置優先順位（Enterprise > Personal > Project）を出典帰属付きで追記し、`sources/article-tools-claude-code-skill-design.md` の活用先宣言と整合させた
+- **Fix (f3)**: `choosing-skill-mcp-or-cli.md:33` の「CLIは既存の道具をそのまま呼ばせるだけ」という説明を、直後の「### CLIとは何か」節への参照に圧縮し重複を解消
+- **Fix (f4)**: `choosing-skill-mcp-or-cli.md:39` のgcloud CLI Skillの実例・出所を削除し「実例は後述」に留めることで、`:97`との重複を解消
+- **Fix (f5)**: `overview.md` / `choosing-skill-mcp-or-cli.md` / `webmcp-and-frontier.md` の該当箇所で、1段落・1項目内に複数あった太字強調を最重要の1箇所に絞った
+
 ## 2026-08-22（agent-capabilities 採点指摘の修正 improve_k run:082220158b）
 
 - **Fix (f1)**: `progressive-disclosure.md` の「実物で確かめる」節に、google/skillsの中身は9割以上がMarkdown散文でPythonは一部の付随スクリプトのみという実物補正を1文追加

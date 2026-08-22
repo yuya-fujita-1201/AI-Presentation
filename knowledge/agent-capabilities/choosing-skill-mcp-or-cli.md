@@ -30,13 +30,13 @@ generated:
 
 解いている問題が違う。それでも選択の問題が生じるのは、**「外部の何かをAIに使わせる」という目的が3つとも満たせてしまう**からである。たとえばGitHubを操作させたいとき、GitHub MCPサーバーを繋いでもいいし、`gh` コマンドの使い方を書いたSkillを置いてもいいし、単に「`gh` を使え」と指示するだけでもいい。
 
-なお、CLIは3つの中で唯一「新しく作るもの」がない。**すでにOSに入っている道具をAIに叩かせるだけ**であり、AIがコマンドを実行できること自体は[Agent SDK overview](../sources/article-he-agent-sdk-overview.md)がBuilt-in tools（ファイル読み書き・コマンド実行・Web検索）として挙げている標準機能である。
+なお、CLIは3つの中で唯一「新しく作るもの」がない（定義は次節「CLIとは何か」を参照）。AIがコマンドを実行できること自体は[Agent SDK overview](../sources/article-he-agent-sdk-overview.md)がBuilt-in tools（ファイル読み書き・コマンド実行・Web検索）として挙げている標準機能である。
 
 ### CLIとは何か
 
 Skill・MCPは「新しく用意するもの」だが、CLIだけは違う。AIにコマンド実行という標準機能を与えれば、あとは**すでにOSにインストール済みの既存の道具（`gh`・`aws`・`docker`・`ffmpeg`等）を、そのまま呼ばせるだけ**である。専用の接続規格もフォルダも要らない。ゼロが固定費である理由（軸1で扱う）は、この「何も新しく足していない」という性質そのものに由来する。
 
-この単純さゆえに、CLI側の設計論点は1つに集約される。**LLMの事前知識は古くhallucinationしやすいので、コマンドの正しい使い方をモデルの記憶に頼らせず、`help`を毎回叩かせて確認させる**という安全弁である。[google/skills解説動画](../sources/video-tools-google-skills-marketplace.md)が紹介するgcloud CLI Skillのように、helpコマンドを持つツールであれば、Skill側に「まず`help`を叩いてから実行する」という一手間を書き込むことで、CLIそのものは何も変更せずにhallucinationを防げる（詳しくは後述）。
+この単純さゆえに、CLI側の設計論点は1つに集約される。**LLMの事前知識は古くhallucinationしやすいので、コマンドの正しい使い方をモデルの記憶に頼らせず、`help`を毎回叩かせて確認させる**という安全弁である（実例は後述）。
 
 ## 軸1：常時いくら払うか
 
@@ -50,17 +50,17 @@ Skill・MCPは「新しく用意するもの」だが、CLIだけは違う。AI�
 
 Skillの側は[Anthropicの公式ドキュメント](../sources/article-tools-agent-skills-overview.md)が明記している。「until a Skill is triggered, only its name and description occupy context」——起動されるまで、Skillはnameとdescriptionしかコンテキストを占めない。約100トークンである。詳しくは[progressive-disclosure.md](./progressive-disclosure.md)を参照。
 
-**問題はMCPの側である。**[MCP公式ドキュメント](../sources/article-tools-mcp-architecture-overview.md)が示すとおり、各プリミティブは `*/list`（発見）してから `tools/call`（実行）する2段構えになっている。裏を返せば、**接続している間ずっと、そのサーバーが公開する全ツールの定義がコンテキストに載り続ける**。使わなくても払う、定額の固定費である。
+問題はMCPの側である。[MCP公式ドキュメント](../sources/article-tools-mcp-architecture-overview.md)が示すとおり、各プリミティブは `*/list`（発見）してから `tools/call`（実行）する2段構えになっている。裏を返せば、**接続している間ずっと、そのサーバーが公開する全ツールの定義がコンテキストに載り続ける**。使わなくても払う、定額の固定費である。
 
 この固定費が実際どれくらいかを実測した報告がある。[Claude CodeからCodex CLIを呼ぶ手段を比較した記事](../sources/article-tools-codex-cli-mcp-vs-skill-bash.md)は、5サーバー58ツールという構成で**約55,000トークンを消費した**としている。1サーバーあたり1万トークン強、1ツールあたり1,000トークン弱という計算になる。
 
-この数字の意味を掴むために並べてみる。同じ枠にSkillなら約550個の name+description が入る。**「便利そうだからMCPサーバーを5つ繋いでおく」は、Skillを550個置くのと同じコストを毎回払っている**ということである。[Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)がMCPは毎回余計な情報も読み込むためトークン消費が大きくなる問題があったと指摘している（[17:00]、聞き取り）のは、この構造を指している。動画側はauto字幕由来だが、**公式の2段構え設計と矛盾しない**。断定的な数値の裏付けとしては、実測記事の55,000トークンと動画の指摘という2本の出所がある。
+この数字の意味を掴むために並べてみる。同じ枠にSkillなら約550個の name+description が入る。**「便利そうだからMCPサーバーを5つ繋いでおく」は、Skillを550個置くのと同じコストを毎回払っている**ということである。[Claude Skills入門動画](../sources/video-tools-claude-skills-beginner-guide.md)がMCPは毎回余計な情報も読み込むためトークン消費が大きくなる問題があったと指摘している（[17:00]、聞き取り）のは、この構造を指している。動画側はauto字幕由来だが、公式の2段構え設計と矛盾しない。断定的な数値の裏付けとしては、実測記事の55,000トークンと動画の指摘という2本の出所がある。
 
 ### 実務的な帰結
 
 - **使っていないMCPサーバーは切る。**固定費なので、繋ぎっぱなしは純損である
-- **「とりあえず入れておく」が成立するのはSkillだけ。**約100トークンなら数十個置いても実害が出にくい
-- **CLIは無料。**`gh` や `ffmpeg` がインストール済みなら、それを使わせるのに事前コストは一切かからない
+- 「とりあえず入れておく」が成立するのはSkillだけ。約100トークンなら数十個置いても実害が出にくい
+- CLIは無料。`gh` や `ffmpeg` がインストール済みなら、それを使わせるのに事前コストは一切かからない
 
 ## 軸2：即応するCRUDか、長く走る重い処理か
 

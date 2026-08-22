@@ -111,7 +111,7 @@ generated:
 
 - **Windows形式のパス（バックスラッシュ）**を使う。フォワードスラッシュを常用すべき
 - **選択肢を並べすぎる**。pypdf / pdfplumber / PyMuPDF のように並列に示すのではなく、デフォルト＋エスケープハッチ（例外時の逃げ道）の形にする
-- **MCPツールの名前を省略する**。Skillから[MCP](./what-is-mcp.md)のツールを使う場合は必ず完全修飾名 `ServerName:tool_name`（例: `BigQuery:bigquery_schema`）を使う。サーバー名を省略すると「tool not found」エラーになりうる（MCPの完全修飾名については[MCPとは何か](./what-is-mcp.md)で扱う。先に読んでおくと分かりやすい）
+- **MCPツールの名前を省略する**。Skillから[MCP](./what-is-mcp.md)のツールを使う場合は必ず完全修飾名 `ServerName:tool_name`（例: `BigQuery:bigquery_schema`）を使う。サーバー名を省略すると「tool not found」エラーになりうる（詳しくは[Skill・MCP・CLIのどれを選ぶか](./choosing-skill-mcp-or-cli.md)を参照）
 
 実務（[21個運用した記事](../sources/article-tools-claude-code-skill-design.md)）:
 
