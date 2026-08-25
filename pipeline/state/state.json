@@ -20,11 +20,11 @@
     "series_index": 0
   },
   "phase": "deck",
-  "generation": 21,
+  "generation": 22,
   "active_run_id": "08231515a9",
   "input_commit": "25fc23306743",
-  "phase_started_at": "2026-08-23T05:15:06+09:00",
-  "phase_attempts": 5,
+  "phase_started_at": null,
+  "phase_attempts": 0,
   "run_counts": {
     "research_scan": 1,
     "research_fetch": 4,
@@ -70,12 +70,8 @@
   "last_started_at": "2026-08-23T15:15:05+09:00",
   "last_successful_transition_at": "2026-08-23T04:52:21+09:00",
   "consecutive_external": 0,
-  "stuck": {
-    "reason": "phase_budget_exhausted",
-    "at": "2026-08-23T17:45:05+09:00",
-    "note": "deck: run_cap 5/5 到達"
-  },
-  "stuck_notified_at": "2026-08-23T17:45:06+09:00",
+  "stuck": null,
+  "stuck_notified_at": null,
   "notify_failed_count": 0,
   "manual_override": {
     "at": "2026-08-23T04:45:05+09:00",
@@ -91,10 +87,10 @@
     "reason": "repair_exhaustedが3時間継続"
   },
   "manual_reset": {
-    "at": "2026-08-22T15:04:08+09:00",
-    "from": "grade_k",
-    "to": "grade_k",
-    "was_stuck": "repair_exhausted"
+    "at": "2026-08-25T11:12:04+09:00",
+    "from": "deck",
+    "to": "deck",
+    "was_stuck": "phase_budget_exhausted"
   },
   "last_notification_success_at": "2026-08-23T17:45:06+09:00",
   "_use_fallback": false
