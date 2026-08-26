@@ -117,6 +117,7 @@
 
 ## 動画（ループエンジニアリング）
 
+- [video-le-anno-team-mirai-loop-engineering.md](./video-le-anno-team-mirai-loop-engineering.md) — 「【ループエンジニアリングとは？】AIにプロンプトはもう要らない、、非エンジニアも必見！」（安野貴博とチームみらい通信）。「プロンプトを打つ」から「AIが自走するループを設計する」への移行、Human on the Loop、終盤の非エンジニア向け3業務例（日程調整・会議後タスク管理・書類作成チェック）。自由研究チャンネル版（video-pe-loop-engineering-overview）の別チャンネル再解説
 - [video-le-loop-design-four-points.md](./video-le-loop-design-four-points.md) — 「【必見】AIエージェントは『ループ設計』の時代！完全自律で回す5つのポイント含め解説します」（まさおAIじっくり解説ch）。ループ設計の4つのポイント（ゴール明確化・エージェント割当・進捗検証・継続条件判定）と、ロングラン自律動作のための5つの技術（オートパーミッション・動的ワークフロー・ループコマンド・自己検証ツール・Ralph Loop）、「ゴール」と「ループ」の概念上の違いを解説
 
 ## 記事（ループエンジニアリング）
