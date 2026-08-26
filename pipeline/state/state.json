@@ -19,8 +19,8 @@
     ],
     "series_index": 0
   },
-  "phase": "deck",
-  "generation": 22,
+  "phase": "grade_d",
+  "generation": 23,
   "active_run_id": "08231515a9",
   "input_commit": "25fc23306743",
   "phase_started_at": null,
@@ -87,11 +87,11 @@
     "reason": "repair_exhaustedが3時間継続"
   },
   "manual_reset": {
-    "at": "2026-08-25T11:12:04+09:00",
+    "at": "2026-08-27T00:23:32+09:00",
     "from": "deck",
-    "to": "deck",
+    "to": "grade_d",
     "was_stuck": "phase_budget_exhausted"
   },
-  "last_notification_success_at": "2026-08-23T17:45:06+09:00",
+  "last_notification_success_at": "2026-08-25T12:45:01+09:00",
   "_use_fallback": false
 }
