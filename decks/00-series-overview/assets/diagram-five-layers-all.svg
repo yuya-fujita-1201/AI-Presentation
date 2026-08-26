@@ -40,9 +40,9 @@
   <!-- 第1層（中心）: 頼み方 -->
   <rect x="236" y="402" width="552" height="152" rx="24" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
   <circle cx="314" cy="478" r="25" fill="#FFFFFF" stroke="#E5A692" stroke-width="3"/>
-  <text x="314" y="489" text-anchor="middle" class="h" font-size="30" fill="#7C3527">1</text>
-  <text x="362" y="476" class="h" font-size="36">頼み方（プロンプト）</text>
-  <text x="362" y="516" class="m" font-size="23">1回の指示</text>
+  <text x="314" y="487" text-anchor="middle" class="h" font-size="24">1</text>
+  <text x="362" y="476" class="h" font-size="27">頼み方（プロンプト）</text>
+  <text x="362" y="516" class="m" font-size="20">1回の指示</text>
 
   <text x="512" y="724" text-anchor="middle" class="m" font-size="23">内側の指示を、外側の仕組みが支える（整理の一例）</text>
 </svg>
