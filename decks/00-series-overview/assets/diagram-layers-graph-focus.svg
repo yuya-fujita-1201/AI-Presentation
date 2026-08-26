@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <style>
+      text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}
+      .h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}.a{fill:#B44A32}
+    </style>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 第5層（最外）: 処理のつながり = 今回の範囲 -->
+  <rect x="40" y="28" width="944" height="712" rx="36" fill="#B44A32" stroke="#7C3527" stroke-width="4"/>
+  <circle cx="82" cy="72" r="20" fill="#FFFFFF"/>
+  <text x="82" y="81" text-anchor="middle" class="h" font-size="24" fill="#B44A32">5</text>
+  <text x="116" y="81" class="h w" font-size="28">処理のつながり（グラフ）</text>
+  <text x="565" y="80" class="w" font-size="20">順序・分岐・役割分担</text>
+  <rect x="790" y="46" width="158" height="48" rx="24" fill="#FFFFFF"/>
+  <text x="869" y="78" text-anchor="middle" class="h a" font-size="22">今回はここ</text>
+
+  <!-- 第4層: 確認の繰り返し -->
+  <rect x="82" y="110" width="860" height="586" rx="32" fill="#FADFD5" stroke="#D8B074" stroke-width="3"/>
+  <circle cx="124" cy="154" r="20" fill="#FFFFFF" stroke="#D8B074" stroke-width="3"/>
+  <text x="124" y="163" text-anchor="middle" class="h" font-size="24">4</text>
+  <text x="158" y="163" class="h" font-size="27">確認の繰り返し（ループ）</text>
+  <text x="590" y="162" class="m" font-size="20">作る→確かめる→直す</text>
+
+  <!-- 第3層: 安全な環境 -->
+  <rect x="124" y="192" width="776" height="460" rx="28" fill="#F6E6CF" stroke="#D8B074" stroke-width="3"/>
+  <circle cx="166" cy="236" r="20" fill="#FFFFFF" stroke="#D8B074" stroke-width="3"/>
+  <text x="166" y="245" text-anchor="middle" class="h" font-size="24">3</text>
+  <text x="200" y="245" class="h" font-size="27">安全な環境（ハーネス）</text>
+  <text x="575" y="244" class="m" font-size="20">権限・ツール・実行環境</text>
+
+  <!-- 第2層: 渡す情報 -->
+  <rect x="166" y="274" width="692" height="334" rx="26" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
+  <circle cx="208" cy="318" r="20" fill="#FFFFFF" stroke="#E5A692" stroke-width="3"/>
+  <text x="208" y="327" text-anchor="middle" class="h" font-size="24">2</text>
+  <text x="244" y="328" class="h" font-size="27">渡す情報（コンテキスト）</text>
+  <text x="656" y="327" class="m" font-size="20">資料・前提</text>
+
+  <!-- 第1層（中心）: 頼み方 -->
+  <rect x="236" y="402" width="552" height="152" rx="24" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
+  <circle cx="314" cy="478" r="25" fill="#FFFFFF" stroke="#E5A692" stroke-width="3"/>
+  <text x="314" y="489" text-anchor="middle" class="h" font-size="30" fill="#7C3527">1</text>
+  <text x="362" y="476" class="h" font-size="36">頼み方（プロンプト）</text>
+  <text x="362" y="516" class="m" font-size="23">1回の指示</text>
+
+  <text x="512" y="724" text-anchor="middle" class="w" font-size="23">内側の指示を、外側の仕組みが支える（整理の一例）</text>
+</svg>

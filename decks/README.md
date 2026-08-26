@@ -6,6 +6,7 @@
 
 | 順番 | フォルダ | タイトル | 枚数 | 生成物ID |
 |---:|---|---|---:|---|
+| 00 | [`00-series-overview/`](00-series-overview/) | AIエンジニアリング超入門（シリーズ全体紹介） | 21 | `ai-eng-00-series-overview` |
 | 01 | [`01-prompt-engineering/`](01-prompt-engineering/) | プロンプトエンジニアリング超入門 | 53 | `ai-eng-01-prompt-engineering` |
 | 02 | [`02-context-engineering/`](02-context-engineering/) | コンテキストエンジニアリング超入門 | 72 | `ai-eng-02-context-engineering-v2` |
 | 03 | [`03-harness-engineering/`](03-harness-engineering/) | ハーネスエンジニアリング超入門 | 66 | `ai-eng-03-harness-engineering` |

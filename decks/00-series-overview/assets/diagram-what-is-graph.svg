@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="gArw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3527"/>
+    </marker>
+  </defs>
+
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 左：これではない -->
+  <rect x="32" y="80" width="468" height="390" rx="28" fill="#FFF2E8" stroke="#F6E6CF" stroke-width="3"/>
+  <text x="266" y="138" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="30" font-weight="800" fill="#6F5C52">円グラフ・棒グラフ</text>
+
+  <!-- 円グラフ -->
+  <circle cx="176" cy="278" r="62" fill="#F0B498"/>
+  <path d="M 176 278 L 176 216 A 62 62 0 0 1 229 309 Z" fill="#F0B498"/>
+  <path d="M 176 278 L 229 309 A 62 62 0 0 1 130 316 Z" fill="#6F5C52"/>
+  <!-- 棒グラフ -->
+  <rect x="300" y="278" width="34" height="62" fill="#F0B498"/>
+  <rect x="346" y="238" width="34" height="102" fill="#F0B498"/>
+  <rect x="392" y="208" width="34" height="132" fill="#6F5C52"/>
+  <line x1="288" y1="342" x2="438" y2="342" stroke="#6F5C52" stroke-width="4"/>
+
+  <!-- ばつ印 -->
+  <line x1="108" y1="192" x2="428" y2="352" stroke="#6F5C52" stroke-width="9" stroke-linecap="round" opacity="0.55"/>
+  <line x1="428" y1="192" x2="108" y2="352" stroke="#6F5C52" stroke-width="9" stroke-linecap="round" opacity="0.55"/>
+
+  <text x="266" y="410" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="600" fill="#6F5C52">データを見せるための絵</text>
+  <text x="266" y="446" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#6F5C52">こちらの話ではありません</text>
+
+  <!-- 右：こちら -->
+  <rect x="524" y="80" width="468" height="390" rx="28" fill="#FFF2E8" stroke="#B44A32" stroke-width="4"/>
+  <text x="758" y="138" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="30" font-weight="800" fill="#7C3527">丸と矢印のグラフ</text>
+
+  <rect x="692" y="156" width="132" height="52" rx="26" fill="#7C3527"/>
+  <text x="758" y="190" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">受け付ける</text>
+
+  <path d="M 758 208 V 232 H 648 V 248" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#gArw)"/>
+  <path d="M 758 208 V 232 H 868 V 248" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#gArw)"/>
+
+  <rect x="582" y="254" width="132" height="52" rx="26" fill="#FFFFFF" stroke="#B44A32" stroke-width="4"/>
+  <text x="648" y="288" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="700" fill="#7C3527">調べる</text>
+  <rect x="802" y="254" width="132" height="52" rx="26" fill="#FFFFFF" stroke="#B44A32" stroke-width="4"/>
+  <text x="868" y="288" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="700" fill="#7C3527">書く</text>
+
+  <path d="M 648 306 V 330 H 758 V 346" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#gArw)"/>
+  <path d="M 868 306 V 330 H 758 V 346" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#gArw)"/>
+
+  <rect x="692" y="352" width="132" height="52" rx="26" fill="#B44A32"/>
+  <text x="758" y="386" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">まとめる</text>
+
+  <text x="758" y="452" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="25" font-weight="800" fill="#7C3527">仕事のつながりを描く絵</text>
+
+  <!-- 下帯 -->
+  <rect x="32" y="506" width="960" height="234" rx="26" fill="#7C3527"/>
+  <text x="512" y="562" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="29" font-weight="800" fill="#FFFFFF">この丸と矢印で決めるのは、たった4つ</text>
+
+  <rect x="67" y="596" width="200" height="70" rx="35" fill="#FFFFFF"/>
+  <text x="167" y="640" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#7C3527">順番</text>
+  <rect x="297" y="596" width="200" height="70" rx="35" fill="#FFFFFF"/>
+  <text x="397" y="640" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#7C3527">分かれ道</text>
+  <rect x="527" y="596" width="200" height="70" rx="35" fill="#FFFFFF"/>
+  <text x="627" y="640" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#7C3527">同時に走る</text>
+  <rect x="757" y="596" width="200" height="70" rx="35" fill="#FFFFFF"/>
+  <text x="857" y="640" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="27" font-weight="800" fill="#7C3527">戻り先</text>
+
+  <text x="512" y="712" text-anchor="middle" font-family="Hiragino Sans, Yu Gothic, sans-serif" font-size="23" font-weight="600" fill="#FADFD5">この4つを自分で決めることが、グラフをつくるということ</text>
+</svg>
