@@ -24,6 +24,13 @@ s["phase"] = phase
 s["stuck"] = None
 s["stuck_notified_at"] = None
 s["phase_attempts"] = 0
+# 戻し先phaseのrun_cap予算を回復する（これが無いと phase_budget_exhausted から復帰できず即再stuckする）
+cfg = json.load(open("pipeline/config.json"))
+group = cfg["cap_group"].get(phase)
+if group:
+    for p, g in cfg["cap_group"].items():
+        if g == group:
+            s.setdefault("run_counts", {}).pop(p, None)
 s["phase_started_at"] = None
 s["consecutive_external"] = 0
 s["generation"] = s.get("generation", 1) + 1
