@@ -563,7 +563,64 @@
     }
   ],
   "web": {
-    "subtopics_done": [],
-    "candidates": []
+    "subtopics_done": [
+      "official-guides"
+    ],
+    "candidates": [
+      {
+        "url": "https://code.claude.com/docs/en/best-practices",
+        "title": "Best practices for Claude Code",
+        "publisher": "Anthropic",
+        "retrieved": "2026-08-28",
+        "extract": "公式ガイドは「Claude's context window fills up fast, and performance degrades as it fills」という制約を全体の前提に置き、以下の構成で実務パターンを示す。\n\n■検証ループの構築: 「Give Claude a way to verify its work」の章では、テスト・ビルド終了コード・リンタ・スクリーンショット比較など「a check it can run」を与えることが核心とされる。表形式の例として、曖昧な指示『implement a function that validates email addresses』を『write a validateEmail function. example test cases: user@example.com is true...run the tests after implementing』のように検証条件付きに書き換える手法を提示。検証の強度は4段階（1プロンプト内で反復／`/goal`条件でセッション横断的に評価／Stop hookで機械的にゲート／sub-agentによるセカンドオピニオン）に分けられ、「Claude Code overrides the hook and ends the turn after 8 consecutive blocks」という具体的な上限も明記されている。\n\n■探索→計画→実装の4段階ワークフロー: plan modeは`Shift+Tab`を状態表示が`⏸ plan mode on`になるまで押すか、`claude --permission-mode plan`で開始。計画は`Ctrl+G`でエディタ編集可能。「If you could describe the diff in one sentence, skip the plan」という判断基準が示される。\n\n■CLAUDE.mdの書き方: `/init`で雛形生成、`/context`で読み込み確認。「Would removing this cause Claude to make mistakes? If not, cut it」という削除判断基準と、含めるべき項目（推測不能なBashコマンド、既定と異なるコードスタイル、テスト手順、ブランチ命名等のリポジトリ慣習）/除くべき項目（コードから読み取れる内容、標準的な言語慣習、頻繁に変わる情報）の対比表がある。1行だけ強調したい場合は「IMPORTANT」を単独行に付与するとよいとされる。\n\n■権限・自動化: `/permissions`でツール許可リスト化、`/sandbox`でOSレベル分離。auto modeでは分類器モデルが権限昇格や未知インフラへの操作のみをブロックする。非対話モードは`claude -p \"prompt\"`で、`--output-format stream-json --verbose`でストリーミングJSON出力が可能。大規模移行では`/batch <instruction>`で5〜30のsubagentに分割し、各subagentが独立worktreeでPRを開く。\n\n■失敗パターン5種: kitchen sink session（無関係タスクの混在）／correcting over and over（2回訂正したら`/clear`推奨）／over-specified CLAUDE.md／trust-then-verify gap／infinite exploration（スコープなき『investigate』指示）。",
+        "quote": "Most best practices are based on one constraint: Claude's context window fills up fast, and performance degrades as it fills.",
+        "claims": [
+          "Anthropicは検証手段（テスト・ビルド・スクリーンショット比較等）をClaudeに与えることが自律ループを成立させる鍵だとしている。",
+          "AnthropicはCLAUDE.mdを簡潔に保ち、削除しても問題ない行は積極的に削るべきだとしている。",
+          "Anthropicは大規模なコード移行作業に`/batch`コマンドで5〜30のsubagentへ並列分割する手法を推奨している。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:claude.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://learn.chatgpt.com/guides/best-practices",
+        "title": "Best practices for Codex",
+        "publisher": "OpenAI",
+        "retrieved": "2026-08-28",
+        "extract": "developers.openai.com/codex/learn/best-practices から308リダイレクトされた公式ページ。新規ユーザー向けに10章構成（Strong first use: Context and prompts／Plan first for difficult tasks／Make guidance reusable with AGENTS.md／Configure Codex for consistency／Improve reliability with testing and review／Use MCPs for external context／Turn repeatable work into skills／Use scheduled tasks for repeated work／Organize long-running chats／Common mistakes）で実務習慣を解説する。\n\n■プロンプトの4要素: 「Goal」「Context」「Constraints」「Done when」の4要素でタスクを構造化することを推奨。「Clear prompting isn't required to get value, but it does make results more reliable」と述べつつ、Reasoning levelをLow（高速・範囲明確なタスク）／Medium・High（複雑な変更やデバッグ）／Extra High（長期・高推論量タスク）で使い分けるよう案内。\n\n■計画: `/plan`または`Shift+Tab`でPlan modeを切替え、「Plan mode lets Codex gather context, ask clarifying questions, and build a stronger plan before implementation」。長期・多段階作業には`PLANS.md`テンプレートの利用も提案。\n\n■AGENTS.md: 「Think of AGENTS.md as an open-format README for agents. It loads into context automatically」とし、リポジトリレイアウト、ビルド/テスト/lintコマンド、エンジニアリング規約、禁止事項（do-not rules）、完了条件を記載すべきとする。階層は個人用`~/.codex/AGENTS.md`、リポジトリ共有`.codex/AGENTS.md`、サブディレクトリ別の3層。「When Codex makes the same mistake twice, ask it for a retrospective and update AGENTS.md」という運用ルールが特徴的。\n\n■設定: `config.toml`も個人用`~/.codex/config.toml`、リポジトリ用`.codex/config.toml`、プロファイル別`$CODEX_HOME/profile-name.config.toml`の3層。ChatGPTデスクトップアプリでは「Settings > Configuration > Open config.toml」から編集。「Start with the default permissions. Keep approval and sandboxing tight by default, then loosen permissions only for trusted repos」と権限は保守的に始めることを推奨。\n\n■レビューとMCP: `/review`スラッシュコマンドでPRスタイルレビュー・未コミット変更レビュー・コミットレビューが可能。「At OpenAI, Codex reviews 100% of PRs」という自社運用実績を明記。MCPは`codex mcp add`で追加し、「Add tools only when they unlock a real workflow」と述べる。\n\n■Skillsとスケジュールタスク: Skillはリポジトリ内`.agents/skills`（チーム共有）または`$HOME/.agents/skills`（個人）に`SKILL.md`として配置し、「Keep each skill scoped to one job」「Start with 2 to 3 concrete use cases」と設計原則を示す。スケジュールタスクはChatGPTデスクトップのScheduledページでプロジェクト・プロンプト・頻度・実行環境（Git worktreeまたはローカル）を設定。「Skills define the method and scheduled tasks define the schedule」という関係性が明記される。\n\n■よくある誤り8種: 恒久ルールをAGENTS.mdに移さずプロンプトに詰め込む／ビルド・テストコマンドの実行方法を伝えない／複雑タスクで計画を省略／ワークフロー理解前にフルアクセス権限を付与／Git worktreeを使わず同一ファイルで並行実行／手動で安定する前にタスクを自動化／逐一監視しようとする／プロジェクト全体を1つのチャットで扱う。",
+        "quote": "Think of AGENTS.md as an open-format README for agents. It loads into context automatically.",
+        "claims": [
+          "OpenAIはプロンプトをGoal/Context/Constraints/Done whenの4要素で構造化することを推奨している。",
+          "OpenAIはAGENTS.mdを個人・リポジトリ・サブディレクトリの3階層で管理し、同じミスを2回した際に更新する運用を推奨している。",
+          "OpenAIは社内でCodexがPRの100%をレビューしていると述べている。"
+        ],
+        "source_tier": "secondary",
+        "origin": "web:chatgpt.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide",
+        "title": "Codex Prompting Guide (GPT-5-Codex)",
+        "publisher": "OpenAI",
+        "retrieved": "2026-08-28",
+        "extract": "GPT-5-Codexモデル向けの公式プロンプティングガイド。構成は「Codex Prompting Guide／Getting Started／Prompting／Compaction／Tools／New features in GPT-5.3 Codex」の6セクション。\n\n■プランニングツールの運用基準: 「Skip using the planning tool for straightforward tasks (roughly the easiest 25%)」と、全タスクの下位25%では計画ツールをスキップすべきとする。複雑なタスクでは段階的に計画を更新し、各アイテムを「Done」「Blocked（1文の理由と的を絞った質問付き）」「Cancelled」のいずれかでマークする。NG例として「Do not make single-step plans」や、テスト・大規模リファクタリングを計画に含めたまま未実行で終了することが挙げられている。最終的には計画の提示ではなく「動作するコード」の提供が必須とされる。\n\n■preamble（前置き発言）の扱い: ツール呼び出し前に「1 sentence acknowledgement, 1–2 sentence plan」で了解と計画を示すことを推奨。進捗更新は通常1〜2文とし、重要なマイルストーンのみ長めにする。更新頻度は「aim every 1–3 execution steps; hard floor: at least within every 6 steps or 10 tool calls」と数値で規定。トーンは「real person pairing, low-ceremony; avoid headings/status labels and log voice」とされ、「Good catch」「Aha」のような不自然な繰り返しフレーズは避けるべきとする。性格バリエーションとしてFriendly型（チームの士気を支える）とPragmatic型（トークンあたりの実用情報量を高める）が紹介されている。\n\n■フロントエンドタスクへの指示: 「avoid collapsing into 'AI slop' or safe, average-looking layouts」とし、「Aim for interfaces that feel intentional, bold, and a bit surprising」と述べる。具体的にはTypography（既定フォントスタックを避け表現力のあるフォントを使う）、Color（明確な方向性を定めCSS変数で管理）、Motion（ページロード時や段階的表示などの意味のあるアニメーションを少数使う）、Background（単色フラット背景に頼らずグラデーションや図形・微細パターンを使う）の4要素を指定。既存デザインシステムがある場合は「preserve the established patterns」とする。完成要件として「Finish the website or app to completion, within the scope of what's possible」も明記。\n\n■冗長性コントロール: 「Avoid repeated micro-edits」として編集前に十分なコンテキストを読むことを求め、「do not end your turn with clarifications unless truly blocked」と不要な確認質問を避けるべきとする。「if you find yourself re-reading or re-editing the same files without clear progress, stop」というループ検知の指針や、「Bias to action: default to implementing with reasonable assumptions」という原則も示される。並列化可能な複数のツール呼び出しは並列実行すべきとされ、最終メッセージは「be very concise; friendly coding teammate tone」を基本とする。",
+        "quote": "Skip using the planning tool for straightforward tasks (roughly the easiest 25%).",
+        "claims": [
+          "OpenAIはGPT-5-Codexに対し、最も単純なタスクの下位25%では計画ツールの使用を省略すべきだとしている。",
+          "OpenAIはpreambleを1〜2文に抑え、実行6ステップまたはツール呼び出し10回以内には必ず進捗更新を行うべきだとしている。",
+          "OpenAIはフロントエンド生成において『AI slop』的な平凡なレイアウトを避け、意図的で大胆なデザインを目指すよう指示している。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:openai.com",
+        "subtopic": "official-guides",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/official-guides"
+      }
+    ]
   }
 }
