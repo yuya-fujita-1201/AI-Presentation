@@ -13,8 +13,37 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[11:00]",
+          "text": "クロードやOpenAIには月200ドル程度の高額プランがあり、月3万円ほどになるので誰もが払えるわけではない",
+          "impact": "high"
+        },
+        {
+          "ts": "[13:00]",
+          "text": "コーディング時に守ってほしいルールをCLAUDE.md等のファイルに書いておくとAIの方向性がすり合いやすくなる",
+          "impact": "normal"
+        },
+        {
+          "ts": "[14:00]",
+          "text": "自動テストに全部合格しなければ次に進まないとAIに指示すると品質を保ったままバイブコーディングを続けられる",
+          "impact": "normal"
+        },
+        {
+          "ts": "[16:00]",
+          "text": "自分のパソコン上でコーディングエージェントを動かすとファイル誤削除や情報漏洩などセキュリティリスクが増す",
+          "impact": "normal"
+        },
+        {
+          "ts": "[19:00]",
+          "text": "クロードのプランは無料・プロ(17ドル)・MAX(100ドル)があり、プロだと利用上限にすぐ達しやすいと言われている",
+          "impact": "high"
+        }
+      ],
+      "summary": "視聴者コメントへの回答形式で、CLAUDE.mdへのルール記述・自動テスト・パソコン上での実行に伴うセキュリティリスク・料金プランなどをQ&Aで解説する回"
     },
     {
       "id": "BNHrLHl1DKQ",
@@ -28,8 +57,32 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[02:00]",
+          "text": "Gitはローカルで編集履歴を管理するバージョン管理機能で、GitHubはそれをクラウド上で共有・公開する場所である",
+          "impact": "high"
+        },
+        {
+          "ts": "[03:00]",
+          "text": "本来20個ほどある操作を削ぎ落とし、ブランチ・コミット・プッシュ・プルリクエスト・プルの5つに絞って解説する",
+          "impact": "normal"
+        },
+        {
+          "ts": "[04:00]",
+          "text": "ブランチは履歴を枝分かれさせ、いつでも元のセーブポイントに戻れるようにする機能である",
+          "impact": "high"
+        },
+        {
+          "ts": "[10:00]",
+          "text": "コンフリクトは複数人が同じ箇所を別々に変更した際に発生し、どちらを採用するか人間が判断する必要がある",
+          "impact": "high"
+        }
+      ],
+      "summary": "Git/GitHubの基本概念（ブランチ・コミット・プッシュ・プルリクエスト・プル・コンフリクト）を図解で説明する回。実演は次回に持ち越し"
     },
     {
       "id": "RdlZsvShSFg",
@@ -43,8 +96,37 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[00:00]",
+          "text": "コミットやプッシュといった単語を知っていればClaude Code越しにGit/GitHubを使うことができる",
+          "impact": "normal"
+        },
+        {
+          "ts": "[03:00]",
+          "text": "Claude Codeはバッシュコマンドを実行する前にユーザーへ実行可否の確認を求めてくる",
+          "impact": "high"
+        },
+        {
+          "ts": "[08:00]",
+          "text": "ローカルとリモートで同名（メイン）のブランチ同士だとプルリクエストを作成できない",
+          "impact": "high"
+        },
+        {
+          "ts": "[17:00]",
+          "text": "同じ箇所を別々に変更した2つのブランチをマージしようとするとコンフリクトが発生し、マージがブロックされる",
+          "impact": "high"
+        },
+        {
+          "ts": "[19:00]",
+          "text": "コンフリクト解決はローカルで最新のメインを取り込んでから行い、解決後にプッシュする必要がある",
+          "impact": "normal"
+        }
+      ],
+      "summary": "Claude Codeを使ってGitHubリポジトリ作成からブランチ・コミット・プッシュ・プルリクエスト・マージ・コンフリクト解決までを実演する回"
     },
     {
       "id": "tNEUfNrwsbA",
