@@ -1,9 +1,9 @@
 {
   "schema": "state-v1",
   "theme": {
-    "id": "tools",
-    "slug": "ai-topics-02-skills-mcp-cli",
-    "title": "AIに能力を足す4つの手段（Skills / MCP / CLI / プロンプト）",
+    "id": "coding",
+    "slug": "ai-topics-03-ai-coding",
+    "title": "AIコーディング実務（Claude Code / Codex）",
     "series": [
       "pe",
       "ce",
@@ -19,80 +19,53 @@
     ],
     "series_index": 0
   },
-  "phase": "grade_d",
-  "generation": 23,
-  "active_run_id": "08270515fd",
-  "input_commit": "0985d5865c9c",
+  "phase": "research_scan",
+  "generation": 25,
+  "active_run_id": "0827124597",
+  "input_commit": "f46e68d2f51d",
   "phase_started_at": null,
   "phase_attempts": 0,
-  "run_counts": {
-    "research_scan": 1,
-    "research_fetch": 4,
-    "research_ledger": 2,
-    "research_web": 3,
-    "web_ledger": 4,
-    "knowledge": 3,
-    "grade_k": 8,
-    "improve_k": 6,
-    "draft": 1,
-    "deck": 5,
-    "grade_d": 4,
-    "improve_d": 3
-  },
+  "run_counts": {},
   "scan_fallback_done": false,
   "video_shortfall": false,
   "web_rerun_done": false,
   "grade": {
     "knowledge": {
-      "iter": 8,
+      "iter": 0,
       "repair_count": 0,
       "pass_streak": 0,
       "retry_used": false,
       "last_unmet": null,
-      "last_scores": {
-        "1": 9,
-        "2": 8,
-        "3": 8,
-        "4": 8,
-        "5": 7
-      }
+      "last_scores": null
     },
     "deck": {
-      "iter": 4,
-      "repair_count": 3,
+      "iter": 0,
+      "repair_count": 0,
       "pass_streak": 0,
       "retry_used": false,
-      "last_unmet": [
-        5
-      ],
-      "last_scores": {
-        "1": 8,
-        "2": 8,
-        "3": 9,
-        "4": 8,
-        "5": 7,
-        "6": 9
-      }
+      "last_unmet": null,
+      "last_scores": null
     }
   },
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-20T11:01:59+09:00",
-  "last_started_at": "2026-08-27T05:15:00+09:00",
-  "last_successful_transition_at": "2026-08-27T05:17:30+09:00",
+  "last_started_at": "2026-08-27T12:45:02+09:00",
+  "last_successful_transition_at": "2026-08-27T12:50:07+09:00",
   "consecutive_external": 0,
   "stuck": null,
   "stuck_notified_at": null,
   "notify_failed_count": 0,
   "manual_override": {
-    "at": "2026-08-23T04:45:05+09:00",
-    "phase": "grade_k",
+    "at": "2026-08-27T12:45:02+09:00",
+    "phase": "grade_d",
     "scores": {
-      "1": 9,
+      "1": 7,
       "2": 8,
-      "3": 8,
+      "3": 9,
       "4": 8,
-      "5": 7
+      "5": 8,
+      "6": 9
     },
     "by": "auto",
     "reason": "repair_exhaustedが3時間継続"
@@ -103,6 +76,6 @@
     "to": "grade_d",
     "was_stuck": "phase_budget_exhausted"
   },
-  "last_notification_success_at": "2026-08-25T12:45:01+09:00",
+  "last_notification_success_at": "2026-08-27T12:50:07+09:00",
   "_use_fallback": false
 }
