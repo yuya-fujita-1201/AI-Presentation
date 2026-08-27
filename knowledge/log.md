@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-27（AIコーディング実務テーマ：動画台帳2本を新規登録 run:08272245f6）
+
+- **Source**: `sources/video-coding-vibe-coding-qa-followup.md` を新規登録。安野貴博氏「【コメント返し】バイブコーディング超入門動画への質問・疑問に回答します」。CLAUDE.mdへのルール記載・自動テスト・ローカル実行時のセキュリティリスク・クロードの料金プラン(無料/Pro17ドル/MAX100ドル)などQ&A形式の実務知見
+- **Source**: `sources/video-coding-git-github-5-operations.md` を新規登録。安野貴博氏「【バイブコーディング超入門講座第5回】初心者向けGit&GitHub解説」。Git/GitHubの役割の違いと、ブランチ・コミット・プッシュ・プルリクエスト・プルの5操作をセーブポイントの比喩で整理、クロードコードでの実演あり
+- **Update**: `sources/index.md` に新節「## 動画（AIコーディング実務）」を追加し、上記2件を登録
+
 ## 2026-08-27（安野氏ループ動画：図解文言の裏取り追記）
 
 - **Update**: `sources/video-le-anno-team-mirai-loop-engineering.md` に「図解の要点（画面キャプチャで文言確認済み）」節を追加。ユーザー提供のスクリーンショット3枚により、HITL/HOTL・4段階（ハーネス＝お願いを制約に変える足場、ループ＝HOTLの実装）・Andrew Ng氏の3層入れ子（context advantage含む）の図中文言を聞き取りではなく画面文言として裏取りした

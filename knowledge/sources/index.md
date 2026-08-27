@@ -166,3 +166,8 @@
 - [video-rag-sme-adoption-guide.md](./video-rag-sme-adoption-guide.md) — 「RAG（検索拡張生成）とは？」（株式会社文武堂）。中小企業向けにRAGの仕組み・SSOT/GIGOの2鉄則・導入の4レベル・無料版のリスク・「運用して育てる」考え方を解説
 - [video-rag-ragflow-oss-intro.md](./video-rag-ragflow-oss-intro.md) — 「RAGFlow入門｜社内文書を答えるAIに変えるオープンソースRAGエンジン」（さつきのOSS研究室）。OSS RAGエンジンRAGFlowの機能・LangChain/LlamaIndex/Difyとの違い・Apache 2.0ライセンス・3つの導入事例を解説
 - [video-rag-ollama-local-privacy.md](./video-rag-ollama-local-privacy.md) — 「社内文書を外に出さずAIに検索させる、Ollamaローカル型RAGの作り方【ずんだもん解説】」（ずんだもんのAI図鑑）。取り込み・分割・ベクトル化・検索・生成の5段階を手元PCで完結させる構成、会話用LLMと埋め込みモデルの役割の違い、RAGとエージェントの違いを解説
+
+## 動画（AIコーディング実務）
+
+- [video-coding-vibe-coding-qa-followup.md](./video-coding-vibe-coding-qa-followup.md) — 「【コメント返し】バイブコーディング超入門動画への質問・疑問に回答します」（安野貴博）。CLAUDE.mdへのルール記載・自動テストによる品質担保・ローカル実行時のセキュリティリスク・クロードの料金プランなど視聴者からの質問に回答
+- [video-coding-git-github-5-operations.md](./video-coding-git-github-5-operations.md) — 「【バイブコーディング超入門講座第5回】初心者向けGit&GitHub解説」（安野貴博）。Git/GitHubの役割の違いと、ブランチ・コミット・プッシュ・プルリクエスト・プルの5操作をセーブポイントの比喩で解説、クロードコードでの実演あり

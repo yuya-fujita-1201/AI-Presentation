@@ -13,7 +13,7 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -43,7 +43,8 @@
           "impact": "high"
         }
       ],
-      "summary": "視聴者コメントへの回答形式で、CLAUDE.mdへのルール記述・自動テスト・パソコン上での実行に伴うセキュリティリスク・料金プランなどをQ&Aで解説する回"
+      "summary": "視聴者コメントへの回答形式で、CLAUDE.mdへのルール記述・自動テスト・パソコン上での実行に伴うセキュリティリスク・料金プランなどをQ&Aで解説する回",
+      "ledger_path": "knowledge/sources/video-coding-vibe-coding-qa-followup.md"
     },
     {
       "id": "BNHrLHl1DKQ",
@@ -57,7 +58,7 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -82,7 +83,8 @@
           "impact": "high"
         }
       ],
-      "summary": "Git/GitHubの基本概念（ブランチ・コミット・プッシュ・プルリクエスト・プル・コンフリクト）を図解で説明する回。実演は次回に持ち越し"
+      "summary": "Git/GitHubの基本概念（ブランチ・コミット・プッシュ・プルリクエスト・プル・コンフリクト）を図解で説明する回。実演は次回に持ち越し",
+      "ledger_path": "knowledge/sources/video-coding-git-github-5-operations.md"
     },
     {
       "id": "RdlZsvShSFg",
