@@ -1,27 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
-<defs><style>text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}.h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}</style></defs>
+<defs>
+<style>text{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;fill:#2B211D}.h{font-weight:700}.m{fill:#6F5C52}.w{fill:#FFFFFF}</style>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker>
+</defs>
 <rect width="1024" height="768" fill="#FFF9F3"/>
-<text x="512" y="64" text-anchor="middle" class="h" font-size="32" fill="#7C3527">ループは、速さの違う3層の入れ子</text>
-<rect x="60" y="110" width="904" height="585" rx="32" fill="#FCE9DC" stroke="#E5A692" stroke-width="3"/>
-<rect x="130" y="205" width="764" height="410" rx="28" fill="#F6E6CF" stroke="#D8B074" stroke-width="3"/>
-<rect x="210" y="315" width="604" height="220" rx="24" fill="#DDEFEA" stroke="#247F7A" stroke-width="6"/>
-<circle cx="102" cy="154" r="20" fill="#FFFFFF" stroke="#E5A692" stroke-width="3"/>
-<text x="102" y="163" text-anchor="middle" class="h" font-size="24">3</text>
-<text x="136" y="163" class="h" font-size="26">数時間〜数週間：周りの反応で見直す</text>
-<circle cx="172" cy="249" r="20" fill="#FFFFFF" stroke="#D8B074" stroke-width="3"/>
-<text x="172" y="258" text-anchor="middle" class="h" font-size="24">2</text>
-<text x="206" y="258" class="h" font-size="26">数十分〜数時間：人間が方向づけ</text>
-<circle cx="252" cy="359" r="20" fill="#FFFFFF" stroke="#247F7A" stroke-width="3"/>
-<text x="252" y="368" text-anchor="middle" class="h" font-size="24">1</text>
-<text x="286" y="368" class="h" font-size="26">数分：AIが自走</text>
-<circle cx="136" cy="642" r="11" fill="#B44A32"/>
-<rect x="124" y="654" width="24" height="28" rx="10" fill="#B44A32"/>
-<text x="172" y="661" class="m" font-size="20">レビュー・試験公開 → 目標を更新</text>
-<circle cx="206" cy="562" r="11" fill="#B44A32"/>
-<rect x="194" y="574" width="24" height="28" rx="10" fill="#B44A32"/>
-<text x="242" y="581" class="m" font-size="20">出来上がりを見て、方向を直す</text>
-<rect x="286" y="420" width="68" height="46" rx="14" fill="#247F7A"/>
-<text x="320" y="450" text-anchor="middle" class="h w" font-size="22">AI</text>
-<text x="376" y="448" class="m" font-size="19">作る→確かめる→直す を自分で回す</text>
+
+<!-- 3層の面（外→内） -->
+<circle cx="512" cy="384" r="330" fill="#FCE9DC"/>
+<circle cx="512" cy="384" r="230" fill="#F6E6CF"/>
+<circle cx="512" cy="384" r="130" fill="#DDEFEA"/>
+
+<!-- 外側ループ（数時間〜数週間） -->
+<path d="M 278.7 150.7 A 330 330 0 0 1 797.8 219.0" fill="none" stroke="#B44A32" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 830.7 298.6 A 330 330 0 0 1 512 714" fill="none" stroke="#B44A32" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 426.6 702.7 A 330 330 0 0 1 226.2 219.0" fill="none" stroke="#B44A32" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+<!-- 中間ループ（数十分〜数時間） -->
+<path d="M 349.4 221.4 A 230 230 0 0 1 711.2 269.0" fill="none" stroke="#C17A27" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 734.2 324.5 A 230 230 0 0 1 512 614" fill="none" stroke="#C17A27" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 452.5 606.2 A 230 230 0 0 1 312.8 269.0" fill="none" stroke="#C17A27" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+<!-- 内側ループ（数分） -->
+<path d="M 420.1 292.1 A 130 130 0 0 1 624.6 319.0" fill="none" stroke="#247F7A" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 637.6 350.4 A 130 130 0 0 1 512 514" fill="none" stroke="#247F7A" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M 478.4 509.6 A 130 130 0 0 1 399.4 319.0" fill="none" stroke="#247F7A" stroke-width="6" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+<!-- ラベル（各リングの頂上） -->
+<rect x="327" y="34" width="370" height="40" rx="20" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+<circle cx="355" cy="54" r="15" fill="#FFFFFF" stroke="#B44A32" stroke-width="3"/>
+<text x="355" y="61" text-anchor="middle" class="h" font-size="20">3</text>
+<text x="379" y="61" class="h" font-size="18">数時間〜数週間：周りの反応で見直す</text>
+
+<rect x="345" y="134" width="334" height="40" rx="20" fill="#FFFFFF" stroke="#C17A27" stroke-width="3"/>
+<circle cx="373" cy="154" r="15" fill="#FFFFFF" stroke="#C17A27" stroke-width="3"/>
+<text x="373" y="161" text-anchor="middle" class="h" font-size="20">2</text>
+<text x="397" y="161" class="h" font-size="18">数十分〜数時間：人間が方向づけ</text>
+
+<rect x="408" y="234" width="208" height="40" rx="20" fill="#FFFFFF" stroke="#247F7A" stroke-width="3"/>
+<circle cx="436" cy="254" r="15" fill="#FFFFFF" stroke="#247F7A" stroke-width="3"/>
+<text x="436" y="261" text-anchor="middle" class="h" font-size="20">1</text>
+<text x="460" y="261" class="h" font-size="18">数分：AIが自走</text>
+
+<!-- 中心：AIが自分で回す -->
+<rect x="480" y="320" width="64" height="44" rx="14" fill="#247F7A"/>
+<text x="512" y="350" text-anchor="middle" class="h w" font-size="22">AI</text>
+<text x="512" y="410" text-anchor="middle" class="h" font-size="18">作る→確かめる→直す</text>
+
+<!-- 中間層：人間（方向づけ） -->
+<circle cx="385" cy="494" r="13" fill="#B44A32"/>
+<rect x="370" y="509" width="30" height="34" rx="12" fill="#B44A32"/>
+
+<!-- 外側層：利用者・現場 -->
+<circle cx="300" cy="566" r="11" fill="#B44A32"/>
+<rect x="287" y="578" width="26" height="28" rx="11" fill="#B44A32"/>
+<circle cx="328" cy="574" r="11" fill="#B44A32"/>
+<rect x="315" y="586" width="26" height="28" rx="11" fill="#B44A32"/>
+
 <text x="984" y="748" text-anchor="end" class="m" font-size="16">整理：Andrew Ng氏（参考動画より）</text>
 </svg>
