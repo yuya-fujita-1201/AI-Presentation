@@ -564,7 +564,8 @@
   ],
   "web": {
     "subtopics_done": [
-      "official-guides"
+      "official-guides",
+      "research"
     ],
     "candidates": [
       {
@@ -620,6 +621,42 @@
         "subtopic": "official-guides",
         "status": "verified",
         "cache_dir": "pipeline/cache/web/official-guides"
+      },
+      {
+        "url": "https://arxiv.org/abs/2607.01418",
+        "title": "Adoption and Impact of Command-Line AI Coding Agents: A Study of Microsoft's Early 2026 Rollout of Claude Code and GitHub Copilot CLI",
+        "publisher": "arXiv (Microsoft Research)",
+        "retrieved": "2026-08-28",
+        "extract": "調査概要：Microsoft社の研究者（Murphy-Hill、Butler、Savelieva）が、2026年前半（1月5日～4月29日）における社内数万人のエンジニアを対象に、Claude CodeとGitHub Copilot CLIというコマンドラインAIコーディングエージェントの採用・定着・生産性への影響を分析した。採用研究はCopilot CLIのみを対象に2024年10月～2026年4月29日（事前13週間・事後16週間）を分析し、成果研究は両ツールを対象にマージされたPR数を主要指標とした。\n採用の要因（RQ1・RQ2）：社会的露出が最も強い予測因子であり、skip-levelピアの25%以上が利用している場合、初回使用のオッズが+216%となった。マネージャーが使用している場合は初回試行+82%・定着+22%、コードレビューピアの25%以上が利用している場合は初回使用オッズ+54%。一方、IDE版Copilotの事前利用者は試行意欲は+83%と高いが、定着率はむしろ−12～15%という矛盾的な関連が見られた。キャリアステージ別ではシニアIC（IC5・IC6）が+約22%、ジュニアIC2・IC3が−13～14%という差があった。\n成果（RQ3～RQ5）：合成対照分析（CausalImpact）により、導入後にエンジニア1人1日あたりのマージPR数が+24.0%増加（95%信頼区間 +14.5%〜+33.7%、p<0.001）し、4ヶ月間の観測期間を通じて減衰しなかった（2月+29.4%、3月〜4月+20.0%）。週あたりのツール使用日数との用量反応関係では、3日利用で+15.0%、5日以上利用で+50.1%の増加が確認された。ツール比較では、Claude Code単独利用者が+11.4%（95%CI +9.4%〜+13.6%）、Copilot CLI単独利用者が+24.9%（+23.0%〜+26.8%）のPR増加を示し、Copilot CLIがClaude Codeの約2.2倍の効果を示した（p<0.0001）。\n限界：著者は「マージPRは出力の不完全なプロキシ」であり複雑性追加などの品質コストは未測定と明記し、「Microsoft 2026年初期の単一企業」の結果であり他組織への一般化は限定的であるとしている。また28日のPR完成ウィンドウのため長期効果は測定できないと注記している。",
+        "quote": "「合成対照分析により、エンジニア1人1日あたりのマージPR数は+24.0%増加した（95%CI +14.5%, +33.7%、p<0.001）」。Copilot CLIがClaude Codeの2.2倍の効果を示した。",
+        "claims": [
+          "Microsoftの研究チームは、2026年前半の社内ロールアウトにおいて、Claude Code/Copilot CLI導入後にエンジニア1人1日あたりのマージPR数が24.0%増加したと報告している。",
+          "研究チームは、ツール採用の最大の予測因子は同僚の利用状況という社会的露出であり、IDE版Copilotの既存利用者はむしろ新ツールの定着率が低いという矛盾的な関連を指摘している。",
+          "研究チームは、Copilot CLI単独利用者の方がClaude Code単独利用者よりPR増加率が約2.2倍高かったとしつつ、マージPR数は品質を反映しない不完全な指標であると注意を促している。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "research",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/research"
+      },
+      {
+        "url": "https://arxiv.org/abs/2311.01020",
+        "title": "Exploring the Problems, their Causes and Solutions of AI Pair Programming: A Study on GitHub and Stack Overflow",
+        "publisher": "arXiv",
+        "retrieved": "2026-08-28",
+        "extract": "調査方法：研究チームはGitHub Copilotに関するGitHub Issues 476件、GitHub Discussions 706件、Stack Overflow投稿142件の計1,324件（Copilot公開日2021年6月29日以降、2023年6月18日時点、閉じたIssue・回答済み投稿のみ）を収集し、パイロット段階でCohen's Kappa係数0.806〜0.834の信頼性を確認した上でラベリングを行い、最終的に1,355件の問題を分類した。\n問題カテゴリ（RQ1）：Operation Issue（機能障害・起動失敗・認証エラー・アクセス失敗・インストール問題等）が57.5%と大多数を占め、次いでCompatibility Issue 15.6%、Feature Request 15.0%、Suggestion Content Issue（低品質提案・無意味な提案・バグ含有提案）4.4%、User Experience Issue 4.3%、Copyright and Policy Issue 3.3%と続いた。Operation Issue内では機能障害226件、認証失敗198件、起動問題193件が上位だった。\n原因分析（RQ2）：391件（全問題の28.9%）で原因が特定され、最頻出はCopilot内部エラー76件（19.4%）、ネットワーク接続エラー53件（13.6%）、エディタ/IDE不適合50件（12.8%）、未サポートプラットフォーム32件（8.2%）の順だった。\n解決策（RQ3）：497件（36.7%）で解決策が抽出され、Copilotによるバグ修正135件（27.2%）、設定・構成の変更110件（22.1%）、適切なバージョン使用85件（17.1%）、再インストール・再起動60件（12.1%）が上位を占めた。\n著者の含意：著者らはユーザーへの提言として「Copilotを完全な代替ではなくインスピレーション源として活用する」こと、コード提案を受け入れる前にレビューすること、公式サポート対象のIDEを使用することを挙げ、Copilotチームへの提言としてカスタマイズオプションの拡充や生成コンテンツの制御方法の充実、提案の多様性と品質の向上を挙げている。機能要望115件のうち約45%（52件）がカスタマイズ関連だった点も指摘されている。",
+        "quote": "「Operation IssueはCopilotの機能設計の不十分さと不安定性に起因する」。「Copilotの価値は有用なスタートポイントとして機能することにある」。",
+        "claims": [
+          "研究チームは、GitHub IssuesやDiscussions、Stack Overflowから収集した1,324件のCopilot関連投稿を分析し、Operation Issue（機能障害・認証エラー等）が全体の57.5%を占めると報告している。",
+          "研究チームは、問題原因のうち最も多いのはCopilot内部エラー（19.4%）とネットワーク接続エラー（13.6%）であると指摘している。",
+          "研究チームは、ユーザーへの提言としてCopilotの提案を鵜呑みにせずレビューし、完全な代替ではなくインスピレーション源として活用すべきだと結論づけている。"
+        ],
+        "source_tier": "primary",
+        "origin": "web:arxiv.org",
+        "subtopic": "research",
+        "status": "verified",
+        "cache_dir": "pipeline/cache/web/research"
       }
     ]
   }
