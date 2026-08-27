@@ -98,7 +98,7 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -128,7 +128,8 @@
           "impact": "normal"
         }
       ],
-      "summary": "Claude Codeを使ってGitHubリポジトリ作成からブランチ・コミット・プッシュ・プルリクエスト・マージ・コンフリクト解決までを実演する回"
+      "summary": "Claude Codeを使ってGitHubリポジトリ作成からブランチ・コミット・プッシュ・プルリクエスト・マージ・コンフリクト解決までを実演する回",
+      "ledger_path": "knowledge/sources/video-coding-git-pr-conflict-practice.md"
     },
     {
       "id": "tNEUfNrwsbA",
@@ -142,7 +143,7 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "fetched",
+      "status": "ledgered",
       "reject_reason": null,
       "subs": "auto",
       "claims": [
@@ -172,7 +173,8 @@
           "impact": "normal"
         }
       ],
-      "summary": "SupabaseでのDB操作時にAIが誤ってデータを壊さないための注意点（危険なSQL・確認手順・環境分離・バックアップ）を解説する回"
+      "summary": "SupabaseでのDB操作時にAIが誤ってデータを壊さないための注意点（危険なSQL・確認手順・環境分離・バックアップ）を解説する回",
+      "ledger_path": "knowledge/sources/video-coding-database-supabase-safety.md"
     },
     {
       "id": "ksfm6jeTg3Q",

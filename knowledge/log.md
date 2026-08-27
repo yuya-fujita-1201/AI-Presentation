@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-27（AIコーディング実務テーマ：動画台帳2本を新規登録 run:08272345f6）
+
+- **Source**: `sources/video-coding-git-pr-conflict-practice.md` を新規登録。安野貴博氏「【バイブコーディング超入門講座第6回】GitやGitHubはもう怖くない！？」。リポジトリ作成からコミット・プッシュ・プルリクエスト、2ブランチが同じ行を変更した際のコンフリクト解決までをClaude Code越しに実演
+- **Source**: `sources/video-coding-database-supabase-safety.md` を新規登録。安野貴博氏「【バイブコーディング超入門講座第7回】アプリにデータ保存機能を追加するには？」。データベースの基本、Supabase（BaaS）の紹介、AIに本番データを壊されないための「壊さない意識」・危険な言葉（DELETE/UPDATE/WHERE）・SELECT事前確認・環境分離・バックアップの実践知見
+- **Update**: `sources/index.md` の「## 動画（AIコーディング実務）」節に上記2件を追記
+
 ## 2026-08-27（AIコーディング実務テーマ：動画台帳2本を新規登録 run:08272245f6）
 
 - **Source**: `sources/video-coding-vibe-coding-qa-followup.md` を新規登録。安野貴博氏「【コメント返し】バイブコーディング超入門動画への質問・疑問に回答します」。CLAUDE.mdへのルール記載・自動テスト・ローカル実行時のセキュリティリスク・クロードの料金プラン(無料/Pro17ドル/MAX100ドル)などQ&A形式の実務知見

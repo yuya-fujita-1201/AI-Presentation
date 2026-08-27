@@ -171,3 +171,5 @@
 
 - [video-coding-vibe-coding-qa-followup.md](./video-coding-vibe-coding-qa-followup.md) — 「【コメント返し】バイブコーディング超入門動画への質問・疑問に回答します」（安野貴博）。CLAUDE.mdへのルール記載・自動テストによる品質担保・ローカル実行時のセキュリティリスク・クロードの料金プランなど視聴者からの質問に回答
 - [video-coding-git-github-5-operations.md](./video-coding-git-github-5-operations.md) — 「【バイブコーディング超入門講座第5回】初心者向けGit&GitHub解説」（安野貴博）。Git/GitHubの役割の違いと、ブランチ・コミット・プッシュ・プルリクエスト・プルの5操作をセーブポイントの比喩で解説、クロードコードでの実演あり
+- [video-coding-git-pr-conflict-practice.md](./video-coding-git-pr-conflict-practice.md) — 「【バイブコーディング超入門講座第6回】GitやGitHubはもう怖くない！？Claude Codeで楽々つかえるGit&GitHubの使い方！」（安野貴博）。リポジトリ作成からコミット・プッシュ・プルリクエスト、2ブランチが同じ行を変更した際のコンフリクト解決までをClaude Code越しに実演
+- [video-coding-database-supabase-safety.md](./video-coding-database-supabase-safety.md) — 「【バイブコーディング超入門講座第7回】アプリにデータ保存機能を追加するには？」（安野貴博）。データベースの基本をExcelに例えて解説し、Supabase（BaaS）の紹介と、AIに本番データを壊されないための「壊さない意識」・DELETE/UPDATE/WHEREの注意・SELECT事前確認・環境分離・バックアップの実践を解説
