@@ -140,8 +140,37 @@
       "trust": "expert",
       "score": 10,
       "score_detail": "適合+3 初心者+2 新しさ+2 trust+2 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "fetched",
+      "reject_reason": null,
+      "subs": "auto",
+      "claims": [
+        {
+          "ts": "[08:00]",
+          "text": "AIでデータベースを操作する際は、データが消えたり壊れたりしないよう「壊さない意識」を持つことが最も重要",
+          "impact": "normal"
+        },
+        {
+          "ts": "[09:00]",
+          "text": "SQL文でDELETE・UPDATE・WHEREという言葉が出てきたら注意度を上げるべき",
+          "impact": "high"
+        },
+        {
+          "ts": "[13:00]",
+          "text": "本番データを操作する前にSELECT文で対象データの件数や中身を確認すべき",
+          "impact": "normal"
+        },
+        {
+          "ts": "[14:00]",
+          "text": "開発環境・ステージング環境・本番（プロダクション）環境を分けて運用すべき",
+          "impact": "normal"
+        },
+        {
+          "ts": "[16:00]",
+          "text": "毎日バックアップ（ダンプデータ）を取っておけば本番データを誤って壊しても復旧できる",
+          "impact": "normal"
+        }
+      ],
+      "summary": "SupabaseでのDB操作時にAIが誤ってデータを壊さないための注意点（危険なSQL・確認手順・環境分離・バックアップ）を解説する回"
     },
     {
       "id": "ksfm6jeTg3Q",
@@ -155,8 +184,9 @@
       "trust": "official",
       "score": 9,
       "score_detail": "適合+3 初心者+0 新しさ+2 trust+3 再生+1",
-      "status": "selected",
-      "reject_reason": null
+      "status": "needs_human",
+      "reject_reason": null,
+      "subs": "auto"
     },
     {
       "id": "i4odXOmgMLw",
