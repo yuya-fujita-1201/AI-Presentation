@@ -1,5 +1,10 @@
 # 変更履歴
 
+## 2026-08-27（安野氏ループ動画：図解文言の裏取り追記）
+
+- **Update**: `sources/video-le-anno-team-mirai-loop-engineering.md` に「図解の要点（画面キャプチャで文言確認済み）」節を追加。ユーザー提供のスクリーンショット3枚により、HITL/HOTL・4段階（ハーネス＝お願いを制約に変える足場、ループ＝HOTLの実装）・Andrew Ng氏の3層入れ子（context advantage含む）の図中文言を聞き取りではなく画面文言として裏取りした
+- **Context**: 同キャプチャを参考に `decks/00-series-overview` のループ部分を図解改修（HITL/HOTL対比図・3層入れ子スライド新設、23枚化）
+
 ## 2026-08-27（安野氏ループ動画の新版登録と、00デッキレビューで受けたシリーズ方針の反映）
 
 - **Source**: `sources/video-le-anno-team-mirai-loop-engineering.md` を新規登録。安野貴博氏「【ループエンジニアリングとは？】AIにプロンプトはもう要らない」（チームみらい通信チャンネル、2026-08-21公開）。既存の自由研究チャンネル版（video-pe-loop-engineering-overview）の別チャンネル再解説で、終盤の非エンジニア向け3業務例（日程調整・会議後タスク管理・書類作成チェック）が新規要素
