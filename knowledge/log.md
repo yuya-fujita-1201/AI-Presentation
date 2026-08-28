@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-28（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:082810157b）
+
+- **Source**: `sources/article-coding-codex-best-practices.md` を新規登録。OpenAI公式「Best practices for Codex」。プロンプトの4要素（Goal/Context/Constraints/Done when）、AGENTS.mdによる恒久ルールの外部化、権限の保守的運用、MCP/Skills/スケジュールタスクの活用、よくある誤り8種を解説
+- **Update**: `sources/index.md` に新節「## 記事（AIコーディング実務）」を追加し、上記1件を登録
+- **Skip**: マニフェストのもう1本「Best practices for Claude Code」（`https://code.claude.com/docs/en/best-practices`）は、既存の `sources/article-le-claude-code-best-practices.md` に同一URLで既に登録済み（source_tier: primary、活用先リンク4件あり）のため、重複登録を避けて今回は見送った
+
 ## 2026-08-27（AIコーディング実務テーマ：動画台帳2本を新規登録 run:08272345f6）
 
 - **Source**: `sources/video-coding-git-pr-conflict-practice.md` を新規登録。安野貴博氏「【バイブコーディング超入門講座第6回】GitやGitHubはもう怖くない！？」。リポジトリ作成からコミット・プッシュ・プルリクエスト、2ブランチが同じ行を変更した際のコンフリクト解決までをClaude Code越しに実演

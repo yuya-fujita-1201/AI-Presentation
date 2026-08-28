@@ -602,8 +602,9 @@
         "source_tier": "secondary",
         "origin": "web:chatgpt.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-coding-codex-best-practices.md"
       },
       {
         "url": "https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide",

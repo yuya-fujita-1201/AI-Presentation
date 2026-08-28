@@ -173,3 +173,7 @@
 - [video-coding-git-github-5-operations.md](./video-coding-git-github-5-operations.md) — 「【バイブコーディング超入門講座第5回】初心者向けGit&GitHub解説」（安野貴博）。Git/GitHubの役割の違いと、ブランチ・コミット・プッシュ・プルリクエスト・プルの5操作をセーブポイントの比喩で解説、クロードコードでの実演あり
 - [video-coding-git-pr-conflict-practice.md](./video-coding-git-pr-conflict-practice.md) — 「【バイブコーディング超入門講座第6回】GitやGitHubはもう怖くない！？Claude Codeで楽々つかえるGit&GitHubの使い方！」（安野貴博）。リポジトリ作成からコミット・プッシュ・プルリクエスト、2ブランチが同じ行を変更した際のコンフリクト解決までをClaude Code越しに実演
 - [video-coding-database-supabase-safety.md](./video-coding-database-supabase-safety.md) — 「【バイブコーディング超入門講座第7回】アプリにデータ保存機能を追加するには？」（安野貴博）。データベースの基本をExcelに例えて解説し、Supabase（BaaS）の紹介と、AIに本番データを壊されないための「壊さない意識」・DELETE/UPDATE/WHEREの注意・SELECT事前確認・環境分離・バックアップの実践を解説
+
+## 記事（AIコーディング実務）
+
+- [article-coding-codex-best-practices.md](./article-coding-codex-best-practices.md) — OpenAI公式「Best practices for Codex」。プロンプトの4要素（Goal/Context/Constraints/Done when）、AGENTS.mdによる恒久ルールの外部化、権限の保守的運用、MCP/Skills/スケジュールタスクの活用、よくある誤り8種を解説
