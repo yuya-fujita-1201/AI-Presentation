@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-28（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:082823451b）
+
+- **Source**: `sources/article-coding-qiita-team-rollout-pitfalls.md` を新規登録。Qiita「チーム開発でClaude Codeを3ヶ月運用して分かった『壊れるポイント』と『仕組み化のコツ』」。エンジニア5名（フロント2名・バック2名・フルスタック1名）、Next.js + Go + PostgreSQL構成のチームが2025年4月〜6月に運用し、CLAUDE.mdの属人化によるPRレビュー時間2倍化、丸投げリトライ等によるトークンコスト約3倍膨張、信頼バイアスによるGoのHTTPハンドラのリソースリーク本番障害という3つの崩壊パターンを報告。対策としてCLAUDE.mdの3層レイヤー分離・2週間毎の振り返り会、/compactとGitHub Actions/Slackによるトークン予算可視化、AI生成コード専用レビューチェックリストのCI組み込みを実施し、3ヶ月後にPRレビュー時間0.8倍・月額コスト1.4倍まで改善したと報告する内容を解説
+- **Update**: `sources/index.md` の「## 記事（AIコーディング実務）」節に上記1件を追記
+- **Skip**: マニフェストのもう1本「Best practices for Claude Code」（`https://code.claude.com/docs/en/best-practices`）は、既存の `sources/article-le-claude-code-best-practices.md` に同一URLで既に登録済み（source_tier: primary、活用先リンク4件あり）のため、重複登録を避けて今回も見送った（run:082810157b・run:082812459e・run:0828151527・run:0828224531に続き5回目の同一確認）
+
 ## 2026-08-28（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:0828224531）
 
 - **Source**: `sources/article-coding-copilot-issues-study.md` を新規登録。arXiv「Exploring the Problems, their Causes and Solutions of AI Pair Programming: A Study on GitHub and Stack Overflow」。GitHub Copilotに関するGitHub Issues 476件・Discussions 706件・Stack Overflow投稿142件（計1,324件）を分析し1,355件の問題を分類、Operation Issue（機能障害・認証エラー等）が57.5%を占めると報告。原因分析ではCopilot内部エラー19.4%・ネットワーク接続エラー13.6%が上位、解決策分析ではCopilotによるバグ修正27.2%が最多。ユーザーへの提言（レビュー励行・インスピレーション源としての活用・公式サポートIDEの使用）とCopilotチームへの提言（カスタマイズ拡充等）を解説

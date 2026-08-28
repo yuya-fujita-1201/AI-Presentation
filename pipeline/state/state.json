@@ -21,8 +21,8 @@
   },
   "phase": "web_ledger",
   "generation": 25,
-  "active_run_id": "0828224531",
-  "input_commit": "aeac0485a16d",
+  "active_run_id": "082823451b",
+  "input_commit": "1584ddfde149",
   "phase_started_at": "2026-08-28T03:45:01+09:00",
   "phase_attempts": 0,
   "run_counts": {
@@ -30,7 +30,7 @@
     "research_fetch": 2,
     "research_ledger": 2,
     "research_web": 3,
-    "web_ledger": 8
+    "web_ledger": 9
   },
   "scan_fallback_done": false,
   "video_shortfall": false,
@@ -56,7 +56,7 @@
   "push_pending": false,
   "last_result": "succeeded",
   "last_scan_at": "2026-08-27T15:19:04+09:00",
-  "last_started_at": "2026-08-28T22:45:25+09:00",
+  "last_started_at": "2026-08-28T23:45:00+09:00",
   "last_successful_transition_at": "2026-08-28T02:48:46+09:00",
   "consecutive_external": 0,
   "stuck": null,
@@ -82,6 +82,6 @@
     "to": "grade_d",
     "was_stuck": "phase_budget_exhausted"
   },
-  "last_notification_success_at": "2026-08-27T22:51:37+09:00",
+  "last_notification_success_at": "2026-08-28T22:47:28+09:00",
   "_use_fallback": false
 }

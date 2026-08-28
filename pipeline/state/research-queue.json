@@ -678,8 +678,9 @@
         "source_tier": "secondary",
         "origin": "web:qiita.com/hikariclaude01",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-coding-qiita-team-rollout-pitfalls.md"
       },
       {
         "url": "https://product.plex.co.jp/entry/local-claude-code-review-required-check",
