@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-29（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:0829014578）
+
+- **Source**: `sources/article-coding-zenn-smartshopping-6points.md` を新規登録。Zenn（SmartShopping）「AIコーディングで失敗しまくった私が学んだ、効率的にAIを使うための6つのポイント」。①「このフォームに数字しか入力できないようにバリデーション追加して」という指示で何も入力できなくなり修正指示も繰り返し失敗した失敗例（原因分析・修正方針決定・コード理解の3段階を踏まなかったことが原因）、②完璧に理解していないコードがたまたま動作し3ヶ月後の保守で苦労した失敗例、③完成図を描かず段階的に機能追加した結果重複コードや汎用性の低いコードが乱立した失敗例、という3つの失敗から導いた実用的なプロンプト例（要件整理6項目・段階的実装）と、実装機能の理解／既存コード理解／事前調査／実装範囲の明確化／計画立案／入出力の明確化という「効率的にAIを使うための6つのポイント」を解説する内容を解説
+- **Update**: `sources/index.md` の「## 記事（AIコーディング実務）」節に上記1件を追記
+- **Skip**: マニフェストのもう1本「Best practices for Claude Code」（`https://code.claude.com/docs/en/best-practices`）は、既存の `sources/article-le-claude-code-best-practices.md` に同一URLで既に登録済み（source_tier: primary、活用先リンク4件あり）のため、重複登録を避けて今回も見送った（run:082810157b以降7回目の同一確認）
+
 ## 2026-08-29（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:0829004573）
 
 - **Source**: `sources/article-coding-plex-local-review-gate.md` を新規登録。PLEX Product Team Blog「ローカルの Claude Code レビューを『すり抜けられない』必須チェックにした話」。AIレビューの実行コストを抑えるため各開発者のローカル環境でClaude Codeレビューを実行する構成にしたところ、Git hookは未設定でも何も言わずスキップされ「痕跡すら残らない」ためセットアップ漏れが検知できないという弱点が生じたと報告。解決策としてgit notes（commit本体を書き換えずメモを貼れる機能）にレビューPASSを記述し、GitHub Actions経由でcommit statusに反映、branch protectionでstatus successを必須化することで、hook未セットアップの環境からのcommitにはnoteが付かずマージできない構造を実現したと解説。ただしレビュー品質やPASSの正当性自体の保証、意図的な迂回への対応はできないという限界も明示されている内容を解説

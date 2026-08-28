@@ -716,8 +716,9 @@
         "source_tier": "secondary",
         "origin": "web:zenn.dev/smartshopping",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-coding-zenn-smartshopping-6points.md"
       }
     ]
   }
