@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-29（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:0829004573）
+
+- **Source**: `sources/article-coding-plex-local-review-gate.md` を新規登録。PLEX Product Team Blog「ローカルの Claude Code レビューを『すり抜けられない』必須チェックにした話」。AIレビューの実行コストを抑えるため各開発者のローカル環境でClaude Codeレビューを実行する構成にしたところ、Git hookは未設定でも何も言わずスキップされ「痕跡すら残らない」ためセットアップ漏れが検知できないという弱点が生じたと報告。解決策としてgit notes（commit本体を書き換えずメモを貼れる機能）にレビューPASSを記述し、GitHub Actions経由でcommit statusに反映、branch protectionでstatus successを必須化することで、hook未セットアップの環境からのcommitにはnoteが付かずマージできない構造を実現したと解説。ただしレビュー品質やPASSの正当性自体の保証、意図的な迂回への対応はできないという限界も明示されている内容を解説
+- **Update**: `sources/index.md` の「## 記事（AIコーディング実務）」節に上記1件を追記
+- **Skip**: マニフェストのもう1本「Best practices for Claude Code」（`https://code.claude.com/docs/en/best-practices`）は、既存の `sources/article-le-claude-code-best-practices.md` に同一URLで既に登録済み（source_tier: primary、活用先リンク4件あり）のため、重複登録を避けて今回も見送った（run:082810157b・run:082812459e・run:0828151527・run:0828224531・run:082823451bに続き6回目の同一確認）
+
 ## 2026-08-28（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:082823451b）
 
 - **Source**: `sources/article-coding-qiita-team-rollout-pitfalls.md` を新規登録。Qiita「チーム開発でClaude Codeを3ヶ月運用して分かった『壊れるポイント』と『仕組み化のコツ』」。エンジニア5名（フロント2名・バック2名・フルスタック1名）、Next.js + Go + PostgreSQL構成のチームが2025年4月〜6月に運用し、CLAUDE.mdの属人化によるPRレビュー時間2倍化、丸投げリトライ等によるトークンコスト約3倍膨張、信頼バイアスによるGoのHTTPハンドラのリソースリーク本番障害という3つの崩壊パターンを報告。対策としてCLAUDE.mdの3層レイヤー分離・2週間毎の振り返り会、/compactとGitHub Actions/Slackによるトークン予算可視化、AI生成コード専用レビューチェックリストのCI組み込みを実施し、3ヶ月後にPRレビュー時間0.8倍・月額コスト1.4倍まで改善したと報告する内容を解説

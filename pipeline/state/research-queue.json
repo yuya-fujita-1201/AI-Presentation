@@ -697,8 +697,9 @@
         "source_tier": "secondary",
         "origin": "web:co.jp",
         "subtopic": "jp-practice",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/jp-practice"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/jp-practice",
+        "ledger_path": "knowledge/sources/article-coding-plex-local-review-gate.md"
       },
       {
         "url": "https://zenn.dev/smartshopping/articles/9261deff759763",
