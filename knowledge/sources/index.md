@@ -177,3 +177,4 @@
 ## 記事（AIコーディング実務）
 
 - [article-coding-codex-best-practices.md](./article-coding-codex-best-practices.md) — OpenAI公式「Best practices for Codex」。プロンプトの4要素（Goal/Context/Constraints/Done when）、AGENTS.mdによる恒久ルールの外部化、権限の保守的運用、MCP/Skills/スケジュールタスクの活用、よくある誤り8種を解説
+- [article-coding-codex-prompting-guide.md](./article-coding-codex-prompting-guide.md) — OpenAI公式「Codex Prompting Guide (GPT-5-Codex)」。計画ツールを省略してよい下位25%の基準、preamble（前置き発言）の頻度と口調規定、フロントエンド生成の「AI slop」回避方針、冗長な繰り返し編集を避ける行動原則を解説

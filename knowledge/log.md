@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-28（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:082812459e）
+
+- **Source**: `sources/article-coding-codex-prompting-guide.md` を新規登録。OpenAI公式「Codex Prompting Guide (GPT-5-Codex)」。計画ツールを省略してよい下位25%タスクの基準、preamble（前置き発言）の1〜2文ルールと更新頻度の数値規定、フロントエンド生成における「AI slop」回避とTypography/Color/Motion/Backgroundの4要素、冗長な繰り返し編集を避ける行動原則を解説
+- **Update**: `sources/index.md` の「## 記事（AIコーディング実務）」節に上記1件を追記
+- **Skip**: マニフェストのもう1本「Best practices for Claude Code」（`https://code.claude.com/docs/en/best-practices`）は、既存の `sources/article-le-claude-code-best-practices.md` に同一URLで既に登録済み（source_tier: primary、活用先リンク4件あり）のため、重複登録を避けて今回も見送った（前回run:082810157bと同一の重複を再確認）
+
 ## 2026-08-28（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:082810157b）
 
 - **Source**: `sources/article-coding-codex-best-practices.md` を新規登録。OpenAI公式「Best practices for Codex」。プロンプトの4要素（Goal/Context/Constraints/Done when）、AGENTS.mdによる恒久ルールの外部化、権限の保守的運用、MCP/Skills/スケジュールタスクの活用、よくある誤り8種を解説

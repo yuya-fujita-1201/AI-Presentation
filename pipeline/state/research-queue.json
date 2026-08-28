@@ -621,8 +621,9 @@
         "source_tier": "primary",
         "origin": "web:openai.com",
         "subtopic": "official-guides",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/official-guides"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/official-guides",
+        "ledger_path": "knowledge/sources/article-coding-codex-prompting-guide.md"
       },
       {
         "url": "https://arxiv.org/abs/2607.01418",
