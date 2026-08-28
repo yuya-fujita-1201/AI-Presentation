@@ -178,3 +178,4 @@
 
 - [article-coding-codex-best-practices.md](./article-coding-codex-best-practices.md) — OpenAI公式「Best practices for Codex」。プロンプトの4要素（Goal/Context/Constraints/Done when）、AGENTS.mdによる恒久ルールの外部化、権限の保守的運用、MCP/Skills/スケジュールタスクの活用、よくある誤り8種を解説
 - [article-coding-codex-prompting-guide.md](./article-coding-codex-prompting-guide.md) — OpenAI公式「Codex Prompting Guide (GPT-5-Codex)」。計画ツールを省略してよい下位25%の基準、preamble（前置き発言）の頻度と口調規定、フロントエンド生成の「AI slop」回避方針、冗長な繰り返し編集を避ける行動原則を解説
+- [article-coding-msft-cli-agent-adoption.md](./article-coding-msft-cli-agent-adoption.md) — arXiv（Microsoft Research）「Adoption and Impact of Command-Line AI Coding Agents」。Microsoft社内での2026年前半のClaude Code/Copilot CLI導入で、社会的露出が採用の最大予測因子であること、合成対照分析によるマージPR数24.0%増加とCopilot CLIがClaude Codeの2.2倍の効果を示したという成果分析を解説

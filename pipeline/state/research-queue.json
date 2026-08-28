@@ -640,8 +640,9 @@
         "source_tier": "primary",
         "origin": "web:arxiv.org",
         "subtopic": "research",
-        "status": "verified",
-        "cache_dir": "pipeline/cache/web/research"
+        "status": "ledgered",
+        "cache_dir": "pipeline/cache/web/research",
+        "ledger_path": "knowledge/sources/article-coding-msft-cli-agent-adoption.md"
       },
       {
         "url": "https://arxiv.org/abs/2311.01020",

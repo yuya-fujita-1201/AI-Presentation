@@ -1,5 +1,11 @@
 # 変更履歴
 
+## 2026-08-28（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:0828151527）
+
+- **Source**: `sources/article-coding-msft-cli-agent-adoption.md` を新規登録。arXiv（Microsoft Research）「Adoption and Impact of Command-Line AI Coding Agents」（Murphy-Hill, Butler, Savelieva）。2026年前半のMicrosoft社内ロールアウトにおいて、社会的露出（skip-levelピア25%以上利用で初回使用オッズ+216%等）が採用の最大予測因子であること、IDE版Copilot既存利用者はむしろ定着率が低いという矛盾的関連、合成対照分析（CausalImpact）によるマージPR数+24.0%増加（95%CI +14.5%〜+33.7%、p<0.001）、Copilot CLIがClaude Codeの約2.2倍の効果を示したという成果分析と、マージPRは品質を反映しない不完全な指標であるという著者自身の限界の明記を解説
+- **Update**: `sources/index.md` の「## 記事（AIコーディング実務）」節に上記1件を追記
+- **Skip**: マニフェストのもう1本「Best practices for Claude Code」（`https://code.claude.com/docs/en/best-practices`）は、既存の `sources/article-le-claude-code-best-practices.md` に同一URLで既に登録済み（source_tier: primary、活用先リンク4件あり）のため、重複登録を避けて今回も見送った（run:082810157b・run:082812459eに続き3回目の同一確認）
+
 ## 2026-08-28（AIコーディング実務テーマ：記事台帳1本を新規登録、1本は重複のためスキップ run:082812459e）
 
 - **Source**: `sources/article-coding-codex-prompting-guide.md` を新規登録。OpenAI公式「Codex Prompting Guide (GPT-5-Codex)」。計画ツールを省略してよい下位25%タスクの基準、preamble（前置き発言）の1〜2文ルールと更新頻度の数値規定、フロントエンド生成における「AI slop」回避とTypography/Color/Motion/Backgroundの4要素、冗長な繰り返し編集を避ける行動原則を解説
