@@ -5,11 +5,11 @@
     "subtitle": "ダウンロードした人向けの使い方マニュアル",
     "author": "slide-deck plugin",
     "date": "2026-09-02",
-    "theme": "default",
+    "theme": "accenture-purple",
     "layout_overrides": {
       "bullets": {
         "lead": { "line_height": 1.5, "h": 56 },
-        "body": { "y": 208, "gap": 18, "line_height": 1.6, "child_gap": 8, "indent": 30 }
+        "body": { "y": 208, "gap": 16, "line_height": 1.55, "child_gap": 8, "indent": 30 }
       }
     }
   },
@@ -17,151 +17,209 @@
     {
       "type": "title",
       "title": "slide-deck プラグイン\nユーザーガイド",
-      "subtitle": "JSON をソースにスライドを HTML / PowerPoint にビルドする Claude Code プラグイン。インストールから作成・微修正・テーマまで。",
-      "meta": "User Guide / 2026-09 / default テーマ",
+      "subtitle": "ダウンロード → セットアップ → スライド作成 まで、手順どおりに進めれば使えるようになります。",
+      "meta": "User Guide / 2026-09",
       "notes": "このマニュアル自体が本プラグインで作られています（manual/deck.json → build_deck.py）。"
     },
     {
       "type": "agenda",
       "eyebrow": "CONTENTS",
-      "title": "このガイドの内容",
-      "lead": "ダウンロード後、最短でスライドを作れるようになるための手順とルールをまとめています。",
+      "title": "このガイドの構成",
+      "lead": "全3章。第1・2章は全員向け、第3章は仕組みを知りたい人向け（読み飛ばし可）です。",
       "items": [
-        "これは何か",
-        "セットアップ（インストール）",
-        "依存関係",
-        "スライドを作る流れ",
-        "主要コマンド",
-        "使えるスライドタイプ",
-        "微修正のルール",
-        "テーマ（切替・追加）",
-        "サンプルからテーマ生成",
-        "注意事項 / トラブルシュート"
+        "第1章 ダウンロードとセットアップ",
+        "　用意するもの / ダウンロード(git・ZIP)",
+        "　起動とセットアップの指示",
+        "第2章 スライドの作り方",
+        "　頼み方 / テーマ・タイプの指定",
+        "　Tips と Dos / Don'ts / 微修正",
+        "　テーマの追加（後半）",
+        "第3章 仕組み・アーキテクチャ（読み飛ばし可）",
+        "　フォルダ構成 / どう作っているか",
+        "　JSONで管理する理由"
       ],
-      "notes": "全10トピック。項目数が多いので自動で2段組になります。"
+      "notes": "項目が多いので自動2段組。"
+    },
+
+    {
+      "type": "section",
+      "number": "01",
+      "title": "ダウンロードとセットアップ",
+      "subtitle": "プラグインを手元に用意し、初回セットアップを済ませるまで。",
+      "notes": "第1章。ここが終われば作成に進めます。"
     },
     {
       "type": "bullets",
-      "eyebrow": "OVERVIEW",
-      "title": "これは何か",
-      "lead": "スライドの「内容」と「デザイン」を分離し、すべてを deck.json のパラメーターで管理する仕組みです。",
+      "eyebrow": "1章 / STEP 0",
+      "title": "用意するもの（前提）",
+      "lead": "はじめる前に、次のものがそろっているか確認します。",
       "bullets": [
-        { "text": "1つの deck.json から HTML と PowerPoint(16:9) を生成する", "bold": true, "color": "primary" },
-        "内容もデザインも JSON のパラメーター。仮想キャンバス 1280×720px に px 指定",
-        "HTML と PPTX は同じ値を読むので見た目が一致する",
-        { "text": "AI（Claude Code）でもヒトでも、同じルールで作成・微修正できる", "children": [
-          "作成・編集: /slide-deck:create-deck",
-          "テーマ追加: /slide-deck:add-theme"
-        ] },
-        "色はテーマトークンで指定 → テーマを変えるだけで全体の配色が変わる"
+        { "text": "Claude Code が使えること（CLI または IDE 拡張）", "bold": true, "color": "primary" },
+        "Python 3 が入っていること（ターミナルで python --version が動く）",
+        "git（clone する場合）／ ブラウザ（ZIP でダウンロードする場合）",
+        "ネットワーク（初回に python-pptx などを取得するため）"
       ],
-      "notes": "「build/ を直接いじらない・deck.json を直して再ビルド」が基本思想。"
-    },
-    {
-      "type": "steps",
-      "eyebrow": "SETUP",
-      "title": "セットアップ（4ステップ）",
-      "lead": "Claude Code のスラッシュコマンドで導入します。Python 3 が入っていることが前提です。",
-      "steps": [
-        { "label": "1. 追加", "items": ["/plugin marketplace add", "yuya-fujita-1201/AI-Presentation"] },
-        { "label": "2. インストール", "items": ["/plugin install", "slide-deck@ai-presentation"] },
-        { "label": "3. 初回セットアップ", "items": ["/slide-deck:setup", "python-pptx を導入"] },
-        { "label": "4. 準備完了", "items": ["/slide-deck:create-deck", "でスライド作成"] }
-      ],
-      "notes": "組織配布時はマーケットプレイスの owner/repo を自組織のものに読み替える。"
-    },
-    {
-      "type": "table",
-      "eyebrow": "REQUIREMENTS",
-      "title": "依存関係",
-      "lead": "必須は python-pptx だけ。残りは使う機能に応じて任意で導入します（/slide-deck:setup が面倒を見ます）。",
-      "columns": ["パッケージ", "要否", "用途"],
-      "rows": [
-        ["python-pptx", "必須", "PPTX 生成"],
-        ["playwright (+chromium)", "任意", "プレビュー PNG 生成"],
-        ["pillow", "任意", "一覧シート / 画像からのテーマ抽出"],
-        ["pymupdf", "任意", "PDF からのテーマ抽出"]
-      ],
-      "style": { "table": { "col_widths": [3, 1.4, 4] } },
-      "notes": "setup: 既定=python-pptx / --playwright / --pillow / --pdf / --all。"
-    },
-    {
-      "type": "steps",
-      "eyebrow": "WORKFLOW",
-      "title": "スライドを作る流れ",
-      "lead": "「〜のスライドを作って」と頼むと create-deck が起動し、deck.json を作ってビルド・検証まで行います。",
-      "steps": [
-        { "label": "1. 依頼", "items": ["作りたい内容を伝える", "create-deck 起動"] },
-        { "label": "2. 生成", "items": ["deck.json を作成", "見本をコピー"] },
-        { "label": "3. ビルド", "items": ["build_deck.py", "HTML + PPTX"] },
-        { "label": "4. 確認", "items": ["preview_deck.py", "PNG で目視"] },
-        { "label": "5. 検証", "items": ["zip整合/再パース", "ノート混入なし"] }
-      ],
-      "notes": "生成物は <deck_dir>/build/ に出力。ファイル名は meta.id。"
-    },
-    {
-      "type": "code",
-      "eyebrow": "COMMANDS",
-      "title": "主要コマンド",
-      "lead": "スキルを介さず手で叩くこともできます。$TOOLS はビルダーの場所です。",
-      "language": "bash",
-      "code": "# $TOOLS = ${CLAUDE_PLUGIN_ROOT}/tools\n\n# ビルド（HTML + PPTX）\npython \"$TOOLS/build_deck.py\" <deck_dir>\npython \"$TOOLS/build_deck.py\" <deck_dir> --html   # HTML のみ\n\n# プレビュー（PNG・要 Playwright）\npython \"$TOOLS/preview_deck.py\" <deck_dir> 5\n\n# テーマ追加 / サンプルから生成\npython \"$TOOLS/new_theme.py\" <name>\npython \"$TOOLS/theme_from_sample.py\" <file> --name <name>",
-      "notes": "環境により python / python3。<deck_dir> は deck.json のあるフォルダ。"
-    },
-    {
-      "type": "cards",
-      "eyebrow": "SLIDE TYPES",
-      "title": "使えるスライドタイプ（全15種）",
-      "lead": "用途に応じて type を選ぶだけ。社内資料の大半をネイティブに描画できます。",
-      "columns": 3,
-      "cards": [
-        { "heading": "基本", "body": "構成・区切り", "items": ["title / section", "agenda / closing"] },
-        { "heading": "テキスト", "body": "論点・対比・引用", "items": ["bullets", "two_column / quote"] },
-        { "heading": "データ", "body": "一覧・コード", "items": ["table", "code"] },
-        { "heading": "図解", "body": "図と説明", "items": ["image", "image_text"] },
-        { "heading": "プロセス", "body": "手順・整理", "items": ["steps / matrix", "cards"] },
-        { "heading": "フロー", "body": "業務フロー", "items": ["swimlane", "（凡例を自動挿入）"] }
-      ],
-      "notes": "各タイプの実物は examples/template-sample を参照。"
+      "notes": "python が無い場合は先に Python 3 を導入。python3 で動くこともある。"
     },
     {
       "type": "two_column",
-      "eyebrow": "EDITING",
-      "title": "微修正のルール",
-      "lead": "位置・サイズ・色の調整は、作り直さずに該当スライドの style へ差分だけ書きます。",
-      "left":  { "heading": "やらない", "bullets": ["build/ を直接編集", "スライドを作り直す", "色を hex で直書き"] },
-      "right": { "heading": "やる", "bullets": ["deck.json の style に差分", "該当スライドだけ再ビルド", "テーマトークンで色指定"] },
-      "notes": "デッキ全体は meta.layout_overrides、全デッキ共通は templates/layouts/default.json。"
+      "eyebrow": "1章 / STEP 1",
+      "title": "ダウンロードする（2通り）",
+      "lead": "配布元リポジトリを手元に取得します。どちらでもOK。",
+      "left":  { "heading": "A. git clone（推奨）", "bullets": ["git clone <配布リポジトリURL>", "cd AI-Presentation", "更新は git pull で取得"] },
+      "right": { "heading": "B. ZIP ダウンロード", "bullets": ["GitHub の Code ▾ → Download ZIP", "解凍してフォルダを開く", "git が無くてもOK"] },
+      "notes": "URL は配布元のものに読み替える。将来は組織用リポジトリを配布。"
     },
     {
-      "type": "section",
-      "number": "02",
-      "title": "テーマ（配色・フォント）",
-      "subtitle": "色は hex 直書きせずテーマトークンで指定。テーマを切り替える・追加する・サンプルから起こす。",
-      "notes": "章扉。ここからテーマ関連。"
+      "type": "steps",
+      "eyebrow": "1章 / STEP 2",
+      "title": "起動してセットアップを指示",
+      "lead": "フォルダの中で Claude Code を起動し、日本語で頼むだけです。",
+      "steps": [
+        { "label": "1. フォルダへ", "items": ["ダウンロードした", "フォルダに移動"] },
+        { "label": "2. 起動", "items": ["claude を実行", "(IDEなら開く)"] },
+        { "label": "3. 指示", "items": ["「セットアップして」", "と入力"] },
+        { "label": "4. 完了", "items": ["python-pptx 導入", "作成OK"] }
+      ],
+      "notes": "起動＝ターミナルで claude、または IDE 拡張でフォルダを開く。"
     },
     {
       "type": "bullets",
-      "eyebrow": "THEMES",
-      "title": "テーマの切替・追加",
-      "lead": "テーマは色トークン14種＋フォント3種。default をベースにマージされます。",
+      "eyebrow": "1章 / STEP 2 詳細",
+      "title": "セットアップの指示（コピペ可）",
+      "lead": "Claude Code にこう入力します。裏で依存インストールが走ります。",
       "bullets": [
-        { "text": "切替は meta.theme を変えるだけ（同梱: default / accenture-purple）", "bold": true, "color": "primary" },
-        { "text": "追加は 2通り", "children": [
-          "/slide-deck:add-theme または new_theme.py で雛形を作る",
-          "default 継承なので上書きしたいトークンだけ書けばよい"
-        ] },
-        "探索順は SLIDE_DECK_THEMES(環境変数) → <deck_dir>/themes → 同梱",
-        "ユーザー独自テーマは SLIDE_DECK_THEMES に置けば更新で消えない",
-        "トークンの意味は references/themes.md を参照"
+        { "text": "「plugins/slide-deck の初回セットアップをして（python-pptx を入れて）」", "bold": true, "color": "primary" },
+        "Claude が python plugins/slide-deck/tools/setup_deps.py を実行して導入する",
+        "プレビュー画像も使うなら「playwright も入れて」と追加（--playwright）",
+        "「python-pptx OK」と表示されれば完了",
+        { "text": "プラグインとして導入済みなら /slide-deck:setup でも同じ", "color": "muted" }
       ],
-      "notes": "primary / accent を決めれば見た目が大きく変わる。"
+      "notes": "手で叩くなら: python plugins/slide-deck/tools/setup_deps.py"
     },
     {
       "type": "table",
-      "eyebrow": "THEMES",
-      "title": "サンプルからテーマを生成",
-      "lead": "既存スライドを読み込ませて配色・フォントを抽出できます: theme_from_sample.py <file> --name <name>",
+      "eyebrow": "1章 / 参考",
+      "title": "何が入る？（依存関係）",
+      "lead": "必須は python-pptx だけ。残りは使う機能に応じて任意です。",
+      "columns": ["パッケージ", "要否", "用途"],
+      "rows": [
+        ["python-pptx", "必須", "PowerPoint(PPTX) 生成"],
+        ["playwright (+chromium)", "任意", "プレビュー画像(PNG) 生成"],
+        ["pillow", "任意", "画像からのテーマ抽出 など"],
+        ["pymupdf", "任意", "PDF からのテーマ抽出"]
+      ],
+      "style": { "table": { "col_widths": [3, 1.4, 4] } },
+      "notes": "setup: 既定=python-pptx、--playwright / --pillow / --pdf / --all。"
+    },
+
+    {
+      "type": "section",
+      "number": "02",
+      "title": "スライドの作り方",
+      "subtitle": "Claude Code にどう頼むか。テーマ・タイプの指定、良いスライドのコツ、テーマの追加まで。",
+      "notes": "第2章。セットアップ後の日常操作。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "2章 / 基本",
+      "title": "基本：こう頼む",
+      "lead": "リポジトリのフォルダで、作りたい内容を日本語で伝えるだけです。",
+      "bullets": [
+        { "text": "例：「AI導入の社内勉強会向けに10枚くらいのスライドを作って。テーマは accenture-purple で」", "bold": true, "color": "primary" },
+        "Claude が deck.json を作成 → ビルド → プレビューまで行う",
+        "構成から相談してもよい：「まず目次だけ提案して」",
+        "手元の箇条書き・メモ・既存資料を渡すと、それを元に組み立てる",
+        { "text": "プラグイン導入時は /slide-deck:create-deck でも起動できる", "color": "muted" }
+      ],
+      "notes": "生成物は build/ に出る。deck.json がソース。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "2章 / テーマ指定",
+      "title": "テーマ（配色・フォント）の指定",
+      "lead": "見た目のトーンは『テーマ』で決まります。指示で切り替えられます。",
+      "bullets": [
+        "「テーマは accenture-purple で」／「default（青系）で」＝同梱テーマを指定",
+        "指定しなければ default（青系）になる",
+        "ブランド色を直接伝える：「primary を #460073、accent を #A100FF で」",
+        "「このPPTXと同じ配色で」＝サンプルからテーマ生成（本章後半）",
+        "あとから「テーマを◯◯に変えて」の一言で全体を切替できる"
+      ],
+      "notes": "テーマは meta.theme に入る。色はトークンで管理される。"
+    },
+    {
+      "type": "cards",
+      "eyebrow": "2章 / タイプ指定",
+      "title": "スライドタイプの指定（全15種）",
+      "lead": "「この部分は◯◯で」と伝えると、その表現で作ります。",
+      "columns": 3,
+      "cards": [
+        { "heading": "比較・対比", "body": "", "items": ["two_column", "table / matrix"] },
+        { "heading": "手順・流れ", "body": "", "items": ["steps", "swimlane(業務)"] },
+        { "heading": "図解", "body": "", "items": ["image_text", "image"] },
+        { "heading": "列挙・整理", "body": "", "items": ["bullets", "cards"] },
+        { "heading": "コード・設定", "body": "", "items": ["code"] },
+        { "heading": "構成", "body": "", "items": ["title / section", "agenda / quote / closing"] }
+      ],
+      "notes": "実物は examples/template-sample を参照。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "2章 / Tips",
+      "title": "良いスライドのコツ",
+      "lead": "頼み方を少し工夫すると、仕上がりが安定します。",
+      "bullets": [
+        { "text": "1スライド＝1メッセージ。詰め込みすぎない", "bold": true, "color": "primary" },
+        "箇条書きは5〜6行まで。多いなら分割か 2カラムに",
+        "図は image_text で説明と一体に（図だけ・文だけに分けない）",
+        "まず章立て・目次を固めてから中身を作る",
+        "プレビューを見て「ここをこう」と微修正を重ねる"
+      ],
+      "notes": "詰め込みは可読性を落とす最大要因。"
+    },
+    {
+      "type": "two_column",
+      "eyebrow": "2章 / Dos & Don'ts",
+      "title": "やること・避けること",
+      "lead": "この仕組みを気持ちよく使うための指針です。",
+      "left":  { "heading": "Do", "bullets": ["内容を箇条書きで渡す", "テーマを指定する", "プレビューで確認→微修正", "色はテーマに任せる"] },
+      "right": { "heading": "Don't", "bullets": ["build/ や PPTX を手で直す", "1枚に詰め込みすぎる", "色を hex で直書き", "毎回「全部作り直して」"] },
+      "notes": "build/ を手で直すと再ビルドで消える。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "2章 / 微修正",
+      "title": "微修正の頼み方",
+      "lead": "作り直さず、その1点だけを直せます。該当スライドの style に差分が入ります。",
+      "bullets": [
+        "「5枚目のタイトルをもう少し大きく」",
+        "「この表の1列目を広くして」",
+        "「3枚目の箇条書きの2つ目を強調して」",
+        "「全体の余白をもう少し詰めて」",
+        { "text": "→ 位置・サイズ・色・フォントの微調整はすべて差分で完結", "color": "muted" }
+      ],
+      "notes": "デッキ全体は meta.layout_overrides で。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "2章 / テーマ追加",
+      "title": "テーマを追加したいとき",
+      "lead": "独自の配色テーマを増やせます。default を継承するので差分だけでOK。",
+      "bullets": [
+        { "text": "「brand-navy というテーマを作って。primary は #1F3A5F」→ 雛形を生成", "bold": true, "color": "primary" },
+        "変えたい色だけ指定すればよい（残りは default から継承）",
+        "「このPPTX/画像/PDFからテーマを作って」＝サンプルから抽出（次ページ）",
+        "独自テーマは SLIDE_DECK_THEMES に置けばプラグイン更新で消えない",
+        { "text": "プラグイン導入時は /slide-deck:add-theme でも起動できる", "color": "muted" }
+      ],
+      "notes": "トークンは色14＋フォント3。references/themes.md 参照。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "2章 / サンプルから生成",
+      "title": "サンプルスライドからテーマを作る",
+      "lead": "既存スライドを読み込ませて配色・フォントを抽出できます（自動推定→微調整）。",
       "columns": ["形式", "抽出方法", "追加依存"],
       "rows": [
         [".pptx / .pptm", "実使用色を面積集計＋フォント", "なし"],
@@ -170,48 +228,76 @@
         [".html / .htm", "宣言色と font-family を抽出", "なし"]
       ],
       "style": { "table": { "col_widths": [2.2, 4.5, 1.8] } },
-      "notes": "自動推定なのでレポートを見て微調整。特に primary と accent の取り違えに注意。PPTX が最も正確。"
+      "notes": "PPTX が最も正確。primary/accent の取り違えに注意し、レポートを見て調整。"
+    },
+
+    {
+      "type": "section",
+      "number": "03",
+      "title": "仕組み・アーキテクチャ",
+      "subtitle": "（知りたい人向け。一般ユーザーは読み飛ばして構いません）",
+      "notes": "第3章。中身の解説。"
     },
     {
-      "type": "bullets",
-      "eyebrow": "RULES",
-      "title": "注意事項（厳守）",
-      "lead": "配布・互換性のために守るべき点です。",
-      "bullets": [
-        { "text": "PPTX にスピーカーノートを入れない（Keynote 互換性を壊す）", "bold": true, "color": "accent" },
-        "notes フィールドは HTML の N キーでのみ表示される（ビルダーが自動処理）",
-        "色は必ずテーマトークンで指定。hex 直書きはテーマ切替を無効化する",
-        "生成物（build/）は直接編集しない。必ず deck.json を直して再ビルド",
-        "図解は原則 image_text（図と説明を1枚に統合する）"
+      "type": "code",
+      "eyebrow": "3章 / 構成",
+      "title": "フォルダ構成",
+      "lead": "リポジトリはマーケットプレイス、その中に自己完結したプラグインが入っています。",
+      "language": "text",
+      "code": "AI-Presentation/\n├─ .claude-plugin/marketplace.json     # 配布定義（マーケットプレイス）\n└─ plugins/slide-deck/                 # プラグイン本体（自己完結）\n   ├─ .claude-plugin/plugin.json       # プラグイン定義\n   ├─ skills/     create-deck / add-theme / setup\n   ├─ tools/      build_deck・preview_deck・new_theme・theme_from_sample・setup_deps\n   ├─ templates/  themes（配色）・layouts（既定レイアウト）\n   ├─ references/ deck-schema.md（スキーマ）・themes.md（テーマ）\n   ├─ examples/   template-sample（全タイプ見本）\n   └─ manual/     このガイドのソース",
+      "notes": "plugins/slide-deck/ 単体を別リポジトリへ移設して配布も可能。"
+    },
+    {
+      "type": "steps",
+      "eyebrow": "3章 / 仕組み",
+      "title": "どうスライドを作っているか",
+      "lead": "1つの deck.json を、テーマ・レイアウトとマージして HTML と PPTX に変換します。",
+      "steps": [
+        { "label": "1. deck.json", "items": ["内容＋デザインを", "パラメーターで記述"] },
+        { "label": "2. build_deck", "items": ["テーマ＋レイアウトを", "マージして解決"] },
+        { "label": "3. 出力", "items": ["HTML と PPTX を", "同時生成"] },
+        { "label": "4. 一致", "items": ["96dpi換算で", "両形式の見た目が一致"] }
       ],
-      "notes": "PPTX 検証: zip整合 + Presentation() 再パース + has_notes_slide が全て False。"
+      "notes": "仮想キャンバス 1280×720px。px を HTML はそのまま、PPTX は 96dpi 換算。"
     },
     {
       "type": "table",
-      "eyebrow": "TROUBLESHOOTING",
-      "title": "トラブルシュート",
-      "lead": "よくある症状と対処です。",
-      "columns": ["症状", "対処"],
+      "eyebrow": "3章 / 設計",
+      "title": "デザインの3層構造",
+      "lead": "デザインは3層で解決されます。下の層ほど個別・優先されます。",
+      "columns": ["層", "ファイル / キー", "役割"],
       "rows": [
-        ["PPTX が作れない / python-pptx が無い", "/slide-deck:setup（pip install python-pptx）"],
-        ["プレビュー PNG が出ない", "/slide-deck:setup --playwright"],
-        ["PPTX を上書きできない（Permission denied）", "PowerPoint 等でそのファイルを閉じる"],
-        ["フォントが違って見える", "テーマの fonts を閲覧環境にあるフォントに変更"],
-        ["追加したテーマが更新で消える", "SLIDE_DECK_THEMES にユーザー用フォルダを設定"]
+        ["テーマ", "meta.theme / templates/themes", "色トークン・フォント"],
+        ["レイアウト既定", "templates/layouts/default.json", "タイプ別の位置・サイズ・フォント"],
+        ["スタイル差分", "slide.style / meta.layout_overrides", "個別スライドの微修正"]
       ],
-      "style": { "table": { "col_widths": [4.2, 4.6] } },
-      "notes": "python が無ければ python3 に読み替える。"
+      "style": { "table": { "col_widths": [2, 4, 3.2] } },
+      "notes": "解決順: レイアウト既定 ← layout_overrides ← slide.style。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "3章 / 思想",
+      "title": "なぜ JSON で管理するのか",
+      "lead": "内容とデザインをデータとして分離することに、いくつも利点があります。",
+      "bullets": [
+        { "text": "分離：微修正は数値を変えるだけ。作り直し不要", "bold": true, "color": "primary" },
+        "再現性：テキストなので Git で差分管理・レビュー・巻き戻しができる",
+        "AI 親和性：該当箇所だけを安全に差分編集できる",
+        "一元生成：1ソースから HTML と PPTX を作るので見た目が一致し二重管理が不要",
+        "テーマ化：色をトークンで持つので、切替で全体を一括変更できる"
+      ],
+      "notes": "『内容とデザインの分離』が全設計の核。"
     },
     {
       "type": "closing",
-      "title": "使い始めましょう",
+      "title": "さっそく作ってみましょう",
       "bullets": [
-        "依存を入れて（/slide-deck:setup）、作りたい内容を頼むだけ",
-        "微修正は deck.json の style に差分を書いて再ビルド",
-        "配色はテーマで一括管理。既存スライドからテーマも起こせる"
+        "第1章：ダウンロード →「セットアップして」で準備完了",
+        "第2章：「〜のスライドを作って」＋テーマ・タイプ指定 → プレビューで微修正",
+        "第3章：仕組みは deck.json の一元管理・HTML/PPTX 一致"
       ],
-      "message": "詳細は README / references/deck-schema.md / references/themes.md",
-      "notes": "まとめ。参照ドキュメントへ誘導。"
+      "message": "困ったら README / references を参照。まずは小さく1枚から。",
+      "notes": "まとめ。"
     }
   ]
 }
