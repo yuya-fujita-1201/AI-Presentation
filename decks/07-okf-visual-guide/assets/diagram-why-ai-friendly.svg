@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="rowArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 列見出し -->
+  <text x="250" y="70" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">AIの事情</text>
+  <text x="774" y="70" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">OKFの工夫</text>
+
+  <!-- ROW 1 -->
+  <g id="row-1">
+    <rect x="40" y="110" width="420" height="118" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="64" y="158" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">一度に読める量に上限がある</text>
+    <text x="64" y="192" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#6F5C52">全部は渡せない。渡しすぎると精度も落ちる</text>
+
+    <path d="M 460 169 H 564" fill="none" stroke="#B44A32" stroke-width="5" marker-end="url(#rowArrow)"/>
+
+    <rect x="564" y="110" width="420" height="118" rx="18" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="588" y="158" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">目次とラベルで選んで読む</text>
+    <text x="588" y="192" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#FFEDE3">必要なファイルだけ開く</text>
+  </g>
+
+  <!-- ROW 2 -->
+  <g id="row-2">
+    <rect x="40" y="258" width="420" height="118" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="64" y="306" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">種類や期限を本文から拾えない</text>
+    <text x="64" y="340" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#6F5C52">文章の解釈はぶれる</text>
+
+    <path d="M 460 317 H 564" fill="none" stroke="#B44A32" stroke-width="5" marker-end="url(#rowArrow)"/>
+
+    <rect x="564" y="258" width="420" height="118" rx="18" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="588" y="306" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">決まった欄に書く</text>
+    <text x="588" y="340" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#FFEDE3">種類・説明・期限を先頭のラベルに</text>
+  </g>
+
+  <!-- ROW 3 -->
+  <g id="row-3">
+    <rect x="40" y="406" width="420" height="118" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="64" y="454" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">関連する知識まで辿りたい</text>
+    <text x="64" y="488" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#6F5C52">1ファイルでは答えられない質問がある</text>
+
+    <path d="M 460 465 H 564" fill="none" stroke="#B44A32" stroke-width="5" marker-end="url(#rowArrow)"/>
+
+    <rect x="564" y="406" width="420" height="118" rx="18" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="588" y="454" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">リンクでつなぐ</text>
+    <text x="588" y="488" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#FFEDE3">関連ファイルへ相対リンクを張る</text>
+  </g>
+
+  <!-- ROW 4 -->
+  <g id="row-4">
+    <rect x="40" y="554" width="420" height="118" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="64" y="602" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">根拠がないと作り話をする</text>
+    <text x="64" y="636" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#6F5C52">出所を示せないと信用できない</text>
+
+    <path d="M 460 613 H 564" fill="none" stroke="#B44A32" stroke-width="5" marker-end="url(#rowArrow)"/>
+
+    <rect x="564" y="554" width="420" height="118" rx="18" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="588" y="602" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">出所と確認者も一緒に書く</text>
+    <text x="588" y="636" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#FFEDE3">根拠つきで答えられる</text>
+  </g>
+
+  <!-- 下端注記 -->
+  <text x="512" y="720" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#6F5C52">AIを賢くする前に、AIが読める形に知識を置く</text>
+</svg>
