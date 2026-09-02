@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="mindsetArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 左: これまで -->
+  <g id="el-before">
+    <rect x="40" y="110" width="420" height="540" rx="22" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="250" y="165" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#7C3527">これまで：人が読むための文書</text>
+
+    <text x="250" y="230" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#6F5C52">読み手</text>
+    <text x="250" y="264" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="700" fill="#2B211D">人</text>
+    <line x1="80" y1="300" x2="420" y2="300" stroke="#FADFD5" stroke-width="2"/>
+
+    <text x="250" y="335" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#6F5C52">書く目的</text>
+    <text x="250" y="369" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="700" fill="#2B211D">読んで理解してもらう</text>
+    <line x1="80" y1="405" x2="420" y2="405" stroke="#FADFD5" stroke-width="2"/>
+
+    <text x="250" y="440" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#6F5C52">探し方</text>
+    <text x="250" y="474" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="700" fill="#2B211D">検索と、詳しい人の記憶</text>
+    <line x1="80" y1="510" x2="420" y2="510" stroke="#FADFD5" stroke-width="2"/>
+
+    <text x="250" y="545" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#6F5C52">置き場</text>
+    <text x="250" y="579" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="700" fill="#2B211D">ツールの中</text>
+  </g>
+
+  <!-- 中央矢印 -->
+  <path d="M 470 380 H 554" fill="none" stroke="#B44A32" stroke-width="8" marker-end="url(#mindsetArrow)"/>
+
+  <!-- 右: OKF（最濃） -->
+  <g id="el-after">
+    <rect x="564" y="110" width="420" height="540" rx="22" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="774" y="165" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">OKF：人とAIが引くための知識</text>
+
+    <text x="774" y="230" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#FFEDE3">読み手</text>
+    <text x="774" y="264" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="700" fill="#FFFFFF">人とAIの両方</text>
+    <line x1="604" y1="300" x2="944" y2="300" stroke="#D9836B" stroke-width="2"/>
+
+    <text x="774" y="335" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#FFEDE3">書く目的</text>
+    <text x="774" y="369" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="700" fill="#FFFFFF">質問に答えられる形にしておく</text>
+    <line x1="604" y1="405" x2="944" y2="405" stroke="#D9836B" stroke-width="2"/>
+
+    <text x="774" y="440" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#FFEDE3">探し方</text>
+    <text x="774" y="474" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="700" fill="#FFFFFF">目次とラベルで辿る</text>
+    <line x1="604" y1="510" x2="944" y2="510" stroke="#D9836B" stroke-width="2"/>
+
+    <text x="774" y="545" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#FFEDE3">置き場</text>
+    <text x="774" y="579" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="21" font-weight="700" fill="#FFFFFF">ただのテキストファイル</text>
+  </g>
+
+</svg>

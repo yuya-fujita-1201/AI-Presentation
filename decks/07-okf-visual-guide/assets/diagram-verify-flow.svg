@@ -56,10 +56,10 @@
   <!-- 分岐: 表示／非表示（2択） -->
   <g id="branch-result">
     <path d="M 470 460 C 420 500, 360 520, 315 545" fill="none" stroke="#247F7A" stroke-width="5" marker-end="url(#vArrowShow)"/>
-    <text x="378" y="512" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="15" font-weight="700" fill="#247F7A">両方一致</text>
+    <text x="378" y="512" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="700" fill="#247F7A">両方一致</text>
 
     <path d="M 554 460 C 604 500, 664 520, 709 545" fill="none" stroke="#A63D32" stroke-width="5" marker-end="url(#vArrowHide)"/>
-    <text x="646" y="512" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="15" font-weight="700" fill="#A63D32">1つでも不一致</text>
+    <text x="646" y="512" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="700" fill="#A63D32">1つでも不一致</text>
 
     <rect x="200" y="558" width="230" height="90" rx="20" fill="#247F7A"/>
     <text x="315" y="612" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="30" font-weight="800" fill="#FFFFFF">表示</text>
@@ -68,6 +68,4 @@
     <text x="709" y="612" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="30" font-weight="800" fill="#FFFFFF">非表示</text>
   </g>
 
-  <text x="512" y="682" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">判定するのは人でもAIでもない、決定論的なプログラムです</text>
-  <text x="512" y="708" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">1つでも合わなければ、その数字は表示しない</text>
 </svg>

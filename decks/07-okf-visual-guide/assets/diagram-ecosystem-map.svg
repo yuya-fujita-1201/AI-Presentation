@@ -8,7 +8,7 @@
     <rect x="0" y="500" width="1024" height="140" fill="#7C3527"/>
     <line x1="40" y1="570" x2="984" y2="570" stroke="#F0B498" stroke-width="6" stroke-dasharray="42 30"/>
     <text x="230" y="552" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="32" font-weight="800" fill="#FFFFFF">MCP</text>
-    <text x="230" y="578" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#FFEDE3">道路＝接続の規格</text>
+    <text x="230" y="578" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#FFEDE3">道路＝接続の規格</text>
 
     <!-- 動きを示す線 -->
     <line x1="460" y1="560" x2="500" y2="580" stroke="#F0B498" stroke-width="3" opacity="0.6"/>
@@ -32,7 +32,7 @@
     <rect x="712" y="424" width="96" height="10" rx="4" fill="#FFEDE3"/>
     <rect x="712" y="442" width="96" height="10" rx="4" fill="#FFEDE3"/>
     <text x="760" y="488" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">OKF</text>
-    <text x="760" y="508" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="15" fill="#FFEDE3">知識の中身</text>
+    <text x="760" y="508" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#FFEDE3">荷物の中身</text>
   </g>
 
   <!-- 看板＝llms.txt（場所を示す） -->
@@ -40,6 +40,6 @@
     <rect x="147" y="258" width="6" height="242" fill="#7C3527"/>
     <path d="M 90 220 H 250 L 280 255 L 250 290 H 90 Z" fill="#FFF2E8" stroke="#B44A32" stroke-width="3"/>
     <text x="185" y="248" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="800" fill="#7C3527">llms.txt</text>
-    <text x="185" y="272" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="15" fill="#6F5C52">場所を示す看板</text>
+    <text x="185" y="272" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="19" fill="#6F5C52">場所を示す看板</text>
   </g>
 </svg>
