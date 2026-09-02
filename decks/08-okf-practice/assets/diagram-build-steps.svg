@@ -7,7 +7,7 @@
   <rect width="1024" height="768" fill="#FFF9F3"/>
 
   <!-- 上見出し -->
-  <text x="512" y="100" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">AI推進担当2〜3名で、1日〜1週間</text>
+  <text x="512" y="100" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">AI推進担当2〜3名で、3日〜1週間</text>
 
   <!-- ステップ間の矢印 -->
   <path d="M 216 350 H 232" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#stepArrow)"/>

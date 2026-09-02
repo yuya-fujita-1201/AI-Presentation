@@ -22,7 +22,7 @@
     <rect x="60" y="400" width="904" height="200" rx="22" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
     <line x1="530" y1="435" x2="530" y2="565" stroke="#C17A27" stroke-width="2" opacity="0.35"/>
     <text x="90" y="485" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="28" font-weight="700" fill="#2B211D">形式の確認</text>
-    <text x="90" y="525" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">ラベル・リンク・目次・機密</text>
+    <text x="90" y="525" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">フロントマター・リンク・目次・機密</text>
     <text x="560" y="485" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#7C3527">機械チェック＋AI推進担当</text>
     <text x="560" y="525" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">process: で記録。立ち上げ期は伴走</text>
   </g>
