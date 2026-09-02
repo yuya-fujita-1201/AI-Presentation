@@ -26,8 +26,8 @@
   <!-- ノード3: AIが取り込む -->
   <g id="node-3">
     <rect x="714" y="130" width="270" height="110" rx="18" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
-    <text x="738" y="175" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">AIが取り込む</text>
-    <text x="738" y="206" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#FFEDE3">書記が当日中に投げる</text>
+    <text x="738" y="175" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">書記が投げる</text>
+    <text x="738" y="206" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#FFEDE3">AI が当日中に取り込む</text>
   </g>
 
   <!-- ノード4: draft で更新 -->
