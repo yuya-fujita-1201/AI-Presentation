@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="cycleArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3527"/>
+    </marker>
+    <marker id="cycleReturnArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 上見出し -->
+  <text x="512" y="110" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">作るのは一度。育てて使うのは毎日</text>
+
+  <!-- カード1: 作る -->
+  <g id="phase-1">
+    <rect x="40" y="200" width="214" height="300" rx="22" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="147" y="266" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="36" font-weight="800" fill="#B44A32">1</text>
+    <text x="147" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">作る</text>
+    <text x="147" y="412" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">9月に一度</text>
+    <text x="147" y="452" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">AI推進担当</text>
+  </g>
+
+  <path d="M 254 350 H 286" fill="none" stroke="#7C3527" stroke-width="5" marker-end="url(#cycleArrow)"/>
+
+  <!-- カード2: 育てる -->
+  <g id="phase-2">
+    <rect x="286" y="200" width="214" height="300" rx="22" fill="#F6E6CF" stroke="#C17A27" stroke-width="3"/>
+    <text x="393" y="266" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="36" font-weight="800" fill="#B44A32">2</text>
+    <text x="393" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">育てる</text>
+    <text x="393" y="412" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">討議のたび</text>
+    <text x="393" y="452" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">書記と確認者</text>
+  </g>
+
+  <path d="M 500 350 H 532" fill="none" stroke="#7C3527" stroke-width="5" marker-end="url(#cycleArrow)"/>
+
+  <!-- カード3: 使う（最濃） -->
+  <g id="phase-3">
+    <rect x="532" y="200" width="214" height="300" rx="22" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="639" y="266" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="36" font-weight="800" fill="#FFFFFF">3</text>
+    <text x="639" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">使う</text>
+    <text x="639" y="412" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#FFEDE3">毎日</text>
+    <text x="639" y="452" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#FFEDE3">メンバー全員</text>
+  </g>
+
+  <path d="M 746 350 H 778" fill="none" stroke="#7C3527" stroke-width="5" marker-end="url(#cycleArrow)"/>
+
+  <!-- カード4: 守る -->
+  <g id="phase-4">
+    <rect x="778" y="200" width="214" height="300" rx="22" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="885" y="266" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="36" font-weight="800" fill="#B44A32">4</text>
+    <text x="885" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">守る</text>
+    <text x="885" y="412" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">週次と節目</text>
+    <text x="885" y="452" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">推進担当とリード</text>
+  </g>
+
+  <!-- 戻り矢印: 4の下辺中央 → 下 → 左 → 2の下辺中央 -->
+  <path d="M 885 500 L 885 580 L 393 580 L 393 500" fill="none" stroke="#B44A32" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#cycleReturnArrow)"/>
+  <text x="640" y="572" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">壊れたら直して、また育てる</text>
+
+</svg>

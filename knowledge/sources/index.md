@@ -13,6 +13,7 @@
 - [article-zenn-knowledgesense-okf.md](./article-zenn-knowledgesense-okf.md) — Zenn。ナレッジ管理の課題の観点から OKF を解説
 - [article-qiita-zumax-okf.md](./article-qiita-zumax-okf.md) — Qiita。OKF 仕様（最小性・寛容な消費）の解説
 - [article-note-sutero-okf.md](./article-note-sutero-okf.md) — note。Obsidian での OKF 導入実例と Claude Code 実証
+- [article-adr-nygard.md](./article-adr-nygard.md) — Michael Nygard「Documenting Architecture Decisions」（2011）。1決定1ファイルの ADR と、覆った決定を superseded で残す慣行の原典。OKF 実践編の「上書き＋決定記録」の根拠
 
 ## 動画（YouTube）
 

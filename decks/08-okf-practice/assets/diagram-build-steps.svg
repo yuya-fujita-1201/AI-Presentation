@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="stepArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3527"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 上見出し -->
+  <text x="512" y="100" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">AI推進担当2〜3名で、3日〜1週間</text>
+
+  <!-- ステップ間の矢印 -->
+  <path d="M 216 350 H 232" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#stepArrow)"/>
+  <path d="M 408 350 H 424" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#stepArrow)"/>
+  <path d="M 600 350 H 616" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#stepArrow)"/>
+  <path d="M 792 350 H 808" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#stepArrow)"/>
+
+  <!-- ステップ1 -->
+  <g id="step-1">
+    <rect x="40" y="170" width="176" height="360" rx="20" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="128" y="240" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="32" font-weight="800" fill="#B44A32">1</text>
+    <text x="128" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">集めて</text>
+    <text x="128" y="370" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">仕分ける</text>
+    <text x="128" y="500" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">半日</text>
+  </g>
+
+  <!-- ステップ2 -->
+  <g id="step-2">
+    <rect x="232" y="170" width="176" height="360" rx="20" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="320" y="240" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="32" font-weight="800" fill="#B44A32">2</text>
+    <text x="320" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">骨組みを</text>
+    <text x="320" y="370" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">作る</text>
+    <text x="320" y="500" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">半日</text>
+  </g>
+
+  <!-- ステップ3 -->
+  <g id="step-3">
+    <rect x="424" y="170" width="176" height="360" rx="20" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="512" y="240" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="32" font-weight="800" fill="#B44A32">3</text>
+    <text x="512" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">AIに一次</text>
+    <text x="512" y="370" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">抽出させる</text>
+    <text x="512" y="500" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">1〜2日</text>
+  </g>
+
+  <!-- ステップ4（最濃） -->
+  <g id="step-4">
+    <rect x="616" y="170" width="176" height="360" rx="20" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="704" y="240" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="32" font-weight="800" fill="#FFFFFF">4</text>
+    <text x="704" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">人が</text>
+    <text x="704" y="370" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">確認する</text>
+    <text x="704" y="500" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#FFEDE3">1〜2日</text>
+  </g>
+
+  <!-- ステップ5 -->
+  <g id="step-5">
+    <rect x="808" y="170" width="176" height="360" rx="20" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="896" y="240" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="32" font-weight="800" fill="#B44A32">5</text>
+    <text x="896" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">入口を</text>
+    <text x="896" y="370" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">整える</text>
+    <text x="896" y="500" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">半日</text>
+  </g>
+
+  <!-- 下端注記 -->
+  <text x="512" y="620" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">4だけは省けない。AIの一次抽出は、必ず人が読む</text>
+</svg>
