@@ -3,6 +3,8 @@
 JSON（`deck.json`）をソースにして、スライドを **HTML / PowerPoint(16:9)** にビルドする Claude Code プラグイン。
 スライドの**内容もデザインもすべて deck.json のパラメーター**で管理し、色はテーマトークンで切替・追加できる。
 
+> 📖 **使い方のスライド版マニュアル**: [`USER-GUIDE.html`](USER-GUIDE.html)（ブラウザで開く。← / → で移動）。この README は概要、USER-GUIDE はダウンロードした人向けの操作マニュアル。ソースは [`manual/deck.json`](manual/deck.json)（本プラグイン自身でビルド）。
+
 ## インストール
 
 ```
