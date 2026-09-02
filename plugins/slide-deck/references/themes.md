@@ -61,6 +61,25 @@
 2. `colors` / `fonts` を編集
 3. `deck.json` の `meta.theme` に `<name>` を指定して再ビルド
 
+### サンプルスライドから自動生成する
+
+既存スライド（PPTX / HTML / PDF / 画像）から配色・フォントを抽出してテーマ JSON を作る:
+
+```bash
+python tools/theme_from_sample.py <sample-file> --name <name>
+```
+
+| 形式 | 抽出方法 | 追加依存 |
+|---|---|---|
+| `.pptx` `.pptm` | スライド内の**実使用色を面積重みで集計**＋文字フォント（最良品質） | なし |
+| `.png` `.jpg` … | 主要色を量子化抽出 | pillow |
+| `.pdf` | 先頭ページを描画して主要色＋埋め込みフォント名 | pymupdf |
+| `.html` `.htm` | 宣言された `#hex`/`rgb()` と `font-family` を静的抽出 | なし |
+
+- 各形式から `background` / `text` / `primary` / `accent` とフォントを推定し、**共通の色演算で残り14＋3トークンを導出**する（既存テーマに近い一貫した配色になる）。
+- 自動推定なので、**出力レポートを確認して `colors`/`fonts` を微調整**すること。特に `primary` と `accent` は取り違えが起きやすい。PPTX が最も正確。
+- 依存導入: 画像=`setup_deps.py --pillow`、PDF=`setup_deps.py --pdf`。
+
 ### 更新で消えないようにする（配布時）
 
 `new_theme.py` は既定で同梱テーマ置き場に書くが、そこはプラグイン更新で上書きされうる。ユーザー独自テーマを永続させたい場合は専用ディレクトリを使う:

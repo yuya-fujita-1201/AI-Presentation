@@ -46,6 +46,8 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/build_deck.py" <deck_dir>
 python "${CLAUDE_PLUGIN_ROOT}/tools/preview_deck.py" <deck_dir> [番号...]
 # 新テーマ雛形
 python "${CLAUDE_PLUGIN_ROOT}/tools/new_theme.py" <name>
+# サンプルスライド(PPTX/HTML/PDF/画像)からテーマを生成
+python "${CLAUDE_PLUGIN_ROOT}/tools/theme_from_sample.py" <sample-file> --name <name>
 ```
 
 ## 構成
@@ -54,7 +56,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/new_theme.py" <name>
 plugins/slide-deck/
 ├── .claude-plugin/plugin.json   # プラグイン定義
 ├── skills/                      # create-deck / add-theme / setup
-├── tools/                       # build_deck.py / preview_deck.py / new_theme.py / setup_deps.py / QAヘルパー
+├── tools/                       # build_deck / preview_deck / new_theme / theme_from_sample / setup_deps / QAヘルパー
 ├── templates/                   # themes/（default, accenture-purple） layouts/（default）
 ├── references/                  # deck-schema.md（スキーマ） themes.md（テーマ）
 └── examples/template-sample/    # 全スライドタイプの見本 deck.json

@@ -8,7 +8,27 @@ allowed-tools: Bash, Read, Write, Edit
 
 テーマは **色トークン14種＋フォント3種**の JSON。`default` をベースにマージされるので、**新テーマは上書きしたいトークンだけ書けばよい**（残りは default から継承）。トークンの意味は `${CLAUDE_PLUGIN_ROOT}/references/themes.md` を参照。
 
-## 追加の手順
+作り方は2通り: **A) サンプルスライドから自動生成**、**B) 雛形から手書き**。
+
+## A) サンプルスライドから作る
+
+既存のスライド（PPTX / HTML / PDF / 画像）を読み込ませ、配色・フォントを抽出してテーマ JSON を自動生成する。
+
+```bash
+python "${CLAUDE_PLUGIN_ROOT}/tools/theme_from_sample.py" <sample-file> --name <name>
+#   例: ブランドの .pptx から       … best（実使用色を面積重みで集計）
+#   .png/.jpg（要 pillow）/ .pdf（要 pymupdf）/ .html にも対応
+```
+
+- 抽出は自動推定なので、**出力されるレポート（検出色・フォント・マッピング）を必ず確認**し、生成された `<name>.json` の `colors`/`fonts` を微調整する（特に primary と accent は入れ替わることがある）。
+- 追加依存が要る形式は事前に: 画像=`/slide-deck:setup --pillow`、PDF=`/slide-deck:setup --pdf`。
+- 出力先は `--dir` → 環境変数 `SLIDE_DECK_THEMES` → 同梱の順（下の「消えないように保存」参照）。
+
+生成後は 3.（使う）へ。
+
+## B) 雛形から手書きで作る
+
+### 1. 雛形を作る
 
 ### 1. 雛形を作る
 ```bash

@@ -28,6 +28,7 @@
 
 - テーマは `default` をベースにマージされる。新テーマは上書きしたいトークンだけ書けばよい（`extends` で任意の親も可）
 - 雛形は `python plugins/slide-deck/tools/new_theme.py <name>`。トークンの意味は `plugins/slide-deck/references/themes.md`
+- サンプルスライド（PPTX/HTML/PDF/画像）から生成する場合は `python plugins/slide-deck/tools/theme_from_sample.py <file> --name <name>`（自動推定なので生成後に微調整）
 - 探索順は `SLIDE_DECK_THEMES`（環境変数）→ `<deck_dir>/themes/` → 同梱 `templates/themes/`
 
 ## プラグインを編集したら

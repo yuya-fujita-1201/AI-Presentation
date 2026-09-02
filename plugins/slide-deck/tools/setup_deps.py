@@ -12,7 +12,8 @@
 依存の役割:
     python-pptx  必須。PPTX 生成に使用
     playwright   任意。preview_deck.py のプレビューPNG生成に使用（chromium も要install）
-    pillow       任意。contact_sheet.py の一覧シート生成に使用
+    pillow       任意。contact_sheet.py の一覧シート生成／画像からのテーマ抽出に使用
+    pymupdf      任意。theme_from_sample.py で PDF からテーマを抽出する場合に使用
 """
 
 import argparse
@@ -34,13 +35,15 @@ def pip_install(*args: str) -> bool:
 def main() -> int:
     ap = argparse.ArgumentParser(description="slide-deck の依存セットアップ")
     ap.add_argument("--playwright", action="store_true", help="プレビューPNG用 playwright + chromium も導入")
-    ap.add_argument("--pillow", action="store_true", help="一覧シート用 pillow も導入")
+    ap.add_argument("--pillow", action="store_true", help="一覧シート／画像テーマ抽出用 pillow も導入")
+    ap.add_argument("--pdf", action="store_true", help="PDFからのテーマ抽出用 pymupdf も導入")
     ap.add_argument("--all", action="store_true", help="任意依存もすべて導入")
     ap.add_argument("--check", action="store_true", help="導入せず状態確認のみ")
     args = ap.parse_args()
 
     want_playwright = args.playwright or args.all
     want_pillow = args.pillow or args.all
+    want_pdf = args.pdf or args.all
 
     print(f"Python: {sys.version.split()[0]}  ({sys.executable})")
 
@@ -49,6 +52,7 @@ def main() -> int:
         "python-pptx (必須)": have("pptx"),
         "playwright (任意)": have("playwright"),
         "pillow (任意)": have("PIL"),
+        "pymupdf (任意)": have("fitz"),
     }
     print("現在の状態:")
     for name, ok in status.items():
@@ -74,6 +78,10 @@ def main() -> int:
     if want_pillow and not have("PIL"):
         print("\npillow を導入します…")
         ok &= pip_install("pillow")
+    # 任意: pymupdf
+    if want_pdf and not have("fitz"):
+        print("\npymupdf を導入します…")
+        ok &= pip_install("pymupdf")
 
     print("\n完了。" if ok else "\n一部の導入に失敗しました。上のログを確認してください。")
     if not want_playwright:
