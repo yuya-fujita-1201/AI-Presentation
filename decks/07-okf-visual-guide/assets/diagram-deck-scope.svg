@@ -53,5 +53,5 @@
     <text x="840" y="136" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" font-weight="700" fill="#FFFFFF">今日はここ</text>
   </g>
 
-  <text x="512" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#2B211D">AIの側を賢くする前に、AIが読める形に知識を置く</text>
+  <text x="512" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#2B211D">モデルも道具もそのままで、知識の置き方だけを変える</text>
 </svg>

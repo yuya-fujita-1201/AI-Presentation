@@ -33,7 +33,7 @@
     <circle cx="512" cy="112" r="28" fill="#B44A32"/>
     <text x="512" y="122" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="28" font-weight="800" fill="#FFFFFF">②</text>
     <rect x="378" y="150" width="268" height="470" rx="24" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
-    <text x="512" y="192" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#7C3527">ラベルを見比べる</text>
+    <text x="512" y="192" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#7C3527">背表紙ラベルを見比べる</text>
 
     <!-- 3枚の書類。中央だけラベルが光る -->
     <rect x="396" y="225" width="64" height="118" rx="8" fill="#FFFFFF" stroke="#F0B498" stroke-width="2"/>
@@ -54,7 +54,7 @@
     <rect x="574" y="270" width="44" height="6" fill="#F6E6CF"/>
     <rect x="574" y="284" width="34" height="6" fill="#F6E6CF"/>
 
-    <text x="512" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">上端ラベルだけを見比べる</text>
+    <text x="512" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">背表紙ラベルだけを見比べる</text>
   </g>
 
   <path d="M 650 380 H 712" fill="none" stroke="#7C3527" stroke-width="5" marker-end="url(#stepArrow)"/>
