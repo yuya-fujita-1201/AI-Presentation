@@ -25,7 +25,7 @@
 
   <!-- カード2: 育てる -->
   <g id="phase-2">
-    <rect x="286" y="200" width="214" height="300" rx="22" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <rect x="286" y="200" width="214" height="300" rx="22" fill="#F6E6CF" stroke="#C17A27" stroke-width="3"/>
     <text x="393" y="266" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="36" font-weight="800" fill="#B44A32">2</text>
     <text x="393" y="340" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">育てる</text>
     <text x="393" y="412" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">討議のたび</text>

@@ -25,7 +25,7 @@
 
   <!-- ノード3: AIが取り込む -->
   <g id="node-3">
-    <rect x="714" y="130" width="270" height="110" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <rect x="714" y="130" width="270" height="110" rx="18" fill="#F6E6CF" stroke="#C17A27" stroke-width="3"/>
     <text x="738" y="175" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">AIが取り込む</text>
     <text x="738" y="206" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">書記が当日中に投げる</text>
   </g>
@@ -61,5 +61,5 @@
 
   <!-- 戻り矢印（点線）：棚卸しで見つかった変更を draft 更新へ差し戻す -->
   <path d="M 175 470 V 330 H 512 L 760 470" fill="none" stroke="#B44A32" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrowReturn)"/>
-  <text x="512" y="320" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" font-weight="700" fill="#B44A32">変更が来たら 4 へ</text>
+  <text x="512" y="320" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" font-weight="700" fill="#B44A32">変更が来たら「draft で更新」へ</text>
 </svg>

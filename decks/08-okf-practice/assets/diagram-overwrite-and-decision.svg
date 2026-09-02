@@ -20,7 +20,7 @@
     <rect x="60" y="120" width="440" height="300" rx="22" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
     <text x="84" y="168" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">requirements/F-012-受注登録.md</text>
     <text x="84" y="222" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">現在の答えは、ここ1か所</text>
-    <text x="84" y="330" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#FFEDE3">status: stable</text>
+    <text x="84" y="330" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#FFEDE3">書き換え直後は draft、確認後に stable</text>
     <text x="84" y="366" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#FFEDE3">古い記述は残さない</text>
   </g>
 
@@ -32,7 +32,7 @@
     <rect x="544" y="120" width="420" height="300" rx="22" fill="#F6E6CF" stroke="#C17A27" stroke-width="3"/>
     <text x="568" y="168" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" font-weight="700" fill="#7C3527">decisions/D-034-配送先の複数化.md</text>
     <text x="568" y="222" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="26" font-weight="700" fill="#2B211D">経緯は、決定記録に</text>
-    <text x="568" y="330" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">いつ・誰が・なぜ・CR番号</text>
+    <text x="568" y="330" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">いつ・誰が・なぜ・変更管理の番号</text>
     <text x="568" y="366" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">追記するだけ。消さない</text>
   </g>
 
