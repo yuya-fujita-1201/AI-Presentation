@@ -13,7 +13,8 @@
 | 04 | [`04-loop-engineering/`](04-loop-engineering/) | ループエンジニアリング超入門 | 55 | `ai-eng-04-loop-engineering` |
 | 05 | [`05-graph-engineering/`](05-graph-engineering/) | グラフエンジニアリング超入門 | 48 | `ai-eng-05-graph-engineering` |
 | 06 | [`06-rag/`](06-rag/) | RAG（検索拡張生成）とは何か | 35 | `ai-topics-01-rag` |
-| 07 | [`07-okf-visual-guide/`](07-okf-visual-guide/) | OKF（オープンナレッジフォーマット）超入門（旧: OKFビジュアルガイド。5層シリーズから独立） | 54 | `okf-visual-v2` |
+| 07 | [`07-okf-visual-guide/`](07-okf-visual-guide/) | OKF（オープンナレッジフォーマット）超入門（旧: OKFビジュアルガイド。5層シリーズから独立） | 56 | `okf-visual-v2` |
+| 08 | [`08-okf-practice/`](08-okf-practice/) | OKF 実践編：SI プロジェクトでの構築と運用（07 の続編。作る→育てる→使う→守る＋依頼文集） | 56 | `okf-practice` |
 
 `deck.json` の `meta.id` はHTML/PPTXの生成物名として使うため、フォルダ整理では変更しません。
 
