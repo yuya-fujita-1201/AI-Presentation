@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- 上見出し -->
+  <text x="512" y="100" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="24" font-weight="800" fill="#7C3527">「正しいか」と「約束どおりか」は、別の人が見る</text>
+
+  <!-- 上段: 内容の確認（最濃） -->
+  <g id="layer-content">
+    <rect x="60" y="150" width="904" height="200" rx="22" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <line x1="530" y1="185" x2="530" y2="315" stroke="#FFEDE3" stroke-width="2" opacity="0.45"/>
+    <text x="90" y="235" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="28" font-weight="700" fill="#FFFFFF">内容の確認</text>
+    <text x="90" y="275" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#FFEDE3">要件・設計として正しいか</text>
+    <text x="560" y="235" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">アプリリード／アーキリード</text>
+    <text x="560" y="275" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#FFEDE3">verified に human:名前 を書く</text>
+  </g>
+
+  <!-- 中間注記 -->
+  <text x="90" y="375" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">2つを分けるから、どちらも回る</text>
+
+  <!-- 下段: 形式の確認（薄） -->
+  <g id="layer-format">
+    <rect x="60" y="400" width="904" height="200" rx="22" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <line x1="530" y1="435" x2="530" y2="565" stroke="#C17A27" stroke-width="2" opacity="0.35"/>
+    <text x="90" y="485" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="28" font-weight="700" fill="#2B211D">形式の確認</text>
+    <text x="90" y="525" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">ラベル・リンク・目次・機密</text>
+    <text x="560" y="485" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#7C3527">機械チェック＋AI推進担当</text>
+    <text x="560" y="525" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" fill="#6F5C52">process: で記録。立ち上げ期は伴走</text>
+  </g>
+</svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <defs>
+    <marker id="arrowSolid" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7C3527"/>
+    </marker>
+    <marker id="arrowReturn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#B44A32"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFF9F3"/>
+
+  <!-- ノード1: 討議 -->
+  <g id="node-1">
+    <rect x="40" y="130" width="270" height="110" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="64" y="175" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">討議</text>
+    <text x="64" y="206" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">クライアントとの会議</text>
+  </g>
+
+  <!-- ノード2: 議事録 -->
+  <g id="node-2">
+    <rect x="377" y="130" width="270" height="110" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="401" y="175" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">議事録</text>
+    <text x="401" y="206" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">会議ツールの要約</text>
+  </g>
+
+  <!-- ノード3: AIが取り込む -->
+  <g id="node-3">
+    <rect x="714" y="130" width="270" height="110" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="738" y="175" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">AIが取り込む</text>
+    <text x="738" y="206" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">書記が当日中に投げる</text>
+  </g>
+
+  <!-- ノード4: draft で更新 -->
+  <g id="node-4">
+    <rect x="714" y="470" width="270" height="110" rx="18" fill="#FCE9DC" stroke="#F0B498" stroke-width="3"/>
+    <text x="738" y="515" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">draft で更新</text>
+    <text x="738" y="546" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">確認待ちの状態</text>
+  </g>
+
+  <!-- ノード5: 確認者が stable に（最濃） -->
+  <g id="node-5">
+    <rect x="377" y="470" width="270" height="110" rx="18" fill="#B44A32" stroke="#7C3527" stroke-width="3"/>
+    <text x="401" y="515" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">確認者が stable に</text>
+    <text x="401" y="546" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#FFEDE3">領域リードが名前を書く</text>
+  </g>
+
+  <!-- ノード6: 棚卸し -->
+  <g id="node-6">
+    <rect x="40" y="470" width="270" height="110" rx="18" fill="#FFF2E8" stroke="#FADFD5" stroke-width="3"/>
+    <text x="64" y="506" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="700" fill="#2B211D">棚卸し</text>
+    <text x="64" y="534" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">期限切れと deprecated</text>
+    <text x="64" y="558" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">を見直す</text>
+  </g>
+
+  <!-- 循環の矢印（実線） -->
+  <path d="M 310 185 H 377" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#arrowSolid)"/>
+  <path d="M 647 185 H 714" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#arrowSolid)"/>
+  <path d="M 849 240 V 470" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#arrowSolid)"/>
+  <path d="M 714 525 H 647" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#arrowSolid)"/>
+  <path d="M 377 525 H 310" fill="none" stroke="#7C3527" stroke-width="4" marker-end="url(#arrowSolid)"/>
+
+  <!-- 戻り矢印（点線）：棚卸しで見つかった変更を draft 更新へ差し戻す -->
+  <path d="M 175 470 V 330 H 512 L 760 470" fill="none" stroke="#B44A32" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrowReturn)"/>
+  <text x="512" y="320" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="20" font-weight="700" fill="#B44A32">変更が来たら 4 へ</text>
+</svg>
