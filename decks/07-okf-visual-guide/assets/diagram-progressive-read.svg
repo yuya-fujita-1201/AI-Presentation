@@ -23,7 +23,7 @@
     <rect x="74" y="355" width="10" height="10" fill="#B44A32"/>
     <rect x="98" y="350" width="170" height="16" rx="8" fill="#F0B498"/>
 
-    <text x="174" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">目次で全体像をつかむ</text>
+    <text x="174" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">目次で全体像をつかむ</text>
   </g>
 
   <path d="M 312 380 H 374" fill="none" stroke="#7C3527" stroke-width="5" marker-end="url(#stepArrow)"/>
@@ -54,7 +54,7 @@
     <rect x="574" y="270" width="44" height="6" fill="#F6E6CF"/>
     <rect x="574" y="284" width="34" height="6" fill="#F6E6CF"/>
 
-    <text x="512" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">上端ラベルだけを見比べる</text>
+    <text x="512" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">上端ラベルだけを見比べる</text>
   </g>
 
   <path d="M 650 380 H 712" fill="none" stroke="#7C3527" stroke-width="5" marker-end="url(#stepArrow)"/>
@@ -73,13 +73,13 @@
     <!-- 開かれた1枚（前面・最濃） -->
     <rect x="782" y="216" width="136" height="150" rx="10" fill="#FFFFFF" stroke="#B44A32" stroke-width="4"/>
     <rect x="782" y="216" width="136" height="26" rx="8" fill="#B44A32"/>
-    <text x="850" y="234" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">選ばれた1枚</text>
+    <text x="850" y="234" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" font-weight="700" fill="#FFFFFF">選ばれた1枚</text>
     <rect x="798" y="258" width="104" height="7" fill="#F0B498"/>
     <rect x="798" y="276" width="104" height="7" fill="#F0B498"/>
     <rect x="798" y="294" width="104" height="7" fill="#F0B498"/>
     <rect x="798" y="312" width="78" height="7" fill="#F0B498"/>
     <rect x="798" y="330" width="90" height="7" fill="#F0B498"/>
 
-    <text x="850" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="16" fill="#6F5C52">選ばれた1枚だけを開いて読む</text>
+    <text x="850" y="600" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="18" fill="#6F5C52">選ばれた1枚だけを開いて読む</text>
   </g>
 </svg>

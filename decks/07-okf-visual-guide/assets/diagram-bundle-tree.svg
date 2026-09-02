@@ -4,7 +4,7 @@
   <!-- 入口: index.md（最濃） -->
   <rect x="422" y="40" width="180" height="64" rx="18" fill="#B44A32" stroke="#7C3527" stroke-width="4"/>
   <text x="512" y="66" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="22" font-weight="800" fill="#FFFFFF">index.md</text>
-  <text x="512" y="88" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="14" fill="#FFEDE3">入口の目次</text>
+  <text x="512" y="88" text-anchor="middle" font-family="Hiragino Sans, Hiragino Kaku Gothic ProN, sans-serif" font-size="17" fill="#FFEDE3">入口の目次</text>
 
   <!-- 入口 → 3フォルダ 接続線 -->
   <path d="M 512 104 V 150 H 180 V 190" fill="none" stroke="#7C3527" stroke-width="3"/>
