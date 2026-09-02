@@ -44,20 +44,20 @@
 | `id` | ✅ | デッキ ID（フォルダ名と一致。出力ファイル名になる） |
 | `title` | ✅ | デッキタイトル（フッターにも表示） |
 | `subtitle` / `author` / `date` | | 補足情報 |
-| `theme` | | テーマ名（省略時 `default`）。`templates/themes/` から選択（`accenture-purple` / `feiler-bright` / `cytra-wine` など） |
+| `theme` | | テーマ名（省略時 `default`）。`templates/themes/` から選択（同梱: `default` / `accenture-purple`） |
 | `layout` | | レイアウト名（省略時 `default`） |
 | `layout_overrides` | | デッキ全体のレイアウト調整（タイプ名 → 領域 → プロパティ） |
-| `brand` | | 全スライド右上に表示する短いブランド表記（例: `FEILER`）。アクセント色・太字・右寄せ |
+| `brand` | | 全スライド右上に表示する短いブランド表記（例: `ACME`）。アクセント色・太字・右寄せ |
 
 ## slides — スライドタイプ一覧
 
 全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）。
 
-`bullets` / `two_column` / `table` / `code` / `image` / `image_text` では `eyebrow`（タイトル上の小さなサブタイトル。15px・アクセント色・太字）も指定できる。章や系列の目印に使う（使い方は [デッキデザイン文法](../knowledge/slide-system/deck-design-grammar.md) を参照）。ページ番号を消したい/変えたいスライドは `style.footer_r.text` に表示文字列を指定する（空文字は不可。既定はページ番号）。
+`bullets` / `two_column` / `table` / `code` / `image` / `image_text` では `eyebrow`（タイトル上の小さなサブタイトル。15px・アクセント色・太字）も指定できる。章や系列の目印に使う。ページ番号を消したい/変えたいスライドは `style.footer_r.text` に表示文字列を指定する（空文字は不可。既定はページ番号）。
 
 ### `title` — 表紙
 ```json
-{ "type": "title", "title": "OKF入門", "subtitle": "...", "meta": "社内勉強会 / 2026-08" }
+{ "type": "title", "title": "資料タイトル", "subtitle": "...", "meta": "社内勉強会 / 2026-08" }
 ```
 領域: `bar`（左帯）, `title`, `subtitle`, `meta`
 
@@ -140,6 +140,83 @@ PNG / JPG / SVG に対応（SVG は PPTX ビルド時に自動で PNG 化され 
 { "type": "closing", "title": "まとめ", "bullets": ["..."], "message": "締めの一言（任意）" }
 ```
 領域: `bg`, `title`, `rule`, `body`, `message`
+
+### `agenda` — アジェンダ / 目次
+```json
+{ "type": "agenda", "title": "Agenda", "lead": "（任意）",
+  "items": [ "はじめに", { "text": "本日の議題", "active": true }, "まとめ" ] }
+```
+領域: `title`, `rule`, `lead`, `body`, `footer_l/r`。各項目に自動で連番（`01`, `02`…）が付く。`active: true` の項目は面（`active_fill`）で強調され、文字色が `active_color` になる。`bullets` の代替ではなく「番号付き＋現在地ハイライト」が要るときに使う。
+
+**自動2段組・ページ送り**（項目数に応じて自動）:
+- 1列あたりの最大行数 `R = floor(body.h / (row_h+gap))`（既定値で **R = 8 行**）。
+- 項目数 **N ≤ R** → 1段。**R < N ≤ R×max_cols** → 自動で2段（左列を上から埋めて右列へ）。**N > R×max_cols** → 次ページの agenda に自動で繰り越し（連番は通し、2枚目以降のタイトルに「（続き）」）。
+- `body` の `max_cols`（既定 2）/ `row_h` / `gap` / `col_gap` で段数・行ピッチを調整できる。既定では **9〜16 項目=2段、17 項目以上=2ページ目**。
+
+### `steps` — ステップチャート / フロー
+```json
+{ "type": "steps", "title": "見出し", "lead": "（任意）",
+  "steps": [
+    { "label": "研究開発", "items": ["基礎研究", "実験・検証"] },
+    { "label": "社会実装", "items": ["インフラ整備"] }
+  ] }
+```
+領域: `title`, `rule`, `lead`, `body`, `footer_l/r`。手順・フロー・バリューチェーンを横並びのカードで表現し、カード間をシェブロン（›）で接続する。ステップ数（3〜5推奨）に応じてカード幅は自動調整。各カードはヘッダ（`header_fill`＝primary、`STEP n` は `num_color`）＋本文の箇条書き（`items`）。
+
+### `matrix` — 2×2 マトリクス
+```json
+{ "type": "matrix", "title": "見出し", "lead": "（任意）",
+  "x_axis": { "label": "モデルの複雑さ", "low": "低", "high": "高" },
+  "y_axis": { "label": "データの量", "low": "少", "high": "多" },
+  "quadrants": [
+    { "heading": "…", "body": "…", "highlight": true },
+    { "heading": "…", "body": "…" },
+    { "heading": "…", "body": "…" },
+    { "heading": "…", "body": "…" }
+  ] }
+```
+領域: `title`, `rule`, `lead`, `grid`, `axis`, `footer_l/r`。`quadrants` は **左上 → 右上 → 左下 → 右下** の順。y軸は上が `high`、x軸は右が `high`。`highlight: true` の象限は `hi_fill`／`hi_heading_color`（accent）で強調する。単純な行列は `table`、2軸の位置づけは `matrix` を使い分ける。
+
+### `cards` — ボックスチャート / カードグリッド
+```json
+{ "type": "cards", "title": "見出し", "lead": "（任意）", "columns": 3,
+  "cards": [
+    { "heading": "Python", "body": "汎用・データ分析", "items": ["初学者向け", "AI/ML の定番"] },
+    { "heading": "Go", "body": "クラウド基盤" }
+  ] }
+```
+領域: `title`, `rule`, `lead`, `grid`, `footer_l/r`。整理軸に沿って要素カードを並べる（`two_column` の一般化）。`columns` で列数を指定（既定 3）、カード数に応じて行が自動で折り返す。各カードは `heading`＋任意の `body`＋任意の `items`（箇条書き）。
+
+### `swimlane` — スイムレーン業務フロー
+```json
+{ "type": "swimlane", "title": "見出し", "lead": "（任意）",
+  "cols": 6,
+  "phases": ["", "作成", "精緻化", "レビュー", "判定", "次工程"],
+  "lanes": [
+    { "group": "Japan", "name": "開発T(Lead)" },
+    { "group": "Japan", "name": "開発T(Member)" },
+    { "name": "AI（Claude Code等）" }
+  ],
+  "nodes": [
+    { "id": "start", "lane": 0, "col": 0, "shape": "terminal", "text": "開始" },
+    { "id": "t1", "lane": 1, "col": 1, "shape": "task", "text": "ドラフト作成", "loop": true },
+    { "id": "d1", "lane": 1, "col": 2, "shape": "decision", "text": "指摘あり" },
+    { "id": "io1", "lane": 2, "col": 1, "shape": "io", "input": ["論点一覧"], "output": ["検討資料"] }
+  ],
+  "edges": [
+    { "from": "start", "to": "t1" },
+    { "from": "t1", "to": "d1" },
+    { "from": "d1", "to": "end", "label": "Y" }
+  ] }
+```
+領域: `title`, `rule`, `lead`, `flow`, `footer_l/r`。業務フロー・運用フローを **image に頼らずネイティブ描画**する（座標を自動計算するのでズレない）。
+
+- **レーン（横帯）＝役割**。`lanes[]` は上から順の行。`group`（Lv1）が同じ連続レーンは左端に縦帯でまとめられる。`group` を省けば **Lv1 なしのフラットなレーン** になる（Lv1 のみ・Lv1+Lv2 どちらも可）。
+- **配置はグリッド**。各ノードに `lane`（行 index）と `col`（工程＝列 index、0始まり）を指定。列数は `cols`（省略時はノードの最大 col+1）。`phases[]` を書くと上部に工程ヘッダ帯が出る（列と対応、空文字で省略）。
+- **ノード形状 `shape`**: `task`（角丸四角・`loop:true` で反復記号／`variant` で `onpf`＝オンラインPF・`onother`＝PF以外・`offline`＝オフラインを色分け）/ `system`（システム・サービス）/ `decision`（ひし形・分岐）/ `terminal`（楕円・前/次ページ等のラベル付き連結）/ `marker`（小さな丸・`kind` で `start`/`end`/`mid`）/ `connector`（ペンタゴン・分岐の遷移先）/ `mail`（メール配信）/ `io`（`input`/`output` の成果物リスト）。
+- **エッジ `edges[]`**: `{ from, to, label, style }`。ノード id 同士を結ぶと、レーンをまたぐ L 字・Z 字の直交矢印を**自動ルーティング**する。`label` は Y/N などの分岐ラベル、`style: "dashed"` で破線（システム操作）になる（既定は実線＝作業の流れ）。
+- **凡例 `legend`**: **既定 `true`**。true のとき、そのスイムレーンの**直前に凡例専用ページ（`swimlane_legend`）を自動挿入**する（立命館サンプル準拠の記号一覧：作業3種・システム・分岐・成果物・開始/終了/途中・前/次ページ・遷移先・メール・実線/破線の15種）。`"legend": false` で凡例ページを省略。`legend_title` で凡例ページのタイトル、`legend_items` で凡例内容をカスタムできる。
+- 色・線幅・ノードサイズは `flow` の各トークンで調整可（`task_onpf_fill` / `task_offline_fill` / `system_fill` / `marker_start` / `connector_fill` / `decision_fill` / `edge_color` など）。
 
 ## ビルドとプレビュー
 

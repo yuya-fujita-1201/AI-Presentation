@@ -4,7 +4,7 @@
     "background": "#FFFFFF",
     "surface": "#F7F0FC",
     "text": "#1B1B24",
-    "muted": "#6E6E7E",
+    "muted": "#565663",
     "primary": "#460073",
     "accent": "#A100FF",
     "on_primary": "#FFFFFF",
@@ -17,8 +17,8 @@
     "table_row_alt": "#F7F0FC"
   },
   "fonts": {
-    "heading": "Hiragino Sans",
-    "body": "Hiragino Sans",
-    "code": "Menlo"
+    "heading": "Meiryo UI",
+    "body": "Meiryo UI",
+    "code": "Consolas"
   }
 }

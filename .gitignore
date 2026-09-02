@@ -1,12 +1,4 @@
 decks/*/build/
-decks/_archive/**/build/
 decks/.backups/
 __pycache__/
 .DS_Store
-tmax/
-pipeline/logs/
-pipeline/cache/
-pipeline/staging/
-pipeline/lock/
-pipeline/state/outbox/
-pipeline/PAUSE

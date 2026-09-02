@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768" font-family="Meiryo UI, 'Yu Gothic', sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#A100FF"/>
+    </marker>
+  </defs>
+  <rect width="1024" height="768" fill="#FFFFFF"/>
+
+  <!-- deck.json -->
+  <rect x="70" y="324" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#A100FF" stroke-width="3"/>
+  <text x="180" y="378" text-anchor="middle" font-size="26" font-weight="bold" fill="#460073">deck.json</text>
+  <text x="180" y="410" text-anchor="middle" font-size="16" fill="#565663">ソース（内容＋style）</text>
+
+  <!-- arrow deck -> build -->
+  <line x1="290" y1="384" x2="352" y2="384" stroke="#A100FF" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- build_deck.py -->
+  <rect x="362" y="308" width="270" height="152" rx="16" fill="#460073"/>
+  <text x="497" y="372" text-anchor="middle" font-size="24" font-weight="bold" fill="#FFFFFF">build_deck.py</text>
+  <text x="497" y="404" text-anchor="middle" font-size="15" fill="#D9BBF2">10タイプを描画</text>
+
+  <!-- branch arrows build -> HTML / PPTX -->
+  <path d="M632,384 L682,384 L682,255 L720,255" fill="none" stroke="#A100FF" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M632,384 L682,384 L682,515 L720,515" fill="none" stroke="#A100FF" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- HTML -->
+  <rect x="724" y="200" width="230" height="110" rx="14" fill="#F7F0FC" stroke="#A100FF" stroke-width="2.5"/>
+  <text x="839" y="248" text-anchor="middle" font-size="24" font-weight="bold" fill="#460073">HTML</text>
+  <text x="839" y="278" text-anchor="middle" font-size="15" fill="#565663">ブラウザで確認</text>
+
+  <!-- PPTX -->
+  <rect x="724" y="460" width="230" height="110" rx="14" fill="#F7F0FC" stroke="#A100FF" stroke-width="2.5"/>
+  <text x="839" y="508" text-anchor="middle" font-size="24" font-weight="bold" fill="#460073">PPTX</text>
+  <text x="839" y="538" text-anchor="middle" font-size="15" fill="#565663">PowerPointで配布</text>
+</svg>
