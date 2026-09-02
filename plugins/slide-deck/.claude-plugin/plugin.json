@@ -1,0 +1,12 @@
+{
+  "name": "slide-deck",
+  "version": "0.1.0",
+  "description": "JSON をソースにスライドを HTML / PowerPoint(16:9) にビルドする仕組み。内容もデザインも deck.json のパラメーターで管理し、色はテーマトークンで切替・追加できる。",
+  "author": {
+    "name": "yuya.fujita"
+  },
+  "homepage": "https://github.com/yuya-fujita-1201/AI-Presentation",
+  "repository": "https://github.com/yuya-fujita-1201/AI-Presentation",
+  "license": "UNLICENSED",
+  "keywords": ["slides", "presentation", "pptx", "powerpoint", "deck", "json"]
+}

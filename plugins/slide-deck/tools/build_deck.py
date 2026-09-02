@@ -26,6 +26,7 @@ import copy
 import html as html_mod
 import json
 import mimetypes
+import os
 import re
 import sys
 from pathlib import Path
@@ -45,10 +46,45 @@ def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def theme_dirs(deck_dir: Path):
+    """テーマの探索ディレクトリを優先順に返す。
+    1. 環境変数 SLIDE_DECK_THEMES（複数可・OS区切り）… ユーザー追加テーマ置き場
+    2. <deck_dir>/themes/                           … デッキ／プロジェクト同梱テーマ
+    3. 同梱テーマ（templates/themes/）              … default・accenture-purple 等
+    先に見つかったものが勝つ。プラグイン更新で消したくないテーマは 1 か 2 に置く。"""
+    dirs = []
+    env = os.environ.get("SLIDE_DECK_THEMES")
+    if env:
+        dirs += [Path(p) for p in env.split(os.pathsep) if p.strip()]
+    if deck_dir is not None:
+        dirs.append(Path(deck_dir) / "themes")
+    dirs.append(ROOT / "templates" / "themes")
+    return dirs
+
+
+def load_theme(name: str, dirs, _seen=None):
+    """テーマを解決して返す。default.json（または extends 先）をベースにマージするため、
+    新しいテーマは上書きしたいトークンだけ書けばよい。`extends` を指定すると任意のテーマを
+    親にできる（未指定なら default が親）。探索は theme_dirs() の順。"""
+    _seen = _seen or []
+    if name in _seen:
+        sys.exit(f"error: テーマの extends が循環しています: {' -> '.join(_seen + [name])}")
+    path = next((d / f"{name}.json" for d in dirs if (d / f"{name}.json").exists()), None)
+    if path is None:
+        searched = ", ".join(str(d) for d in dirs)
+        sys.exit(f"error: テーマ '{name}' が見つかりません（探索: {searched}）")
+    data = load_json(path)
+    parent = data.get("extends") or (None if name == "default" else "default")
+    if parent:
+        data = deep_merge(load_theme(parent, dirs, _seen + [name]), data)
+    data["name"] = name
+    return data
+
+
 def load_deck(deck_dir: Path):
     deck = load_json(deck_dir / "deck.json")
     meta = deck.get("meta", {})
-    theme = load_json(ROOT / "templates" / "themes" / f"{meta.get('theme', 'default')}.json")
+    theme = load_theme(meta.get("theme", "default"), theme_dirs(deck_dir))
     layout = load_json(ROOT / "templates" / "layouts" / f"{meta.get('layout', 'default')}.json")
     return deck, theme, layout
 
@@ -202,7 +238,7 @@ def swimlane_geometry(slide, st):
             "groups": groups, "phases": phase_boxes, "nodes": node_map, "edges": edges}
 
 
-# スイムレーンの凡例エントリ（立命館サンプル準拠）: (shape, variant/kind, ラベル, 説明)
+# スイムレーンの凡例エントリ（業務フロー標準記号）: (shape, variant/kind, ラベル, 説明)
 SWIMLANE_LEGEND = [
     ("task", "onpf", "作業（オンラインPF）", "PF 上で実施する作業"),
     ("task", "onother", "作業（PF以外）", "他システムで実施する作業"),
@@ -999,12 +1035,19 @@ def build_html(deck, theme, layout, deck_dir: Path, out_path: Path):
 # ---------------------------------------------------------------------------
 
 def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
-    from pptx import Presentation
-    from pptx.dml.color import RGBColor
-    from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
-    from pptx.enum.text import PP_ALIGN
-    from pptx.oxml.ns import qn
-    from pptx.util import Emu, Inches, Pt
+    try:
+        from pptx import Presentation
+        from pptx.dml.color import RGBColor
+        from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
+        from pptx.enum.text import PP_ALIGN
+        from pptx.oxml.ns import qn
+        from pptx.util import Emu, Inches, Pt
+    except ImportError:
+        sys.exit(
+            "error: python-pptx が未インストールのため PPTX を生成できません。\n"
+            "  初回セットアップを実行してください: /slide-deck:setup"
+            "（または `pip install python-pptx`）。HTML だけなら --html を付けて再実行できます。"
+        )
 
     fonts = theme["fonts"]
 

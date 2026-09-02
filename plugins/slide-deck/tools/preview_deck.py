@@ -36,7 +36,14 @@ def main():
     out_dir = deck_dir / "build" / "preview"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    from playwright.sync_api import sync_playwright
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        sys.exit(
+            "error: Playwright が未インストールのためプレビューPNGを生成できません。\n"
+            "  初回セットアップを実行してください: /slide-deck:setup --playwright\n"
+            "  （または `pip install playwright && playwright install chromium`）"
+        )
 
     url = html_path.as_uri()
     with sync_playwright() as pw:

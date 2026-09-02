@@ -1,0 +1,17 @@
+{
+  "name": "ai-presentation",
+  "owner": {
+    "name": "yuya.fujita"
+  },
+  "version": "0.1.0",
+  "description": "スライド生成の仕組みを配布する社内マーケットプレイス。",
+  "plugins": [
+    {
+      "name": "slide-deck",
+      "displayName": "Slide Deck Builder",
+      "description": "JSON をソースにスライドを HTML / PPTX にビルドする仕組み（テーマ切替・追加対応）。",
+      "version": "0.1.0",
+      "source": "./plugins/slide-deck"
+    }
+  ]
+}

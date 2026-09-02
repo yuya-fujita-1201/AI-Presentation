@@ -1,6 +1,6 @@
 # deck.json スキーマリファレンス（v2: パラメーター駆動）
 
-デッキは `decks/<デッキ名>/deck.json` の 1 ファイルで管理する。**内容（コンテンツ）とデザイン（パラメーター）を分離**しており、デザインの微修正は JSON の数値を変えるだけで行える。AI に再生成させる必要はない。
+デッキは `<deck_dir>/deck.json` の 1 ファイルで管理する。**内容（コンテンツ）とデザイン（パラメーター）を分離**しており、デザインの微修正は JSON の数値を変えるだけで行える。AI に再生成させる必要はない。
 
 ```json
 {
@@ -215,23 +215,25 @@ PNG / JPG / SVG に対応（SVG は PPTX ビルド時に自動で PNG 化され 
 - **配置はグリッド**。各ノードに `lane`（行 index）と `col`（工程＝列 index、0始まり）を指定。列数は `cols`（省略時はノードの最大 col+1）。`phases[]` を書くと上部に工程ヘッダ帯が出る（列と対応、空文字で省略）。
 - **ノード形状 `shape`**: `task`（角丸四角・`loop:true` で反復記号／`variant` で `onpf`＝オンラインPF・`onother`＝PF以外・`offline`＝オフラインを色分け）/ `system`（システム・サービス）/ `decision`（ひし形・分岐）/ `terminal`（楕円・前/次ページ等のラベル付き連結）/ `marker`（小さな丸・`kind` で `start`/`end`/`mid`）/ `connector`（ペンタゴン・分岐の遷移先）/ `mail`（メール配信）/ `io`（`input`/`output` の成果物リスト）。
 - **エッジ `edges[]`**: `{ from, to, label, style }`。ノード id 同士を結ぶと、レーンをまたぐ L 字・Z 字の直交矢印を**自動ルーティング**する。`label` は Y/N などの分岐ラベル、`style: "dashed"` で破線（システム操作）になる（既定は実線＝作業の流れ）。
-- **凡例 `legend`**: **既定 `true`**。true のとき、そのスイムレーンの**直前に凡例専用ページ（`swimlane_legend`）を自動挿入**する（立命館サンプル準拠の記号一覧：作業3種・システム・分岐・成果物・開始/終了/途中・前/次ページ・遷移先・メール・実線/破線の15種）。`"legend": false` で凡例ページを省略。`legend_title` で凡例ページのタイトル、`legend_items` で凡例内容をカスタムできる。
+- **凡例 `legend`**: **既定 `true`**。true のとき、そのスイムレーンの**直前に凡例専用ページ（`swimlane_legend`）を自動挿入**する（業務フロー標準記号の一覧：作業3種・システム・分岐・成果物・開始/終了/途中・前/次ページ・遷移先・メール・実線/破線の15種）。`"legend": false` で凡例ページを省略。`legend_title` で凡例ページのタイトル、`legend_items` で凡例内容をカスタムできる。
 - 色・線幅・ノードサイズは `flow` の各トークンで調整可（`task_onpf_fill` / `task_offline_fill` / `system_fill` / `marker_start` / `connector_fill` / `decision_fill` / `edge_color` など）。
 
 ## ビルドとプレビュー
 
 ```bash
-python3 tools/build_deck.py decks/<デッキ名>            # HTML + PPTX
-python3 tools/build_deck.py decks/<デッキ名> --html      # HTML のみ（高速）
-python3 tools/preview_deck.py decks/<デッキ名> 5         # 5枚目だけPNG化して目視確認
-python3 tools/preview_deck.py decks/<デッキ名>           # 全スライドPNG化
+# <deck_dir> は deck.json があるフォルダ。$TOOLS はビルダーの場所:
+#   プラグイン利用時: "${CLAUDE_PLUGIN_ROOT}/tools" / このリポジトリ内: plugins/slide-deck/tools
+python "$TOOLS/build_deck.py" <deck_dir>            # HTML + PPTX
+python "$TOOLS/build_deck.py" <deck_dir> --html      # HTML のみ（高速）
+python "$TOOLS/preview_deck.py" <deck_dir> 5         # 5枚目だけPNG化して目視確認
+python "$TOOLS/preview_deck.py" <deck_dir>           # 全スライドPNG化
 ```
 
 ### 微修正ループ（推奨ワークフロー）
 
 1. `deck.json` の該当スライドの `style`（または内容）だけを編集
-2. `build_deck.py <デッキ> --html` → `preview_deck.py <デッキ> <番号>` で当該スライドのみ確認
-3. 納得したら `build_deck.py <デッキ>` で PPTX も再生成
+2. `build_deck.py <deck_dir> --html` → `preview_deck.py <deck_dir> <番号>` で当該スライドのみ確認
+3. 納得したら `build_deck.py <deck_dir>` で PPTX も再生成
 
 ビルドは全体でも1秒未満なので、再生成コストを気にする必要はない。**生成物（build/ 配下）は絶対に直接編集しない**。
 
@@ -239,4 +241,4 @@ python3 tools/preview_deck.py decks/<デッキ名>           # 全スライドPN
 
 - PPTX にスピーカーノートは出力しない仕様（python-pptx の notes_slide が Keynote 互換性を壊すため）
 - 色は必ずテーマトークン（`primary`, `accent` など）で指定し、hex 直書きはスライド固有の特例に限る（テーマ切替が効かなくなるため）
-- 新しいテーマを作るときは `templates/themes/` に色トークン一式を定義した JSON を追加し、`meta.theme` を切り替えるだけでよい
+- 新しいテーマは `tools/new_theme.py <name>` で雛形を作り、`colors`/`fonts` を編集して `meta.theme` を切り替えるだけでよい。テーマは `default` をベースにマージされるので上書きしたいトークンだけ書けばよい（詳細は `themes.md`）
