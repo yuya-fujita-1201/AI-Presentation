@@ -2,7 +2,7 @@
   "name": "accenture-purple",
   "colors": {
     "background": "#FFFFFF",
-    "surface": "#F7F0FC",
+    "surface": "#EBE0F5",
     "text": "#1B1B24",
     "muted": "#565663",
     "primary": "#460073",
@@ -14,7 +14,11 @@
     "code_text": "#EDE3F7",
     "table_header_bg": "#460073",
     "table_header_text": "#FFFFFF",
-    "table_row_alt": "#F7F0FC"
+    "table_row_alt": "#F5EEFA",
+    "highlight_fill": "#DCC0FA",
+    "border": "#C4B0D8",
+    "heading_text": "#460073",
+    "accent_on_primary": "#C266FF"
   },
   "fonts": {
     "heading": "Meiryo UI",

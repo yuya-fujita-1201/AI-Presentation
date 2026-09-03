@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""SVG図版のフォント機械ゲート（試作）: decks/<deck>/assets/*.svg を Chromium で開き、
+"""SVG図版のフォント機械ゲート: <deck_dir>/assets/*.svg を Chromium で開き、
 全 <text>/<tspan> の computed font-family にゴシック系（Hiragino Sans / Noto Sans / sans-serif 等）が
 含まれないものを「明朝体フォールバック」として報告する。exit 1 = 検出あり。
 
-使い方: python3 tools/check_svg_fonts.py decks/<deck> [--json out.json]
+使い方: python tools/check_svg_fonts.py <deck_dir> [--json out.json]
 """
 from __future__ import annotations
 
@@ -11,6 +11,40 @@ import argparse
 import json
 import sys
 from pathlib import Path
+
+TOOLS_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(TOOLS_DIR))
+try:
+    import build_deck  # type: ignore
+except Exception:
+    build_deck = None
+
+
+def _fallback_setup_console():
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+
+def _fallback_fail(msg):
+    print(f"error: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def _fallback_warn(msg):
+    print(f"warning: {msg}", file=sys.stderr)
+
+
+def _fallback_note(msg):
+    print(f"note: {msg}", file=sys.stderr)
+
+
+setup_console = getattr(build_deck, "setup_console", None) or _fallback_setup_console
+fail = getattr(build_deck, "fail", None) or _fallback_fail
+warn = getattr(build_deck, "warn", None) or _fallback_warn
+note = getattr(build_deck, "note", None) or _fallback_note
 
 GOTHIC = ("hiragino sans", "hiragino kaku gothic", "noto sans", "sans-serif", "yu gothic", "meiryo",
           "helvetica", "arial", "inter", "roboto", "system-ui", "-apple-system", "bizudpgothic", "source han sans")
@@ -34,7 +68,8 @@ JS = r"""
 
 
 def main():
-    ap = argparse.ArgumentParser()
+    setup_console()
+    ap = argparse.ArgumentParser(description="SVG図版のフォント機械ゲート")
     ap.add_argument("deck_dir")
     ap.add_argument("--json")
     args = ap.parse_args()
@@ -42,7 +77,10 @@ def main():
     if not svgs:
         print("check_svg_fonts: SVGなし")
         sys.exit(0)
-    from playwright.sync_api import sync_playwright
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        fail("Playwright が未インストールのため check_svg_fonts.py を実行できません。初回セットアップ: /slide-deck:setup --playwright")
     bad = {}
     n_text = 0
     with sync_playwright() as pw:

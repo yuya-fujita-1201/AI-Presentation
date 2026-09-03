@@ -8,7 +8,7 @@
 
 - マーケットプレイス定義: `.claude-plugin/marketplace.json`
 - プラグイン本体（自己完結）: `plugins/slide-deck/`
-  - `skills/`（create-deck / add-theme / setup）、`tools/`、`templates/`、`references/`、`examples/`
+  - `skills/`（create-deck / add-theme / review-deck / export-pdf / setup）、`tools/`、`templates/`、`references/`、`examples/`、`manual/`
 - スクリプトは `plugins/slide-deck/tools/` にあり、テンプレートを `plugins/slide-deck/templates/` から解決する（`ROOT = tools の親 = plugins/slide-deck/`）
 
 ## デッキ作成のルール
@@ -20,6 +20,7 @@
 - 画像は `<deck_dir>/assets/` に置き、`image` / `image_text` タイプの `path` で相対参照する（PNG / JPG / SVG 対応）
 - **微修正の依頼（位置・サイズ・フォント・色の変更）が来たら、スライドを作り直さず該当スライドの `style` に差分だけ書く**。デッキ全体なら `meta.layout_overrides`、全デッキ共通なら `plugins/slide-deck/templates/layouts/default.json`
 - 微修正後は `build_deck.py <deck_dir> --html` → `preview_deck.py <deck_dir> <番号>` で該当スライドだけ目視確認してから PPTX を再生成する
+- ビルド前後の機械チェックとして `check_layout.py <deck_dir>`（はみ出し・重なり・文字あふれ）と `lint_deck_text.py <deck_dir>`（文字量・AI定型句）を通す（`create-deck` スキルの手順4、または `review-deck` スキルでまとめて実行できる）。図解タイプ（`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane`）を使ったら `check_diagram.py <deck_dir>`（配線・ラベルの座標診断）も通す
 - 色は hex 直書きせずテーマトークン（`primary` / `accent` 等）で指定。テーマ変更は `meta.theme` の切替のみ（同梱: `default` / `accenture-purple`）
 - **PPTX にスピーカーノートを絶対に入れない**（python-pptx の notes_slide は Keynote 互換性を破壊する）。`notes` フィールドは HTML でのみ表示される
 - PPTX 生成後の検証: zip 整合（`unzip -t` 等）と `Presentation()` 再パースの 2 点を必ず実施し、全スライドで `has_notes_slide` が False であることを確認する
@@ -34,8 +35,12 @@
 ## プラグインを編集したら
 
 - ローカル検証: `claude --plugin-dir ./plugins/slide-deck`、または `/reload-plugins`
-- スキルの description は簡潔に（skill 一覧での表示コストになる）。frontmatter は `name` / `description` / `allowed-tools` を基本にする
+- スキルの description は簡潔に（skill 一覧での表示コストになる）。frontmatter は `name` / `description` / `allowed-tools` を基本に、必要なら `argument-hint` / `disable-model-invocation` を使う
+- ユニットテスト: `python -m unittest discover -s plugins/slide-deck/tools -p "test_*.py"` を実行し全て通ることを確認する（表リンク機能を変更した場合は `python -m unittest plugins/slide-deck/tools/test_build_deck_links.py` も個別実行）
+- 見本デッキ（`examples/template-sample`）と `manual` が `build_deck.py` でエラーなくビルドできることを確認してからコミットする
+- `claude plugin validate ./plugins/slide-deck` と `claude plugin validate .` が通ることを確認する
 
 ## 変更記録
 
-- タスク完了時は該当デッキの deck.json の `meta.date` を更新する。プラグインの機能を変えたら `plugin.json` / `marketplace.json` の `version` を上げる
+- タスク完了時は該当デッキの deck.json の `meta.date` を更新する
+- **プラグインの機能を変えたら（`tools/` `templates/` `skills/` 等 `plugin.json` 以外のファイルを変更したら）必ず `plugin.json` / `marketplace.json` の `version` を semver で bump する**（このルールを守らなかった実績があるため、コミット前に diff を見て徹底する）

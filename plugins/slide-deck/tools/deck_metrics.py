@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""複数デッキの文章・構成の定量指標を横並びで出す（01/02 を基準に 03〜05 との差異を見るため）。
+"""複数デッキの文章・構成の定量指標を横並びで比較する（文体・情報量の一貫性チェック用）。
 
-使い方: python3 tools/deck_metrics.py decks/01-prompt-engineering decks/02-context-engineering ... [--json out.json]
+使い方: python tools/deck_metrics.py <deck_dir> [<deck_dir> ...] [--json out.json]
 指標（表示テキストは notes/code を除く）:
   枚数 / type 構成 / 導入4枚の type 列 / 章扉数
   punch: 枚数・中央値字数・です・ます終止率
@@ -16,7 +16,42 @@ import argparse
 import json
 import re
 import statistics as st
+import sys
 from pathlib import Path
+
+TOOLS_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(TOOLS_DIR))
+try:
+    import build_deck  # type: ignore
+except Exception:
+    build_deck = None
+
+
+def _fallback_setup_console():
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+
+def _fallback_fail(msg):
+    print(f"error: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def _fallback_warn(msg):
+    print(f"warning: {msg}", file=sys.stderr)
+
+
+def _fallback_note(msg):
+    print(f"note: {msg}", file=sys.stderr)
+
+
+setup_console = getattr(build_deck, "setup_console", None) or _fallback_setup_console
+fail = getattr(build_deck, "fail", None) or _fallback_fail
+warn = getattr(build_deck, "warn", None) or _fallback_warn
+note = getattr(build_deck, "note", None) or _fallback_note
 
 HEDGE = ["だと思います", "正直", "んです", "かなと", "かもしれません", "迷い", "と思っています", "気がします", "ですね"]
 DESU = re.compile(r"(です|ます|ましょう|ません|でした|ますか|でしょうか|ですか)[。！？]?$")
@@ -50,14 +85,21 @@ def bullet_texts(slide):
                     res.append(b["text"])
                 grab(b.get("children"))
     grab(slide.get("bullets"))
-    for c in slide.get("columns", []) or []:
-        if isinstance(c, dict):
-            grab(c.get("bullets"))
+    cols = slide.get("columns")
+    # cards/table では columns が列数(int)や見出し文字列のリストであり、
+    # two_column の列オブジェクト配列と型が違うのでここでは無視する。
+    if isinstance(cols, list):
+        for c in cols:
+            if isinstance(c, dict):
+                grab(c.get("bullets"))
     return res
 
 
 def metrics(deck_dir):
-    deck = json.loads((Path(deck_dir) / "deck.json").read_text(encoding="utf-8"))
+    deck_json = Path(deck_dir) / "deck.json"
+    if not deck_json.exists():
+        fail(f"{deck_json} が見つかりません")
+    deck = json.loads(deck_json.read_text(encoding="utf-8-sig"))
     slides = deck["slides"]
     n = len(slides)
     types = [s.get("type") for s in slides]
@@ -110,8 +152,9 @@ def metrics(deck_dir):
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("decks", nargs="+")
+    setup_console()
+    ap = argparse.ArgumentParser(description="複数デッキの文章・構成の定量指標を横並びで比較する")
+    ap.add_argument("decks", nargs="+", help="比較する deck_dir（2つ以上を指定すると横並び表示）")
     ap.add_argument("--json")
     args = ap.parse_args()
     rows = [metrics(d) for d in args.decks]

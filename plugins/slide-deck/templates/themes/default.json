@@ -2,11 +2,11 @@
   "name": "default",
   "colors": {
     "background": "#FFFFFF",
-    "surface": "#F1F5FA",
+    "surface": "#E0E7F0",
     "text": "#1A2233",
     "muted": "#5A6B85",
     "primary": "#0F3D6E",
-    "accent": "#00A8CC",
+    "accent": "#007D96",
     "on_primary": "#FFFFFF",
     "on_primary_soft": "#EAF1F8",
     "on_primary_muted": "#C7D6E8",
@@ -14,11 +14,15 @@
     "code_text": "#E2E8F0",
     "table_header_bg": "#0F3D6E",
     "table_header_text": "#FFFFFF",
-    "table_row_alt": "#F1F5FA"
+    "table_row_alt": "#F1F5F9",
+    "highlight_fill": "#BFDDE7",
+    "border": "#BCC8D8",
+    "heading_text": "#0F3D6E",
+    "accent_on_primary": "#7FDDF0"
   },
   "fonts": {
-    "heading": "Hiragino Sans",
-    "body": "Hiragino Sans",
-    "code": "Menlo"
+    "heading": "Meiryo",
+    "body": "Meiryo",
+    "code": "Consolas"
   }
 }

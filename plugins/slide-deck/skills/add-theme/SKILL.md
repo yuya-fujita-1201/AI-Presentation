@@ -1,12 +1,12 @@
 ---
 name: add-theme
-description: スライドの配色・フォント（テーマ）を新しく追加する。ユーザーがブランドカラーや独自テーマ、色・フォントの変更、テーマの追加を求めたときに使う。テーマは色トークン14種＋フォント3種で構成され、default を継承して差分だけ書ける。
+description: デッキ全体の配色・フォントのセット（テーマ）を新規に追加、または既存テーマへの切替を行う。ユーザーがブランドカラー・独自テーマの追加、テーマ全体の切替を求めたときに使う。単一スライドの色・サイズなど個別要素の微修正は create-deck を使う。テーマは色トークン18種＋フォント3種で構成され、default を継承して差分だけ書ける。
 allowed-tools: Bash, Read, Write, Edit
 ---
 
 # add-theme — 新しいテーマ（色・フォント）を追加する
 
-テーマは **色トークン14種＋フォント3種**の JSON。`default` をベースにマージされるので、**新テーマは上書きしたいトークンだけ書けばよい**（残りは default から継承）。トークンの意味は `${CLAUDE_PLUGIN_ROOT}/references/themes.md` を参照。
+テーマは **色トークン18種＋フォント3種**の JSON。`default` をベースにマージされ、明示していないトークンはテーマ自身の基本色（`primary`/`accent`等）から自動導出されるので、**新テーマは上書きしたいトークンだけ書けばよい**。トークンの意味・導出規則は `${CLAUDE_PLUGIN_ROOT}/references/themes.md` を参照。
 
 作り方は2通り: **A) サンプルスライドから自動生成**、**B) 雛形から手書き**。
 
@@ -20,15 +20,13 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/theme_from_sample.py" <sample-file> --name <
 #   .png/.jpg（要 pillow）/ .pdf（要 pymupdf）/ .html にも対応
 ```
 
-- 抽出は自動推定なので、**出力されるレポート（検出色・フォント・マッピング）を必ず確認**し、生成された `<name>.json` の `colors`/`fonts` を微調整する（特に primary と accent は入れ替わることがある）。
+- 抽出は自動推定なので、**出力されるレポート（検出色・フォント・マッピング）を必ず確認**し、生成された `<name>.json` の `colors`/`fonts` を微調整する（特に `primary` と `accent` は入れ替わることがある。候補が僅差の場合はレポートに「要確認」と出る）。
 - 追加依存が要る形式は事前に: 画像=`/slide-deck:setup --pillow`、PDF=`/slide-deck:setup --pdf`。
-- 出力先は `--dir` → 環境変数 `SLIDE_DECK_THEMES` → 同梱の順（下の「消えないように保存」参照）。
+- 出力先は `--dir` → 環境変数 `SLIDE_DECK_THEMES` → カレントディレクトリの `./themes/` の順（下の「消えないように保存」参照）。
 
-生成後は 3.（使う）へ。
+生成後は「B) 3. 使う」以降（コントラスト確認 → 使う）へ進む。
 
 ## B) 雛形から手書きで作る
-
-### 1. 雛形を作る
 
 ### 1. 雛形を作る
 ```bash
@@ -41,16 +39,24 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/new_theme.py" <name> --extends accenture-pur
 `<name>` は kebab-case（例 `brand-navy`）。
 
 ### 2. 色・フォントを編集
-生成された `<name>.json` の `colors` / `fonts` を編集する。最低限 `primary` / `accent` を決めれば見た目が変わる。トークンの役割は `references/themes.md`。
+生成された `<name>.json` の `colors` / `fonts` を編集する。最低限 `primary` / `accent` を決めれば見た目が変わり、表ヘッダ色・コード背景・強調色などの派生トークンも自動的に追随する。トークンの役割・導出規則は `references/themes.md`。
 
-### 3. 使う
-デッキの `deck.json` の `meta.theme` に `"<name>"` を指定して再ビルドするだけ。
+### 3. コントラストを確認する
+```bash
+python "${CLAUDE_PLUGIN_ROOT}/tools/check_theme.py" <name>
+```
+`text`/背景 など主要な文字色/背景の組み合わせの WCAG コントラスト比を表示する。4.5 未満（大文字・太字用途は 3.0 未満）は警告として列挙される。`text`/背景 が 4.5 未満の場合は exit 1 になるので、`colors` の明度を調整してから次に進む。
+
+### 4. 使う・代表スライドを目視確認する
+デッキの `deck.json` の `meta.theme` に `"<name>"` を指定して再ビルドする。
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/tools/build_deck.py" <deck_dir>
+python "${CLAUDE_PLUGIN_ROOT}/tools/preview_deck.py" <deck_dir> <番号...>
 ```
+`title`（primary 地に文字が乗る）・`bullets`・`table`（ヘッダ色）・`matrix`（強調象限）など、primary/accent/highlight_fill を実際に使うスライドを選んで PNG を目視し、文字が読めるか・強調が意図通り見えるかを確認する。Playwright が使えない環境では `export_pdf.py` や `soffice --headless --convert-to png` で代替する。
 
 ## テーマを消えないように保存する（配布時の注意）
-`new_theme.py` は既定で**同梱テーマ置き場**に書くが、そこはプラグイン更新で上書きされうる。ユーザー独自テーマを永続させたい場合は、専用ディレクトリを作って環境変数で指定する:
+`new_theme.py` / `theme_from_sample.py` は既定で **`--dir` 明示 → 環境変数 `SLIDE_DECK_THEMES` → カレントディレクトリの `./themes/`** の順に書き込む（プラグイン同梱ディレクトリには `--dir` で明示したときだけ書く）。複数プロジェクトで使い回すユーザー独自テーマを永続させたい場合は、専用ディレクトリを作って環境変数で指定する:
 
 ```bash
 export SLIDE_DECK_THEMES="$HOME/.slide-deck-themes"     # Windows: setx SLIDE_DECK_THEMES "%USERPROFILE%\.slide-deck-themes"

@@ -4,20 +4,33 @@
     "title": "slide-deck プラグイン ユーザーガイド",
     "subtitle": "ダウンロードした人向けの使い方マニュアル",
     "author": "slide-deck plugin",
-    "date": "2026-09-02",
+    "date": "2026-09-04",
     "theme": "accenture-purple",
     "layout_overrides": {
-      "bullets": {
-        "lead": { "line_height": 1.5, "h": 56 },
-        "body": { "y": 208, "gap": 16, "line_height": 1.55, "child_gap": 8, "indent": 30 }
+      "image_text": {
+        "body": {
+          "x": 72,
+          "w": 428
+        },
+        "img": {
+          "x": 532,
+          "y": 196,
+          "w": 676,
+          "h": 412
+        },
+        "caption": {
+          "x": 532,
+          "y": 618,
+          "w": 676
+        }
       }
     }
   },
   "slides": [
     {
       "type": "title",
-      "title": "slide-deck プラグイン\nユーザーガイド",
-      "subtitle": "ダウンロード → セットアップ → スライド作成 まで、手順どおりに進めれば使えるようになります。",
+      "title": "slide-deckプラグイン\nユーザーガイド",
+      "subtitle": "ダウンロードから使いこなし、仕組みの理解まで一冊で。",
       "meta": "User Guide / 2026-09",
       "notes": "このマニュアル自体が本プラグインで作られています（manual/deck.json → build_deck.py）。"
     },
@@ -25,278 +38,558 @@
       "type": "agenda",
       "eyebrow": "CONTENTS",
       "title": "このガイドの構成",
-      "lead": "全3章。第1・2章は全員向け、第3章は仕組みを知りたい人向け（読み飛ばし可）です。",
+      "lead": "全3章。読みたい章から読んでも進められます。",
       "items": [
-        "第1章 ダウンロードとセットアップ",
-        "　用意するもの / ダウンロード(git・ZIP)",
-        "　起動とセットアップの指示",
-        "第2章 スライドの作り方",
-        "　頼み方 / テーマ・タイプの指定",
-        "　Tips と Dos / Don'ts / 微修正",
-        "　テーマの追加（後半）",
-        "第3章 仕組み・アーキテクチャ（読み飛ばし可）",
-        "　フォルダ構成 / どう作っているか",
-        "　JSONで管理する理由"
+        "第1章：セットアップ（前提・導入・動作確認）",
+        "第2章：使いこなす（頼み方・タイプ・微修正・配布）",
+        "第3章：仕組み（deck.jsonの裏側とJSON設計の理由）",
+        "まとめ：最初の1枚を作るまで"
       ],
-      "notes": "項目が多いので自動2段組。"
+      "notes": "第3章は仕組みを知りたい人向け。読み飛ばしても進められる。"
     },
-
     {
       "type": "section",
       "number": "01",
-      "title": "ダウンロードとセットアップ",
-      "subtitle": "プラグインを手元に用意し、初回セットアップを済ませるまで。",
+      "title": "セットアップ",
+      "subtitle": "プラグインを用意し、動作確認まで済ませる。",
       "notes": "第1章。ここが終われば作成に進めます。"
     },
     {
       "type": "bullets",
-      "eyebrow": "1章 / STEP 0",
-      "title": "用意するもの（前提）",
-      "lead": "はじめる前に、次のものがそろっているか確認します。",
+      "eyebrow": "1章 / 始める前に",
+      "title": "動くPCなら誰でも始められる",
+      "lead": "必要なのはこの2つだけです。",
       "bullets": [
-        { "text": "Claude Code が使えること（CLI または IDE 拡張）", "bold": true, "color": "primary" },
-        "Python 3 が入っていること（ターミナルで python --version が動く）",
-        "git（clone する場合）／ ブラウザ（ZIP でダウンロードする場合）",
-        "ネットワーク（初回に python-pptx などを取得するため）"
+        {
+          "text": "Claude Codeが使えること（CLIまたはIDE拡張）",
+          "bold": true,
+          "color": "primary"
+        },
+        "Python 3.9以上（バージョンはあとで確認する）",
+        "未導入ならpython.orgから入手してインストールする",
+        "git、またはZIPをダウンロードできるブラウザ",
+        "初回のみネットワーク接続（依存ライブラリの取得用）"
       ],
-      "notes": "python が無い場合は先に Python 3 を導入。python3 で動くこともある。"
+      "style": {
+        "body": {
+          "valign": "middle"
+        }
+      },
+      "notes": "pythonが無い場合は先にPython 3を導入。python3で動くこともある。"
     },
     {
-      "type": "two_column",
+      "type": "image_text",
       "eyebrow": "1章 / STEP 1",
-      "title": "ダウンロードする（2通り）",
-      "lead": "配布元リポジトリを手元に取得します。どちらでもOK。",
-      "left":  { "heading": "A. git clone（推奨）", "bullets": ["git clone <配布リポジトリURL>", "cd AI-Presentation", "更新は git pull で取得"] },
-      "right": { "heading": "B. ZIP ダウンロード", "bullets": ["GitHub の Code ▾ → Download ZIP", "解凍してフォルダを開く", "git が無くてもOK"] },
-      "notes": "URL は配布元のものに読み替える。将来は組織用リポジトリを配布。"
-    },
-    {
-      "type": "steps",
-      "eyebrow": "1章 / STEP 2",
-      "title": "起動してセットアップを指示",
-      "lead": "フォルダの中で Claude Code を起動し、日本語で頼むだけです。",
-      "steps": [
-        { "label": "1. フォルダへ", "items": ["ダウンロードした", "フォルダに移動"] },
-        { "label": "2. 起動", "items": ["claude を実行", "(IDEなら開く)"] },
-        { "label": "3. 指示", "items": ["「セットアップして」", "と入力"] },
-        { "label": "4. 完了", "items": ["python-pptx 導入", "作成OK"] }
-      ],
-      "notes": "起動＝ターミナルで claude、または IDE 拡張でフォルダを開く。"
-    },
-    {
-      "type": "bullets",
-      "eyebrow": "1章 / STEP 2 詳細",
-      "title": "セットアップの指示（コピペ可）",
-      "lead": "Claude Code にこう入力します。裏で依存インストールが走ります。",
+      "title": "2つのコマンドで導入できる",
       "bullets": [
-        { "text": "「plugins/slide-deck の初回セットアップをして（python-pptx を入れて）」", "bold": true, "color": "primary" },
-        "Claude が python plugins/slide-deck/tools/setup_deps.py を実行して導入する",
-        "プレビュー画像も使うなら「playwright も入れて」と追加（--playwright）",
-        "「python-pptx OK」と表示されれば完了",
-        { "text": "プラグインとして導入済みなら /slide-deck:setup でも同じ", "color": "muted" }
+        {
+          "text": "/plugin marketplace add yuya-fujita-1201/AI-Presentation",
+          "bold": true,
+          "color": "primary"
+        },
+        "/plugin install slide-deck@ai-presentation",
+        "5つのスキルが使えるようになる",
+        "URLは配布元のリポジトリに読み替える"
       ],
-      "notes": "手で叩くなら: python plugins/slide-deck/tools/setup_deps.py"
+      "path": "assets/terminal-install-image.png",
+      "caption": "実行イメージ（応答文言は簡略化したもの）",
+      "image_side": "right",
+      "notes": "将来は組織用リポジトリを配布する想定。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "1章 / STEP 2",
+      "title": "導入状況は1コマンドで確認できる",
+      "bullets": [
+        {
+          "text": "setup_deps.py --check で状態を一覧表示",
+          "bold": true,
+          "color": "primary"
+        },
+        "OK印は導入済み、未印は未導入",
+        "必須は python-pptx だけ（PPTX生成用）",
+        "Claude Codeに「セットアップして」でも可"
+      ],
+      "path": "assets/terminal-setup.png",
+      "caption": "実行結果の例（表示パスはお使いの環境に置き換わる）",
+      "image_side": "left",
+      "notes": "手で叩くなら python plugins/slide-deck/tools/setup_deps.py --check。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "1章 / STEP 3",
+      "title": "ビルドでHTMLとPPTXが一度にできる",
+      "bullets": [
+        {
+          "text": "build_deck.py にデッキのフォルダを渡す",
+          "bold": true,
+          "color": "primary"
+        },
+        "build/ に HTML と PPTX が同時に出る",
+        "1秒未満なので何度でも実行できる",
+        "エラーが出たら deck.json を直して再実行"
+      ],
+      "path": "assets/terminal-build.png",
+      "caption": "python build_deck.py decks/kickoff の実行例",
+      "image_side": "right",
+      "notes": "kickoffはscratchpad上の検証用サンプルデッキ名。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "1章 / STEP 4",
+      "title": "プレビューで見た目をその場で確認する",
+      "bullets": [
+        {
+          "text": "preview_deck.py <フォルダ> [番号] でPNG化",
+          "bold": true,
+          "color": "primary"
+        },
+        "番号を省略すると全スライドを出力",
+        "PNGを開いて文字切れ・はみ出しを確認",
+        "playwright が無ければ省略してよい"
+      ],
+      "path": "assets/terminal-preview.png",
+      "caption": "python preview_deck.py decks/kickoff 1 2 の実行例",
+      "image_side": "left",
+      "notes": "PNGはbuild/preview/配下に出力される。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "1章 / でき上がる構成",
+      "title": "1つのデッキが1つのフォルダにまとまる",
+      "bullets": [
+        {
+          "text": "deck.json が内容とデザインのソース",
+          "bold": true,
+          "color": "primary"
+        },
+        "assets/ の画像は相対パスで参照する",
+        "build/ に HTML・PPTX・PNG が出力される",
+        "build/ は直接編集せず deck.json を直す"
+      ],
+      "path": "assets/folder-project.png",
+      "caption": "decks/kickoff というデッキ例のフォルダ構成",
+      "image_side": "right",
+      "notes": "buildは生成物なので.gitignore対象にしてよい。"
     },
     {
       "type": "table",
       "eyebrow": "1章 / 参考",
-      "title": "何が入る？（依存関係）",
-      "lead": "必須は python-pptx だけ。残りは使う機能に応じて任意です。",
-      "columns": ["パッケージ", "要否", "用途"],
-      "rows": [
-        ["python-pptx", "必須", "PowerPoint(PPTX) 生成"],
-        ["playwright (+chromium)", "任意", "プレビュー画像(PNG) 生成"],
-        ["pillow", "任意", "画像からのテーマ抽出 など"],
-        ["pymupdf", "任意", "PDF からのテーマ抽出"]
+      "title": "OSごとの読み替えはこの4点だけ",
+      "lead": "コマンド自体はPowerShell・Git Bashのどちらでも同じです。",
+      "columns": [
+        "項目",
+        "Windows",
+        "macOS"
       ],
-      "style": { "table": { "col_widths": [3, 1.4, 4] } },
-      "notes": "setup: 既定=python-pptx、--playwright / --pillow / --pdf / --all。"
+      "rows": [
+        [
+          "ターミナル",
+          "PowerShell または Git Bash",
+          "ターミナル（zsh）"
+        ],
+        [
+          "Pythonコマンド",
+          "python（無ければpy -3）",
+          "python3"
+        ],
+        [
+          "確認コマンド",
+          "python --version",
+          "python3 --version"
+        ],
+        [
+          "フォルダ移動",
+          "cd フォルダ名",
+          "cd フォルダ名"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2.6,
+            3.6,
+            2.8
+          ],
+          "y": 281
+        }
+      },
+      "notes": "Windowsでpythonが未インストールだとMicrosoft Storeが開く。"
     },
-
     {
       "type": "section",
       "number": "02",
-      "title": "スライドの作り方",
-      "subtitle": "Claude Code にどう頼むか。テーマ・タイプの指定、良いスライドのコツ、テーマの追加まで。",
+      "title": "使いこなす",
+      "subtitle": "頼み方からテーマ追加・配布まで、日常の操作。",
       "notes": "第2章。セットアップ後の日常操作。"
     },
     {
-      "type": "bullets",
-      "eyebrow": "2章 / 基本",
-      "title": "基本：こう頼む",
-      "lead": "リポジトリのフォルダで、作りたい内容を日本語で伝えるだけです。",
+      "type": "image_text",
+      "eyebrow": "2章 / 頼み方",
+      "title": "目的と聞き手を伝えると精度が上がる",
       "bullets": [
-        { "text": "例：「AI導入の社内勉強会向けに10枚くらいのスライドを作って。テーマは accenture-purple で」", "bold": true, "color": "primary" },
-        "Claude が deck.json を作成 → ビルド → プレビューまで行う",
-        "構成から相談してもよい：「まず目次だけ提案して」",
-        "手元の箇条書き・メモ・既存資料を渡すと、それを元に組み立てる",
-        { "text": "プラグイン導入時は /slide-deck:create-deck でも起動できる", "color": "muted" }
+        {
+          "text": "「勉強会向けに生成AI導入の効果を10枚で」",
+          "bold": true,
+          "color": "primary"
+        },
+        "聞き手・目的・枚数が伝わるほど手戻りが減る",
+        "足りない情報は着手前にまとめて質問される",
+        "曖昧でも叩き台はでき、あとから直せる"
       ],
-      "notes": "生成物は build/ に出る。deck.json がソース。"
-    },
-    {
-      "type": "bullets",
-      "eyebrow": "2章 / テーマ指定",
-      "title": "テーマ（配色・フォント）の指定",
-      "lead": "見た目のトーンは『テーマ』で決まります。指示で切り替えられます。",
-      "bullets": [
-        "「テーマは accenture-purple で」／「default（青系）で」＝同梱テーマを指定",
-        "指定しなければ default（青系）になる",
-        "ブランド色を直接伝える：「primary を #460073、accent を #A100FF で」",
-        "「このPPTXと同じ配色で」＝サンプルからテーマ生成（本章後半）",
-        "あとから「テーマを◯◯に変えて」の一言で全体を切替できる"
-      ],
-      "notes": "テーマは meta.theme に入る。色はトークンで管理される。"
-    },
-    {
-      "type": "cards",
-      "eyebrow": "2章 / タイプ指定",
-      "title": "スライドタイプの指定（全15種）",
-      "lead": "「この部分は◯◯で」と伝えると、その表現で作ります。",
-      "columns": 3,
-      "cards": [
-        { "heading": "比較・対比", "body": "", "items": ["two_column", "table / matrix"] },
-        { "heading": "手順・流れ", "body": "", "items": ["steps", "swimlane(業務)"] },
-        { "heading": "図解", "body": "", "items": ["image_text", "image"] },
-        { "heading": "列挙・整理", "body": "", "items": ["bullets", "cards"] },
-        { "heading": "コード・設定", "body": "", "items": ["code"] },
-        { "heading": "構成", "body": "", "items": ["title / section", "agenda / quote / closing"] }
-      ],
-      "notes": "実物は examples/template-sample を参照。"
+      "path": "assets/chat-request-image.png",
+      "caption": "やり取りのイメージ（実際の応答文言とは異なる）",
+      "image_side": "left",
+      "notes": "良い頼み方の例文はreferences/content-guide.md 7章にも掲載。"
     },
     {
       "type": "bullets",
-      "eyebrow": "2章 / Tips",
-      "title": "良いスライドのコツ",
-      "lead": "頼み方を少し工夫すると、仕上がりが安定します。",
+      "eyebrow": "2章 / 内容設計",
+      "title": "作る前に聞き手と型を決めておく",
+      "lead": "content-guide.mdの要点。骨子が決まると手戻りが減ります。",
       "bullets": [
-        { "text": "1スライド＝1メッセージ。詰め込みすぎない", "bold": true, "color": "primary" },
-        "箇条書きは5〜6行まで。多いなら分割か 2カラムに",
-        "図は image_text で説明と一体に（図だけ・文だけに分けない）",
-        "まず章立て・目次を固めてから中身を作る",
-        "プレビューを見て「ここをこう」と微修正を重ねる"
+        {
+          "text": "聞き手・目的・時間と枚数を先に決めておく",
+          "bold": true,
+          "color": "primary"
+        },
+        "SCQAやPREPなど構成の型を1つ選んでから並べる",
+        "タイトルは話題ではなく結論を一文で言い切る",
+        "抽象語（推進・活用等）は具体的な数字や動作に置換"
       ],
-      "notes": "詰め込みは可読性を落とす最大要因。"
+      "style": {
+        "body": {
+          "valign": "middle"
+        }
+      },
+      "notes": "詳細はreferences/content-guide.md。create-deckスキルの手順1.5でも参照する。"
     },
     {
-      "type": "two_column",
-      "eyebrow": "2章 / Dos & Don'ts",
-      "title": "やること・避けること",
-      "lead": "この仕組みを気持ちよく使うための指針です。",
-      "left":  { "heading": "Do", "bullets": ["内容を箇条書きで渡す", "テーマを指定する", "プレビューで確認→微修正", "色はテーマに任せる"] },
-      "right": { "heading": "Don't", "bullets": ["build/ や PPTX を手で直す", "1枚に詰め込みすぎる", "色を hex で直書き", "毎回「全部作り直して」"] },
-      "notes": "build/ を手で直すと再ビルドで消える。"
+      "type": "image",
+      "eyebrow": "2章 / 一覧",
+      "title": "19種類のテンプレートから選べる",
+      "path": "assets/gallery.png",
+      "caption": "全19種＋swimlane直前に自動挿入される凡例ページ1枚（examples/template-sample）",
+      "notes": "実物はexamples/template-sample/deck.jsonを参照。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "2章 / タイプ紹介",
+      "title": "比較は2カラムか表で見せる",
+      "bullets": [
+        {
+          "text": "two_column：Before/After など2案の比較",
+          "bold": true,
+          "color": "primary"
+        },
+        "table：複数項目を行と列で一覧比較",
+        "matrix：2軸でのポジショニングを可視化"
+      ],
+      "path": "assets/type-05-two_column.png",
+      "caption": "type=two_column の見本",
+      "image_side": "right",
+      "notes": "比較・対比系。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "2章 / タイプ紹介",
+      "title": "手順はステップかスイムレーンで見せる",
+      "bullets": [
+        {
+          "text": "steps：3〜5工程をカードで横に並べる",
+          "bold": true,
+          "color": "primary"
+        },
+        "swimlane：役割をまたぐ業務フローを描く",
+        "凡例ページが直前に自動で1枚追加される"
+      ],
+      "path": "assets/type-11-steps.png",
+      "caption": "type=steps の見本",
+      "image_side": "left",
+      "notes": "手順・流れ系。swimlaneはlegend:falseで凡例を省略できる。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "2章 / タイプ紹介",
+      "title": "図と説明は1枚に統合できる",
+      "bullets": [
+        {
+          "text": "image_text：図と本文を1枚にまとめる",
+          "bold": true,
+          "color": "primary"
+        },
+        "image：図版だけを大きく見せたいときに使う",
+        "quote：キーメッセージを一文で強調する",
+        "code：JSON・YAMLの設定例をそのまま見せる"
+      ],
+      "path": "assets/type-10-image_text.png",
+      "caption": "type=image_text の見本",
+      "image_side": "right",
+      "notes": "図解・資料系。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "2章 / タイプ紹介",
+      "title": "基本の骨格はbulletsとcardsで組む",
+      "bullets": [
+        {
+          "text": "bullets：見出しと箇条書きの最も汎用的な型",
+          "bold": true,
+          "color": "primary"
+        },
+        "cards：整理軸に沿って要素カードを並べる",
+        "骨格は title・section・agenda・closing"
+      ],
+      "path": "assets/type-04-bullets.png",
+      "caption": "type=bullets の見本",
+      "image_side": "left",
+      "style": {
+        "body": {
+          "y": 365
+        }
+      },
+      "notes": "列挙・構成系。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "2章 / タイプ紹介",
+      "title": "構成図やフローも自動配線で図解できる",
+      "bullets": [
+        {
+          "text": "architecture・dataflow・lifecycle・sequenceの4種で図解できる",
+          "bold": true,
+          "color": "primary"
+        },
+        "構成図・データフロー・状態遷移・シーケンスをJSONのノードとエッジで書くと自動配線される",
+        "check_diagram.pyが重なりを座標付きで指摘しAIが直す",
+        "画像と違いテーマに追随しPPTXで編集できる"
+      ],
+      "path": "assets/type-16-architecture.png",
+      "caption": "type=architecture の見本",
+      "image_side": "right",
+      "notes": "図解4種。詳細はreferences/diagram-guide.mdを参照。"
     },
     {
       "type": "bullets",
       "eyebrow": "2章 / 微修正",
-      "title": "微修正の頼み方",
-      "lead": "作り直さず、その1点だけを直せます。該当スライドの style に差分が入ります。",
+      "title": "直したい1点だけ伝えれば直る",
+      "lead": "作り直さず、該当スライドのstyleに差分だけ入ります。",
       "bullets": [
-        "「5枚目のタイトルをもう少し大きく」",
-        "「この表の1列目を広くして」",
-        "「3枚目の箇条書きの2つ目を強調して」",
+        {
+          "text": "「表紙のタイトルをもう少し大きく」",
+          "bold": true,
+          "color": "primary"
+        },
+        "「比較表の1列目をもう少し広くして」",
         "「全体の余白をもう少し詰めて」",
-        { "text": "→ 位置・サイズ・色・フォントの微調整はすべて差分で完結", "color": "muted" }
+        "デッキ全体の調整はmeta.layout_overridesで対応"
       ],
-      "notes": "デッキ全体は meta.layout_overrides で。"
+      "style": {
+        "body": {
+          "valign": "middle"
+        }
+      },
+      "notes": "build/は直接編集しない。修正は必ずdeck.json→再ビルド。"
     },
     {
       "type": "bullets",
-      "eyebrow": "2章 / テーマ追加",
-      "title": "テーマを追加したいとき",
-      "lead": "独自の配色テーマを増やせます。default を継承するので差分だけでOK。",
+      "eyebrow": "2章 / テーマ",
+      "title": "配色はテーマを1箇所変えるだけで変わる",
+      "lead": "色はトークン管理なので、切替も追加も安全にできます。",
       "bullets": [
-        { "text": "「brand-navy というテーマを作って。primary は #1F3A5F」→ 雛形を生成", "bold": true, "color": "primary" },
-        "変えたい色だけ指定すればよい（残りは default から継承）",
-        "「このPPTX/画像/PDFからテーマを作って」＝サンプルから抽出（次ページ）",
-        "独自テーマは SLIDE_DECK_THEMES に置けばプラグイン更新で消えない",
-        { "text": "プラグイン導入時は /slide-deck:add-theme でも起動できる", "color": "muted" }
+        {
+          "text": "「テーマをaccenture-purpleにして」で即切替",
+          "bold": true,
+          "color": "primary"
+        },
+        "独自の配色は新テーマとして追加できる",
+        "既存スライドから配色とフォントを自動抽出も可能",
+        "色は常にトークン名で指定し、hex直書きはしない"
       ],
-      "notes": "トークンは色14＋フォント3。references/themes.md 参照。"
+      "style": {
+        "body": {
+          "valign": "middle"
+        }
+      },
+      "notes": "add-themeスキル。トークンは色18種＋フォント3種。"
     },
     {
-      "type": "table",
-      "eyebrow": "2章 / サンプルから生成",
-      "title": "サンプルスライドからテーマを作る",
-      "lead": "既存スライドを読み込ませて配色・フォントを抽出できます（自動推定→微調整）。",
-      "columns": ["形式", "抽出方法", "追加依存"],
-      "rows": [
-        [".pptx / .pptm", "実使用色を面積集計＋フォント", "なし"],
-        [".png / .jpg …", "主要色を量子化抽出", "pillow"],
-        [".pdf", "描画して主要色＋フォント", "pymupdf"],
-        [".html / .htm", "宣言色と font-family を抽出", "なし"]
-      ],
-      "style": { "table": { "col_widths": [2.2, 4.5, 1.8] } },
-      "notes": "PPTX が最も正確。primary/accent の取り違えに注意し、レポートを見て調整。"
+      "type": "two_column",
+      "eyebrow": "2章 / 仕上げと配布",
+      "title": "レビューしてからPDFで配布する",
+      "lead": "仕上げと配布もスキルに任せられます。",
+      "left": {
+        "heading": "仕上げ（review-deck）",
+        "bullets": [
+          "文字あふれ・重なりを機械チェック",
+          "文言の量やAI定型句も検出",
+          "content-guideに沿って内容も確認"
+        ]
+      },
+      "right": {
+        "heading": "配布（export-pdf）",
+        "bullets": [
+          "ビルド済みPPTXをPDFに変換",
+          "内部ではLibreOffice(soffice)を使用",
+          "無い場合はPowerPoint等で代替書き出し"
+        ]
+      },
+      "notes": "soffice不在時はPowerPoint/Keynoteのエクスポート機能で代替。"
     },
-
     {
       "type": "section",
       "number": "03",
       "title": "仕組み・アーキテクチャ",
-      "subtitle": "（知りたい人向け。一般ユーザーは読み飛ばして構いません）",
+      "subtitle": "（知りたい人向け。読み飛ばしても構いません）",
       "notes": "第3章。中身の解説。"
-    },
-    {
-      "type": "code",
-      "eyebrow": "3章 / 構成",
-      "title": "フォルダ構成",
-      "lead": "リポジトリはマーケットプレイス、その中に自己完結したプラグインが入っています。",
-      "language": "text",
-      "code": "AI-Presentation/\n├─ .claude-plugin/marketplace.json     # 配布定義（マーケットプレイス）\n└─ plugins/slide-deck/                 # プラグイン本体（自己完結）\n   ├─ .claude-plugin/plugin.json       # プラグイン定義\n   ├─ skills/     create-deck / add-theme / setup\n   ├─ tools/      build_deck・preview_deck・new_theme・theme_from_sample・setup_deps\n   ├─ templates/  themes（配色）・layouts（既定レイアウト）\n   ├─ references/ deck-schema.md（スキーマ）・themes.md（テーマ）\n   ├─ examples/   template-sample（全タイプ見本）\n   └─ manual/     このガイドのソース",
-      "notes": "plugins/slide-deck/ 単体を別リポジトリへ移設して配布も可能。"
     },
     {
       "type": "steps",
       "eyebrow": "3章 / 仕組み",
-      "title": "どうスライドを作っているか",
-      "lead": "1つの deck.json を、テーマ・レイアウトとマージして HTML と PPTX に変換します。",
+      "title": "1つのJSONが2つの成果物になる",
+      "lead": "deck.json を読み、テーマとレイアウト既定値を重ねてから 2 形式へ書き出します。",
       "steps": [
-        { "label": "1. deck.json", "items": ["内容＋デザインを", "パラメーターで記述"] },
-        { "label": "2. build_deck", "items": ["テーマ＋レイアウトを", "マージして解決"] },
-        { "label": "3. 出力", "items": ["HTML と PPTX を", "同時生成"] },
-        { "label": "4. 一致", "items": ["96dpi換算で", "両形式の見た目が一致"] }
+        {
+          "label": "deck.json",
+          "items": [
+            "内容（見出し・本文）と",
+            "デザイン差分（style）を",
+            "1 ファイルに記述"
+          ]
+        },
+        {
+          "label": "検証",
+          "items": [
+            "type・色・表・画像を",
+            "ビルド前に一括チェック",
+            "誤りは日本語で停止"
+          ]
+        },
+        {
+          "label": "解決",
+          "items": [
+            "テーマ → レイアウト既定 →",
+            "style の順に重ねて",
+            "座標と色を確定"
+          ]
+        },
+        {
+          "label": "書き出し",
+          "items": [
+            "HTML は px そのまま",
+            "PPTX は 96dpi 換算",
+            "同じ座標で 2 形式を生成"
+          ]
+        }
       ],
-      "notes": "仮想キャンバス 1280×720px。px を HTML はそのまま、PPTX は 96dpi 換算。"
+      "notes": "仮想キャンバス1280×720px。pxをHTMLはそのまま、PPTXは96dpi換算。"
     },
     {
       "type": "table",
       "eyebrow": "3章 / 設計",
-      "title": "デザインの3層構造",
-      "lead": "デザインは3層で解決されます。下の層ほど個別・優先されます。",
-      "columns": ["層", "ファイル / キー", "役割"],
-      "rows": [
-        ["テーマ", "meta.theme / templates/themes", "色トークン・フォント"],
-        ["レイアウト既定", "templates/layouts/default.json", "タイプ別の位置・サイズ・フォント"],
-        ["スタイル差分", "slide.style / meta.layout_overrides", "個別スライドの微修正"]
+      "title": "デザインは3層で解決される",
+      "lead": "上から順に重ね、下の層ほど個別のスライドに近く、あとから優先されます。",
+      "columns": [
+        "層",
+        "ファイル / キー",
+        "役割"
       ],
-      "style": { "table": { "col_widths": [2, 4, 3.2] } },
+      "rows": [
+        [
+          "テーマ",
+          "meta.theme / templates/themes",
+          "色トークンとフォント"
+        ],
+        [
+          "レイアウト既定",
+          "templates/layouts/default.json",
+          "タイプ別の位置とサイズ"
+        ],
+        [
+          "スタイル差分",
+          "slide.style / meta.layout_overrides",
+          "個別スライドの微修正"
+        ],
+        [
+          "共通領域",
+          "layout common.brand",
+          "全スライド共通の右上ブランド表記"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            4,
+            3.2
+          ]
+        }
+      },
       "notes": "解決順: レイアウト既定 ← layout_overrides ← slide.style。"
+    },
+    {
+      "type": "image",
+      "eyebrow": "3章 / 構成",
+      "title": "プラグインは1フォルダに閉じている",
+      "path": "assets/folder-plugin.png",
+      "caption": "plugins/slide-deck 直下の構成",
+      "notes": "単体で別リポジトリへ移設して配布することもできる。"
     },
     {
       "type": "bullets",
       "eyebrow": "3章 / 思想",
-      "title": "なぜ JSON で管理するのか",
-      "lead": "内容とデザインをデータとして分離することに、いくつも利点があります。",
+      "title": "内容とデザインをデータとして分ける",
+      "lead": "この分離が、以下すべての利点のもとになっています。",
       "bullets": [
-        { "text": "分離：微修正は数値を変えるだけ。作り直し不要", "bold": true, "color": "primary" },
-        "再現性：テキストなので Git で差分管理・レビュー・巻き戻しができる",
-        "AI 親和性：該当箇所だけを安全に差分編集できる",
-        "一元生成：1ソースから HTML と PPTX を作るので見た目が一致し二重管理が不要",
-        "テーマ化：色をトークンで持つので、切替で全体を一括変更できる"
+        {
+          "text": "微修正は数値を変えるだけで作り直しが不要",
+          "bold": true,
+          "color": "primary"
+        },
+        "テキストなのでGitで差分管理・レビューができる",
+        "AIが該当箇所だけを安全に差分編集できる",
+        "1ソースからHTMLとPPTXを同時に生成できる",
+        "色をトークンで持つので切替で全体が変わる"
       ],
+      "style": {
+        "body": {
+          "valign": "middle"
+        }
+      },
       "notes": "『内容とデザインの分離』が全設計の核。"
     },
     {
-      "type": "closing",
-      "title": "さっそく作ってみましょう",
+      "type": "bullets",
+      "eyebrow": "3章 / 品質ゲート",
+      "title": "ビルド前に間違いを機械が止める",
+      "lead": "typoや枠あふれは、目視の前に検出されます。",
       "bullets": [
-        "第1章：ダウンロード →「セットアップして」で準備完了",
-        "第2章：「〜のスライドを作って」＋テーマ・タイプ指定 → プレビューで微修正",
-        "第3章：仕組みは deck.json の一元管理・HTML/PPTX 一致"
+        {
+          "text": "テーマ名や型のtypoはエラーでビルドを止める",
+          "bold": true,
+          "color": "primary"
+        },
+        "文字あふれや要素の重なりは警告として表示される",
+        "図解のノード重なりや配線の問題はcheck_diagram.pyが座標付きで指摘する",
+        "check_layout.pyとlint_deck_text.pyが機械チェックを担当",
+        "review-deckスキルでまとめて実行できる"
       ],
-      "message": "困ったら README / references を参照。まずは小さく1枚から。",
+      "style": {
+        "body": {
+          "valign": "middle"
+        }
+      },
+      "notes": "エラー（error）はビルド停止、警告（warning）は続行しつつ報告。"
+    },
+    {
+      "type": "closing",
+      "title": "最初の1枚はここから",
+      "bullets": [
+        "セットアップしてと頼むだけで環境が整う",
+        "作りたい内容とテーマを伝えると1稿ができる",
+        "プレビューを見て気になる点だけ直す"
+      ],
+      "message": "詳しくはREADME.mdとreferences/配下を参照。まずは小さく1枚から。",
       "notes": "まとめ。"
     }
   ]

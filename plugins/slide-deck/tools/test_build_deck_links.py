@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -42,7 +45,7 @@ class TableUrlLinkTest(unittest.TestCase):
             )
 
             subprocess.run(
-                ["python3", str(BUILD_DECK), str(deck_dir)],
+                [sys.executable, str(BUILD_DECK), str(deck_dir)],
                 cwd=ROOT,
                 check=True,
                 capture_output=True,
