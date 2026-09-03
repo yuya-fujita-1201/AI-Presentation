@@ -1,7 +1,7 @@
 {
   "name": "slide-deck",
   "displayName": "Slide Deck Builder",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "JSON をソースにスライドを HTML / PowerPoint(16:9) にビルドする仕組み。内容もデザインも deck.json のパラメーターで管理し、色はテーマトークンで切替・追加できる。",
   "author": {
     "name": "yuya.fujita"

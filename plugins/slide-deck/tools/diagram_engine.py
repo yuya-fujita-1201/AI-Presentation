@@ -43,6 +43,7 @@ LABEL_GAP = 4.0          # 線とラベルピルの隙間
 LABEL_BREATH = 2.0       # ラベル衝突判定時に周囲へ足す余白（px）
 TOUCH_TOL = 3.0          # この深さまでの接触は衝突とみなさない（px）
 BEND_PENALTY = 26.0      # 折れ 1 回のコスト（px 換算）
+CROSS_PENALTY = 30.0     # 既存の線と交差 1 回のコスト（px 換算）
 CENTER_TRACK_PENALTY = 0.35   # ノード中心線トラックを通る際の追加コスト率（ガター優先）
 SHARED_TRACK_PENALTY = 0.25   # 既に他の線が通ったトラックの追加コスト率（回廊の分散）
 BACK_SIDE_PENALTY = 60.0      # 相手と反対側の辺から出る／入るときのコスト
@@ -68,7 +69,14 @@ TYPE_LABELS_JA = {
 # ---------------------------------------------------------------------------
 
 def char_ratio(ch: str) -> float:
-    return 1.0 if unicodedata.east_asian_width(ch) in ("W", "F") else 0.55
+    """1 文字の幅（フォントサイズに対する比）。全角 1.0、英大文字・数字 0.68、その他半角 0.55、空白 0.3。"""
+    if unicodedata.east_asian_width(ch) in ("W", "F"):
+        return 1.0
+    if ch == " ":
+        return 0.3
+    if ch.isupper() or ch.isdigit():
+        return 0.68
+    return 0.55
 
 
 def text_width(text, size: float) -> float:
@@ -76,31 +84,77 @@ def text_width(text, size: float) -> float:
     return sum(size * char_ratio(c) for c in str(text or ""))
 
 
+BREAK_AFTER = "・、。／/をのはがにとで"   # 日本語の自然な折り返し位置（この文字の直後で切ってよい）
+
+
+def _tokens(line: str) -> List[str]:
+    """英数字の連なり（単語）は 1 トークン、空白は 1 トークン、それ以外（CJK 等）は 1 文字 1 トークン。"""
+    out: List[str] = []
+    cur = ""
+    for ch in line:
+        if ch.isascii() and not ch.isspace():
+            cur += ch
+            continue
+        if cur:
+            out.append(cur)
+            cur = ""
+        out.append(ch)
+    if cur:
+        out.append(cur)
+    return out
+
+
 def wrap_text(text, size: float, width: float) -> List[str]:
-    """幅 width に収まるよう貪欲に折り返した行のリスト（明示の改行も尊重）。"""
+    """幅 width に収まるよう折り返した行のリスト（明示の改行も尊重）。
+    - 英単語（英数字の連なり）は途中で切らない（単語だけで幅を超える場合のみ文字単位で切る）
+    - 日本語は直近 3 文字以内に「・」「、」や助詞（を の は が に と で）があればその直後で切る"""
     out: List[str] = []
     width = max(1.0, width)
     for raw in str(text or "").split("\n"):
         if raw == "":
             out.append("")
             continue
-        cur = ""
-        w = 0.0
-        for ch in raw:
-            cw = size * char_ratio(ch)
-            if cur and w + cw > width:
-                out.append(cur)
-                cur = ""
-                w = 0.0
-            cur += ch
-            w += cw
-        out.append(cur)
+        line = ""
+        for tok in _tokens(raw):
+            if not line and tok.isspace():
+                continue
+            cand = line + tok
+            if text_width(cand, size) <= width or not line:
+                if text_width(cand, size) > width and len(tok) > 1:
+                    # 単語だけで幅を超える: 文字単位で分割
+                    for ch in tok:
+                        if line and text_width(line + ch, size) > width:
+                            out.append(line)
+                            line = ""
+                        line += ch
+                else:
+                    line = cand
+                continue
+            # 折り返し: 直近 3 文字以内の自然な切れ目を探す（英単語の内部は対象外）
+            cut = len(line)
+            for back in range(1, 4):
+                idx = len(line) - back
+                if idx <= 0:
+                    break
+                if line[idx - 1] in BREAK_AFTER and idx < len(line):
+                    cut = idx
+                    break
+            head, tail = line[:cut], line[cut:]
+            out.append(head.rstrip())
+            line = (tail + tok).lstrip()
+        if line:
+            out.append(line)
     return out or [""]
 
 
 def fit_font_size(text, size: float, width: float, height: float, line_h: float = 1.15,
                   min_size: float = 10.0, max_lines: Optional[int] = None) -> Tuple[float, List[str]]:
-    """箱（width×height）に収まる最大のフォントサイズと折り返し結果を返す（min_size まで縮小）。"""
+    """箱（width×height）に収まる最大のフォントサイズと折り返し結果を返す（min_size まで縮小）。
+    ほぼ同じ大きさ（既定 −1px まで）で 1 行に収まるなら 1 行を優先し、そうでなければサイズを保ったまま折り返す。"""
+    for s1 in (float(size), float(size) - 1):
+        if s1 >= min_size and text_width(text, s1) <= width and s1 * line_h <= height + 0.5 \
+                and "\n" not in str(text or ""):
+            return s1, [str(text or "")]
     s = float(size)
     while True:
         lines = wrap_text(text, s, width)
@@ -333,6 +387,7 @@ class LatticeRouter:
         self.xi = {x: i for i, x in enumerate(self.xs)}
         self.yi = {y: i for i, y in enumerate(self.ys)}
         self.used: Dict[Tuple[str, float], int] = {}  # 既に線が通ったトラック → 本数
+        self.routed_segments: List[Tuple[Point, Point]] = []  # 既に配線した線分（交差ペナルティ用）
 
     # -- 障害物判定 ---------------------------------------------------------
     def _blocked(self, p: Point, q: Point, ignore: Sequence[str]) -> bool:
@@ -343,9 +398,33 @@ class LatticeRouter:
                 return True
         return False
 
+    @staticmethod
+    def _step_crosses(p: Point, q: Point, a: Point, b: Point) -> bool:
+        """格子の 1 ステップ p→q が既存線分 a-b を横切るか。格子上では交点が p→q の端点（格子点）に
+        乗るため、既存線分の内側を通り、かつ交点がステップの始点 p 以外にあれば交差と数える。"""
+        step_h = abs(p[1] - q[1]) < 1e-6
+        seg_h = abs(a[1] - b[1]) < 1e-6
+        if step_h == seg_h:
+            return False
+        if step_h:  # 水平ステップ × 垂直線分
+            x = a[0]
+            lo, hi = min(p[0], q[0]), max(p[0], q[0])
+            if not (lo - 1e-6 <= x <= hi + 1e-6) or abs(x - p[0]) < 1e-6:
+                return False
+            return min(a[1], b[1]) + 0.5 < p[1] < max(a[1], b[1]) - 0.5
+        y = a[1]
+        lo, hi = min(p[1], q[1]), max(p[1], q[1])
+        if not (lo - 1e-6 <= y <= hi + 1e-6) or abs(y - p[1]) < 1e-6:
+            return False
+        return min(a[0], b[0]) + 0.5 < p[0] < max(a[0], b[0]) - 0.5
+
     def _step_cost(self, p: Point, q: Point) -> float:
         d = seg_len(p, q)
         cost = d
+        # 既に配線した線との交差 1 箇所ごとにペナルティ（交差の少ない経路を選ぶ）
+        for a, b in self.routed_segments:
+            if self._step_crosses(p, q, a, b):
+                cost += CROSS_PENALTY
         if abs(p[1] - q[1]) < 1e-6:  # 水平移動: 使っている水平トラックは y
             y = round(p[1], 3)
             if y in self.center_y:
@@ -475,9 +554,10 @@ class LatticeRouter:
         end_port = end_nodes[pts[-1]][1]
         full = [start_port] + pts + [end_port]
         full = simplify(full)
-        # 使用トラックを記録（後続の線が同じ回廊を避けやすくする）
+        # 使用トラック・線分を記録（後続の線が同じ回廊・交差を避けやすくする）
         for i in range(len(full) - 1):
             p, q = full[i], full[i + 1]
+            self.routed_segments.append((p, q))
             if abs(p[1] - q[1]) < 1e-6:
                 self.used[("h", round(p[1], 3))] = self.used.get(("h", round(p[1], 3)), 0) + 1
             else:
@@ -582,16 +662,46 @@ def spread_segments(routed: List[dict], boxes: Dict[str, dict], step: float = CO
                 offsets[(s[0], s[1])] = (k - (n - 1) / 2) * eff
     if not offsets:
         return
+
+    def shifted(ei, si, off):
+        pts = routed[ei]["points"]
+        p, q = pts[si], pts[si + 1]
+        if abs(p[1] - q[1]) < 1e-6:
+            return (p[0], p[1] + off), (q[0], q[1] + off)
+        return (p[0] + off, p[1]), (q[0] + off, q[1])
+
+    def hits(ei, si, off):
+        e = routed[ei]
+        p, q = shifted(ei, si, off)
+        return any(segment_hits_rect(p, q, b) for nid, b in boxes.items() if nid not in (e.get("from"), e.get("to")))
+
+    # ずらした先がノードに当たる場合は、そのグループ全体の向きを反転し、それでも当たれば間隔を縮める
+    # （ずらし処理が線をノードの当たり判定の中へ押し込むのを防ぐ）
+    groups: Dict[Tuple[str, float], List[Tuple[int, int]]] = {}
+    for (ei, si) in offsets:
+        pts = routed[ei]["points"]
+        p, q = pts[si], pts[si + 1]
+        key = ("h", round(p[1], 3)) if abs(p[1] - q[1]) < 1e-6 else ("v", round(p[0], 3))
+        groups.setdefault(key, []).append((ei, si))
+    for key, members in groups.items():
+        scale = 1.0
+        while scale >= 0.25:
+            if not any(hits(ei, si, offsets[(ei, si)] * scale) for ei, si in members):
+                break
+            if not any(hits(ei, si, -offsets[(ei, si)] * scale) for ei, si in members):
+                scale = -scale
+                break
+            scale = abs(scale) * 0.5
+        else:
+            scale = 0.0
+        for ei, si in members:
+            offsets[(ei, si)] *= scale
     for (ei, si), off in offsets.items():
+        if abs(off) < 1e-6:
+            continue
         e = routed[ei]
         pts = list(e["points"])
-        p, q = pts[si], pts[si + 1]
-        if abs(p[1] - q[1]) < 1e-6:  # 水平 → y をずらす
-            pts[si] = (p[0], p[1] + off)
-            pts[si + 1] = (q[0], q[1] + off)
-        else:
-            pts[si] = (p[0] + off, p[1])
-            pts[si + 1] = (q[0] + off, q[1])
+        pts[si], pts[si + 1] = shifted(ei, si, off)
         e["points"] = pts
     for e in routed:
         e["points"] = simplify(e["points"])
@@ -649,7 +759,12 @@ def place_labels(routed: List[dict], boxes: Dict[str, dict], label_size: float,
         for i in range(len(pts) - 1):
             p, q = pts[i], pts[i + 1]
             horiz = abs(p[1] - q[1]) < 1e-6
-            segs.append((seg_len(p, q) + (40 if horiz else 0), i, horiz, p, q))
+            L = seg_len(p, q)
+            score = L + (40 if horiz else 0)
+            # 分岐ラベル（Y/N 等）は発側の最初の線分に置くのが読みやすい。ラベルが収まる長さなら優先する
+            if i == 0 and L >= (lw if horiz else lh) + 8:
+                score += 70
+            segs.append((score, i, horiz, p, q))
         segs.sort(key=lambda s: -s[0])
         candidates = []
         for _, i, horiz, p, q in segs:

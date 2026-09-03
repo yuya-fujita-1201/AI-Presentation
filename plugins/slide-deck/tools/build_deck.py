@@ -454,10 +454,34 @@ def swimlane_geometry(slide, st, slide_no=None):
             w = col_w * 0.88; h = row_h * 0.92
         else:  # task, system
             w = col_w * f.get("node_wr", 0.72); h = row_h * f.get("node_hr", 0.52)
-        node_map[nd["id"]] = {"shape": shape, "variant": nd.get("variant"), "kind": nd.get("kind"),
-                              "text": nd.get("text", nd.get("label", "")),  # label は text の別名として受理
-                              "cx": cx, "cy": cy, "x": cx - w / 2, "y": cy - h / 2, "w": w, "h": h,
-                              "input": nd.get("input"), "output": nd.get("output"), "loop": nd.get("loop")}
+        text = nd.get("text", nd.get("label", ""))  # label は text の別名として受理
+        rec = {"shape": shape, "variant": nd.get("variant"), "kind": nd.get("kind"), "text": text,
+               "cx": cx, "cy": cy, "x": cx - w / 2, "y": cy - h / 2, "w": w, "h": h,
+               "input": nd.get("input"), "output": nd.get("output"), "loop": nd.get("loop")}
+        # 文字を箱に収める: 既定サイズで入らなければ下限 10px まで縮小し、折り返し行も確定する
+        # （HTML / PPTX 共通。「起/票」のような語の途中での折り返しを減らし、はみ出しを防ぐ）
+        ns = f.get("node_size", 14)
+        base = {"task": ns, "system": ns, "decision": ns - 2, "terminal": ns - 2, "connector": ns - 3}.get(shape)
+        if base and text:
+            if shape == "decision":
+                inner_w, inner_h = w * 0.62, h * 0.58
+            elif shape == "connector":
+                inner_w, inner_h = w * 0.68, h - 4
+            elif shape == "terminal":
+                inner_w, inner_h = w - 14, h - 4
+            else:
+                inner_w, inner_h = w - 12, h - 6
+            size, lines = de.fit_font_size(text, base, inner_w, inner_h, 1.15, min_size=10, max_lines=3)
+            rec["font_size"] = size
+            rec["lines"] = lines
+        if shape == "io":
+            half_w = (w - 2) / 2 - 12
+            items = [str(v) for v in (nd.get("input") or []) + (nd.get("output") or [])]
+            io_size = f.get("io_size", 11)
+            while io_size > 8 and items and max(de.text_width(v, io_size) for v in items) > half_w:
+                io_size -= 1
+            rec["io_font"] = io_size
+        node_map[nd["id"]] = rec
     # エッジ配線: 共通の格子ルーター（diagram_engine）。列境界・レーン境界のガターをトラックにし、
     # 途中のノードを横切らない直交経路を選ぶ。同じ辺から出る複数線・同じ回廊を通る複数線は
     # 等間隔にずらし、ラベルは線の脇に背景ピル付きで置く（Archify の workflow レンダラに倣う）。
@@ -516,9 +540,13 @@ def _sw_node_html(nd, theme, f):
         return col(theme, tok)
     x, y, w, h = nd["x"], nd["y"], nd["w"], nd["h"]
     box = f'position:absolute;left:{x:.1f}px;top:{y:.1f}px;width:{w:.1f}px;height:{h:.1f}px;'
-    shape = nd["shape"]; text = esc(nd.get("text", "")); ns = f.get("node_size", 14)
+    shape = nd["shape"]; ns = f.get("node_size", 14)
+    text = "<br>".join(esc(ln) for ln in nd["lines"]) if nd.get("lines") else esc(nd.get("text", ""))
+    fs = nd.get("font_size")  # swimlane_geometry で収まるよう縮小したフォントサイズ（無ければ既定）
+    # 折り返し位置はエンジン側で決めているので、ブラウザに再折り返しさせない（1 文字だけ落ちる崩れを防ぐ）
+    nowrap = "white-space:nowrap;" if nd.get("lines") else ""
     center = ('display:flex;align-items:center;justify-content:center;text-align:center;'
-              'box-sizing:border-box;line-height:1.15;padding:2px;')
+              'box-sizing:border-box;line-height:1.15;padding:2px;' + nowrap)
     if shape == "decision":
         # 箱に内接するひし形（PPTX の DIAMOND プリセットと同じ輪郭。当たり判定も箱＝外接矩形で一致する）
         return (f'<div style="{box}">'
@@ -526,10 +554,10 @@ def _sw_node_html(nd, theme, f):
                 f'<polygon points="{w/2:.1f},1 {w-1:.1f},{h/2:.1f} {w/2:.1f},{h-1:.1f} 1,{h/2:.1f}" '
                 f'fill="{C(f.get("decision_fill","on_primary_soft"))}" stroke="{C(f.get("decision_border","accent"))}" '
                 f'stroke-width="2" stroke-linejoin="round"/></svg>'
-                f'<div style="position:absolute;inset:{h*0.2:.1f}px {w*0.18:.1f}px;{center}font-size:{ns-2}px;'
+                f'<div style="position:absolute;inset:{h*0.2:.1f}px {w*0.18:.1f}px;{center}font-size:{fs or ns-2}px;'
                 f'color:{C(f.get("decision_color","primary"))};">{text}</div></div>')
     if shape == "terminal":
-        return (f'<div style="{box}{center}font-size:{ns-2}px;background:{C(f.get("terminal_fill","surface"))};'
+        return (f'<div style="{box}{center}font-size:{fs or ns-2}px;background:{C(f.get("terminal_fill","surface"))};'
                 f'border:1.5px solid {C(f.get("terminal_border","muted"))};border-radius:{h/2:.0f}px;'
                 f'color:{C(f.get("terminal_color","muted"))};">{text}</div>')
     if shape == "connector":
@@ -543,7 +571,7 @@ def _sw_node_html(nd, theme, f):
                 f'width:100%;height:100%;overflow:visible;" preserveAspectRatio="none">'
                 f'<polygon points="{pts}" fill="{C(f.get("connector_fill","surface"))}" '
                 f'stroke="{C(f.get("connector_border","muted"))}" stroke-width="1"/></svg>'
-                f'<div style="position:absolute;inset:0;{center}font-size:{ns-3}px;'
+                f'<div style="position:absolute;inset:0;{center}font-size:{fs or ns-3}px;'
                 f'color:{C(f.get("connector_color","text"))};">{text}</div></div>')
     if shape == "marker":
         kind = nd.get("kind", "mid")
@@ -563,13 +591,13 @@ def _sw_node_html(nd, theme, f):
             vals = nd.get(key) or []
             lis = "".join(f'<div style="margin-top:3px;">{esc(v)}</div>' for v in vals)
             cells.append(f'<div style="width:{half:.0f}px;padding:6px;box-sizing:border-box;'
-                         f'font-size:{f.get("io_size",11)}px;color:{C(f.get("io_color","text"))};line-height:1.2;">'
+                         f'font-size:{nd.get("io_font", f.get("io_size",11))}px;color:{C(f.get("io_color","text"))};line-height:1.2;">'
                          f'<div style="font-weight:700;color:{C(f.get("io_head_color","accent"))};">{lbl}</div>{lis}</div>')
         return (f'<div style="{box}display:flex;background:{C(f.get("io_fill","on_primary_soft"))};'
                 f'border:1px solid {C(f.get("io_border","accent"))};border-radius:8px;box-sizing:border-box;overflow:hidden;">'
                 f'{cells[0]}<div style="width:1px;background:{C("border")};"></div>{cells[1]}</div>')
     if shape == "system":
-        return (f'<div style="{box}{center}font-size:{ns}px;background:{C(f.get("system_fill","surface"))};'
+        return (f'<div style="{box}{center}font-size:{fs or ns}px;background:{C(f.get("system_fill","surface"))};'
                 f'border:1.5px solid {C(f.get("system_border","muted"))};color:{C(f.get("system_color","text"))};">{text}</div>')
     # task (+variant)
     variant = nd.get("variant") or "onother"
@@ -582,12 +610,15 @@ def _sw_node_html(nd, theme, f):
     loop = ""
     if nd.get("loop"):
         # 反復記号: ノード右上に小さな円弧矢印（SVG）。旧実装の「↺」1 文字は 16px でも見落とされやすかった。
-        loop = (f'<svg width="18" height="18" viewBox="0 0 18 18" style="position:absolute;right:-7px;top:-8px;" aria-hidden="true">'
+        # テキストの div の外（兄弟要素）に置く: 中に入れると check_layout がテキスト高の見積もりに
+        # バッジ分を含めて「はみ出し」と誤検出するため。
+        loop = (f'<svg width="18" height="18" viewBox="0 0 18 18" style="position:absolute;left:{x + w - 11:.1f}px;'
+                f'top:{y - 8:.1f}px;" aria-hidden="true">'
                 f'<circle cx="9" cy="9" r="8" fill="{C("background")}" stroke="{C("accent")}" stroke-width="1.5"/>'
                 f'<path d="M13 9a4 4 0 1 1-1.2-2.9 M12 4.5v2.6h-2.6" fill="none" stroke="{C("accent")}" stroke-width="1.6" '
                 f'stroke-linecap="round" stroke-linejoin="round"/></svg>')
-    return (f'<div style="{box}{center}font-size:{ns}px;background:{C(fill_t)};'
-            f'border:2px solid {C(bord_t)};border-radius:{f.get("node_radius",8)}px;color:{C(col_t)};">{text}{loop}</div>')
+    return (f'<div style="{box}{center}font-size:{fs or ns}px;background:{C(fill_t)};'
+            f'border:2px solid {C(bord_t)};border-radius:{f.get("node_radius",8)}px;color:{C(col_t)};">{text}</div>{loop}')
 
 
 def _legend_sym_size(shape):
@@ -789,7 +820,7 @@ def _diag_node_html(b: dict, fit: dict, d: dict, theme, kind: str, heading_font_
                  f'display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;'
                  f'box-sizing:border-box;padding:{pad}px 0;">'
                  f'<div style="font-size:{size}px;font-weight:700;color:{col(theme, vis["color"])};line-height:1.15;'
-                 f'font-family:{esc(heading_font_css)};">{label_html}</div>{sub_html}</div>')
+                 f'white-space:nowrap;font-family:{esc(heading_font_css)};">{label_html}</div>{sub_html}</div>')
     # tag（右上に小さなピル。枠線に半分かぶせる）
     if b.get("tag"):
         ts = d.get("tag_size", 10)
@@ -2978,16 +3009,23 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                     tf_items.vertical_anchor = MSO_ANCHOR.MIDDLE
 
     def _shape_text(sp, text, size, color, bold=False):
+        """図形の中央にテキストを置く。改行（\\n）は段落に分ける（レンダラ差で崩れにくい）。"""
         tf = sp.text_frame; tf.word_wrap = True
         tf.vertical_anchor = 3
         for m in ("margin_left", "margin_right", "margin_top", "margin_bottom"):
             setattr(tf, m, Emu(0))
-        p = tf.paragraphs[0]; p.alignment = PP_ALIGN.CENTER; p.line_spacing = 1.1
-        set_run(p.add_run(), text, size, color, bold=bold)
+        used = [False]
+        for line in str(text).split("\n"):
+            p = para(tf, used); p.alignment = PP_ALIGN.CENTER; p.line_spacing = 1.1
+            set_run(p.add_run(), line, size, color, bold=bold)
 
     def _sw_node_pptx(slide, nd, f):
         ns = f.get("node_size", 14)
         shape = nd["shape"]; x, y, w, h = nd["x"], nd["y"], nd["w"], nd["h"]
+        # swimlane_geometry で決めた縮小サイズ・折り返し行（HTML と同じ）を使う
+        fs = nd.get("font_size")
+        fitted = "\n".join(nd["lines"]) if nd.get("lines") else nd.get("text", "")
+        io_font = nd.get("io_font", f.get("io_size", 11))
         if shape == "decision":
             sp = slide.shapes.add_shape(MSO_SHAPE.DIAMOND, IN(x), IN(y), IN(w), IN(h))
             sp.fill.solid(); sp.fill.fore_color.rgb = C(f.get("decision_fill", "on_primary_soft"))
@@ -3000,7 +3038,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 # で自然に複数行へ折り返しており、ここでも同じ幅の別レイヤーのテキストボックスを
                 # ひし形の上に重ねることで、はみ出しと縦1文字折り返しの両方を避ける。
                 tb = slide.shapes.add_textbox(IN(x), IN(y), IN(w), IN(h))
-                _shape_text(tb, nd["text"], ns - 2, C(f.get("decision_color", "primary")))
+                _shape_text(tb, fitted, fs or ns - 2, C(f.get("decision_color", "primary")))
         elif shape == "terminal":
             # M-48: HTML のスタジアム型（border-radius:h/2）に合わせ、真円ではなく
             # 角丸長方形＋adjustments[0]=0.5 で描く。
@@ -3009,13 +3047,13 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             sp.fill.solid(); sp.fill.fore_color.rgb = C(f.get("terminal_fill", "surface"))
             sp.line.color.rgb = C(f.get("terminal_border", "muted")); sp.line.width = Pt(1.25); sp.shadow.inherit = False
             if nd.get("text"):
-                _shape_text(sp, nd["text"], ns - 2, C(f.get("terminal_color", "muted")))
+                _shape_text(sp, fitted, fs or ns - 2, C(f.get("terminal_color", "muted")))
         elif shape == "connector":
             sp = slide.shapes.add_shape(MSO_SHAPE.PENTAGON, IN(x), IN(y), IN(w), IN(h))
             sp.fill.solid(); sp.fill.fore_color.rgb = C(f.get("connector_fill", "surface"))
             sp.line.color.rgb = C(f.get("connector_border", "muted")); sp.line.width = Pt(1); sp.shadow.inherit = False
             if nd.get("text"):
-                _shape_text(sp, nd["text"], ns - 3, C(f.get("connector_color", "text")))
+                _shape_text(sp, fitted, fs or ns - 3, C(f.get("connector_color", "text")))
         elif shape == "marker":
             kind = nd.get("kind", "mid")
             mc = {"start": f.get("marker_start", "accent"), "end": f.get("marker_end", "primary"),
@@ -3039,16 +3077,16 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 vals = nd.get(key) or []
                 tf = add_box(slide, {"x": x + idx * half + 6, "y": y + 6, "w": half - 10, "h": h - 12})
                 p0 = tf.paragraphs[0]
-                set_run(p0.add_run(), lbl, f.get("io_size", 11), C(f.get("io_head_color", "accent")), bold=True)
+                set_run(p0.add_run(), lbl, io_font, C(f.get("io_head_color", "accent")), bold=True)
                 for v in vals:
                     pp = tf.add_paragraph()
-                    set_run(pp.add_run(), v, f.get("io_size", 11), C(f.get("io_color", "text")))
+                    set_run(pp.add_run(), v, io_font, C(f.get("io_color", "text")))
         elif shape == "system":
             sp = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, IN(x), IN(y), IN(w), IN(h))
             sp.fill.solid(); sp.fill.fore_color.rgb = C(f.get("system_fill", "surface"))
             sp.line.color.rgb = C(f.get("system_border", "muted")); sp.line.width = Pt(1.5); sp.shadow.inherit = False
             if nd.get("text"):
-                _shape_text(sp, nd["text"], ns, C(f.get("system_color", "text")))
+                _shape_text(sp, fitted, fs or ns, C(f.get("system_color", "text")))
         else:  # task (+variant)
             variant = nd.get("variant") or "onother"
             vmap = {"onpf": (f.get("task_onpf_fill", "on_primary_soft"), f.get("task_border", "accent"), f.get("task_onpf_color", "primary")),
@@ -3059,7 +3097,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             sp.fill.solid(); sp.fill.fore_color.rgb = C(fl)
             sp.line.color.rgb = C(bd); sp.line.width = Pt(2); sp.shadow.inherit = False
             if nd.get("text"):
-                _shape_text(sp, nd["text"], ns, C(cl))
+                _shape_text(sp, fitted, fs or ns, C(cl))
             if nd.get("loop"):
                 # 反復記号: 右上角に丸バッジ＋円弧矢印（HTML と同じ位置・見た目）
                 bx, by = x + w - 9, y - 9
