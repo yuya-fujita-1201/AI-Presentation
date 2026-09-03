@@ -7,8 +7,17 @@
     "date": "2026-09-04",
     "layout_overrides": {
       "bullets": {
-        "lead": { "line_height": 1.5, "h": 56 },
-        "body": { "y": 208, "gap": 18, "line_height": 1.6, "child_gap": 8, "indent": 30 }
+        "lead": {
+          "line_height": 1.5,
+          "h": 56
+        },
+        "body": {
+          "y": 208,
+          "gap": 18,
+          "line_height": 1.6,
+          "child_gap": 8,
+          "indent": 30
+        }
       }
     }
   },
@@ -17,18 +26,21 @@
       "type": "title",
       "title": "テンプレート タイプ ギャラリー",
       "subtitle": "19スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
-      "meta": "テンプレートサンプル / 2026-09 / default テーマ",
+      "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / default テーマ",
       "notes": "表紙（title）— 左帯(bar)＋タイトル＋サブタイトル＋meta。"
     },
     {
       "type": "agenda",
       "eyebrow": "TYPE 02 / agenda",
       "title": "アジェンダ ─ 利用できるテンプレート",
-      "lead": "本デッキで利用できる全19タイプ。項目が多いと自動で2段組（8行超で2段、16項目超で次ページへ）になります。",
+      "lead": "全19タイプを掲載順に並べた目次。番号は各ページの TYPE 番号と一致する（行の高さを詰めて1枚に収めている）。",
       "items": [
         "title（表紙）",
+        {
+          "text": "agenda（目次）※本ページ",
+          "active": true
+        },
         "section（章扉）",
-        { "text": "agenda（目次）※本ページ", "active": true },
         "bullets（箇条書き）",
         "two_column（2カラム比較）",
         "table（表）",
@@ -40,322 +52,1071 @@
         "matrix（2×2マトリクス）",
         "cards（ボックスチャート）",
         "swimlane（スイムレーン業務フロー）",
-        "architecture / dataflow / lifecycle / sequence（図解4種）",
+        "architecture（システム構成図）",
+        "dataflow（データフロー）",
+        "lifecycle（ライフサイクル）",
+        "sequence（シーケンス図）",
         "closing（まとめ）"
       ],
-      "notes": "TYPE 02 / agenda — 全タイプを1項目ずつ列挙。8行を超えると自動2段組、16項目を超えると次ページへ繰り越し。"
+      "notes": "TYPE 02 / agenda — 全19タイプを掲載順に列挙。番号＝TYPE 番号。既定（row_h 44・gap 10）だと8行超で2段・16項目超で次ページになるため、style.body で行を詰めて2段×10行に収めている。",
+      "style": {
+        "body": {
+          "row_h": 37,
+          "gap": 8,
+          "text_size": 18,
+          "num_size": 20
+        }
+      }
     },
     {
       "type": "section",
-      "number": "01",
+      "number": "03",
       "title": "章扉（section）",
-      "subtitle": "章の区切りに使う全面カラーのタイトル。番号(number)＋タイトル＋罫線＋サブタイトル。",
+      "subtitle": "TYPE 03 / section ─ 章の区切りに使う全面カラーのタイトル。番号(number)＋タイトル＋罫線＋サブタイトル。",
       "notes": "章扉（section）— primary 塗り。eyebrow は無し。"
     },
     {
       "type": "bullets",
-      "eyebrow": "TYPE 03 / bullets",
+      "eyebrow": "TYPE 04 / bullets",
       "title": "箇条書き（bullets）",
       "lead": "最も汎用のタイプ。eyebrow / title / rule / lead / body（親・子・強調）/ footer の既定表示をまとめて可視化しています。",
       "bullets": [
         "親項目：本文は 24px・text 色、行頭マーカーはアクセント色で表示される",
-        { "text": "子項目つきの親項目（children）", "children": [
-          "子項目：19px・muted 色・インデントで描画される",
-          "子項目：親との間隔は child_gap、行間は line_height で決まる"
-        ] },
-        { "text": "強調行：size・color・bold を項目単位で上書きできる", "bold": true, "size": 26, "color": "accent" },
+        {
+          "text": "子項目つきの親項目（children）",
+          "children": [
+            "子項目：19px・muted 色・インデントで描画される",
+            "子項目：親との間隔は child_gap、行間は line_height で決まる"
+          ]
+        },
+        {
+          "text": "強調行：size・color・bold を項目単位で上書きできる",
+          "bold": true,
+          "size": 26,
+          "color": "accent"
+        },
         "通常項目に戻る（項目間は gap、行間は line_height）",
-        { "text": "primary 色で見出し的に使う行", "bold": true, "color": "primary" }
+        {
+          "text": "primary 色で見出し的に使う行",
+          "bold": true,
+          "color": "primary"
+        }
       ],
-      "notes": "TYPE 03 / bullets — 罫線フル幅・余白・色階層のチューニング適用済み。"
+      "notes": "TYPE 04 / bullets — 罫線フル幅・余白・色階層のチューニング適用済み。"
     },
     {
       "type": "two_column",
-      "eyebrow": "TYPE 04 / two_column",
+      "eyebrow": "TYPE 05 / two_column",
       "title": "2カラム比較（two_column）",
       "lead": "左右の surface ボックスで対比を見せる。見出し＋箇条書きを2枚並べる。",
-      "left":  { "heading": "Before", "bullets": ["生成物(build/)を直接手直し", "再現できない", "テーマ切替が効かない"] },
-      "right": { "heading": "After",  "bullets": ["deck.json の style で調整", "差分だけを書く", "テーマトークンで色管理"] },
-      "notes": "TYPE 04 / two_column — Before/After や対比に。"
+      "left": {
+        "heading": "Before",
+        "bullets": [
+          "生成物(build/)を直接手直し",
+          "再現できない",
+          "テーマ切替が効かない"
+        ]
+      },
+      "right": {
+        "heading": "After",
+        "bullets": [
+          "deck.json の style で調整",
+          "差分だけを書く",
+          "テーマトークンで色管理"
+        ]
+      },
+      "notes": "TYPE 05 / two_column — Before/After や対比に。"
     },
     {
       "type": "table",
-      "eyebrow": "TYPE 05 / table",
+      "eyebrow": "TYPE 06 / table",
       "title": "表（table）",
       "lead": "数値・比較の一覧に。ヘッダ色・交互行の背景はテーマトークンで決まる。",
-      "columns": ["タイプ", "主な用途", "描画方式"],
-      "rows": [
-        ["table", "数値・項目の一覧比較", "ネイティブ"],
-        ["bullets", "論点・手順の列挙", "ネイティブ"],
-        ["image", "フロー図・ポンチ絵", "画像(SVG/PNG)"],
-        ["swimlane", "業務・運用フロー", "ネイティブ"],
-        ["architecture", "システム構成・関係図", "ネイティブ"]
+      "columns": [
+        "タイプ",
+        "主な用途",
+        "描画方式"
       ],
-      "style": { "table": { "col_widths": [2, 4, 2.4] } },
-      "notes": "TYPE 05 / table — columns/rows を書くだけで描画。"
+      "rows": [
+        [
+          "table",
+          "数値・項目の一覧比較",
+          "ネイティブ"
+        ],
+        [
+          "bullets",
+          "論点・手順の列挙",
+          "ネイティブ"
+        ],
+        [
+          "image",
+          "フロー図・ポンチ絵",
+          "画像(SVG/PNG)"
+        ],
+        [
+          "swimlane",
+          "業務・運用フロー",
+          "ネイティブ"
+        ],
+        [
+          "architecture",
+          "システム構成・関係図",
+          "ネイティブ"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            4,
+            2.4
+          ]
+        }
+      },
+      "notes": "TYPE 06 / table — columns/rows を書くだけで描画。"
     },
     {
       "type": "code",
-      "eyebrow": "TYPE 06 / code",
+      "eyebrow": "TYPE 07 / code",
       "title": "コード・設定例（code）",
       "lead": "コードや JSON/YAML を等幅フォントで。行数が多いと自動で縮小する。",
       "language": "json",
       "code": "{\n  \"type\": \"table\",\n  \"title\": \"見出し\",\n  \"columns\": [\"列1\", \"列2\"],\n  \"rows\": [\n    [\"a\", \"b\"],\n    [\"c\", \"d\"]\n  ]\n}",
-      "notes": "TYPE 06 / code — code フォントは Consolas。"
+      "notes": "TYPE 07 / code — code フォントは Consolas。"
     },
     {
       "type": "quote",
       "text": "内容とデザインを分離する。だから微修正は JSON の数値を変えるだけでいい。",
-      "attribution": "deck-schema.md",
+      "attribution": "TYPE 08 / quote ─ deck-schema.md",
       "notes": "引用（quote）— キーメッセージ。eyebrow は無し。"
     },
     {
       "type": "image",
-      "eyebrow": "TYPE 07 / image",
+      "eyebrow": "TYPE 09 / image",
       "title": "画像（image）",
       "path": "assets/flow-sample.svg",
       "caption": "SVG/PNG を全幅で配置。関係図・ポンチ絵など自由作図はこのタイプ（SVGはビルド時に自動PNG化）。",
-      "notes": "TYPE 07 / image — フロー図サンプルSVGを全幅表示。"
+      "notes": "TYPE 09 / image — フロー図サンプルSVGを全幅表示。"
     },
     {
       "type": "image_text",
-      "eyebrow": "TYPE 08 / image_text",
+      "eyebrow": "TYPE 10 / image_text",
       "title": "画像＋本文（image_text）",
       "punch": "図と説明を1枚に統合できる（分離しない）",
       "bullets": [
         "左に本文、右に図。image_side で左右を入れ替え可能",
-        { "text": "図は 4:3 前後（例 1024×768）が最も収まりが良い" },
+        {
+          "text": "図は 4:3 前後（例 1024×768）が最も収まりが良い"
+        },
         "メッセージと図解を同時に見せたいときの主力タイプ"
       ],
       "path": "assets/flow-sample.svg",
       "caption": "image と同じSVGを本文の隣に配置した例。",
       "image_side": "right",
-      "notes": "TYPE 08 / image_text — 図＋パンチライン＋本文の統合レイアウト。"
+      "notes": "TYPE 10 / image_text — 図＋パンチライン＋本文の統合レイアウト。"
     },
     {
       "type": "steps",
-      "eyebrow": "TYPE 09 / steps",
+      "eyebrow": "TYPE 11 / steps",
       "title": "ステップチャート（steps）",
       "lead": "手順・フロー・バリューチェーンを横並びで。ステップ間はシェブロンで接続する。",
       "steps": [
-        { "label": "研究開発", "items": ["基礎研究", "実験・検証"] },
-        { "label": "社会実装", "items": ["インフラ整備", "法規制対応"] },
-        { "label": "市場展開", "items": ["製品開発", "販売戦略"] },
-        { "label": "普及拡大", "items": ["価格最適化", "エコシステム"] }
+        {
+          "label": "研究開発",
+          "items": [
+            "基礎研究",
+            "実験・検証"
+          ]
+        },
+        {
+          "label": "社会実装",
+          "items": [
+            "インフラ整備",
+            "法規制対応"
+          ]
+        },
+        {
+          "label": "市場展開",
+          "items": [
+            "製品開発",
+            "販売戦略"
+          ]
+        },
+        {
+          "label": "普及拡大",
+          "items": [
+            "価格最適化",
+            "エコシステム"
+          ]
+        }
       ],
-      "notes": "TYPE 09 / steps — steps数は可変（3〜5推奨）。ヘッダは primary、番号は accent。"
+      "notes": "TYPE 11 / steps — steps数は可変（3〜5推奨）。ヘッダは primary、番号は accent。"
     },
     {
       "type": "matrix",
-      "eyebrow": "TYPE 10 / matrix",
+      "eyebrow": "TYPE 12 / matrix",
       "title": "2×2マトリクス（matrix）",
       "lead": "2軸4象限のポジショニング。highlight: true で推奨象限を強調する。",
-      "x_axis": { "label": "モデルの複雑さ", "low": "低", "high": "高" },
-      "y_axis": { "label": "データの量", "low": "少", "high": "多" },
+      "x_axis": {
+        "label": "モデルの複雑さ",
+        "low": "低",
+        "high": "高"
+      },
+      "y_axis": {
+        "label": "データの量",
+        "low": "少",
+        "high": "多"
+      },
       "quadrants": [
-        { "heading": "シンプル × 大量データ", "body": "高効率かつ解釈性も高い。まず狙うべき象限", "highlight": true },
-        { "heading": "複雑 × 大量データ", "body": "高精度だが計算コストが大きく解釈が難しい" },
-        { "heading": "シンプル × 少量データ", "body": "学習は容易だが表現力・精度は限定的" },
-        { "heading": "複雑 × 少量データ", "body": "過学習のリスク。汎化性能の確保が課題" }
+        {
+          "heading": "シンプル × 大量データ",
+          "body": "高効率かつ解釈性も高い。まず狙うべき象限",
+          "highlight": true
+        },
+        {
+          "heading": "複雑 × 大量データ",
+          "body": "高精度だが計算コストが大きく解釈が難しい"
+        },
+        {
+          "heading": "シンプル × 少量データ",
+          "body": "学習は容易だが表現力・精度は限定的"
+        },
+        {
+          "heading": "複雑 × 少量データ",
+          "body": "過学習のリスク。汎化性能の確保が課題"
+        }
       ],
-      "notes": "TYPE 10 / matrix — 象限順は左上→右上→左下→右下。y軸は上=high、x軸は右=high。"
+      "notes": "TYPE 12 / matrix — 象限順は左上→右上→左下→右下。y軸は上=high、x軸は右=high。"
     },
     {
       "type": "cards",
-      "eyebrow": "TYPE 11 / cards",
+      "eyebrow": "TYPE 13 / cards",
       "title": "ボックスチャート（cards）",
       "lead": "整理軸に沿ってカードを並べる。columns で列数を変更（既定3）。",
       "columns": 3,
       "cards": [
-        { "heading": "Python", "body": "汎用・データ分析", "items": ["初学者向け", "AI/ML の定番"] },
-        { "heading": "JavaScript", "body": "Web 標準", "items": ["フロント必須", "Node.js で全域"] },
-        { "heading": "Go", "body": "クラウド基盤", "items": ["高速・並行処理", "運用が容易"] },
-        { "heading": "Rust", "body": "システム・性能", "items": ["メモリ安全", "高パフォーマンス"] },
-        { "heading": "Java", "body": "エンタープライズ", "items": ["大規模で安定", "広い実績"] },
-        { "heading": "SQL", "body": "データ操作", "items": ["集計・分析", "全 DB の基礎"] }
+        {
+          "heading": "Python",
+          "body": "汎用・データ分析",
+          "items": [
+            "初学者向け",
+            "AI/ML の定番"
+          ]
+        },
+        {
+          "heading": "JavaScript",
+          "body": "Web 標準",
+          "items": [
+            "フロント必須",
+            "Node.js で全域"
+          ]
+        },
+        {
+          "heading": "Go",
+          "body": "クラウド基盤",
+          "items": [
+            "高速・並行処理",
+            "運用が容易"
+          ]
+        },
+        {
+          "heading": "Rust",
+          "body": "システム・性能",
+          "items": [
+            "メモリ安全",
+            "高パフォーマンス"
+          ]
+        },
+        {
+          "heading": "Java",
+          "body": "エンタープライズ",
+          "items": [
+            "大規模で安定",
+            "広い実績"
+          ]
+        },
+        {
+          "heading": "SQL",
+          "body": "データ操作",
+          "items": [
+            "集計・分析",
+            "全 DB の基礎"
+          ]
+        }
       ],
-      "notes": "TYPE 11 / cards — columns で列数可変。3列×2行など。カードは surface 角丸。"
+      "notes": "TYPE 13 / cards — columns で列数可変。3列×2行など。カードは surface 角丸。"
     },
     {
       "type": "swimlane",
-      "eyebrow": "TYPE 12 / swimlane",
+      "eyebrow": "TYPE 14 / swimlane",
       "title": "スイムレーン業務フロー（swimlane）",
       "lead": "作業3種（PF／PF以外／オフライン）・システム・分岐・開始/終了・遷移先・メール・実線/破線に対応。凡例は前ページ参照。",
-      "style": { "lead": { "size": 16, "line_height": 1.3 } },
-      "phases": ["", "作成", "精緻化", "自己レビュー", "判定", "次工程"],
+      "style": {
+        "lead": {
+          "size": 16,
+          "line_height": 1.3
+        }
+      },
+      "phases": [
+        "",
+        "作成",
+        "精緻化",
+        "自己レビュー",
+        "判定",
+        "次工程"
+      ],
       "lanes": [
-        { "group": "Client", "name": "システム担当者" },
-        { "group": "Japan", "name": "開発T(Lead)" },
-        { "group": "Japan", "name": "開発T(Member)" },
-        { "group": "ATC", "name": "Dev(Lead)" },
-        { "group": "ATC", "name": "Dev(Member)" },
-        { "name": "AI（Claude Code等）" }
+        {
+          "group": "Client",
+          "name": "システム担当者"
+        },
+        {
+          "group": "Japan",
+          "name": "開発T(Lead)"
+        },
+        {
+          "group": "Japan",
+          "name": "開発T(Member)"
+        },
+        {
+          "group": "ATC",
+          "name": "Dev(Lead)"
+        },
+        {
+          "group": "ATC",
+          "name": "Dev(Member)"
+        },
+        {
+          "name": "AI（Claude Code等）"
+        }
       ],
       "cols": 6,
       "nodes": [
-        { "id": "m0", "lane": 2, "col": 0, "shape": "marker", "kind": "start" },
-        { "id": "t1", "lane": 2, "col": 1, "shape": "task", "variant": "onpf", "text": "論点検討ドラフト作成", "loop": true },
-        { "id": "sys", "lane": 5, "col": 1, "shape": "system", "text": "Claude Code" },
-        { "id": "t2", "lane": 2, "col": 2, "shape": "task", "variant": "onother", "text": "ドラフト精緻化" },
-        { "id": "t3", "lane": 2, "col": 3, "shape": "task", "variant": "offline", "text": "セルフレビュー" },
-        { "id": "d1", "lane": 2, "col": 4, "shape": "decision", "text": "指摘あり" },
-        { "id": "t4", "lane": 1, "col": 4, "shape": "task", "variant": "onpf", "text": "Leadレビュー" },
-        { "id": "mail", "lane": 0, "col": 5, "shape": "mail" },
-        { "id": "conn", "lane": 1, "col": 5, "shape": "connector", "text": "次工程へ" },
-        { "id": "mend", "lane": 2, "col": 5, "shape": "marker", "kind": "end" },
-        { "id": "io1", "lane": 5, "col": 3, "shape": "io", "input": ["論点一覧", "機能一覧"], "output": ["論点検討資料"] }
+        {
+          "id": "m0",
+          "lane": 2,
+          "col": 0,
+          "shape": "marker",
+          "kind": "start"
+        },
+        {
+          "id": "t1",
+          "lane": 2,
+          "col": 1,
+          "shape": "task",
+          "variant": "onpf",
+          "text": "論点検討ドラフト作成",
+          "loop": true
+        },
+        {
+          "id": "sys",
+          "lane": 5,
+          "col": 1,
+          "shape": "system",
+          "text": "Claude Code"
+        },
+        {
+          "id": "t2",
+          "lane": 2,
+          "col": 2,
+          "shape": "task",
+          "variant": "onother",
+          "text": "ドラフト精緻化"
+        },
+        {
+          "id": "t3",
+          "lane": 2,
+          "col": 3,
+          "shape": "task",
+          "variant": "offline",
+          "text": "セルフレビュー"
+        },
+        {
+          "id": "d1",
+          "lane": 2,
+          "col": 4,
+          "shape": "decision",
+          "text": "指摘あり"
+        },
+        {
+          "id": "t4",
+          "lane": 1,
+          "col": 4,
+          "shape": "task",
+          "variant": "onpf",
+          "text": "Leadレビュー"
+        },
+        {
+          "id": "mail",
+          "lane": 0,
+          "col": 5,
+          "shape": "mail"
+        },
+        {
+          "id": "conn",
+          "lane": 1,
+          "col": 5,
+          "shape": "connector",
+          "text": "次工程へ"
+        },
+        {
+          "id": "mend",
+          "lane": 2,
+          "col": 5,
+          "shape": "marker",
+          "kind": "end"
+        },
+        {
+          "id": "io1",
+          "lane": 5,
+          "col": 3,
+          "shape": "io",
+          "input": [
+            "論点一覧",
+            "機能一覧"
+          ],
+          "output": [
+            "論点検討資料"
+          ]
+        }
       ],
       "edges": [
-        { "from": "m0", "to": "t1" },
-        { "from": "t1", "to": "t2" },
-        { "from": "t1", "to": "sys", "style": "dashed" },
-        { "from": "t2", "to": "t3" },
-        { "from": "t3", "to": "d1" },
-        { "from": "d1", "to": "t4", "label": "Y" },
-        { "from": "d1", "to": "mend", "label": "N" },
-        { "from": "t4", "to": "conn" },
-        { "from": "t4", "to": "mail", "label": "通知", "style": "dashed" }
+        {
+          "from": "m0",
+          "to": "t1"
+        },
+        {
+          "from": "t1",
+          "to": "t2"
+        },
+        {
+          "from": "t1",
+          "to": "sys",
+          "style": "dashed"
+        },
+        {
+          "from": "t2",
+          "to": "t3"
+        },
+        {
+          "from": "t3",
+          "to": "d1"
+        },
+        {
+          "from": "d1",
+          "to": "t4",
+          "label": "Y"
+        },
+        {
+          "from": "d1",
+          "to": "mend",
+          "label": "N"
+        },
+        {
+          "from": "t4",
+          "to": "conn"
+        },
+        {
+          "from": "t4",
+          "to": "mail",
+          "label": "通知",
+          "style": "dashed"
+        }
       ],
-      "notes": "TYPE 12 / swimlane — 拡張語彙（作業3種/system/marker/connector/mail）＋実線破線。凡例は別ページ自動挿入（legend:false で省略）。"
+      "notes": "TYPE 14 / swimlane — 拡張語彙（作業3種/system/marker/connector/mail）＋実線破線。凡例は別ページ自動挿入（legend:false で省略）。"
     },
     {
       "type": "architecture",
-      "eyebrow": "TYPE 13 / architecture",
+      "eyebrow": "TYPE 15 / architecture",
       "title": "システム構成図（architecture）",
       "lead": "コンポーネントを type（役割）付きで置き、線は自動配線。境界（groups）で領域を囲む。",
       "nodes": [
-        { "id": "users", "type": "external", "label": "利用者", "sublabel": "ブラウザ / モバイル", "row": 1, "col": 0 },
-        { "id": "auth", "type": "security", "label": "認証基盤", "sublabel": "OAuth 2.0", "row": 0, "col": 0, "tag": "JWT" },
-        { "id": "cdn", "type": "cloud", "label": "CloudFront", "sublabel": "CDN", "row": 1, "col": 1 },
-        { "id": "lb", "type": "cloud", "label": "ロードバランサ", "sublabel": "HTTPS :443", "row": 1, "col": 2 },
-        { "id": "api", "type": "backend", "label": "API サーバ", "sublabel": "FastAPI", "row": 1, "col": 3, "variant": "emphasis" },
-        { "id": "cache", "type": "database", "label": "Redis", "sublabel": "キャッシュ", "row": 0, "col": 3 },
-        { "id": "db", "type": "database", "label": "PostgreSQL", "sublabel": "primary", "row": 1, "col": 4 },
-        { "id": "s3", "type": "cloud", "label": "S3", "sublabel": "静的アセット", "row": 2, "col": 1 },
-        { "id": "queue", "type": "messagebus", "label": "SQS", "sublabel": "ジョブキュー", "row": 2, "col": 3 },
-        { "id": "worker", "type": "backend", "label": "Worker", "sublabel": "非同期処理", "row": 2, "col": 4 }
+        {
+          "id": "users",
+          "type": "external",
+          "label": "利用者",
+          "sublabel": "ブラウザ / モバイル",
+          "row": 1,
+          "col": 0
+        },
+        {
+          "id": "auth",
+          "type": "security",
+          "label": "認証基盤",
+          "sublabel": "OAuth 2.0",
+          "row": 0,
+          "col": 0,
+          "tag": "JWT"
+        },
+        {
+          "id": "cdn",
+          "type": "cloud",
+          "label": "CloudFront",
+          "sublabel": "CDN",
+          "row": 1,
+          "col": 1
+        },
+        {
+          "id": "lb",
+          "type": "cloud",
+          "label": "ロードバランサ",
+          "sublabel": "HTTPS :443",
+          "row": 1,
+          "col": 2
+        },
+        {
+          "id": "api",
+          "type": "backend",
+          "label": "API サーバ",
+          "sublabel": "FastAPI",
+          "row": 1,
+          "col": 3,
+          "variant": "emphasis"
+        },
+        {
+          "id": "cache",
+          "type": "database",
+          "label": "Redis",
+          "sublabel": "キャッシュ",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "id": "db",
+          "type": "database",
+          "label": "PostgreSQL",
+          "sublabel": "primary",
+          "row": 1,
+          "col": 4
+        },
+        {
+          "id": "s3",
+          "type": "cloud",
+          "label": "S3",
+          "sublabel": "静的アセット",
+          "row": 2,
+          "col": 1
+        },
+        {
+          "id": "queue",
+          "type": "messagebus",
+          "label": "SQS",
+          "sublabel": "ジョブキュー",
+          "row": 2,
+          "col": 3
+        },
+        {
+          "id": "worker",
+          "type": "backend",
+          "label": "Worker",
+          "sublabel": "非同期処理",
+          "row": 2,
+          "col": 4
+        }
       ],
       "groups": [
-        { "label": "AWS ap-northeast-1", "kind": "region", "nodes": ["cdn", "lb", "api", "cache", "db", "s3", "queue", "worker"] },
-        { "label": "sg-api", "kind": "security", "nodes": ["lb", "api"] }
+        {
+          "label": "AWS ap-northeast-1",
+          "kind": "region",
+          "nodes": [
+            "cdn",
+            "lb",
+            "api",
+            "cache",
+            "db",
+            "s3",
+            "queue",
+            "worker"
+          ]
+        },
+        {
+          "label": "sg-api",
+          "kind": "security",
+          "nodes": [
+            "lb",
+            "api"
+          ]
+        }
       ],
       "edges": [
-        { "from": "users", "to": "cdn", "label": "HTTPS", "variant": "emphasis" },
-        { "from": "auth", "to": "api", "label": "JWT 検証", "variant": "security" },
-        { "from": "cdn", "to": "lb" },
-        { "from": "cdn", "to": "s3", "label": "静的", "variant": "dashed" },
-        { "from": "lb", "to": "api" },
-        { "from": "api", "to": "cache", "label": "read-through" },
-        { "from": "api", "to": "db", "label": "SQL" },
-        { "from": "api", "to": "queue", "label": "enqueue", "variant": "dashed" },
-        { "from": "queue", "to": "worker" },
-        { "from": "worker", "to": "db", "label": "書込" }
+        {
+          "from": "users",
+          "to": "cdn",
+          "label": "HTTPS",
+          "variant": "emphasis"
+        },
+        {
+          "from": "auth",
+          "to": "api",
+          "label": "JWT 検証",
+          "variant": "security"
+        },
+        {
+          "from": "cdn",
+          "to": "lb"
+        },
+        {
+          "from": "cdn",
+          "to": "s3",
+          "label": "静的",
+          "variant": "dashed"
+        },
+        {
+          "from": "lb",
+          "to": "api"
+        },
+        {
+          "from": "api",
+          "to": "cache",
+          "label": "read-through"
+        },
+        {
+          "from": "api",
+          "to": "db",
+          "label": "SQL"
+        },
+        {
+          "from": "api",
+          "to": "queue",
+          "label": "enqueue",
+          "variant": "dashed"
+        },
+        {
+          "from": "queue",
+          "to": "worker"
+        },
+        {
+          "from": "worker",
+          "to": "db",
+          "label": "書込"
+        }
       ],
-      "notes": "TYPE 13 / architecture — nodes に type（アイコン）と variant、groups で境界を囲む。via/label_at は診断が求めたときだけ足す。"
+      "notes": "TYPE 15 / architecture — nodes に type（アイコン）と variant、groups で境界を囲む。via/label_at は診断が求めたときだけ足す。"
     },
     {
       "type": "dataflow",
-      "eyebrow": "TYPE 14 / dataflow",
+      "eyebrow": "TYPE 16 / dataflow",
       "title": "データフロー（dataflow）",
       "lead": "stages で工程を、row で並行する流れを表す。ラベルに classification を添えられる。",
-      "stages": ["収集", "取込", "加工", "保存", "利用"],
+      "stages": [
+        "収集",
+        "取込",
+        "加工",
+        "保存",
+        "利用"
+      ],
       "nodes": [
-        { "id": "web", "type": "frontend", "label": "Web アプリ", "sublabel": "ブラウザ SDK", "col": 0, "row": 0 },
-        { "id": "mobile", "type": "frontend", "label": "モバイル", "sublabel": "iOS / Android", "col": 0, "row": 2 },
-        { "id": "edge", "type": "cloud", "label": "収集 API", "sublabel": "collector", "col": 1, "row": 1 },
-        { "id": "consent", "type": "security", "label": "同意ゲート", "sublabel": "ポリシー適用", "col": 2, "row": 0 },
-        { "id": "stream", "type": "messagebus", "label": "イベント基盤", "sublabel": "Kafka", "col": 2, "row": 2 },
-        { "id": "pii", "type": "security", "label": "PII 保管庫", "sublabel": "暗号化", "col": 3, "row": 0 },
-        { "id": "dwh", "type": "database", "label": "DWH", "sublabel": "分析テーブル", "col": 3, "row": 2 },
-        { "id": "dash", "type": "backend", "label": "ダッシュボード", "sublabel": "KPI", "col": 4, "row": 1 }
+        {
+          "id": "web",
+          "type": "frontend",
+          "label": "Web アプリ",
+          "sublabel": "ブラウザ SDK",
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "mobile",
+          "type": "frontend",
+          "label": "モバイル",
+          "sublabel": "iOS / Android",
+          "col": 0,
+          "row": 2
+        },
+        {
+          "id": "edge",
+          "type": "cloud",
+          "label": "収集 API",
+          "sublabel": "collector",
+          "col": 1,
+          "row": 1
+        },
+        {
+          "id": "consent",
+          "type": "security",
+          "label": "同意ゲート",
+          "sublabel": "ポリシー適用",
+          "col": 2,
+          "row": 0
+        },
+        {
+          "id": "stream",
+          "type": "messagebus",
+          "label": "イベント基盤",
+          "sublabel": "Kafka",
+          "col": 2,
+          "row": 2
+        },
+        {
+          "id": "pii",
+          "type": "security",
+          "label": "PII 保管庫",
+          "sublabel": "暗号化",
+          "col": 3,
+          "row": 0
+        },
+        {
+          "id": "dwh",
+          "type": "database",
+          "label": "DWH",
+          "sublabel": "分析テーブル",
+          "col": 3,
+          "row": 2
+        },
+        {
+          "id": "dash",
+          "type": "backend",
+          "label": "ダッシュボード",
+          "sublabel": "KPI",
+          "col": 4,
+          "row": 1
+        }
       ],
       "edges": [
-        { "from": "web", "to": "edge", "label": "クリック", "variant": "emphasis" },
-        { "from": "mobile", "to": "edge", "label": "アプリ操作" },
-        { "from": "edge", "to": "consent", "label": "同意確認", "classification": "個人データ", "variant": "security" },
-        { "from": "edge", "to": "stream", "label": "承認済み", "variant": "emphasis" },
-        { "from": "consent", "to": "pii", "label": "ID連携", "variant": "security" },
-        { "from": "stream", "to": "dwh", "label": "正規化" },
-        { "from": "dwh", "to": "dash", "label": "集計 SQL" },
-        { "from": "pii", "to": "dash", "label": "制限付き結合", "variant": "dashed" }
+        {
+          "from": "web",
+          "to": "edge",
+          "label": "クリック",
+          "variant": "emphasis"
+        },
+        {
+          "from": "mobile",
+          "to": "edge",
+          "label": "アプリ操作"
+        },
+        {
+          "from": "edge",
+          "to": "consent",
+          "label": "同意確認",
+          "classification": "個人データ",
+          "variant": "security"
+        },
+        {
+          "from": "edge",
+          "to": "stream",
+          "label": "承認済み",
+          "variant": "emphasis"
+        },
+        {
+          "from": "consent",
+          "to": "pii",
+          "label": "ID連携",
+          "variant": "security"
+        },
+        {
+          "from": "stream",
+          "to": "dwh",
+          "label": "正規化"
+        },
+        {
+          "from": "dwh",
+          "to": "dash",
+          "label": "集計 SQL"
+        },
+        {
+          "from": "pii",
+          "to": "dash",
+          "label": "制限付き結合",
+          "variant": "dashed"
+        }
       ],
-      "notes": "TYPE 14 / dataflow — stages＝列見出し、classification はラベル2行目。隣接列の短いラベルは意味を保って詰める。"
+      "notes": "TYPE 16 / dataflow — stages＝列見出し、classification はラベル2行目。隣接列の短いラベルは意味を保って詰める。"
     },
     {
       "type": "lifecycle",
-      "eyebrow": "TYPE 15 / lifecycle",
+      "eyebrow": "TYPE 17 / lifecycle",
       "title": "ライフサイクル（lifecycle）",
       "lead": "状態は kind（開始/進行中/待機/分岐/成功/失敗）ごとに形と色を変える。",
-      "lanes": [{ "name": "主要フェーズ" }, { "name": "中断" }, { "name": "終了" }],
+      "lanes": [
+        {
+          "name": "主要フェーズ"
+        },
+        {
+          "name": "中断"
+        },
+        {
+          "name": "終了"
+        }
+      ],
       "states": [
-        { "id": "queued", "kind": "start", "label": "受付", "sublabel": "リクエスト受理", "lane": 0, "col": 0, "step": "01" },
-        { "id": "plan", "kind": "active", "label": "計画", "sublabel": "タスク分解", "lane": 0, "col": 1, "step": "02" },
-        { "id": "run", "kind": "active", "label": "実行中", "sublabel": "ツール呼び出し", "lane": 0, "col": 2, "step": "03" },
-        { "id": "review", "kind": "decision", "label": "レビュー", "lane": 0, "col": 3, "step": "04" },
-        { "id": "done", "kind": "success", "label": "完了", "sublabel": "最終応答", "lane": 0, "col": 4, "step": "05" },
-        { "id": "wait", "kind": "waiting", "label": "承認待ち", "sublabel": "人の判断", "lane": 1, "col": 2 },
-        { "id": "blocked", "kind": "waiting", "label": "入力待ち", "lane": 1, "col": 3 },
-        { "id": "failed", "kind": "failure", "label": "失敗", "sublabel": "再試行可", "lane": 2, "col": 1 },
-        { "id": "cancel", "kind": "failure", "label": "中止", "sublabel": "利用者が停止", "lane": 2, "col": 3 }
+        {
+          "id": "queued",
+          "kind": "start",
+          "label": "受付",
+          "sublabel": "リクエスト受理",
+          "lane": 0,
+          "col": 0,
+          "step": "01"
+        },
+        {
+          "id": "plan",
+          "kind": "active",
+          "label": "計画",
+          "sublabel": "タスク分解",
+          "lane": 0,
+          "col": 1,
+          "step": "02"
+        },
+        {
+          "id": "run",
+          "kind": "active",
+          "label": "実行中",
+          "sublabel": "ツール呼び出し",
+          "lane": 0,
+          "col": 2,
+          "step": "03"
+        },
+        {
+          "id": "review",
+          "kind": "decision",
+          "label": "レビュー",
+          "lane": 0,
+          "col": 3,
+          "step": "04"
+        },
+        {
+          "id": "done",
+          "kind": "success",
+          "label": "完了",
+          "sublabel": "最終応答",
+          "lane": 0,
+          "col": 4,
+          "step": "05"
+        },
+        {
+          "id": "wait",
+          "kind": "waiting",
+          "label": "承認待ち",
+          "sublabel": "人の判断",
+          "lane": 1,
+          "col": 2
+        },
+        {
+          "id": "blocked",
+          "kind": "waiting",
+          "label": "入力待ち",
+          "lane": 1,
+          "col": 3
+        },
+        {
+          "id": "failed",
+          "kind": "failure",
+          "label": "失敗",
+          "sublabel": "再試行可",
+          "lane": 2,
+          "col": 1
+        },
+        {
+          "id": "cancel",
+          "kind": "failure",
+          "label": "中止",
+          "sublabel": "利用者が停止",
+          "lane": 2,
+          "col": 3
+        }
       ],
       "transitions": [
-        { "from": "queued", "to": "plan" },
-        { "from": "plan", "to": "run" },
-        { "from": "run", "to": "review" },
-        { "from": "review", "to": "done", "label": "OK", "variant": "emphasis" },
-        { "from": "run", "to": "wait", "label": "要承認", "variant": "security" },
-        { "from": "wait", "to": "run", "label": "承認", "variant": "dashed" },
-        { "from": "review", "to": "blocked", "label": "NG" },
-        { "from": "run", "to": "failed", "label": "エラー" },
-        { "from": "failed", "to": "plan", "label": "再試行", "variant": "dashed" },
-        { "from": "wait", "to": "cancel", "label": "却下" }
+        {
+          "from": "queued",
+          "to": "plan"
+        },
+        {
+          "from": "plan",
+          "to": "run"
+        },
+        {
+          "from": "run",
+          "to": "review"
+        },
+        {
+          "from": "review",
+          "to": "done",
+          "label": "OK",
+          "variant": "emphasis"
+        },
+        {
+          "from": "run",
+          "to": "wait",
+          "label": "要承認",
+          "variant": "security"
+        },
+        {
+          "from": "wait",
+          "to": "run",
+          "label": "承認",
+          "variant": "dashed"
+        },
+        {
+          "from": "review",
+          "to": "blocked",
+          "label": "NG"
+        },
+        {
+          "from": "run",
+          "to": "failed",
+          "label": "エラー"
+        },
+        {
+          "from": "failed",
+          "to": "plan",
+          "label": "再試行",
+          "variant": "dashed"
+        },
+        {
+          "from": "wait",
+          "to": "cancel",
+          "label": "却下"
+        }
       ],
-      "notes": "TYPE 15 / lifecycle — states/transitions は nodes/edges の別名。kind でピル/ひし形/破線などの形が決まる。"
+      "notes": "TYPE 17 / lifecycle — states/transitions は nodes/edges の別名。kind でピル/ひし形/破線などの形が決まる。"
     },
     {
       "type": "sequence",
-      "eyebrow": "TYPE 16 / sequence",
+      "eyebrow": "TYPE 18 / sequence",
       "title": "シーケンス図（sequence）",
       "lead": "参加者を横に並べ、messages の順にやり取りを上から描く。return は破線の戻り。",
       "participants": [
-        { "id": "user", "type": "external", "label": "利用者" },
-        { "id": "web", "type": "frontend", "label": "Web", "sublabel": "React" },
-        { "id": "api", "type": "backend", "label": "API", "sublabel": "FastAPI" },
-        { "id": "auth", "type": "security", "label": "認証" },
-        { "id": "cache", "type": "database", "label": "Redis" },
-        { "id": "db", "type": "database", "label": "DB", "sublabel": "PostgreSQL" }
+        {
+          "id": "user",
+          "type": "external",
+          "label": "利用者"
+        },
+        {
+          "id": "web",
+          "type": "frontend",
+          "label": "Web",
+          "sublabel": "React"
+        },
+        {
+          "id": "api",
+          "type": "backend",
+          "label": "API",
+          "sublabel": "FastAPI"
+        },
+        {
+          "id": "auth",
+          "type": "security",
+          "label": "認証"
+        },
+        {
+          "id": "cache",
+          "type": "database",
+          "label": "Redis"
+        },
+        {
+          "id": "db",
+          "type": "database",
+          "label": "DB",
+          "sublabel": "PostgreSQL"
+        }
       ],
       "messages": [
-        { "from": "user", "to": "web", "label": "ページを開く" },
-        { "from": "web", "to": "api", "label": "GET /dashboard", "variant": "emphasis" },
-        { "from": "api", "to": "auth", "label": "JWT 検証", "variant": "security" },
-        { "from": "auth", "to": "api", "label": "OK", "variant": "return" },
-        { "from": "api", "to": "cache", "label": "キャッシュ参照" },
-        { "from": "cache", "to": "api", "label": "miss", "variant": "return" },
-        { "from": "api", "to": "db", "label": "SELECT profile", "variant": "emphasis" },
-        { "from": "db", "to": "api", "label": "rows", "variant": "return" },
-        { "from": "api", "to": "api", "label": "キャッシュ更新", "variant": "dashed" },
-        { "from": "api", "to": "web", "label": "200 JSON", "variant": "return" },
-        { "from": "web", "to": "user", "label": "描画", "variant": "return" }
+        {
+          "from": "user",
+          "to": "web",
+          "label": "ページを開く"
+        },
+        {
+          "from": "web",
+          "to": "api",
+          "label": "GET /dashboard",
+          "variant": "emphasis"
+        },
+        {
+          "from": "api",
+          "to": "auth",
+          "label": "JWT 検証",
+          "variant": "security"
+        },
+        {
+          "from": "auth",
+          "to": "api",
+          "label": "OK",
+          "variant": "return"
+        },
+        {
+          "from": "api",
+          "to": "cache",
+          "label": "キャッシュ参照"
+        },
+        {
+          "from": "cache",
+          "to": "api",
+          "label": "miss",
+          "variant": "return"
+        },
+        {
+          "from": "api",
+          "to": "db",
+          "label": "SELECT profile",
+          "variant": "emphasis"
+        },
+        {
+          "from": "db",
+          "to": "api",
+          "label": "rows",
+          "variant": "return"
+        },
+        {
+          "from": "api",
+          "to": "api",
+          "label": "キャッシュ更新",
+          "variant": "dashed"
+        },
+        {
+          "from": "api",
+          "to": "web",
+          "label": "200 JSON",
+          "variant": "return"
+        },
+        {
+          "from": "web",
+          "to": "user",
+          "label": "描画",
+          "variant": "return"
+        }
       ],
       "activations": [
-        { "participant": "web", "from": 1, "to": 9 },
-        { "participant": "api", "from": 1, "to": 9 },
-        { "participant": "db", "from": 6, "to": 7 }
+        {
+          "participant": "web",
+          "from": 1,
+          "to": 9
+        },
+        {
+          "participant": "api",
+          "from": 1,
+          "to": 9
+        },
+        {
+          "participant": "db",
+          "from": 6,
+          "to": 7
+        }
       ],
       "segments": [
-        { "from": 0, "to": 3, "label": "リクエストと認証" },
-        { "from": 4, "to": 7, "label": "キャッシュ → DB" },
-        { "from": 8, "to": 10, "label": "応答" }
+        {
+          "from": 0,
+          "to": 3,
+          "label": "リクエストと認証"
+        },
+        {
+          "from": 4,
+          "to": 7,
+          "label": "キャッシュ → DB"
+        },
+        {
+          "from": 8,
+          "to": 10,
+          "label": "応答"
+        }
       ],
-      "notes": "TYPE 16 / sequence — participants を横並び、messages は配列順に上から等間隔。activations/segments は任意。"
+      "notes": "TYPE 18 / sequence — participants を横並び、messages は配列順に上から等間隔。activations/segments は任意。"
     },
     {
       "type": "closing",
-      "title": "まとめ",
+      "title": "まとめ（TYPE 19 / closing）",
       "bullets": [
         "19タイプで社内資料の大半の表現をネイティブにカバーできる",
-        "業務フローは swimlane、自由作図・グラフは image / image_text で拡張する",
+        "業務フローは swimlane、構成図・データフロー・状態遷移・シーケンスは図解4タイプ、自由作図・グラフは image で拡張する",
         "微修正は deck.json の style（差分）だけで完結する"
       ],
       "message": "テンプレートはテーマ・レイアウト・オーバーライドの3層で管理する",
