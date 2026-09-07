@@ -19,3 +19,9 @@
 プラグインから1枚1メッセージ・定義先行・意味ある矢印/境界・独立内容レビューを採用。未対応の新図type・Archifyは移植しなかった。
 
 未確認: PowerPoint/Keynote実アプリ描画、実受講者試行、独立レビュー役による全外部URL再取得。制作者の一次資料確認と独立の内部整合レビューは区別する。Gitへの保存とDraft PRは次の記録を参照。
+
+## Git保存
+
+成果物コミット `6a573aa` をoriginの `loop/later-series-2026-09-07` へpush。初回PR作成はactiveアカウントのcollaborator権限不足で失敗したため、登録済み所有者アカウントを当該CLIプロセスだけに適用して再実行し、Draft PR #13を作成した（グローバル認証切替なし）。https://github.com/yuya-fujita-1201/AI-Presentation/pull/13 。マージ・サイト公開は未実施。
+
+ローカル既存 `training/` 等の別作業はコミット対象外。PPTX/HTMLはローカル納品済みだが、クリーンcheckoutでの全教材リンクと再検証は未確認とPRへ明記。

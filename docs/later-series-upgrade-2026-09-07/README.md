@@ -20,3 +20,5 @@
 PowerPoint/Keynote実アプリ表示と実受講者による試行は未確認。HTML画像の検証とPPTX構造の検証は、実アプリ表示を保証するものではない。
 
 検証記録: [機械ゲート](verification.json)、[レイアウト等](gate-results.json)、[最終レビューA](review-a-final.md)、[最終レビューB](review-b-final.md)、[最終レビューC](review-c-final.md)、[採点集計](scores.json)。HTML/PPTXはローカル生成物で、Git管理対象外。
+
+[レビュー用Draft PR #13](https://github.com/yuya-fujita-1201/AI-Presentation/pull/13)。マージ・公開は未実施。
