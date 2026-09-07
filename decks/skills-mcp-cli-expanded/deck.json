@@ -1,0 +1,1488 @@
+{
+  "meta": {
+    "id": "skills-mcp-cli-expanded",
+    "title": "AIに手順と道具を渡す",
+    "date": "2026-09-07",
+    "theme": "warm-terracotta",
+    "layout_overrides": {
+      "table": {
+        "title": {
+          "size": 36
+        },
+        "rule": {
+          "h": 0
+        },
+        "footer_l": {
+          "size": 13
+        },
+        "table": {
+          "cell_size": 24,
+          "header_size": 23,
+          "row_h": 78,
+          "header_h": 56,
+          "line_height": 1.3,
+          "pad_y": 12
+        }
+      },
+      "code": {
+        "title": {
+          "size": 36
+        },
+        "rule": {
+          "h": 0
+        },
+        "footer_l": {
+          "size": 13
+        },
+        "code": {
+          "size": 25,
+          "min_size": 22,
+          "line_height": 1.5,
+          "pad": 28
+        }
+      },
+      "two_column": {
+        "title": {
+          "size": 36
+        },
+        "rule": {
+          "h": 0
+        },
+        "footer_l": {
+          "size": 13
+        },
+        "left": {
+          "fill": "background",
+          "pad": 16
+        },
+        "right": {
+          "fill": "background",
+          "pad": 16
+        },
+        "col_heading": {
+          "size": 29,
+          "gap_below": 24
+        },
+        "col_body": {
+          "size": 25,
+          "gap": 24,
+          "line_height": 1.5
+        }
+      },
+      "bullets": {
+        "title": {
+          "size": 36
+        },
+        "rule": {
+          "h": 0
+        },
+        "footer_l": {
+          "size": 13
+        }
+      },
+      "section": {
+        "rule": {
+          "h": 0
+        },
+        "number": {
+          "color": "accent_soft"
+        }
+      },
+      "closing": {
+        "rule": {
+          "h": 0
+        },
+        "message": {
+          "color": "on_primary_soft"
+        },
+        "body": {
+          "size": 27,
+          "gap": 23,
+          "marker_color": "accent_soft"
+        }
+      }
+    }
+  },
+  "slides": [
+    {
+      "type": "title",
+      "title": "AIに手順と道具を渡す",
+      "subtitle": "プロンプト・Skill・MCP・CLIの使い分け\n月次報告の例で学ぶ",
+      "meta": "社内トレーニング / 改訂版 / 2026-09-07",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "bullets",
+      "title": "この資料で学ぶこと",
+      "lead": "月次報告を例に、手順と実行手段を選びます。",
+      "bullets": [
+        "第1章：Skill・MCP・CLIの定義と違い",
+        "第2章：手順の作り方と、道具の使い方",
+        "第3章：月次報告の事例と失敗の切り分け",
+        "第4章：導入・共有のTipsと練習"
+      ],
+      "style": {
+        "body": {
+          "size": 25,
+          "gap": 23,
+          "line_height": 1.46
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "section",
+      "number": "01",
+      "title": "Skill・MCP・CLIとは何か",
+      "subtitle": "何を伝え、どう実行するかを整理します",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "bullets",
+      "title": "Skill・MCP・CLIとは何か",
+      "lead": "AIに仕事を頼むときの、手順・接続・操作のための仕組みです。",
+      "bullets": [
+        "Skill：再利用する指示と関連資料をまとめたフォルダ",
+        "MCP：AIアプリと外部の機能やデータをつなぐ通信規格",
+        "CLI：文字のコマンドでプログラムを操作する方法"
+      ],
+      "style": {
+        "body": {
+          "size": 25,
+          "gap": 23,
+          "line_height": 1.46
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "quote",
+      "text": "8月の売上で、部署別の報告を作って",
+      "attribution": "この資料では、架空の会社と売上データを使います",
+      "notes": "今回の例は自社の規程や導入実績ではありません。AIに渡す指示・手順・データ・道具を、この依頼に沿って区別します。",
+      "style": {
+        "text": {
+          "x": 120,
+          "w": 1040,
+          "size": 40
+        }
+      }
+    },
+    {
+      "type": "table",
+      "title": "それぞれが担当すること",
+      "lead": "この分類は研修用の整理です。組み合わせて使えます。",
+      "columns": [
+        "手段",
+        "月次報告での役割"
+      ],
+      "rows": [
+        [
+          "プロンプト",
+          "今回の対象月と完成条件を伝える"
+        ],
+        [
+          "プロジェクトルール",
+          "金額の単位など、共通の注意を置く"
+        ],
+        [
+          "Skill",
+          "再利用する手順書とひな形をまとめる"
+        ],
+        [
+          "MCP",
+          "売上サービスの機能へ接続する"
+        ],
+        [
+          "CLI",
+          "コマンドで集計プログラムを動かす"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            6
+          ],
+          "row_h": 74,
+          "cell_size": 23
+        }
+      },
+      "eyebrow": "出典 S1 / M1 / G1",
+      "notes": "出典（2026-09-05確認）:\nS1: Agent Skills仕様 — https://agentskills.io/specification\nM1: MCPアーキテクチャ — https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture\nG1: GitHub CLIマニュアル — https://cli.github.com/manual/"
+    },
+    {
+      "type": "image_text",
+      "title": "手順と道具が受け持つ仕事",
+      "punch": "Skillで手順を読み、使える道具で実行します。",
+      "bullets": [
+        "依頼文で対象月と完成条件を伝えます。",
+        "Skillに集計と確認の手順を置きます。",
+        "MCPやCLIで取得・集計を行います。"
+      ],
+      "path": "assets/diagram-procedure-action.svg",
+      "style": {
+        "body": {
+          "size": 23,
+          "gap": 23,
+          "line_height": 1.46
+        },
+        "img": {
+          "y": 232,
+          "h": 378
+        },
+        "caption": {
+          "y": 622,
+          "h": 30
+        }
+      },
+      "caption": "架空の月次報告を使った説明図",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "bullets",
+      "title": "同じ仕事を繰り返すときの利点",
+      "lead": "共通の手順を見直す場所が決まります。",
+      "bullets": [
+        "毎月同じ確認事項を、手順書にまとめられます。",
+        "担当交代時も、入力例と期待する結果を共有できます。",
+        "更新した手順が使われたか、同じ例題で確かめます。"
+      ],
+      "style": {
+        "body": {
+          "size": 25,
+          "gap": 23,
+          "line_height": 1.46
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "仕組みを増やす前の判断",
+      "lead": "一度だけの短い仕事なら、依頼文だけで足りる場合があります。",
+      "columns": [
+        "状況",
+        "考えること"
+      ],
+      "rows": [
+        [
+          "毎回同じ説明をする",
+          "再利用する手順をSkillへ整理"
+        ],
+        [
+          "必要な売上が別サービスにある",
+          "使える接続経路と権限を確認"
+        ],
+        [
+          "手元のCSVを集計したい",
+          "計算できる既存の道具を確認"
+        ],
+        [
+          "文章を一度だけ短くしたい",
+          "目的と完成条件を依頼文に書く"
+        ]
+      ],
+      "style": {
+        "table": {
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 86,
+          "header_h": 52,
+          "col_widths": [
+            2,
+            5
+          ]
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "bullets",
+      "title": "規格や手順だけでは保証されないこと",
+      "lead": "導入した後の動作と成果物も確かめます。",
+      "bullets": [
+        "Skillを置いても、対応アプリで見つかるとは限りません。",
+        "MCP対応同士でも、対応機能や認証の確認が必要です。",
+        "CLIで実行できても、計算や対象データが正しいとは限りません。"
+      ],
+      "style": {
+        "body": {
+          "size": 25,
+          "gap": 23,
+          "line_height": 1.46
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "section",
+      "number": "02",
+      "title": "手順を作り、道具で実行する",
+      "subtitle": "月次報告の入力・処理・完成条件を具体化します",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "今回の売上データ",
+      "lead": "CSVは、表データを文字で保存する形式です。下は8月の確定売上3件です。",
+      "columns": [
+        "日付",
+        "部署",
+        "売上"
+      ],
+      "rows": [
+        [
+          "8月1日",
+          "営業部",
+          "120,000円"
+        ],
+        [
+          "8月2日",
+          "開発部",
+          "80,000円"
+        ],
+        [
+          "8月3日",
+          "営業部",
+          "30,000円"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            3,
+            3
+          ]
+        }
+      },
+      "notes": "教材用の架空データです。3行の合計は230,000円。営業部150,000円、開発部80,000円です。"
+    },
+    {
+      "type": "code",
+      "title": "できあがりの例",
+      "lead": "集計値と元データを確認できる下書きにします。",
+      "language": "text",
+      "code": "8月の売上報告\n\n営業部    150,000円\n開発部     80,000円\n合計      230,000円\n\n元データ：sales-2026-08.csv\n対象：確定済みの売上 3件",
+      "notes": "ファイル名と報告内容は架空の例です。文章が自然でも、対象月・合計・入力件数を確かめる必要があります。"
+    },
+    {
+      "type": "two_column",
+      "title": "依頼を具体的にする",
+      "lead": "AIが何を作ればよいか、完成条件をそろえます。",
+      "left": {
+        "heading": "短すぎる依頼",
+        "bullets": [
+          "売上をいい感じにまとめて",
+          "対象月が分からない",
+          "必要な集計や出力が分からない"
+        ]
+      },
+      "right": {
+        "heading": "具体的な依頼",
+        "bullets": [
+          "8月の確定売上CSVを使う",
+          "部署別の合計を円で出す",
+          "合計と元ファイル名を添える"
+        ]
+      },
+      "notes": "書式や手段を増やす前に、何を求めているかを具体化します。右の依頼でも入力ファイルがなければ取得・確認が必要です。"
+    },
+    {
+      "type": "code",
+      "title": "共通ルールの例",
+      "lead": "毎回同じ注意を書くなら、対応するアプリのルールにまとめます。",
+      "language": "text",
+      "code": "対象月は依頼文で確認する。\n未指定なら、推測して集計しない。\n\n元のCSVは変更しない。\n金額は円で表示する。\n合計を確認し、入力ファイル名を残す。",
+      "eyebrow": "出典 A1 / C2",
+      "notes": "これは教材用のルール例です。AGENTS.mdやCLAUDE.mdなど、使うアプリが参照する形式と置き場所を確認します。\n\n出典（2026-09-05確認）:\nA1: AGENTS.md — https://agents.md/\nC2: Claude Code：ルールの読込 — https://code.claude.com/docs/en/memory"
+    },
+    {
+      "type": "table",
+      "title": "ルールの読まれ方",
+      "lead": "ファイルを置くだけで、すべてのAIに伝わるわけではありません。",
+      "columns": [
+        "確認すること",
+        "確認例"
+      ],
+      "rows": [
+        [
+          "対応するファイル",
+          "AGENTS.md、CLAUDE.mdなど。アプリにより異なる"
+        ],
+        [
+          "読み込む範囲",
+          "プロジェクト共通か、特定フォルダだけか"
+        ],
+        [
+          "読み込むタイミング",
+          "開始時か、対象ファイルを開いたときか"
+        ],
+        [
+          "反映の確認",
+          "実際の依頼で、そのルールを参照できるか"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            6
+          ]
+        }
+      },
+      "eyebrow": "出典 A1 / C2",
+      "notes": "Claude Codeでは親のCLAUDE.md/CLAUDE.local.mdは開始時、作業対象配下のものは必要時に読み込む仕組みがあります。会話を閉じた瞬間にプロンプトが消えるとは限りません。履歴や記憶機能も製品ごとに異なります。300行や150〜200指示を全AI共通の能力上限とは扱いません。\n\n出典（2026-09-05確認）:\nA1: AGENTS.md — https://agents.md/\nC2: Claude Code：ルールの読込 — https://code.claude.com/docs/en/memory"
+    },
+    {
+      "type": "code",
+      "title": "Skillのフォルダ",
+      "lead": "必須はSKILL.md。関連資料やプログラムは必要に応じて加えます。",
+      "language": "text",
+      "code": "monthly-sales-report/\n  SKILL.md                   手順と用途\n  references/\n    returns.md               返品の扱い\n  assets/\n    report-template.csv      報告のひな形\n  scripts/\n    check_columns.py         CSVの列を確認",
+      "eyebrow": "出典 S1",
+      "notes": "このフォルダは説明用で、配布する実行用Skillではありません。スクリプトがない、手順書だけのSkillもあります。\n\n出典（2026-09-05確認）:\nS1: Agent Skills仕様 — https://agentskills.io/specification"
+    },
+    {
+      "type": "code",
+      "title": "SKILL.mdの記入例",
+      "lead": "冒頭に用途を書き、その下に作業手順を続けます。",
+      "language": "yaml",
+      "code": "---\nname: monthly-sales-report\ndescription: 売上CSVから月次報告を作る。\n  月次売上の集計を依頼されたときに使う。\n---\n\n1. 対象月と必要な列を確認する。\n2. 部署別に集計し、全体合計と照合する。\n3. 元データの名前を添えて下書きを保存する。",
+      "eyebrow": "出典 S1",
+      "notes": "これは短い説明例で、実行に必要な計算コードや例外処理までを含む完成版ではありません。nameは親フォルダ名と合わせます。descriptionは用途と使う場面の手がかりになります。\n\n出典（2026-09-05確認）:\nS1: Agent Skills仕様 — https://agentskills.io/specification",
+      "style": {
+        "code": {
+          "size": 24,
+          "min_size": 22,
+          "line_height": 1.4
+        }
+      }
+    },
+    {
+      "type": "code",
+      "title": "手順書だけのSkillを試す",
+      "lead": "Claude Codeを利用できる人向けの例。練習用プロジェクトに保存します。",
+      "language": "text",
+      "code": ".claude/skills/training-sales-check/SKILL.md\n\n---\nname: training-sales-check\ndescription: 教材の売上3件を部署別に集計する。\n---\n依頼文の売上を部署別に合計し、全体合計を示す。\n対象月や金額が足りない場合は質問する。\n入力データの変更と、外部への送信は行わない。",
+      "eyebrow": "02｜最小の実習",
+      "style": {
+        "code": {
+          "size": 24,
+          "min_size": 22,
+          "line_height": 1.4
+        }
+      },
+      "notes": "保存先と明示呼出しはClaude Code公式Skills docs https://code.claude.com/docs/en/skills を2026-09-07確認。教材Skillの実行を実測したとの主張ではない。利用契約・アプリの導入は受講者環境に依存。"
+    },
+    {
+      "type": "code",
+      "title": "Skillを指定して、結果を照合する",
+      "lead": "そのプロジェクトでClaude Codeを開き、次を入力します。",
+      "language": "text",
+      "code": "/training-sales-check\n8月の確定売上です。部署別と全体の合計を示して。\n営業部 120,000円\n開発部  80,000円\n営業部  30,000円\n\n確認する値：営業150,000円／開発80,000円\n全体230,000円。返った結果を人が照合します。\n次は月を省き、確認の質問が返るか試します。",
+      "eyebrow": "02｜最小の実習",
+      "style": {
+        "code": {
+          "size": 24,
+          "min_size": 22,
+          "line_height": 1.4
+        }
+      },
+      "notes": "https://code.claude.com/docs/en/skills 。スラッシュ一覧に見つからなければ、保存先・name・アプリの対応を確認する。Claude Codeでの実行と実受講者試行は未確認。既存CLI例とは独立した、手順書だけの最小実習。"
+    },
+    {
+      "type": "table",
+      "title": "必要になったところから読む",
+      "lead": "この読み方を「段階的開示」と呼びます。",
+      "columns": [
+        "段階",
+        "月次報告で読むもの",
+        "読まれる情報"
+      ],
+      "rows": [
+        [
+          "探す",
+          "Skillの名前と用途",
+          "候補を選ぶための説明"
+        ],
+        [
+          "使う",
+          "SKILL.mdの本文",
+          "集計の手順"
+        ],
+        [
+          "詳しく調べる",
+          "返品の扱いの資料",
+          "今回必要な参照箇所"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1.4,
+            3,
+            3.6
+          ]
+        }
+      },
+      "eyebrow": "出典 S1",
+      "notes": "未読の参照本文はコンテキストへ入れずに済みます。参照資料は読めば内容が入ります。コードを実行するだけなら結果を返せますが、検査や修正のためにコードを読む場合はその内容も入ります。100個置いても軽いという保証ではありません。\n\n出典（2026-09-05確認）:\nS1: Agent Skills仕様 — https://agentskills.io/specification"
+    },
+    {
+      "type": "image_text",
+      "title": "MCPの3つの役割",
+      "punch": "AIアプリ内のClientが、Serverと通信します。",
+      "bullets": [
+        "Host：依頼を受けるAIアプリ。",
+        "Client：Host内でMCP通信を担当。",
+        "Server：売上を検索する機能を公開。"
+      ],
+      "path": "assets/diagram-mcp-host-client.svg",
+      "caption": "Serverは外部でも手元でも動く。ここでは外部接続の例。",
+      "image_side": "right",
+      "notes": "基準はMCP 2026-07-28版です。サーバーはローカルでも外部でも動きます。対応版・通信方法・機能・認証が合うことを確認します。MCP対応なら全ホストと全サーバーが必ず接続できる、という保証ではありません。\n\n出典（2026-09-05確認）:\nM1: MCPアーキテクチャ — https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture",
+      "style": {
+        "body": {
+          "size": 23,
+          "gap": 23
+        },
+        "img": {
+          "y": 220,
+          "h": 400
+        },
+        "caption": {
+          "y": 626,
+          "h": 36,
+          "size": 13
+        }
+      }
+    },
+    {
+      "type": "table",
+      "title": "MCPで受け渡すもの",
+      "lead": "使うものを選ぶ主体は、機能ごとに異なります。",
+      "columns": [
+        "種類",
+        "月次報告での例",
+        "典型的な選択主体"
+      ],
+      "rows": [
+        [
+          "Tools",
+          "指定月の売上を検索する関数",
+          "モデルが利用を提案"
+        ],
+        [
+          "Resources",
+          "売上CSVの列の説明",
+          "アプリが参照データを扱う"
+        ],
+        [
+          "Prompts",
+          "売上報告を頼むテンプレート",
+          "利用者が選ぶ"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1.8,
+            3.6,
+            2.6
+          ]
+        }
+      },
+      "eyebrow": "出典 M2 / M3",
+      "notes": "すべてをモデルが自動実行するわけではありません。規格が毎回の確認ダイアログを保証するわけでもありません。利用者が拒否できる設計や確認表示が推奨され、実際の許可動作はホストと接続先の設定で確認します。\n\n出典（2026-09-05確認）:\nM2: MCPのサーバー機能 — https://modelcontextprotocol.io/docs/2026-07-28/learn/server-concepts\nM3: MCP Tools仕様 — https://modelcontextprotocol.io/specification/2026-07-28/server/tools"
+    },
+    {
+      "type": "code",
+      "title": "売上検索ツールのやり取り",
+      "lead": "架空の操作例です。サービスごとに名前と入力形式は異なります。",
+      "language": "text",
+      "code": "入力\n  対象月：2026-08\n  状態：確定済み\n\n売上検索ツールを呼ぶ\n\n結果\n  営業部 120,000円 / 開発部 80,000円\n  営業部  30,000円 / 合計 3件",
+      "eyebrow": "出典 M2",
+      "notes": "ツールの入出力を説明する架空例です。実際のAPI名や実装済みのMCPサーバーを示していません。モデルが計算を推測する前に、取得結果の期間や件数も確かめます。\n\n出典（2026-09-05確認）:\nM2: MCPのサーバー機能 — https://modelcontextprotocol.io/docs/2026-07-28/learn/server-concepts",
+      "style": {
+        "code": {
+          "size": 24,
+          "min_size": 22,
+          "line_height": 1.4
+        }
+      }
+    },
+    {
+      "type": "code",
+      "title": "CLIで集計する例",
+      "lead": "CLIは文字で操作する方法です。下は架空プログラムの実行例です。",
+      "language": "text",
+      "code": "python monthly_report.py sales-2026-08.csv\n\n→ CSVを読み、部署別に集計する\n→ report-2026-08.txt に保存する\n\n保存後に確認すること\n  営業部 150,000円 / 開発部 80,000円\n  合計   230,000円",
+      "eyebrow": "出典 G1",
+      "notes": "monthly_report.pyは教材用の架空コマンドで、この資料に実行プログラムは付属しません。CLI一般の例として示しています。Pythonのインストールと実行許可などが必要です。gh、aws、dockerなどもすべてのOSに標準搭載されているわけではありません。\n\n出典（2026-09-05確認）:\nG1: GitHub CLIマニュアル — https://cli.github.com/manual/"
+    },
+    {
+      "eyebrow": "02｜計算をコードへ寄せる理由",
+      "title": "同じ入力とコードで、計算を確かめる",
+      "lead": "CSVの合計のように手順を固定できる処理は、検査済みコードをCLIで動かすと再現・照合しやすくなります。",
+      "columns": [
+        "固定・記録するもの",
+        "売上集計での例",
+        "確かめること"
+      ],
+      "rows": [
+        [
+          "入力",
+          "同じ月の確定CSV",
+          "ファイル内容と対象行が同じか"
+        ],
+        [
+          "コードと実行環境",
+          "同じ集計コードの版・設定・依存ソフト",
+          "丸め方や通貨の扱いもそろえる"
+        ],
+        [
+          "期待する出力",
+          "営業150,000円＋開発80,000円",
+          "合計230,000円と照合する"
+        ],
+        [
+          "外部状態のある処理",
+          "最新売上API・現在時刻・乱数を使うCLI",
+          "状態が変わると結果も変わる。CLIだけでは決定性を保証しない"
+        ],
+        [
+          "根拠",
+          {
+            "text": "Anthropic：Skill authoring best practices",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices"
+          },
+          "決定的な処理にスクリプトを使い、必要な依存を確認する"
+        ]
+      ],
+      "notes": "既存ナレッジ knowledge/agent-capabilities/choosing-skill-mcp-or-cli.md / knowledge/sources/article-tools-agent-skills-best-practices.md。公式 https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices のRuntime environment: Prefer scripts for deterministic operations とPackage dependenciesを2026-09-06再確認。入出力・コード版・設定・環境を固定し、非決定的要素に依存しない計算なら、同じ結果を再検査しやすくなるという設計上の説明。CLIは呼び出し方であり、処理内容が決定的であることやコードの正しさを自動保証しない。金額は既存の研修用架空CSVの例を継承。",
+      "type": "table"
+    },
+    {
+      "type": "table",
+      "title": "接続・実行に必要な準備",
+      "lead": "必要な道具と権限は、実行環境でも確認します。",
+      "columns": [
+        "確認すること",
+        "具体例"
+      ],
+      "rows": [
+        [
+          "実行環境",
+          "必要なコマンドやプログラムが導入済みか"
+        ],
+        [
+          "認証と権限",
+          "自分が見てよい売上だけ取得できるか"
+        ],
+        [
+          "対象と保存先",
+          "対象月・会社・出力フォルダが正しいか"
+        ],
+        [
+          "実行結果",
+          "保存したファイルを開いて合計を確かめる"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            6
+          ]
+        }
+      },
+      "eyebrow": "出典 S1 / G1 / M3",
+      "notes": "helpはコマンドの使い方の確認に役立ちますが、間違った会社や対象月の操作までは防ぎません。終了コードや完了メッセージだけでなく、成果物と実際の状態を確認します。\n\n出典（2026-09-05確認）:\nS1: Agent Skills仕様 — https://agentskills.io/specification\nG1: GitHub CLIマニュアル — https://cli.github.com/manual/\nM3: MCP Tools仕様 — https://modelcontextprotocol.io/specification/2026-07-28/server/tools"
+    },
+    {
+      "type": "table",
+      "title": "月次報告での組み合わせ",
+      "lead": "手順はSkillにまとめ、利用できる道具で実行します。",
+      "columns": [
+        "状況",
+        "候補",
+        "判断のポイント"
+      ],
+      "rows": [
+        [
+          "同じ手順を繰り返す",
+          "Skill",
+          "入力・例外・完成条件を共通化"
+        ],
+        [
+          "売上サービスから取得する",
+          "MCP、CLIなど",
+          "組織が使える接続方法と権限"
+        ],
+        [
+          "手元のCSVを計算する",
+          "CLI＋必要ならSkill",
+          "導入済みの道具と結果の検査"
+        ],
+        [
+          "今回だけ文章を整える",
+          "プロンプト",
+          "追加の仕組みを作る必要があるか"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            3,
+            2,
+            3
+          ]
+        }
+      },
+      "eyebrow": "出典 S1 / M1 / G1",
+      "notes": "決まった優先順位はありません。組織が管理するMCPの方が認証や監査に向く場合も、既存CLIが適している場合もあります。APIはサービスがプログラム向けに用意する窓口です。\n\n出典（2026-09-05確認）:\nS1: Agent Skills仕様 — https://agentskills.io/specification\nM1: MCPアーキテクチャ — https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture\nG1: GitHub CLIマニュアル — https://cli.github.com/manual/"
+    },
+    {
+      "type": "section",
+      "number": "03",
+      "title": "事例とトラブルシューティング",
+      "subtitle": "結果が違うとき、手順・接続・入力を切り分けます",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "image_text",
+      "title": "月次報告を仕上げる流れ",
+      "punch": "集計前後の件数と金額を照合します。",
+      "bullets": [
+        "架空データは確定売上3件です。",
+        "営業部150,000円、開発部80,000円。",
+        "合計230,000円を下書きと照合します。"
+      ],
+      "path": "assets/diagram-sales-check.svg",
+      "style": {
+        "body": {
+          "size": 23,
+          "gap": 23,
+          "line_height": 1.46
+        },
+        "img": {
+          "y": 232,
+          "h": 378
+        },
+        "caption": {
+          "y": 622,
+          "h": 30
+        }
+      },
+      "caption": "架空の月次報告を使った説明図",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "合計が200,000円になった事例",
+      "lead": "教材用の失敗例です。差額だけで原因を決めつけません。",
+      "columns": [
+        "調べる順",
+        "確かめる内容"
+      ],
+      "rows": [
+        [
+          "入力の件数",
+          "3件のうち、営業部30,000円が含まれるか"
+        ],
+        [
+          "対象の条件",
+          "8月・確定の条件で絞られているか"
+        ],
+        [
+          "計算の途中",
+          "部署別の加算に3行とも使われたか"
+        ],
+        [
+          "保存した結果",
+          "修正後の下書きを開き230,000円と照合"
+        ]
+      ],
+      "style": {
+        "table": {
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 86,
+          "header_h": 52,
+          "col_widths": [
+            2,
+            5
+          ]
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "Skillが使われないとき",
+      "lead": "選択の問題と、実行の問題を分けます。",
+      "columns": [
+        "観測したこと",
+        "次に確かめること"
+      ],
+      "rows": [
+        [
+          "候補に見当たらない",
+          "導入先・対応形式・有効化を確認"
+        ],
+        [
+          "候補にあるが選ばれない",
+          "用途の説明と依頼が合うか確認"
+        ],
+        [
+          "読まれたが処理できない",
+          "必要なファイル・道具・権限を確認"
+        ],
+        [
+          "処理はできたが誤答",
+          "手順と入力、期待する結果を照合"
+        ]
+      ],
+      "style": {
+        "table": {
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 86,
+          "header_h": 52,
+          "col_widths": [
+            2,
+            5
+          ]
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "Skillが選ばれるか、結果が正しいか",
+      "lead": "説明文は選択の手がかり。実行品質は別に確かめます。",
+      "columns": [
+        "試す依頼・入力",
+        "期待する動き"
+      ],
+      "rows": [
+        [
+          "8月の売上報告＋必要なCSV",
+          "対象月と合計が正しい下書きを作る"
+        ],
+        [
+          "文章の誤字だけ直して",
+          "月次報告Skillを不要に使わない"
+        ],
+        [
+          "対象月がない売上報告の依頼",
+          "対象月を確認する"
+        ],
+        [
+          "必要な列がないCSV",
+          "不足を知らせ、完了扱いしない"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            4,
+            4
+          ]
+        }
+      },
+      "eyebrow": "出典 S2 / C1",
+      "notes": "架空の試験例です。自動選択だけでなく、利用者がSkillを指定する製品もあります。登録場所・有効化・権限・必要なツールも成否に影響し、descriptionだけで決まりません。\n\n出典（2026-09-05確認）:\nS2: Skill作成ガイド — https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices\nC1: Claude Code：Skills — https://code.claude.com/docs/en/skills"
+    },
+    {
+      "type": "table",
+      "title": "接続できないとき",
+      "lead": "接続先を増やす前に、失敗した段階を確認します。",
+      "columns": [
+        "段階",
+        "確認と対応"
+      ],
+      "rows": [
+        [
+          "接続先が見つからない",
+          "設定した接続先と対応する通信方法を確認"
+        ],
+        [
+          "認証が失敗する",
+          "有効な認証と必要な閲覧範囲を確認"
+        ],
+        [
+          "必要な機能がない",
+          "対応機能と権限を調べる"
+        ],
+        [
+          "取得結果が空",
+          "対象月・確定状態・閲覧範囲を確認"
+        ]
+      ],
+      "style": {
+        "table": {
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 86,
+          "header_h": 52,
+          "col_widths": [
+            2,
+            5
+          ]
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "CLIが失敗したとき",
+      "lead": "同じコマンドの再実行だけで解決しない場合があります。",
+      "columns": [
+        "症状",
+        "確認と対応"
+      ],
+      "rows": [
+        [
+          "コマンドが見つからない",
+          "必要なソフトの導入と実行環境"
+        ],
+        [
+          "ファイルがない",
+          "入力ファイル名と作業フォルダ"
+        ],
+        [
+          "必要な列がない",
+          "CSVの見出しと集計プログラムの前提"
+        ],
+        [
+          "出力が古い",
+          "保存先と更新時刻、実際の内容"
+        ]
+      ],
+      "style": {
+        "table": {
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 86,
+          "header_h": 52,
+          "col_widths": [
+            2,
+            5
+          ]
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "長い処理で確認すること",
+      "lead": "MCPにも進捗通知やTasks拡張があります。対応は実装ごとに違います。",
+      "columns": [
+        "必要なこと",
+        "確認例"
+      ],
+      "rows": [
+        [
+          "進捗が分かる",
+          "読込中・集計中・保存中を区別できるか"
+        ],
+        [
+          "途中で止める",
+          "取消が可能か。途中の出力はどうなるか"
+        ],
+        [
+          "再開する",
+          "通信が切れた後、結果を取得できるか"
+        ],
+        [
+          "重複させない",
+          "再実行で同じ報告や送信を増やさないか"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            6
+          ]
+        }
+      },
+      "eyebrow": "出典 M4",
+      "notes": "MCPを短いCRUD専用、長時間処理を必ずCLIと決めません。CRUDは作成・読取・更新・削除の操作です。拡張の存在と手元の製品での利用可能性は別なので、必要な動作で比較します。\n\n出典（2026-09-05確認）:\nM4: MCP Tasks拡張 — https://modelcontextprotocol.io/extensions/tasks/overview"
+    },
+    {
+      "type": "two_column",
+      "title": "手順の指示と、実際の権限",
+      "lead": "「外部へ送らない」と書くことと、通信を制限することは別です。",
+      "left": {
+        "heading": "手順に書くこと",
+        "bullets": [
+          "使ってよいデータの範囲",
+          "報告は下書きとして保存",
+          "確認してから共有する"
+        ]
+      },
+      "right": {
+        "heading": "環境で確認すること",
+        "bullets": [
+          "接続先の閲覧・更新権限",
+          "プログラムと外部通信先",
+          "実行・送信の許可設定"
+        ]
+      },
+      "eyebrow": "出典 C1 / G2",
+      "notes": "allowed-toolsは許可を与える設定で、OSのサンドボックスではありません。スクリプトも必要に応じて読むことができ、段階的開示が事前検査を禁止するわけではありません。コードがないSkillでも外部ツールへ指示する可能性があります。\n\n出典（2026-09-05確認）:\nC1: Claude Code：Skills — https://code.claude.com/docs/en/skills\nG2: Skillの企業利用ガイド — https://platform.claude.com/docs/en/agents-and-tools/agent-skills/enterprise"
+    },
+    {
+      "type": "table",
+      "title": "返品を含む月へ応用する",
+      "lead": "教材用の追加条件です。返品の扱いは業務担当に確認します。",
+      "columns": [
+        "先に決めること",
+        "手順へ残す内容"
+      ],
+      "rows": [
+        [
+          "売上の定義",
+          "税込・税抜、返品を含むか"
+        ],
+        [
+          "対象となる日",
+          "売上日か返品処理日か"
+        ],
+        [
+          "符号と集計",
+          "返品を減算する規則と入力例"
+        ],
+        [
+          "検証する例",
+          "返品なし・返品あり両方の期待値"
+        ]
+      ],
+      "style": {
+        "table": {
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 86,
+          "header_h": 52,
+          "col_widths": [
+            2,
+            5
+          ]
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "bullets",
+      "title": "第3章の点検順序",
+      "lead": "まず、どこまで正しく進んだかを確かめます。",
+      "bullets": [
+        "手順が読まれたか。",
+        "必要な接続・道具で入力を取得できたか。",
+        "入力の範囲と計算が正しいか。",
+        "保存した成果物に修正が反映されたか。"
+      ],
+      "style": {
+        "body": {
+          "size": 25,
+          "gap": 23,
+          "line_height": 1.46
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "section",
+      "number": "04",
+      "title": "運用のTipsと練習",
+      "subtitle": "小さく導入し、更新後も同じ仕事で確かめます",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "two_column",
+      "title": "コストは同じ仕事で比べる",
+      "lead": "CLI→Skill→MCPという、共通の安い順はありません。",
+      "left": {
+        "heading": "負荷が変わる要因",
+        "bullets": [
+          "手順やツール定義の読み方",
+          "入力・出力の量と再実行",
+          "外部サービスの料金"
+        ]
+      },
+      "right": {
+        "heading": "比較で記録するもの",
+        "bullets": [
+          "完成物の正しさ",
+          "処理時間と実際の料金",
+          "失敗後に直す手間"
+        ]
+      },
+      "eyebrow": "出典 C3 / M1",
+      "notes": "MCPのtools/listは一覧取得で、全定義を常時モデルへ投入する義務ではありません。Claude Codeには必要な定義を後から取得するtool searchがあります。古い特定構成の55,000トークンを全MCPの固定費やSkill550個分に換算しません。\n\n出典（2026-09-05確認）:\nC3: Claude Code：MCP — https://code.claude.com/docs/en/mcp\nM1: MCPアーキテクチャ — https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture"
+    },
+    {
+      "type": "table",
+      "title": "チームで使うときの記録",
+      "lead": "更新した後も、同じ例題で動作を確かめられるようにします。",
+      "columns": [
+        "記録",
+        "月次報告の例"
+      ],
+      "rows": [
+        [
+          "誰が管理するか",
+          "営業企画担当と問い合わせ先"
+        ],
+        [
+          "どの版を使うか",
+          "手順書の版・導入先・必要な道具"
+        ],
+        [
+          "何を試したか",
+          "8月のCSV、期待する合計、実際の結果"
+        ],
+        [
+          "更新後の確認",
+          "同じ入力で再検査し、必要なら前の版へ戻す"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2.3,
+            5.7
+          ]
+        }
+      },
+      "eyebrow": "出典 G2",
+      "notes": "Skillの共有や同期は登録経路・製品設定で異なります。プラグインだから必ず版固定、CLIだから必ず最新版、とは判断しません。個人の動画で紹介された利用数を、自社運用の必要数とは扱いません。\n\n出典（2026-09-05確認）:\nG2: Skillの企業利用ガイド — https://platform.claude.com/docs/en/agents-and-tools/agent-skills/enterprise"
+    },
+    {
+      "type": "code",
+      "title": "引き継ぎに残すテンプレート",
+      "lead": "［ ］を埋め、認証情報は書きません。",
+      "language": "text",
+      "code": "仕事：［月次報告など］\n手順の版：［版・保存先］\n対象データ：［期間・ファイル名］\n使う道具：［接続先・コマンド］\n期待する結果：［件数・合計など］\n実際の結果：［保存先・確認した内容］\n未確認と担当：［次に確認すること・担当］",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "2分で考える：どこを整えるか",
+      "lead": "それぞれの状況で、まず必要になるものを考えてください。",
+      "columns": [
+        "状況",
+        "考えるポイント"
+      ],
+      "rows": [
+        [
+          "毎回、同じ返品処理を説明している",
+          "どこに再利用する手順を置くか"
+        ],
+        [
+          "売上サービスへ未接続",
+          "どの接続経路と権限が使えるか"
+        ],
+        [
+          "CSVはあるが集計方法がない",
+          "何を使って計算するか"
+        ],
+        [
+          "結果は出たが合計が違う",
+          "何を確認してから完了にするか"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            4,
+            4
+          ]
+        }
+      },
+      "notes": "受講者に2分考えてもらいます。ツール名だけの正解探しではなく、対象の不足を言葉にする練習です。次ページで一例を示します。"
+    },
+    {
+      "type": "table",
+      "title": "考え方の例",
+      "lead": "複数の手段を組み合わせても構いません。",
+      "columns": [
+        "状況",
+        "対応の例"
+      ],
+      "rows": [
+        [
+          "同じ返品処理を繰り返す",
+          "Skillに手順と確認例をまとめる"
+        ],
+        [
+          "売上サービスへ未接続",
+          "MCP・CLIの対応と権限を調べる"
+        ],
+        [
+          "集計方法がない",
+          "承認された集計プログラムを用意する"
+        ],
+        [
+          "合計が違う",
+          "対象月・入力行・計算結果を照合する"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            3.5,
+            4.5
+          ]
+        }
+      },
+      "notes": "これは唯一の解答ではありません。Excelなど別の道具でも、利用環境と完成条件に合えば選択肢になります。"
+    },
+    {
+      "type": "bullets",
+      "title": "最初の導入で試すこと",
+      "lead": "実データの前に、少量の教材データで流れを確認します。",
+      "bullets": [
+        "正常な入力で、期待する合計になるか。",
+        "対象月や必要な列がないとき、止まって知らせるか。",
+        "読み取りだけの仕事で、元データを変更しないか。",
+        "更新した版でも同じ例題を再検査できるか。"
+      ],
+      "style": {
+        "body": {
+          "size": 25,
+          "gap": 23,
+          "line_height": 1.46
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "closing",
+      "title": "自分の仕事で試す準備",
+      "bullets": [
+        "対象の仕事と、完成した状態を決める",
+        "繰り返す手順はSkillなどにまとめる",
+        "接続方法・権限・道具を確認する",
+        "小さな入力で実行し、成果物を確かめる"
+      ],
+      "message": "手順を伝える方法と、実行する道具を組み合わせる",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "section",
+      "number": "05",
+      "title": "付録：仕様と参照資料",
+      "subtitle": "具体的な仕様・製品の扱いは対応する資料で確認します",
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "形式の要件と、短く書く目安",
+      "lead": "「500行」は作成上の推奨です。501行で形式違反にはなりません。",
+      "columns": [
+        "種類",
+        "例",
+        "意味"
+      ],
+      "rows": [
+        [
+          "形式の要件",
+          "name・description",
+          "共通形式で必須のメタデータ"
+        ],
+        [
+          "作成の目安",
+          "本文500行未満",
+          "必要な手順を見つけやすくする推奨"
+        ],
+        [
+          "量の目安",
+          "メタデータ約100トークン",
+          "文章を処理する単位。量は変わる"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1.8,
+            2.7,
+            3.5
+          ]
+        }
+      },
+      "eyebrow": "出典 S1 / S2",
+      "notes": "本文5,000トークン未満も推奨です。トークンは文章を処理する単位で、字数そのものではありません。量は記述と言語、アプリの扱い方によります。参照を1階層にする助言は参照先を延々とたどる構造を避ける趣旨で、フォルダ階層の形式制限ではありません。\n\n出典（2026-09-05確認）:\nS1: Agent Skills仕様 — https://agentskills.io/specification\nS2: Skill作成ガイド — https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices"
+    },
+    {
+      "type": "table",
+      "title": "参照資料：Skillとルール",
+      "lead": "2026年9月5日に確認した一次資料。資料名から公式ページを開けます。",
+      "columns": [
+        "番号",
+        "資料",
+        "この資料で使った内容"
+      ],
+      "rows": [
+        [
+          "S1",
+          {
+            "text": "Agent Skills仕様",
+            "url": "https://agentskills.io/specification"
+          },
+          "共通形式・段階的開示"
+        ],
+        [
+          "S2",
+          {
+            "text": "Skill作成ガイド",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices"
+          },
+          "短い手順・評価例"
+        ],
+        [
+          "C1",
+          {
+            "text": "Claude Code：Skills",
+            "url": "https://code.claude.com/docs/en/skills"
+          },
+          "起動・設定・権限"
+        ],
+        [
+          "C2",
+          {
+            "text": "Claude Codeのルール",
+            "url": "https://code.claude.com/docs/en/memory"
+          },
+          "対応ファイルと読込範囲"
+        ],
+        [
+          "A1",
+          {
+            "text": "AGENTS.md",
+            "url": "https://agents.md/"
+          },
+          "エージェント向け指示ファイル"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1.2,
+            3.3,
+            3.5
+          ],
+          "row_h": 74,
+          "cell_size": 23
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    },
+    {
+      "type": "table",
+      "title": "参照資料：接続と運用",
+      "lead": "MCPの説明は2026-07-28版を基準にしています。",
+      "columns": [
+        "番号",
+        "資料",
+        "この資料で使った内容"
+      ],
+      "rows": [
+        [
+          "M1",
+          {
+            "text": "MCP公式：アーキテクチャ",
+            "url": "https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture"
+          },
+          "Host・Client・Server"
+        ],
+        [
+          "M2",
+          {
+            "text": "MCP公式：サーバー機能",
+            "url": "https://modelcontextprotocol.io/docs/2026-07-28/learn/server-concepts"
+          },
+          "Tools・Resources・Prompts"
+        ],
+        [
+          "M3",
+          {
+            "text": "MCP Tools仕様",
+            "url": "https://modelcontextprotocol.io/specification/2026-07-28/server/tools"
+          },
+          "ユーザー制御の推奨"
+        ],
+        [
+          "C3",
+          {
+            "text": "Claude Code：MCP",
+            "url": "https://code.claude.com/docs/en/mcp"
+          },
+          "定義の遅延読込"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1.2,
+            3.8,
+            3
+          ],
+          "row_h": 74,
+          "cell_size": 23
+        }
+      },
+      "notes": "補足原典：https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture\n企業利用ガイド：https://platform.claude.com/docs/en/agents-and-tools/agent-skills/enterprise"
+    },
+    {
+      "type": "table",
+      "title": "参照資料：実行と共有",
+      "lead": "製品や設定の変更後には、使う経路と必要な動作を再確認します。",
+      "columns": [
+        "番号",
+        "資料",
+        "この資料で使った内容"
+      ],
+      "rows": [
+        [
+          "M4",
+          {
+            "text": "MCP Tasks拡張",
+            "url": "https://modelcontextprotocol.io/extensions/tasks/overview"
+          },
+          "長時間処理の追跡"
+        ],
+        [
+          "G1",
+          {
+            "text": "GitHub CLIマニュアル",
+            "url": "https://cli.github.com/manual/"
+          },
+          "導入・認証"
+        ],
+        [
+          "G2",
+          {
+            "text": "Skillの企業利用ガイド",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/enterprise"
+          },
+          "導入前の確認・版の管理"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1.2,
+            3.8,
+            3
+          ]
+        }
+      },
+      "notes": "架空の月次報告に基づく教材用の設計例。一般定義はAgent Skills仕様 https://agentskills.io/specification 、MCP Architecture https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture 、CLIの実例 https://cli.github.com/manual/ を2026-09-07確認。特定の製品の実行結果を示すものではありません。"
+    }
+  ]
+}

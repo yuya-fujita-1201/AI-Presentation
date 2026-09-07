@@ -1,0 +1,64 @@
+{
+  "deck": "decks/10-ai-security-expanded",
+  "slides": 57,
+  "deck_sha256": "d718c34e2375696876723ba9eb903a7e2820231196f4280a47be040895cb1732",
+  "pptx_sha256": "9a43f6221eaecd4991ba8a510f21c4271b5804016d8279dc2a3043f29446b223",
+  "html_sha256": "45721d0a0057bf3be95f900560b98324abbdf1fd875adaed569eba91f4cc092c",
+  "checks": {
+    "source_preserved": true,
+    "id_matches_folder": true,
+    "four_chapters": true,
+    "html_exists": true,
+    "images_exist": true,
+    "preview_count": true,
+    "zip_valid": true,
+    "slide_count": true,
+    "no_notes": true
+  },
+  "passed": true,
+  "commands": [
+    {
+      "name": "build",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "layout",
+      "exit": 0
+    },
+    {
+      "name": "preview",
+      "exit": 0
+    },
+    {
+      "name": "contact",
+      "exit": 0
+    },
+    {
+      "name": "svg-fonts",
+      "exit": 0
+    }
+  ],
+  "independent_review": "accepted; A+B",
+  "powerpoint_keynote_display": "unverified",
+  "learner_trial": "unverified",
+  "verified_at": "2026-09-08T00:10:57.636761+09:00",
+  "assets_sha256": {
+    "assets/approval.svg": "8a4808e17f539f833859443b5e90ec2efdf2daadb7b1517b7a7484450430932f",
+    "assets/boundary-corrected.svg": "e8eb5e537db9857c67cb24b1d9060dc909b26adeeff9ac0fe9e89eb8f03553d0",
+    "assets/boundary.svg": "87dfab718984933d9423eac913dbbc4aa2e16993d4baaf7649d2150664b14691",
+    "assets/data.svg": "ab93fb3fd3ddf7d7e2d482c74cbd6d8a505b215d6f1f669c5c9b62f3013eab46",
+    "assets/definition.svg": "62d9adf6cce80c0ad81c3a01171331fea66e2eaf89382b9f17c012b432aa95d7",
+    "assets/external.svg": "1e0f40de394cd6060d3c08945522acbfc4452d2b9e234ab424def0d089e652db",
+    "assets/incident.svg": "0e1df83eb7360644419b12f236e4a928d6dc9bff539ddfed4d0cf168b5afdad8",
+    "assets/isolate.svg": "674fca06f0122c283716c1c4e00a2223fa8fb22b0ce3a96f041e505dc7327633",
+    "assets/lifecycle.svg": "45267972998aea4b2710b892657355d20809ad036fa5c855ef146d1a4594fc14",
+    "assets/permission.svg": "19f2739ca48a7b6c398e6404ed26c24686cf75da92e1e0fc2ac1fbe97063a749",
+    "assets/purpose.svg": "c2afc12937efbf82bad4880183f1918d935373266b9d0961293086e73815eb43",
+    "assets/restart.svg": "2a0696c265fe3c60efbb15a70be717776b2208762d2939b04c9bc3a659d24be1",
+    "assets/scene.png": "1df5cce659c20b1ece3940e5172e08fc053add59be3b2d618899bfcb937dd04a"
+  }
+}

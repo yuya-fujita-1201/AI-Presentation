@@ -1,0 +1,18 @@
+{
+ "deck": "decks/skills-mcp-cli-expanded",
+ "slides": 52,
+ "errors": [],
+ "warnings": [
+  "[集計] 「ではなく」0回 / ダッシュ0回 / 丸数字0個 / AI定型句0箇所 / punch 0/3枚が80字超 / 半角コロン混在0箇所（全角：20回）"
+ ],
+ "stats": {
+  "punch_total": 3,
+  "punch_over": 0,
+  "dewanaku": 0,
+  "dash": 0,
+  "circled": 0,
+  "ai_phrase": 0,
+  "half_colon": 0,
+  "full_colon": 20
+ }
+}

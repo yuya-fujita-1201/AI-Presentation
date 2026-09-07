@@ -1,0 +1,157 @@
+{
+  "topics": [
+    {
+      "deck": "decks/06-rag-expanded",
+      "slides": 57,
+      "deck_sha256": "cc661f31d5f52bd141ddad02cccdaacd500dafd28d1b797c71721920fad9b7b9",
+      "pptx_sha256": "df8df6fd1318ff5f934b7d815ea1107284ce62c2ff882b20de56d4e0e2a3adc5",
+      "html_sha256": "eb041d04b4ad4db2268943224dd96ace1e2642486e7ae2b23e09accd63f08bf9",
+      "checks": {
+        "source_preserved": true,
+        "id_matches_folder": true,
+        "four_chapters": true,
+        "html_exists": true,
+        "images_exist": true,
+        "preview_count": true,
+        "zip_valid": true,
+        "slide_count": true,
+        "no_notes": true
+      },
+      "passed": true
+    },
+    {
+      "deck": "decks/07-okf-expanded",
+      "slides": 55,
+      "deck_sha256": "e4d82591ed875c48a7c3a5a9874cbef73763cb825e18090d1682aa8e87fd5963",
+      "pptx_sha256": "f1a81531f295779e2ef1737a2409c6bc8f4ca1fef955e848010c357838f1902c",
+      "html_sha256": "bb3682dcb5ae3c53d488b35cc8db8572fc6ba1150ebc1daab4c5ca4d246b1d99",
+      "checks": {
+        "source_preserved": true,
+        "id_matches_folder": true,
+        "four_chapters": true,
+        "html_exists": true,
+        "images_exist": true,
+        "preview_count": true,
+        "zip_valid": true,
+        "slide_count": true,
+        "no_notes": true
+      },
+      "passed": true
+    },
+    {
+      "deck": "decks/08-okf-practice-expanded",
+      "slides": 63,
+      "deck_sha256": "29c61c32aa585bf25293bd876b0b0be366697c75ee939a50bf17d3bd6e5bf144",
+      "pptx_sha256": "0c7b3f6ed47298c98f2c13e6ffe788c55fa493d160548d830f0ab4ece4dae7cb",
+      "html_sha256": "a880e31d36c770f869088ed8806da1f78dadd8441a0956919e6fab0469fd5915",
+      "checks": {
+        "source_preserved": true,
+        "id_matches_folder": true,
+        "four_chapters": true,
+        "html_exists": true,
+        "images_exist": true,
+        "preview_count": true,
+        "zip_valid": true,
+        "slide_count": true,
+        "no_notes": true
+      },
+      "passed": true
+    },
+    {
+      "deck": "decks/skills-mcp-cli-expanded",
+      "slides": 52,
+      "deck_sha256": "29ce889826dae2b51dbd4c9e2f8f0de1ecde399d77c4de19b1eeb97f8e1f88f1",
+      "pptx_sha256": "7f8adef49328994d7e630f513004e7429bd6574a7a48264c48b0bea68f9f0342",
+      "html_sha256": "86179560fa319ab68e2b0330f45913ce2f69d5fb304fdd5a439971d11bd1443f",
+      "checks": {
+        "source_preserved": true,
+        "id_matches_folder": true,
+        "four_chapters": true,
+        "html_exists": true,
+        "images_exist": true,
+        "preview_count": true,
+        "zip_valid": true,
+        "slide_count": true,
+        "no_notes": true
+      },
+      "passed": true
+    },
+    {
+      "deck": "decks/09-evaluation-expanded",
+      "slides": 54,
+      "deck_sha256": "5b2ee4ad2b22805c1c7723e9f78266e2daa6f200e4c707ddd53229daa752ad04",
+      "pptx_sha256": "941d4689d30365abbbfeaaa8c3e3f115ae385ff15d20a9376e0ae97f9ed19d8a",
+      "html_sha256": "6393cdc5d6c9aff305f4b02d0b23790d059e40cc2d0986239b6d72ca75bddf27",
+      "checks": {
+        "source_preserved": true,
+        "id_matches_folder": true,
+        "four_chapters": true,
+        "html_exists": true,
+        "images_exist": true,
+        "preview_count": true,
+        "zip_valid": true,
+        "slide_count": true,
+        "no_notes": true
+      },
+      "passed": true
+    },
+    {
+      "deck": "decks/10-ai-security-expanded",
+      "slides": 57,
+      "deck_sha256": "d718c34e2375696876723ba9eb903a7e2820231196f4280a47be040895cb1732",
+      "pptx_sha256": "9a43f6221eaecd4991ba8a510f21c4271b5804016d8279dc2a3043f29446b223",
+      "html_sha256": "45721d0a0057bf3be95f900560b98324abbdf1fd875adaed569eba91f4cc092c",
+      "checks": {
+        "source_preserved": true,
+        "id_matches_folder": true,
+        "four_chapters": true,
+        "html_exists": true,
+        "images_exist": true,
+        "preview_count": true,
+        "zip_valid": true,
+        "slide_count": true,
+        "no_notes": true
+      },
+      "passed": true
+    },
+    {
+      "deck": "decks/11-ai-coding-expanded",
+      "slides": 55,
+      "deck_sha256": "7601ffbbffa23b35efebfada932b51fcb168c491b467a414ab4ccc9299358b8c",
+      "pptx_sha256": "ab427305c96920bc14b1c5f138f5dc210328d7fde096df7e1d76f6364a9b5107",
+      "html_sha256": "6c8edcbf370838d187a1f5cc79c97bd28be060d87710e552bb6f977852e06bc1",
+      "checks": {
+        "source_preserved": true,
+        "id_matches_folder": true,
+        "four_chapters": true,
+        "html_exists": true,
+        "images_exist": true,
+        "preview_count": true,
+        "zip_valid": true,
+        "slide_count": true,
+        "no_notes": true
+      },
+      "passed": true
+    },
+    {
+      "deck": "decks/12-ai-ready-docs-expanded",
+      "slides": 55,
+      "deck_sha256": "32312a6138de0b01ba34e1431c41c08d4a9cb41f71ae74ad731ec45569ec8bb2",
+      "pptx_sha256": "aaf96ef21219f893f1f14bf08afbc6aae9b5670bc247515cca3ce0bcc695d039",
+      "html_sha256": "073b836d05c48be937c1b50e4b488e54158132f11fa9accab3205401625a8199",
+      "checks": {
+        "source_preserved": true,
+        "id_matches_folder": true,
+        "four_chapters": true,
+        "html_exists": true,
+        "images_exist": true,
+        "preview_count": true,
+        "zip_valid": true,
+        "slide_count": true,
+        "no_notes": true
+      },
+      "passed": true
+    }
+  ],
+  "passed": true
+}

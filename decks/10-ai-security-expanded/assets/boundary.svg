@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<rect width="800" height="600" rx="24" fill="#f7f0e8"/>
+<g font-family="Hiragino Sans, sans-serif" text-anchor="middle">
+<rect x="50" y="25" width="700" height="115" rx="16" fill="#eadbcd"/><text x="400" y="73" font-size="36" fill="#3b302b">利用者の依頼</text><text x="400" y="115" font-size="28" fill="#3b302b">目的と任せる範囲を確認</text>
+<rect x="25" y="200" width="365" height="150" rx="16" fill="#eadbcd"/><text x="207" y="254" font-size="34" fill="#3b302b">規程本文</text><text x="207" y="303" font-size="27" fill="#3b302b">根拠として読む</text>
+<rect x="410" y="200" width="365" height="150" rx="16" fill="#eadbcd"/><text x="592" y="254" font-size="34" fill="#3b302b">混入した命令</text><text x="592" y="303" font-size="27" fill="#3b302b">実行許可にしない</text>
+<path d="M207 354 v55 h193 v27" fill="none" stroke="#997561" stroke-width="4"/><path d="M592 354 v42 m-12 0 h24" fill="none" stroke="#a5432c" stroke-width="5"/>
+<rect x="50" y="450" width="700" height="115" rx="16" fill="#744537"/><text x="400" y="498" font-size="36" fill="white">操作の判断</text><text x="400" y="540" font-size="28" fill="white">許可した範囲で実行する</text>
+</g></svg>

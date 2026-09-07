@@ -1,0 +1,2433 @@
+{
+  "meta": {
+    "id": "08-okf-practice-expanded",
+    "title": "OKF 実践編：要件を知識ファイルに残す",
+    "subtitle": "架空の販売管理案件で学ぶ、作成・更新・利用・確認",
+    "author": "Yuya Fujita",
+    "date": "2026-09-07",
+    "theme": "warm-terracotta",
+    "layout": "default",
+    "layout_overrides": {
+      "title": {
+        "bar": {
+          "x": 96,
+          "y": 424,
+          "w": 1088,
+          "h": 3,
+          "fill": "accent",
+          "radius": 0
+        },
+        "title": {
+          "x": 96,
+          "y": 204,
+          "w": 1088,
+          "h": 146,
+          "size": 58,
+          "color": "primary",
+          "bold": true,
+          "line_height": 1.16
+        },
+        "subtitle": {
+          "x": 96,
+          "y": 452,
+          "w": 1020,
+          "h": 86,
+          "size": 27,
+          "color": "muted",
+          "line_height": 1.45
+        },
+        "meta": {
+          "x": 96,
+          "y": 630,
+          "w": 1020,
+          "h": 30,
+          "size": 16,
+          "color": "muted"
+        }
+      },
+      "section": {
+        "bg": {
+          "fill": "primary"
+        },
+        "number": {
+          "x": 96,
+          "y": 176,
+          "w": 500,
+          "h": 94,
+          "color": "accent_soft",
+          "size": 70
+        },
+        "title": {
+          "x": 96,
+          "y": 295,
+          "w": 1088,
+          "h": 100,
+          "color": "on_primary",
+          "size": 50,
+          "line_height": 1.2
+        },
+        "rule": {
+          "x": 96,
+          "y": 416,
+          "w": 1088,
+          "h": 2,
+          "fill": "accent_soft",
+          "radius": 0
+        },
+        "subtitle": {
+          "x": 96,
+          "y": 452,
+          "w": 1060,
+          "h": 90,
+          "color": "on_primary_soft",
+          "size": 22,
+          "line_height": 1.5
+        }
+      },
+      "bullets": {
+        "eyebrow": {
+          "x": 72,
+          "y": 12,
+          "w": 1136,
+          "h": 20,
+          "size": 14,
+          "color": "accent",
+          "bold": true
+        },
+        "title": {
+          "y": 44,
+          "h": 54,
+          "size": 32,
+          "color": "primary"
+        },
+        "rule": {
+          "x": 72,
+          "y": 105,
+          "w": 1136,
+          "h": 2,
+          "fill": "accent",
+          "radius": 0
+        },
+        "lead": {
+          "y": 122,
+          "h": 54,
+          "size": 17,
+          "color": "muted",
+          "line_height": 1.42
+        },
+        "body": {
+          "y": 190,
+          "h": 456,
+          "size": 22,
+          "child_size": 17,
+          "gap": 14,
+          "child_gap": 6,
+          "line_height": 1.46,
+          "color": "text",
+          "child_color": "muted",
+          "marker_color": "accent",
+          "indent": 32
+        }
+      },
+      "two_column": {
+        "eyebrow": {
+          "x": 72,
+          "y": 12,
+          "w": 1136,
+          "h": 20,
+          "size": 14,
+          "color": "accent",
+          "bold": true
+        },
+        "title": {
+          "y": 44,
+          "h": 54,
+          "size": 32,
+          "color": "primary"
+        },
+        "rule": {
+          "x": 72,
+          "y": 105,
+          "w": 1136,
+          "h": 2,
+          "fill": "accent",
+          "radius": 0
+        },
+        "lead": {
+          "y": 122,
+          "h": 54,
+          "size": 18,
+          "color": "muted",
+          "line_height": 1.42
+        },
+        "left": {
+          "x": 72,
+          "y": 190,
+          "w": 548,
+          "h": 458,
+          "fill": "surface_sand",
+          "radius": 0,
+          "pad": 28
+        },
+        "right": {
+          "x": 660,
+          "y": 190,
+          "w": 548,
+          "h": 458,
+          "fill": "surface_peach",
+          "radius": 0,
+          "pad": 28
+        },
+        "col_heading": {
+          "size": 24,
+          "color": "primary",
+          "bold": true,
+          "gap_below": 22
+        },
+        "col_body": {
+          "size": 21,
+          "child_size": 17,
+          "gap": 20,
+          "child_gap": 10,
+          "line_height": 1.52,
+          "color": "text",
+          "child_color": "muted",
+          "marker_color": "accent",
+          "indent": 26
+        }
+      },
+      "table": {
+        "eyebrow": {
+          "x": 72,
+          "y": 12,
+          "w": 1136,
+          "h": 20,
+          "size": 14,
+          "color": "accent",
+          "bold": true
+        },
+        "title": {
+          "y": 44,
+          "h": 54,
+          "size": 32,
+          "color": "primary"
+        },
+        "rule": {
+          "x": 72,
+          "y": 105,
+          "w": 1136,
+          "h": 2,
+          "fill": "accent",
+          "radius": 0
+        },
+        "lead": {
+          "y": 122,
+          "h": 54,
+          "size": 18,
+          "color": "muted",
+          "line_height": 1.42
+        },
+        "table": {
+          "y": 190,
+          "header_fill": "table_header_bg",
+          "header_color": "table_header_text",
+          "row_alt_fill": "table_row_alt",
+          "cell_color": "text",
+          "header_size": 17,
+          "cell_size": 16,
+          "header_h": 50,
+          "row_h": 62,
+          "line_height": 1.32
+        }
+      },
+      "code": {
+        "eyebrow": {
+          "x": 72,
+          "y": 12,
+          "w": 1136,
+          "h": 20,
+          "size": 14,
+          "color": "accent",
+          "bold": true
+        },
+        "title": {
+          "y": 44,
+          "h": 54,
+          "size": 32,
+          "color": "primary"
+        },
+        "rule": {
+          "x": 72,
+          "y": 105,
+          "w": 1136,
+          "h": 2,
+          "fill": "accent",
+          "radius": 0
+        },
+        "lead": {
+          "y": 122,
+          "h": 54,
+          "size": 18,
+          "color": "muted",
+          "line_height": 1.42
+        },
+        "code": {
+          "y": 190,
+          "h": 458,
+          "fill": "code_bg",
+          "color": "code_text",
+          "size": 18,
+          "min_size": 12,
+          "radius": 0,
+          "pad": 26,
+          "line_height": 1.42
+        }
+      },
+      "image": {
+        "eyebrow": {
+          "x": 72,
+          "y": 12,
+          "w": 1136,
+          "h": 20,
+          "size": 14,
+          "color": "accent",
+          "bold": true
+        },
+        "title": {
+          "y": 44,
+          "h": 54,
+          "size": 32,
+          "color": "primary"
+        },
+        "rule": {
+          "x": 72,
+          "y": 105,
+          "w": 1136,
+          "h": 2,
+          "fill": "accent",
+          "radius": 0
+        },
+        "img": {
+          "x": 72,
+          "y": 132,
+          "w": 1136,
+          "h": 500
+        },
+        "caption": {
+          "x": 72,
+          "y": 642,
+          "w": 1136,
+          "h": 28,
+          "size": 14,
+          "color": "muted",
+          "align": "center"
+        }
+      },
+      "image_text": {
+        "eyebrow": {
+          "x": 72,
+          "y": 12,
+          "w": 1136,
+          "h": 20,
+          "size": 14,
+          "color": "accent",
+          "bold": true
+        },
+        "title": {
+          "y": 44,
+          "h": 54,
+          "size": 32,
+          "color": "primary"
+        },
+        "rule": {
+          "x": 72,
+          "y": 105,
+          "w": 1136,
+          "h": 2,
+          "fill": "accent",
+          "radius": 0
+        },
+        "punch": {
+          "x": 72,
+          "y": 122,
+          "w": 1136,
+          "h": 66,
+          "size": 23,
+          "color": "accent",
+          "bold": true,
+          "line_height": 1.35
+        },
+        "body": {
+          "x": 84,
+          "y": 205,
+          "w": 520,
+          "h": 435,
+          "size": 18,
+          "child_size": 15,
+          "gap": 11,
+          "child_gap": 5,
+          "line_height": 1.43,
+          "color": "text",
+          "child_color": "muted",
+          "marker_color": "accent",
+          "indent": 28
+        },
+        "img": {
+          "x": 636,
+          "y": 205,
+          "w": 572,
+          "h": 429
+        },
+        "caption": {
+          "x": 684,
+          "y": 607,
+          "w": 524,
+          "h": 39,
+          "size": 13,
+          "color": "muted",
+          "align": "center",
+          "line_height": 1.35
+        }
+      },
+      "closing": {
+        "bg": {
+          "fill": "primary"
+        },
+        "title": {
+          "x": 96,
+          "y": 74,
+          "w": 1088,
+          "h": 72,
+          "size": 44,
+          "color": "on_primary"
+        },
+        "rule": {
+          "x": 96,
+          "y": 160,
+          "w": 1088,
+          "h": 2,
+          "fill": "accent_soft",
+          "radius": 0
+        },
+        "body": {
+          "x": 96,
+          "y": 198,
+          "w": 1088,
+          "h": 360,
+          "size": 21,
+          "child_size": 17,
+          "gap": 13,
+          "child_gap": 6,
+          "line_height": 1.46,
+          "color": "on_primary_soft",
+          "child_color": "on_primary_muted",
+          "marker_color": "accent_soft",
+          "indent": 32
+        },
+        "message": {
+          "x": 96,
+          "y": 604,
+          "w": 1088,
+          "h": 48,
+          "size": 22,
+          "color": "accent_soft",
+          "bold": true
+        }
+      }
+    }
+  },
+  "slides": [
+    {
+      "type": "title",
+      "title": "OKF 実践編\n要件を知識ファイルに残す",
+      "subtitle": "架空の販売管理案件で、資料からの作成と日々の更新を学ぶ",
+      "meta": "社内勉強会 / 2026-09",
+      "notes": "比較用修正版。元デッキは保持する。SI案件を初めて扱う読者にも、F-012受注登録の具体例を軸に説明する。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "はじめに｜この資料の位置づけ",
+      "title": "この資料で扱う仕事と前提",
+      "lead": "OKF は、説明欄とリンクを持つ Markdown の知識ファイル形式です。今回は、受注登録の要件を残して使う仕事を扱います。",
+      "bullets": [
+        {
+          "text": "作る人と使う人",
+          "bold": true,
+          "children": [
+            "AI 推進担当が下書きの作り方を整える。メンバーが使い、領域リードが根拠を確認する。"
+          ]
+        },
+        {
+          "text": "架空の案件の環境",
+          "bold": true,
+          "children": [
+            "Claude Code を利用できる社内チームを想定。ファイル操作・変換ツール・権限の準備は別に必要。",
+            "正式文書はクライアントと合意した版。OKF は、その内容を調べるための社内の整理版。"
+          ]
+        },
+        {
+          "text": "この案件の運用案",
+          "bold": true,
+          "children": [
+            "金額・契約条件・個人情報は入力対象から除く。保存先と AI への送信先を先に確認する。",
+            "役割・件数・日程は、この資料の提案。OKF 仕様が要求する運用ではない。"
+          ]
+        }
+      ],
+      "notes": "OKFそのものはファイル形式であり、記載した依頼文が特定製品で確実に動くことは保証しない。製品での実行・権限・効果測定は別の確認。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "はじめに｜この資料で学べること",
+      "title": "定義から、実務の運用へ",
+      "lead": "受注登録 F-012 の要件が、資料から生まれ、変更され、設計やテストで使われる流れを追います。",
+      "bullets": [
+        "第1章：OKFと、知識を残す仕事を理解する。",
+        "第2章：要件ファイルを作成し、変更を取り込む。",
+        "第3章：事例・トラブル・演習で使い方を確かめる。",
+        "第4章：担当と確認の仕組みを決めて続ける。"
+      ],
+      "notes": "定義、作成と更新、事例とトラブル、運用Tipsの順に学ぶ。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "はじめに｜通し例の設定",
+      "title": "通し例：X 社の受注登録を作り直す",
+      "lead": "会社・人員・日付・要件は、すべて架空の演習設定です。",
+      "columns": [
+        "項目",
+        "設定"
+      ],
+      "rows": [
+        [
+          "案件",
+          "販売管理システムの刷新。受注・出荷・請求を扱う。"
+        ],
+        [
+          "用語",
+          "SI：システムを構築する仕事。RFP：発注側が要望をまとめた提案依頼書。"
+        ],
+        [
+          "通し例",
+          "F-012 受注登録。得意先・品目・数量・希望納期を入力する。後に配送先を複数にする案が出る。"
+        ],
+        [
+          "進め方",
+          "2026年9月に準備し、10月から要件定義。設計・開発・テストを経て2027年9月の稼働を想定。"
+        ],
+        [
+          "担当",
+          "社内11名。PMと領域リード、開発・テスト担当。AI推進は兼務2名と外部支援1名。"
+        ],
+        [
+          "材料と置き場所",
+          "RFP、提案書、機能一覧。許可済みの材料を読み、設計書と同じリポジトリの knowledge/ に整理。"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 62,
+          "cell_size": 18,
+          "col_widths": [
+            2.4,
+            9.2
+          ]
+        }
+      },
+      "notes": "架空の案件を1つ決めて、最後まで通します。体制は SI 側だけで11名。クライアントは会議と正式文書でやり取りする相手で、OKF には触れません。"
+    },
+    {
+      "type": "section",
+      "number": "01",
+      "title": "OKFとは何か、実践で何をするか",
+      "subtitle": "受注登録の要件を、後から確かめられる知識にする"
+    },
+    {
+      "type": "image_text",
+      "title": "OKFは、知識を文章で残す書式",
+      "punch": "OKFは、人とAIが読める知識ファイルの公開仕様です。",
+      "bullets": [
+        "先頭に種類や説明、本文に知識を書く。",
+        "関連ファイルをフォルダにまとめる。",
+        "この実践編では、要件と決定の記録に使う。"
+      ],
+      "path": "assets/concept-requirement.svg",
+      "caption": "例は架空の販売管理案件。OKF v0.2を参照。",
+      "eyebrow": "01｜OKFと実践の定義",
+      "style": {
+        "body": {
+          "size": 22,
+          "gap": 19
+        }
+      }
+    },
+    {
+      "type": "two_column",
+      "title": "会議の記録だけでは、現在の答えを探しにくい",
+      "lead": "配送先の条件が変わると、古い決定と新しい決定が並びます。",
+      "left": {
+        "heading": "原本に残る情報",
+        "bullets": [
+          "いつ、誰が、何を話したか。",
+          "検討案と合意事項が混在する。",
+          "以前の条件も経緯として残る。"
+        ]
+      },
+      "right": {
+        "heading": "知識ファイルにまとめる情報",
+        "bullets": [
+          "現在の受注登録の条件。",
+          "まだ決まっていない点。",
+          "どの原本の決定に基づくか。"
+        ]
+      },
+      "eyebrow": "01｜OKFと実践の定義"
+    },
+    {
+      "type": "image_text",
+      "title": "要件は、満たすべき条件の記録",
+      "punch": "要件ファイルには、システムに求める振る舞いを残します。",
+      "bullets": [
+        "F-012では得意先・品目・数量を扱う。",
+        "数量は1以上という条件を明記する。",
+        "在庫超過時の扱いは、未決として残す。"
+      ],
+      "path": "assets/requirement-details.svg",
+      "caption": "実装方法を決める前に、必要な振る舞いを確認する。",
+      "eyebrow": "01｜OKFと実践の定義",
+      "style": {
+        "body": {
+          "size": 22,
+          "gap": 19
+        }
+      }
+    },
+    {
+      "type": "two_column",
+      "title": "要件と決定記録は、答える質問が違う",
+      "lead": "同じ配送先の変更でも、現在の条件と変更理由を分けて残します。",
+      "left": {
+        "heading": "要件ファイル",
+        "bullets": [
+          "今、どう動く必要があるか。",
+          "現行の入力項目と制約。",
+          "設計やテストが参照する。"
+        ]
+      },
+      "right": {
+        "heading": "決定記録",
+        "bullets": [
+          "なぜ、その条件に変えたか。",
+          "検討案・理由・影響。",
+          "経緯を調べるときに参照する。"
+        ]
+      },
+      "eyebrow": "01｜OKFと実践の定義"
+    },
+    {
+      "type": "two_column",
+      "title": "知識を整える仕事と、承認を分ける",
+      "lead": "ファイルの書式から、契約や要件の合意は生まれません。",
+      "left": {
+        "heading": "OKFで残す",
+        "bullets": [
+          "根拠と現在の要件。",
+          "未決と確認した範囲。",
+          "変更の理由と関連先。"
+        ]
+      },
+      "right": {
+        "heading": "案件側で決める",
+        "bullets": [
+          "誰が要件を合意するか。",
+          "どの環境でAIを使えるか。",
+          "設計・開発へ進む条件。"
+        ]
+      },
+      "eyebrow": "01｜OKFと実践の定義"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "01｜OKFと実践の定義",
+      "title": "初期作成の後も、変更と確認が続く",
+      "punch": "F-012 を作った後、会議での変更を反映し、設計やテストで使い、根拠を見直します。",
+      "bullets": [
+        {
+          "text": "作る（初期構築）",
+          "bold": true,
+          "children": [
+            "AI 推進担当が、手元の材料から初期ナレッジを作る"
+          ]
+        },
+        {
+          "text": "育てる（討議のたび）",
+          "bold": true,
+          "children": [
+            "書記が下書きを更新し、確認者が根拠と照合する"
+          ]
+        },
+        {
+          "text": "使う（毎日）",
+          "bold": true,
+          "children": [
+            "メンバー全員が、朝の差分確認と工程ごとの問いかけで使う"
+          ]
+        },
+        {
+          "text": "守る（週次と節目）",
+          "bold": true,
+          "children": [
+            "推進担当とリードが、ルール・機械チェック・棚卸しで壊れを防ぐ"
+          ]
+        }
+      ],
+      "image_side": "right",
+      "path": "assets/diagram-practice-cycle.svg",
+      "caption": "この案件の運用案。記録の更新と確認は人が担当します。",
+      "notes": "初期作成の後も追加や再構成が必要になる。OKFを置くだけで知識が自動的に育つわけではない。"
+    },
+    {
+      "type": "section",
+      "number": "02",
+      "title": "作成と更新を、実物で身に付ける",
+      "subtitle": "材料→下書き→照合→変更取り込みの順に進める"
+    },
+    {
+      "type": "table",
+      "eyebrow": "02｜実物で使う項目",
+      "title": "実践編で使う言葉",
+      "lead": "欄の名前を覚える前に、何を確かめる欄かを押さえます。",
+      "columns": [
+        "呼び方",
+        "記入するもの",
+        "注意点"
+      ],
+      "rows": [
+        [
+          "フロントマター",
+          "先頭の --- に挟まれた YAML の説明欄",
+          "通常の知識ファイルで常に必須なのは type"
+        ],
+        [
+          "sources",
+          "根拠の資料。各項目の resource に参照先",
+          "資料名だけでは、参照先が分からない"
+        ],
+        [
+          "generated / verified",
+          "作成・更新の記録 / 出典との照合の記録",
+          "verified は正しさや本人認証の保証ではない"
+        ],
+        [
+          "status / stale_after",
+          "状態 / 再確認の目安となる日時",
+          "stable も期限前も、正しさの保証ではない"
+        ],
+        [
+          "バンドル",
+          "知識ファイル一式のフォルダ",
+          "この運用では index.md と log.md を使う"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 66,
+          "cell_size": 18,
+          "col_widths": [
+            2.6,
+            3.6,
+            5.4
+          ]
+        }
+      },
+      "notes": "超入門のたとえ話は、指示文には使いにくいので、ここで正式な呼び方に置き換えます。以後、この資料では右の呼び方で通します。status の3値は draft・stable・deprecated です。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "初期構築の5ステップ",
+      "punch": "最初は少数の要件で試します。所要日数は、材料の量と確認の手間を測って見積もります。",
+      "bullets": [
+        {
+          "text": "1. 集めて仕分ける",
+          "bold": true,
+          "children": [
+            "AI に渡せる材料と、対象外の情報を確認する。"
+          ]
+        },
+        {
+          "text": "2. 骨組みを作る",
+          "bold": true,
+          "children": [
+            "フォルダ、目次、AI への作業指示を用意する。"
+          ]
+        },
+        {
+          "text": "3. AI に一次抽出させる",
+          "bold": true,
+          "children": [
+            "F-012 など少数の要件を draft にする。"
+          ]
+        },
+        {
+          "text": "4. 人が根拠と照合する",
+          "bold": true,
+          "children": [
+            "数値、条件、例外、未決事項を元資料で確かめる。"
+          ]
+        },
+        {
+          "text": "5. 質問して使い方を試す",
+          "bold": true,
+          "children": [
+            "通常・例外・答えのない質問で、根拠と回答を見る。"
+          ]
+        }
+      ],
+      "image_side": "right",
+      "path": "assets/diagram-build-steps.svg",
+      "caption": "少数で測った時間から、次に確認できる範囲を決めます。",
+      "notes": "以前の3日〜1週間という所要日数には実測根拠がないため削除。人数だけでは工数を決められない。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "材料の棚卸し：読ませるもの、書かないもの",
+      "lead": "この演習では金額・契約条件・個人情報を除外します。出所と送信先を確認し、入力前に許可された範囲へ絞ります。",
+      "columns": [
+        "材料",
+        "形式と量",
+        "OKF に入れる",
+        "OKF に入れない"
+      ],
+      "rows": [
+        [
+          "提案書",
+          "PowerPoint 30〜50 枚",
+          "想定アーキテクチャ・想定機能・前提条件・スコープ外",
+          "見積・金額・体制単価・社内の営業メモ"
+        ],
+        [
+          "機能一覧",
+          "Excel 200 行（1行1機能）",
+          "機能ID・機能名・概要・優先度。1機能1ファイルにする",
+          "工数・金額の列"
+        ],
+        [
+          "RFP と背景資料",
+          "Word 数十ページ・受領 PDF",
+          "業務の背景・目的・現行システムの課題・非機能要件",
+          "契約条件・個人名・担当者の連絡先"
+        ],
+        [
+          "提案時の想定図",
+          "PowerPoint の構成図（画像）",
+          "図は画像として渡し、要点は人が箇条書きにする",
+          "（図に金額が書かれていれば消す）"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 84,
+          "cell_size": 18,
+          "col_widths": [
+            1.8,
+            2.6,
+            4,
+            3.4
+          ]
+        }
+      },
+      "notes": "材料は Office 形式が中心です。入れない情報は、金額・単価・契約条件・個人情報。この線引きをステップ1で決めておくと、AI への依頼文にそのまま書けます。図は文字が取れないので、画像として渡すか、人が要点を箇条書きにします。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "Office の変換結果を原本で確かめる",
+      "punch": "文字を取り出しても、表の対応や図の条件が落ちることがあります。変換後に原本と照合します。",
+      "bullets": [
+        {
+          "text": "許可済みの材料を変換する",
+          "bold": true,
+          "children": [
+            "利用できる変換ツールと AI の送信先を先に確認する。"
+          ]
+        },
+        {
+          "text": "表と図は、対応関係まで確認する",
+          "bold": true,
+          "children": [
+            "機能IDと説明の行が合うか。構成図の接続先や注記が残るか。"
+          ]
+        },
+        {
+          "text": "崩れた部分を補い、出所を残す",
+          "bold": true,
+          "children": [
+            "F-012 が機能一覧のどの行か、後から辿れるようにする。"
+          ]
+        },
+        {
+          "text": "inputs/ の扱いは保存先の権限で決める",
+          "bold": true,
+          "children": [
+            ".gitignore は未追跡ファイルの追加抑止。AI の読み取りや送信は防がない。"
+          ]
+        }
+      ],
+      "image_side": "right",
+      "path": "assets/warm-okfp-01.png",
+      "caption": "変換は準備工程。読めたことと、原本どおりであることは別です。",
+      "notes": "変換処理の実行環境や、Office・PDFの読み取り方式は利用製品に依存。入力前に資料を選別する。このデッキの依頼文を実製品で実行した保証はない。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "フォルダ構成の2案",
+      "lead": "この架空案件では B を使います。8種類への分類は、このチームの運用案です。",
+      "columns": [
+        "",
+        "A：5種類の小規模構成",
+        "B：SI 工程に合わせて8種（推奨）"
+      ],
+      "rows": [
+        [
+          "フォルダ",
+          "glossary / decisions / howto / sources ＋ requirements",
+          "glossary / requirements / architecture / decisions / risks / howto / meetings / sources"
+        ],
+        [
+          "向いている案件",
+          "小規模・短期。要件定義中心の準委任",
+          "要件定義から本稼働まで通す案件。体制が10名前後"
+        ],
+        [
+          "良い点",
+          "迷わない。type も5つで済む",
+          "担当する工程から、関連する資料を探しやすい。回答品質は実際の質問で確かめる。"
+        ],
+        [
+          "注意点",
+          "設計・リスク・会議の要約が decisions に混ざりやすい",
+          "最初に8種を覚える必要がある。増やしたくなる誘惑がある"
+        ],
+        [
+          "この資料の推奨",
+          "小規模・短期なら A でよい",
+          "B。ただし type はこの8種で固定し、増やすときは推進担当に相談する"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 70,
+          "header_h": 46,
+          "cell_size": 18,
+          "col_widths": [
+            2,
+            4.6,
+            5.4
+          ]
+        }
+      },
+      "notes": "type の値は仕様で固定されていない。8種はこの案件の運用案。分類による回答速度や精度の改善は測定していない。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "この案件のフォルダ構成（B）",
+      "lead": "設計書（docs/）と OKF（knowledge/）は同じリポジトリに置き、CLAUDE.md で入口を教えます。inputs/ は原本置き場",
+      "language": "text",
+      "code": "docs-repo/\n├── CLAUDE.md              # AI への指示書。「知識は knowledge/index.md から辿る」と書く\n├── inputs/                # 原本と変換後テキスト（OKF の外）\n│   ├── text/              # 機能一覧などの変換後テキスト\n│   └── meetings/          # 許可済みの議事録（原本）\n├── docs/                  # 設計書・テスト仕様（Markdown）。納品物の元になる\n└── knowledge/             # OKF バンドル（社内限定）\n    ├── index.md           #   入口の目次。okf_version と、各フォルダの一言説明\n    ├── log.md             #   変更履歴。いつ・誰が・何を\n    ├── glossary/          #   用語集：1用語1ファイル（受注・出荷・請求の言葉）\n    ├── requirements/      #   要件：1機能1ファイル（F-012-受注登録.md …）\n    ├── architecture/      #   アーキテクチャ：構成・非機能・外部接続\n    ├── decisions/         #   決定記録：いつ・誰が・なぜ（D-001-…md）\n    ├── risks/             #   懸念と未決：持ち越し事項（R-001-…md）\n    ├── howto/             #   手順：環境構築・リリース・障害対応\n    ├── meetings/          #   会議の要約：決定・変更・未決の3節だけ\n    └── sources/           #   出典台帳：提案書・RFP・受領資料を1つ1ファイルで",
+      "notes": "推奨構成です。ポイントは3つ。設計書と OKF を同じリポジトリに置くこと、原本は inputs/ に分けること、CLAUDE.md で入口を教えること。type はフォルダ名と同じ英単語の単数形で揃えます。",
+      "style": {
+        "code": {
+          "size": 18,
+          "min_size": 16,
+          "line_height": 1.05,
+          "y": 168,
+          "h": 490,
+          "pad": 22
+        }
+      }
+    },
+    {
+      "type": "code",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "依頼文①：初期ナレッジを一次抽出させる",
+      "lead": "F-012 など少数の機能で試す依頼文です。許可済みの変換結果を選び、実ファイル名に置き換えます。",
+      "language": "markdown",
+      "code": "# やること\ninputs/text/functions.csv の F-012 と、関連する RFP を読み、\nknowledge/requirements/F-012-受注登録.md の下書きを作って。\n\n# この案件で使う欄\n- type: requirement、title、description を書く。\n- sources の各項目に resource（元資料の参照先）を付け、行や節を示す。\n- generated に実際の作成者と UTC オフセット付き日時を記録する。\n- status は draft。未実施の verified は書かない。\n\n# 内容の約束\n- 条件と例外を残す。資料にないことは補わず「未決」に分ける。\n- 金額・契約条件・個人情報を見つけたら、書かずに報告する。\n- requirements/index.md と knowledge/log.md も更新する。\n\n# 報告\n変更ファイル、参照した資料の行・節、未決事項を挙げて。",
+      "notes": "実行前に変換ツール・ファイル参照・権限の確認が必要。まず1件で試し、入力から出力までを照合する。要求したから漏れなく実行できる保証はない。",
+      "style": {
+        "code": {
+          "size": 20,
+          "min_size": 16,
+          "line_height": 1.35
+        }
+      }
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "下書きの点検と、利用前の照合",
+      "punch": "下書きの傾向はサンプルで点検できます。業務の判断に使う要件は、使う範囲を元資料と照合します。",
+      "bullets": [
+        {
+          "text": "目次と形式は全件を見る",
+          "bold": true,
+          "children": [
+            "話題の重複、説明の抜け、リンク切れを探す。"
+          ]
+        },
+        {
+          "text": "本文のサンプルで作り方を直す",
+          "bold": true,
+          "children": [
+            "F-012 など優先度の高い要件と、未決のある要件から読む。"
+          ]
+        },
+        {
+          "text": "利用する要件は元資料と照合する",
+          "bold": true,
+          "children": [
+            "入力項目・必須条件・例外が一致するかを確認する。"
+          ]
+        },
+        {
+          "text": "確認していない範囲は draft のまま",
+          "bold": true,
+          "children": [
+            "サンプルが正しくても、残り全件の正しさは保証されない。"
+          ]
+        }
+      ],
+      "image_side": "left",
+      "path": "assets/warm-okfp-02.png",
+      "caption": "確認した範囲を残し、未確認の要件まで stable にしません。",
+      "notes": "サンプル点検は大量の下書きの傾向を確認するための案。全件の正しさを保証しない。業務の判断に使用する本文は原典と照合する。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "F-012 受注登録の下書き",
+      "lead": "架空の記入例。sources の参照先と、見直す日時を記録します。verified はまだありません。",
+      "language": "yaml",
+      "code": "---\ntype: requirement\ntitle: F-012 受注登録\ndescription: 受注登録の入力項目と数量の条件。\nsources:\n  - id: functions\n    resource: ../../inputs/text/functions.csv\n    title: 機能一覧の F-012 行\ngenerated: { by: \"human:training-author\", at: \"2026-09-01T09:00:00+09:00\" }\nstatus: draft\nstale_after: \"2026-12-26T00:00:00+09:00\"\n---\n# 要件\n- 得意先・品目・数量・希望納期を入力する。数量は1以上。[^functions]\n# 未決\n- 在庫を超えたときの扱いは、資料から分からない。\n# 関連\n- [得意先](../glossary/得意先.md)\n[^functions]: 機能一覧の F-012 行。",
+      "style": {
+        "lead": {
+          "h": 40
+        },
+        "code": {
+          "y": 168,
+          "h": 490,
+          "size": 18,
+          "min_size": 16,
+          "line_height": 1.05,
+          "pad": 22
+        }
+      },
+      "notes": "仕様§5.1 sources[].resourceは必須。stale_afterはUTCオフセット付き絶対日時でnow>=指定日時がstale。例の相対パスはknowledge/requirements/から見た位置。架空データであり、このパスに実案件の原本が存在することは示さない。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "CLAUDE.md に記す、読み方と更新の約束",
+      "lead": "この案件の指示例です。読んだ資料の報告を求め、期待した読み方が実行されたかを確かめます。",
+      "language": "markdown",
+      "code": "# 知識の読み方\n- knowledge/index.md の目次と説明から、必要なファイルを開く。\n- draft は未確認として示す。stable も正しさの保証とは扱わない。\n- stale_after は UTC オフセット付きの現在時刻と比較する。\n- now >= stale_after なら「見直し時点に到達」と示す。\n- deprecated は現行の根拠にせず、後継への案内を確認する。\n- 回答には、読んだファイルと根拠の行・節を添える。\n\n# 知識の更新\n- 既存の同じ話題を探してから編集。sources.resource に根拠を残す。\n- 内容を変えたら generated を更新し、status を draft に戻す。\n- 以前の verified を、新しい変更の確認済み記録として使わない。\n- 確認者が本文を出典と照合した後、その主体と日時を記録する。\n- 関連する index.md と knowledge/log.md を更新する。\n- 金額・契約条件・個人情報、資料にない推測は書かずに報告する。",
+      "notes": "CLAUDE.md は利用製品の指示読み取り機能を使う運用例。指示しただけで必ず読みに行く保証はない。自動検知や通知の実装は別途必要。verifiedは機械の形式検査だけでは記録しない。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。 CLAUDE.md の読み込みと指示の性質: https://code.claude.com/docs/en/memory （2026-09-06参照）。",
+      "style": {
+        "code": {
+          "size": 18,
+          "min_size": 16,
+          "line_height": 1.05,
+          "y": 168,
+          "h": 490,
+          "pad": 22
+        }
+      }
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "小さな試行を終える条件",
+      "lead": "この条件は、今回確認した範囲の記録です。残り全件や、今後の製品動作を保証しません。",
+      "bullets": [
+        {
+          "text": "対象のファイルへ、目次から辿れる",
+          "bold": true
+        },
+        {
+          "text": "type・sources.resource・draft と、実際の作成記録がある",
+          "bold": true
+        },
+        {
+          "text": "入力対象外の情報がないか、目視と利用できる検査で確認した",
+          "bold": true
+        },
+        {
+          "text": "形式検査が通り、使う本文を元資料と照合した",
+          "bold": true
+        },
+        {
+          "text": "別のメンバーが質問し、回答と根拠を確かめた",
+          "bold": true,
+          "children": [
+            "通常：数量はいくつから登録できるか。",
+            "例外：在庫を超えたらどうするか。資料に答えはあるか。",
+            "対象外：海外の取引にも同じルールを使えるか。"
+          ]
+        }
+      ],
+      "notes": "仕様への適合、本文の照合、利用アプリの動作は別の確認。少数の質問が成功しても、全件の信頼性や製品の互換性を保証しない。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "討議から棚卸しまで、知識が回る道",
+      "punch": "会議の内容を draft に反映し、根拠と照合した範囲を記録します。更新と確認の担当を決めて運用します。",
+      "bullets": [
+        {
+          "text": "討議 → 議事録",
+          "bold": true,
+          "children": [
+            "会議ツールの要約機能で議事録を作る。書記が内容を整える"
+          ]
+        },
+        {
+          "text": "書記が投げる → AI が draft で更新",
+          "bold": true,
+          "children": [
+            "書記が当日中に依頼文②を投げる。AI が該当ファイルを書き換え、status を draft にする"
+          ]
+        },
+        {
+          "text": "確認者が stable に",
+          "bold": true,
+          "children": [
+            "領域のリードが内容を見て、verified に確認者 ID と日時を記録し、status を stable にする"
+          ]
+        },
+        {
+          "text": "棚卸し",
+          "bold": true,
+          "children": [
+            "週次と節目で、期限切れと deprecated を見直す（第4章）"
+          ]
+        },
+        {
+          "text": "変更が来たら、また draft から",
+          "children": [
+            "上書きして決定記録を残す。この後のページで"
+          ]
+        }
+      ],
+      "image_side": "right",
+      "path": "assets/diagram-knowledge-lifecycle.svg",
+      "caption": "変更するたび、以前の確認記録の対象範囲を見直します。",
+      "notes": "人は材料の選別、議事録の整形、変更の判断、出典との照合、棚卸しを担当する。2か所だけで回るという保証はない。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "status と、チームの確認条件",
+      "lead": "status は記録上の状態です。stable でも、正しさ・社内承認・アクセス権の保証にはなりません。",
+      "columns": [
+        "status",
+        "仕様上の意味",
+        "この案件の運用案"
+      ],
+      "rows": [
+        [
+          "draft",
+          "未レビュー・不完全な可能性がある",
+          "下書きや変更直後。回答に使うなら未確認と示す。"
+        ],
+        [
+          "stable",
+          "利用可能な状態。省略時もこの値",
+          "合意した原本と本文を照合し、確認した範囲を記録する。"
+        ],
+        [
+          "deprecated",
+          "現在の内容ではないが、履歴やリンクのため保持",
+          "廃止や置き換えを明記し、後継があればリンクする。"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 110,
+          "header_h": 46,
+          "cell_size": 19,
+          "col_widths": [
+            1.5,
+            4.5,
+            5.6
+          ]
+        }
+      },
+      "notes": "OKF仕様§5.4–5.5。確認者だけがstableにするのは本資料の運用ルールであり、OKFのアクセス制御ではない。verifiedは出典や実体との照合記録。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "議事録を取り込む日の作業",
+      "punch": "この案件では、会議の当日中に書記が更新の下書きを依頼します。取り込めない場合は、未反映の範囲を残します。",
+      "bullets": [
+        {
+          "text": "1. 許可済みの議事録を inputs/meetings/ に置く",
+          "bold": true,
+          "children": [
+            "発言者の個人名は役割に置換し、内容を確認する。"
+          ]
+        },
+        {
+          "text": "2. 依頼文②で下書きを更新する",
+          "bold": true,
+          "children": [
+            "決定・変更・未決を分け、status は draft にする。"
+          ]
+        },
+        {
+          "text": "3. 領域リードが出典と本文を照合する",
+          "bold": true,
+          "children": [
+            "実際に確認した後、確認者 ID と日時を verified に記録する。"
+          ]
+        },
+        {
+          "text": "4. 更新した範囲を共有する",
+          "bold": true,
+          "children": [
+            "未確認なら draft のまま。翌朝、担当する作業への影響を読む。"
+          ]
+        }
+      ],
+      "image_side": "right",
+      "path": "assets/warm-okfp-03.png",
+      "caption": "human:app-lead は記入例。対応する実在の確認者 ID を管理します。",
+      "notes": "動画の個人運用を実証の根拠として使わない。AIに人の確認記録を書かせる場合も、本人の確認実施に基づく転記に限る。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "依頼文②：議事録から確定・変更・未決を取り込む",
+      "lead": "書記が会議の当日に投げる文です。［　］は会議のファイル名だけ",
+      "language": "markdown",
+      "code": "# やること\ninputs/meetings/［議事録.md］を読み、knowledge/ の更新案を作って。\n# 手順\n1. 決定・変更・未決を分け、関連する既存ファイルを探す。\n2. 合意した変更を該当する要件に反映する。現行の条件を明確にする。\n3. 変更理由を knowledge/decisions/ に記録し、要件から相対リンクを張る。\n4. 未決は knowledge/risks/ または該当要件の「未決」に残す。\n5. 会議の要約を knowledge/meetings/ に保存する。\n6. 触ったフォルダの index.md と knowledge/log.md を更新する。\n# 約束\n- sources.resource に議事録の参照先を残す。\n- 内容を変えたら generated を更新し、status を draft にする。\n- 旧 verified で今回の変更を確認済みにしない。未実施の確認は書かない。\n- 議事録にない内容、金額・契約条件・個人情報は書かずに報告する。\n# 報告\n変更したファイル、決定記録、未決、確認者に見てほしい箇所。",
+      "notes": "依頼文②です。手順に、決まった・変わった・持ち越しの3分類、書き換え、決定記録の追加、会議要約の保存、目次と履歴の更新を書きます。書き換えたら draft に戻す、が肝です。最後の報告を確認者に回します。",
+      "style": {
+        "code": {
+          "size": 18,
+          "min_size": 16,
+          "line_height": 1.05,
+          "y": 168,
+          "h": 490,
+          "pad": 22
+        }
+      }
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "現在の答えは上書き、経緯は決定記録に残す",
+      "punch": "F-012 の配送先を複数にする変更が合意されたら、現行の要件を更新し、変更理由を決定記録に残します。",
+      "bullets": [
+        {
+          "text": "要件ファイルは、常に「現在の答え」だけを持つ",
+          "bold": true,
+          "children": [
+            "現行の条件と適用時点を明記し、古い条件との混同を避ける。"
+          ]
+        },
+        {
+          "text": "経緯は decisions/ に1件ずつ追記する",
+          "bold": true,
+          "children": [
+            "いつ・誰が・なぜ・変更管理の番号。追記するだけで消さない"
+          ]
+        },
+        {
+          "text": "上書き前にコミットした版は、Git履歴から確認できる",
+          "bold": true,
+          "children": [
+            "変更前に記録する。保存だけではGit履歴に残らない。"
+          ]
+        },
+        {
+          "text": "deprecated は「現在の内容ではない」記録に使う",
+          "children": [
+            "例：廃止した機能、置き換えられた用語。後継へのリンクを付ける"
+          ]
+        },
+        {
+          "text": "決定記録そのものが覆ったら、古い決定を deprecated にして後継へリンクする。消さない"
+        },
+        {
+          "text": "この案件では現在と経緯を分ける。決定記録は ADR の考え方を参考にした運用案。",
+          "size": 15,
+          "color": "muted"
+        }
+      ],
+      "image_side": "right",
+      "path": "assets/diagram-overwrite-and-decision.svg",
+      "caption": "現行の要件と、変更理由の決定記録をリンクで結びます。",
+      "notes": "現行の要件と変更理由を分ける運用案。ADRでは覆った決定も経緯として残す。deprecatedは一律の参照禁止やアクセス制御を表す値ではない。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "D-034 配送先の複数化を記録する",
+      "lead": "架空の合意後の記録例。本文を照合する前の下書きなので draft。確認後に verified を記録します。",
+      "language": "yaml",
+      "code": "---\ntype: decision\ntitle: D-034 受注に複数の配送先を持たせる\nsources:\n  - resource: ../../inputs/meetings/2027-07-08.md\n    title: 結合テスト中間報告会の議事録\nchange_request: CR-007\nstatus: draft\ngenerated: { by: \"human:training-author\", at: \"2027-07-08T18:30:00+09:00\" }\n---\n# 背景\n1受注に複数の納品先がある取引を、手作業で分けていた。\n# 決定\n明細ごとに配送先を選べるようにする。\n# 影響\n- [F-012 受注登録](../requirements/F-012-受注登録.md) に配送先を追加。\n- F-031 出荷指示と、関連する設計・テストの変更を確認する。\n# 却下した案と理由\n受注を配送先ごとに登録する案は、入力の重複が増える。",
+      "style": {
+        "lead": {
+          "h": 32
+        },
+        "code": {
+          "y": 168,
+          "h": 490,
+          "size": 18,
+          "min_size": 16,
+          "line_height": 1.05,
+          "pad": 22
+        }
+      },
+      "notes": "架空の未来日付を含む記入例。実際の確認を行っていないためverifiedは記載しない。CR番号は本資料の独自欄でありOKF必須項目ではない。この例は業務上の合意後に作った未照合の記録下書き。合意自体と、本文の確認状態を区別する。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "変更要求（CR）の流れと、OKF 側の動き",
+      "lead": "正式な変更管理は、変更管理台帳と正式文書で進みます。OKF はその各段階で「今の状態」を写し取るだけです",
+      "columns": [
+        "変更管理の段階",
+        "正式文書側（クライアントと）",
+        "OKF 側の動き（社内）"
+      ],
+      "rows": [
+        [
+          "受付",
+          "変更要求票に起票。番号（CR-007）を付ける",
+          "書記が risks/ に1ファイル作る。status: draft（本文に「検討中」と書く）"
+        ],
+        [
+          "影響分析",
+          "影響範囲と規模を整理（見積は別途）",
+          "アーキリードが AI に影響分析を頼む（第3章）。結果を risks/ のファイルに追記する"
+        ],
+        [
+          "承認",
+          "クライアントと合意し、台帳の状態を承認にする",
+          "書記が decisions/ に決定記録を追加し、要件ファイルを上書きして draft にする。受付時の risks/ は deprecated にして決定記録へリンク"
+        ],
+        [
+          "反映",
+          "設計書・テスト仕様を改版し、Office 形式に書き出して提出する",
+          "確認者（リード）が stable にする。docs/ の設計書へリンクを張り直す"
+        ],
+        [
+          "見送り",
+          "台帳の状態を見送りにする",
+          "書記が risks/ のファイルを deprecated にし、理由を1行残す"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 66,
+          "cell_size": 18,
+          "col_widths": [
+            1.8,
+            4.6,
+            5.2
+          ]
+        }
+      },
+      "notes": "変更管理との接続です。正式な流れは台帳と正式文書で進み、OKF は各段階で状態を写し取ります。金額と見積は台帳側にしかありません。承認された時点で決定記録を書き、要件を上書きします。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "02｜作成と更新の詳細",
+      "title": "毎朝、AI に「昨日から何が変わった？」と聞く",
+      "punch": "更新履歴から F-012 の変更を探し、自分の設計やテストへの影響を確認します。読む時間は内容に応じて確保します。",
+      "bullets": [
+        {
+          "text": "依頼文③（毎朝）",
+          "bold": true,
+          "children": [
+            "「knowledge/log.md と git log --since=yesterday を見て、昨日から変わった知識を『決まった／変わった／未決のまま』に分けて教えて。私の担当（［受注・出荷］）に関係するものは先に。根拠のファイル名も添えて」"
+          ]
+        },
+        {
+          "text": "答えの見方",
+          "bold": true,
+          "children": [
+            "stable になった範囲の根拠・確認記録・適用時点を確かめる。",
+            "変わった＝決定記録つき。自分の作業への影響を確かめる",
+            "未決のまま＝risks。担当なら動かす"
+          ]
+        },
+        "リードは週に一度、「先週から」に広げて見る"
+      ],
+      "image_side": "left",
+      "path": "assets/warm-okfp-04.png",
+      "caption": "更新履歴を入口に、担当する要件の本文と根拠を開きます。",
+      "notes": "毎朝3分という所要は保証しない。log.mdとgit logは変更を探す入口。本文と出典を開いて現在の条件を確認する。"
+    },
+    {
+      "type": "section",
+      "number": "03",
+      "title": "工程別の事例とトラブル対応",
+      "subtitle": "F-012を使い、設計・テスト・変更の判断まで確かめる"
+    },
+    {
+      "type": "table",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "6つの場面で、何を聞き、どこが根拠になるか",
+      "lead": "根拠になるフォルダが分かっていると、AI の答えを疑うべきときが分かります",
+      "columns": [
+        "場面",
+        "よくある問い",
+        "根拠になるフォルダ"
+      ],
+      "rows": [
+        [
+          "要件定義",
+          "要件同士の矛盾は？ RFP にあって要件に無いものは？",
+          "requirements / sources / risks"
+        ],
+        [
+          "設計",
+          "この要件が影響する設計書は？ 設計書のドラフトを作って",
+          "requirements / architecture / decisions / docs（設計書）"
+        ],
+        [
+          "開発",
+          "この機能の要件と決定は？ 仕様が無いところは？",
+          "requirements / decisions / glossary"
+        ],
+        [
+          "テスト",
+          "この要件からテストケースを作って。テストされていない要件は？",
+          "requirements / decisions / docs（テスト仕様）"
+        ],
+        [
+          "新規参画",
+          "この案件の背景と、今どこまで決まっている？",
+          "index / architecture / meetings / risks"
+        ],
+        [
+          "マネジメント",
+          "詰まっている領域は？ 期限切れと未決は？",
+          "status と stale_after の欄 / risks"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 62,
+          "cell_size": 18,
+          "col_widths": [
+            1.8,
+            5.4,
+            4.4
+          ]
+        }
+      },
+      "notes": "使い方の地図です。6つの場面それぞれに、よくある問いと根拠になるフォルダを並べました。根拠のフォルダが分かると、答えを疑うべきときが分かります。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "調べる・作る・確かめる依頼文",
+      "punch": "依頼に根拠の提示を加えます。返ってきたファイルを実際に開き、主張を支えているかを確かめます。",
+      "bullets": [
+        {
+          "text": "型1：調べる",
+          "bold": true,
+          "children": [
+            "「index.md から辿って、［受注登録の必須項目］を教えて。根拠のファイル名も添えて」"
+          ]
+        },
+        {
+          "text": "型2：作る",
+          "bold": true,
+          "children": [
+            "「［受注登録の設計書ドラフト］を作って。参照した知識と、知識に無かった部分を分けて報告して」"
+          ]
+        },
+        {
+          "text": "型3：確かめる",
+          "bold": true,
+          "children": [
+            "「［F-001〜F-050］に矛盾や抜けがないか確認して。根拠と確からしさを添えて」"
+          ]
+        },
+        {
+          "text": "共通のコツ",
+          "bold": true,
+          "children": [
+            "「知識に無い部分は分けて」で、AI の推測を見分けやすくなる",
+            "draft の情報を使ったら「未確認」と言わせる（CLAUDE.md に書いてある）",
+            "答えに違和感があれば根拠のファイルを開く。違っていたら推進担当に伝え、draft に戻す"
+          ]
+        }
+      ],
+      "image_side": "right",
+      "path": "assets/diagram-three-ask-patterns.svg",
+      "caption": "ファイル名だけでなく、根拠の行や節も確かめます。",
+      "notes": "根拠を付ける指示だけでは、推測や誤引用を防げない。回答と出典を照合する。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "要件定義：矛盾と抜けを、要件全体で確かめる",
+      "lead": "依頼文④。AI に矛盾や抜けの候補を挙げてもらい、リードが根拠と対象範囲を確かめます。全件の検出保証はありません。",
+      "language": "markdown",
+      "code": "# やること\nknowledge/requirements/ と、knowledge/sources/rfp.md の参照先を読み、\n矛盾や抜けの候補を挙げて。対象の件数と、実際に読んだ範囲も報告して。\n# 見るところ\n1. 同じ条件で矛盾する記述。\n   例：F-012 の在庫超過時に「登録可」と「登録不可」が併記されている。\n2. RFP にあるのに、要件に見つからない項目。\n3. 要件にあるが、RFP や提案書に根拠を見つけられない項目。\n4. 「要確認」が残っている箇所。\n# 約束\n- 根拠のファイル名と行・節を添える。推測で埋めない。\n- draft や期限に達した資料は、その状態を示す。\n- 未読の資料や、判断できなかった項目を別に挙げる。\n# 出力\n表の列：種類、該当ファイル、見つけた記述、確認すること。",
+      "notes": "異なる工程の条件は一見異なっても矛盾とは限らない。比較する条件と適用範囲をそろえた矛盾例に変更。AIによる全件検出は保証しない。",
+      "style": {
+        "code": {
+          "size": 20,
+          "min_size": 18,
+          "line_height": 1.25,
+          "y": 168,
+          "h": 480,
+          "pad": 22
+        }
+      }
+    },
+    {
+      "type": "code",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "設計：影響分析と、設計書のドラフト",
+      "lead": "依頼文⑤。変更要求が来たときの影響分析と、設計書のドラフト作りの2本。どちらも「知識に無い部分」を分けて報告させます",
+      "language": "markdown",
+      "code": "# 影響分析（変更要求が来たとき）\n［F-012 を「1受注に複数の配送先を持てる」に変える案］の影響範囲を洗い出して\n# 材料\nknowledge/requirements/・knowledge/architecture/・docs/design/\n# 守ってほしいこと\n「直接影響（要件や設計書を直す）」「間接影響（確認が要る）」「影響なしと判断した理由」に分け、\n根拠のファイル名を添える。推測は「（推測）」と印を付ける\n# 最後に報告してほしいこと\n参照したファイルの一覧／判断に迷った点\n\n# 設計書のドラフト\ndocs/design/［order-entry.md］（受注登録の設計書）のドラフトを書いて。型は docs/design/_template.md\n# 材料\n［knowledge/requirements/F-012-受注登録.md］ と、knowledge/architecture/・knowledge/decisions/ の関連ファイル\n# 守ってほしいこと\n根拠に無い部分は「（設計判断が必要）」と印を付け、最後に一覧にする\n# 最後に報告してほしいこと\n参照したファイルの一覧／設計判断が必要な箇所",
+      "style": {
+        "lead": {
+          "h": 40
+        },
+        "code": {
+          "y": 168,
+          "h": 480,
+          "size": 20,
+          "min_size": 16,
+          "line_height": 1.35
+        }
+      },
+      "notes": "設計の依頼文は2本。影響分析と、設計書のドラフト。影響分析は直接・間接・影響なしの3分類。ドラフトは根拠に無い部分に印を付けさせます。設計判断は人がします。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "開発：コードを書く前に、要件と決定を読ませる",
+      "lead": "CLAUDE.md に読む順番を記し、依頼には F-012 のように機能 ID を添えます。参照した資料の報告も確認します。",
+      "bullets": [
+        {
+          "text": "CLAUDE.md に、実装の前提を書く",
+          "bold": true,
+          "children": [
+            "「実装の前に、該当する knowledge/requirements/ と knowledge/decisions/ を読む」",
+            "「仕様が無い・矛盾するときは実装せず、質問として返す」"
+          ]
+        },
+        {
+          "text": "依頼のときは、機能 ID を添える",
+          "bold": true,
+          "children": [
+            "「F-012 受注登録の入力チェックを実装して。要件と決定記録に無い振る舞いは、実装せず質問して」"
+          ]
+        },
+        {
+          "text": "コードのコメントやコミットに、機能 ID と決定 ID を書く",
+          "bold": true,
+          "children": [
+            "「F-012 / D-034」と書いておくと、あとから AI がコードと知識を突き合わせられる"
+          ]
+        },
+        {
+          "text": "実装中に分かった「要件の穴」は、risks/ に1ファイル足す",
+          "children": [
+            "AI に「これを risks/ に未決として書いて」と頼む。決めるのはリード"
+          ]
+        }
+      ],
+      "notes": "作業指示の読み込みと、指示どおりの実行は同じではない。実際の参照ファイルと実装・テスト結果を確認する。 CLAUDE.md の読み込みと指示の性質: https://code.claude.com/docs/en/memory （2026-09-06参照）。"
+    },
+    {
+      "type": "table",
+      "title": "テスト案を、F-012の要件と照合する",
+      "lead": "要件は数量1以上。在庫を超える場合は未決という架空例です。",
+      "columns": [
+        "入力",
+        "AIが出した期待結果",
+        "根拠と照合した判断"
+      ],
+      "rows": [
+        [
+          "数量1",
+          "入力を受け付ける",
+          "数量の下限条件を満たす。ほかの必須入力も確認"
+        ],
+        [
+          "数量0",
+          "入力を受け付ける",
+          "誤り。数量1以上を満たさないため拒否する"
+        ],
+        [
+          "数量が在庫超過",
+          "自動で分納する",
+          "根拠なし。未決として業務担当へ確認"
+        ]
+      ],
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "style": {
+        "table": {
+          "row_h": 105,
+          "header_h": 60,
+          "cell_size": 22,
+          "col_widths": [
+            1.7,
+            2.6,
+            4.7
+          ]
+        }
+      },
+      "notes": "架空のF-012数量条件に基づくケース。表はAIの実測出力ではなく、誤りを見つけるための教材例。テストケースの入力、期待値、根拠を一組で確認する。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "新規参画者が最初に確認すること",
+      "punch": "背景、現状、自分の担当を先に整理し、リードとの確認で分からない点を埋めます。",
+      "bullets": [
+        {
+          "text": "1. 背景と目的",
+          "bold": true,
+          "children": [
+            "「index.md から辿って、この案件の背景・目的・体制を10分で読める分量に。根拠のファイル名も添えて」"
+          ]
+        },
+        {
+          "text": "2. 今の状態",
+          "bold": true,
+          "children": [
+            "「今どの工程で、どの範囲に確認記録があり、何が未決（risks）か」"
+          ]
+        },
+        {
+          "text": "3. 自分の担当領域",
+          "bold": true,
+          "children": [
+            "「私は出荷（F-030〜F-045）担当。関係する要件・決定・用語を優先度順に」"
+          ]
+        },
+        "答えを読んでから、リードに不明点と、理解が合っているかを確かめる"
+      ],
+      "image_side": "right",
+      "path": "assets/warm-okfp-05.png",
+      "caption": "効果を見るなら、説明にかかった時間と理解の抜けを記録します。",
+      "notes": "数時間から30分程度という未実測の効果断定を削除。質問への回答だけで追いつけるとはしない。同じ確認項目で説明時間と理解を比較する運用案。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "状態と見直し時点を集計する",
+      "lead": "依頼文⑦。件数は状態を探る入口です。stale は見直しの目印であり、内容が誤りという判定ではありません。",
+      "language": "markdown",
+      "code": "# 状態を数える\nknowledge/requirements/ の status 別の件数（draft／stable／deprecated）を、\n受注・出荷・請求の領域別に表にして。\nUTC オフセット付きの現在時刻を示し、now >= stale_after のファイルを一覧にして。\n日時が不正・未記載なら期限切れと混ぜず別欄に。risks/ の draft も一覧にして。\n# 詰まりを挙げる\n上の数字と knowledge/meetings/ の直近3回の「未決」節から、\n要件定義完了に向けて詰まっている領域を挙げて（多くて5つ）\n# 壁打ち\nいま私（PM）が見落としていそうなリスクを、knowledge/ の記述だけを根拠に挙げて\n# 守ってほしいこと\n根拠の無いものは挙げない。推測は「（推測）」と印を付けて分ける\n# 最後に報告してほしいこと\nそれぞれの根拠のファイル／詰まっている理由（議事録の記述から）／次に決めるべき問い",
+      "notes": "マネジメントの依頼文です。まず数える。draft の件数、期限切れ、未決。次に詰まりを挙げさせ、根拠と次に決める問いを添えさせる。最後に壁打ち。根拠が無いものは挙げさせません。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。",
+      "style": {
+        "code": {
+          "size": 18,
+          "min_size": 16,
+          "line_height": 1.05,
+          "y": 168,
+          "h": 490,
+          "pad": 22
+        }
+      }
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "整理の効果は、同じ質問で比べる",
+      "lead": "フォルダや description だけで回答品質は保証できません。整理前後で、同じ資料・質問・利用設定を使って確かめます。",
+      "bullets": [
+        {
+          "text": "F-012 の通常・例外・対象外の質問を用意する",
+          "bold": true,
+          "children": [
+            "数量の下限、在庫超過時、海外取引への適用を聞く。"
+          ]
+        },
+        {
+          "text": "検索と回答を分けて見る",
+          "bold": true,
+          "children": [
+            "必要な現行ファイルを見つけたか。条件と例外を正しく答えたか。"
+          ]
+        },
+        {
+          "text": "一度に変える整理方法を絞る",
+          "bold": true,
+          "children": [
+            "目次の説明、ファイルの分割、工程別の入口をそれぞれ試す。"
+          ]
+        },
+        {
+          "text": "効果と失敗を記録する",
+          "bold": true,
+          "children": [
+            "時間や利用量を測る場合は、質問数と測定条件も残す。",
+            "対象を絞りすぎて、関連する決定記録を落とさないかも確認する。"
+          ]
+        }
+      ],
+      "notes": "フォルダとdescriptionで絞れば精度は落ちない、専門特化より効くという未検証の比較を削除。整理前後で同じ質問を使用する評価案。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "成果物は別に置き、要件とリンクする",
+      "lead": "この資料の推奨では、同じリポジトリにあるものを OKF に写しません。OKF が持つのは「索引・決定・用語・前提」です",
+      "bullets": [
+        {
+          "text": "OKF（knowledge/）が持つもの",
+          "bold": true,
+          "children": [
+            "要件・決定記録・用語・アーキテクチャの前提・未決・会議の要約・出典"
+          ]
+        },
+        {
+          "text": "OKF の外（docs/・src/）に置くもの",
+          "bold": true,
+          "children": [
+            "設計書・テスト仕様・コード。要件ファイルから相対リンクで指す"
+          ]
+        },
+        {
+          "text": "リンクは両方向に張る",
+          "bold": true,
+          "children": [
+            "requirements/ からは ../../docs/design/order-entry.md。設計書側にも要件へのリンクを置く。"
+          ]
+        },
+        "設計書を直したら、要件ファイルの「設計」リンクと index.md も同じ PR（プルリクエスト）で直す"
+      ],
+      "notes": "成果物との関係です。同じリポジトリにあるものを OKF に写さない。OKF が持つのは索引・決定・用語・前提。設計書やコードは外に置いてリンクで結びます。発展編として、設計書のマージをきっかけに AI に索引を更新させる自動化（GitHub Actions など）も考えられますが、本資料の提案で実績はまだありません。まず手動で回してからです。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "03｜事例とトラブルシューティング",
+      "title": "症状が出たときの確認先",
+      "lead": "原因は候補です。根拠のファイルと実際の回答を見て切り分けます。",
+      "columns": [
+        "症状",
+        "考えられる原因",
+        "確認・修正"
+      ],
+      "rows": [
+        [
+          "古い答えを返す",
+          "旧版や適用時点を取り違えた",
+          "回答が参照した版を開き、現行の条件と照合。"
+        ],
+        [
+          "話題が重複している",
+          "既存ファイルを探さず追加した",
+          "同じ話題を比較し、現行の参照先を決める。"
+        ],
+        [
+          "根拠のない要件がある",
+          "資料にない内容を補った",
+          "sources の参照先を読み、未確認なら draft。"
+        ],
+        [
+          "draft が溜まる",
+          "対象が多い、確認者が不在",
+          "優先する範囲と代理の確認者を決める。"
+        ],
+        [
+          "回答が遅い・外れる",
+          "目次、読み込み範囲、モデル等の問題",
+          "同じ質問で、検索と回答を別々に確認。"
+        ],
+        [
+          "機密が混ざった",
+          "選別や変換後の確認で見落とした",
+          "利用を止めて担当に連絡。履歴と送信先の扱いも確認。"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 67,
+          "header_h": 44,
+          "cell_size": 17,
+          "col_widths": [
+            2.6,
+            4.2,
+            4.8
+          ]
+        }
+      },
+      "notes": "壊れ方と直し方の早見表です。古い答えが返る、重複、根拠のない要件、draft の滞留、遅い・外す、機密混入。それぞれ原因と直し方を決めておくと、運用が始まってから慌てません。"
+    },
+    {
+      "type": "two_column",
+      "title": "演習：配送先の案を、確定として使える？",
+      "lead": "議事録には「配送先を複数にする案。業務側が持ち帰り確認」とあります。",
+      "left": {
+        "heading": "AIが書いた下書き",
+        "bullets": [
+          "明細ごとに配送先を選択できる。",
+          "状態を stable に変更した。",
+          "設計書へ反映するよう指示した。"
+        ]
+      },
+      "right": {
+        "heading": "確認してほしいこと",
+        "bullets": [
+          "何が原本より先に進んでいるか。",
+          "今の要件には何を残すか。",
+          "誰の、どの確認を待つか。"
+        ]
+      },
+      "eyebrow": "03｜事例とトラブルシューティング"
+    },
+    {
+      "type": "two_column",
+      "title": "解答：未決を残し、合意を待つ",
+      "lead": "議事録の「案」を、現在の要件へ無条件に上書きしません。",
+      "left": {
+        "heading": "直す箇所",
+        "bullets": [
+          "現行要件は、決定前の条件を保つ。",
+          "案と影響範囲を risks/ の未決記録へ残す。",
+          "下書きに戻し、確認担当を明示する。"
+        ]
+      },
+      "right": {
+        "heading": "再確認の方法",
+        "bullets": [
+          "業務側の合意記録を確認する。",
+          "確定した条件と本文を照合する。",
+          "設計・テストへの影響を再点検する。"
+        ]
+      },
+      "eyebrow": "03｜事例とトラブルシューティング"
+    },
+    {
+      "type": "section",
+      "number": "04",
+      "title": "壊さずに続けるためのTips",
+      "subtitle": "担当・チェック・見直しを、運用に組み込む"
+    },
+    {
+      "type": "table",
+      "eyebrow": "04｜続けるためのTips",
+      "title": "誰が、何をするか",
+      "lead": "11名の体制で、OKF に関わる役割は5つ。全員が「書く」に参加でき、「確認する」は分けます",
+      "columns": [
+        "役割",
+        "書く（draft）",
+        "内容を確認する（stable）",
+        "形式を確認する",
+        "棚卸し・ルール"
+      ],
+      "rows": [
+        [
+          "AI 推進担当（2〜3名、兼務）",
+          "初期構築。依頼文の整備",
+          "（担当しない）",
+          "機械チェックの運用。立ち上げ期は伴走する",
+          "週次棚卸し。ルール改定の提案"
+        ],
+        [
+          "アプリリード／アーキリード",
+          "自領域の要件・決定",
+          "自領域の verified を書く",
+          "（担当しない）",
+          "節目の棚卸し。stable の条件を決める"
+        ],
+        [
+          "書記（PMO 兼務）",
+          "議事録の当日取り込み",
+          "（担当しない）",
+          "（担当しない）",
+          "meetings/ と risks/ の整理"
+        ],
+        [
+          "メンバー（アプリ・アーキ・テスター）",
+          "実装・テストで見つけた穴を risks/ に書く",
+          "（担当しない）",
+          "（担当しない）",
+          "毎朝の差分確認"
+        ],
+        [
+          "PM",
+          "（担当しない）",
+          "リード承認後の決定記録に目を通す。判断が割れたら決める",
+          "（担当しない）",
+          "週次で状態を数える（第3章）。ルールを承認する"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 68,
+          "header_h": 46,
+          "cell_size": 18,
+          "col_widths": [
+            2.6,
+            2.6,
+            2.6,
+            2.2,
+            2.6
+          ]
+        }
+      },
+      "notes": "役割分担です。書くのは全員、内容の確認は領域リード、形式の確認は機械と推進担当、棚卸しは推進担当とリード。PM は決定記録の最終確認と状態の把握です。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "04｜続けるためのTips",
+      "title": "本文の照合と形式検査の役割",
+      "punch": "本文が原本と合うかは領域リードが確認します。形式検査では、YAML や日時、リンクなどを確認します。",
+      "bullets": [
+        {
+          "text": "本文の照合：領域リード",
+          "bold": true,
+          "children": [
+            "合意した要件と本文を読み、確認した範囲を残す。",
+            "その実施記録を verified の主体と日時に書く。"
+          ]
+        },
+        {
+          "text": "形式検査：検証スクリプトと推進担当",
+          "bold": true,
+          "children": [
+            "必須欄、日時、sources、リンク、目次を調べる。",
+            "結果は検査ログへ。形式 PASS だけで verified は付けない。"
+          ]
+        },
+        {
+          "text": "担当を代わるときも確認範囲を残す",
+          "bold": true,
+          "children": [
+            "人の ID と役割の対応は、チームで管理する。",
+            "操作に不慣れな間は推進担当が伴走し、状況に応じて支援を減らす。"
+          ]
+        }
+      ],
+      "image_side": "right",
+      "path": "assets/diagram-verified-two-layers.svg",
+      "caption": "verified は出典や実体との照合記録。本人認証の仕組みではありません。",
+      "notes": "元版のprocess:で機械検査結果が自動的に残るという記述を訂正。ローカルvalidate_okf.pyは形式検査のみ。形式検査だけでは本文照合を意味しない。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。"
+    },
+    {
+      "type": "two_column",
+      "eyebrow": "04｜続けるためのTips",
+      "title": "この案件で選ぶ更新方法",
+      "left": {
+        "heading": "少人数で直接更新する場合",
+        "bullets": [
+          "チームが認めた場合に限り main を直接更新する。",
+          "内容を変えたら draft。未確認の変更範囲を示す。",
+          "形式検査の後、確認者が本文を出典と照合する。",
+          "同時編集は担当を調整し、差分を確認する。"
+        ]
+      },
+      "right": {
+        "heading": "この案件の案：ブランチと PR",
+        "bullets": [
+          "ブランチで変更し、PR で差分をレビューする。",
+          "CI の形式検査と、人の本文照合を分ける。",
+          "照合した主体・日時・範囲を確認して取り込む。",
+          "PR の承認操作だけを、verified の根拠にしない。"
+        ]
+      },
+      "style": {
+        "col_body": {
+          "size": 17,
+          "line_height": 1.4,
+          "gap": 9
+        }
+      },
+      "notes": "いずれも運用案。GitやCIは別途設定が必要。確認者の承認クリックが出典との照合を意味するとは限らない。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "04｜続けるためのTips",
+      "title": "機械で調べること、人が確かめること",
+      "lead": "本リポジトリの validate_okf.py の現行コードに基づく説明です。形式 PASS は本文の正しさや機密の不在を保証しません。",
+      "columns": [
+        "範囲",
+        "現行スクリプトで調べること",
+        "別に必要な確認"
+      ],
+      "rows": [
+        [
+          "YAML・型",
+          "構文、重複キー、空でない type、status の値",
+          "type の使い分けが適切か"
+        ],
+        [
+          "日時・記録",
+          "generated / verified の by と日時、stale_after の UTC オフセット",
+          "作成や照合を実際に行ったか"
+        ],
+        [
+          "sources",
+          "各項目の resource、日時と usage_window の書式",
+          "参照先を開けるか、本文の根拠か"
+        ],
+        [
+          "目次・リンク",
+          "相対リンク先の存在、目次の記載、okf_version 宣言",
+          "目次の説明とリンクの意味"
+        ],
+        [
+          "追加するなら",
+          "期限抽出と機密候補の検出は、この資料の提案",
+          "now >= stale_after を抽出。内容を照合して見直す"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 76,
+          "header_h": 44,
+          "cell_size": 18,
+          "col_widths": [
+            1.9,
+            5.1,
+            4.6
+          ]
+        }
+      },
+      "notes": "現行validate_okf.pyを直接確認。generated欠落はプロジェクト上の警告。YAML重複キー、日時、status、sources.resource、usage_window、verified等を検査する。期限到達の抽出と機密検出は実装されていない。表の現行検査は完全なOKF適合性や本文の正しさを保証しない。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "04｜続けるためのTips",
+      "title": "定期的な見直しと、工程の節目",
+      "punch": "週次で確認待ちと期限到達を探し、工程の節目で使う知識を見直します。時間は対象の量に応じて確保します。",
+      "bullets": [
+        {
+          "text": "週次（推進担当）",
+          "bold": true,
+          "children": [
+            "draft のまま1週間以上なら、確認者に催促する",
+            "期限到達は根拠と照合し、修正・期限更新・廃止を判断する",
+            "動いていない未決は、次の会議の議題に入れる",
+            "type や tags が増えていたら、まとめる"
+          ]
+        },
+        {
+          "text": "節目（リード、全件）",
+          "bold": true,
+          "children": [
+            "要件定義完了・設計完了・テスト開始・リリース前",
+            "未確認は draft。照合した上で状態と次の見直し時点を決める",
+            "決定記録と要件の整合を AI に確認させる"
+          ]
+        },
+        "リリース後は、引継ぎと保存の要件に合わせて残す知識を決める。"
+      ],
+      "image_side": "left",
+      "path": "assets/warm-okfp-06.png",
+      "caption": "期限を延ばす前に、参照した根拠と確認結果を残します。",
+      "notes": "30分で必ず終わるという保証を削除。期限到達はnow>=stale_afterで判定し、単なる期限延長を確認としない。保存対象は引継ぎ・監査の要件に応じて決める。"
+    },
+    {
+      "type": "bullets",
+      "eyebrow": "04｜続けるためのTips",
+      "title": "更新時に確認する8項目",
+      "lead": "この案件の運用案です。形式の合格と、本文の確認を混同しないための確認表です。",
+      "bullets": [
+        {
+          "text": "1. 変更後は draft に戻したか",
+          "bold": true,
+          "children": [
+            "以前の verified で新しい変更まで確認済みにしない。"
+          ]
+        },
+        {
+          "text": "2. 現行の条件と変更理由を分けたか",
+          "bold": true,
+          "children": [
+            "要件の本文と、決定記録の両方を更新する。"
+          ]
+        },
+        {
+          "text": "3. 入力対象外の情報が混ざっていないか",
+          "bold": true,
+          "children": [
+            "機械で候補を探し、内容を人が確認する。"
+          ]
+        },
+        {
+          "text": "4. 同じ話題が重複していないか",
+          "bold": true,
+          "children": [
+            "新規作成前に既存ファイルを探す。"
+          ]
+        },
+        {
+          "text": "5. 目次と履歴も更新したか",
+          "bold": true
+        },
+        {
+          "text": "6. 使う本文を出典と照合したか",
+          "bold": true
+        },
+        {
+          "text": "7. 作業指示と知識を分けて置いたか",
+          "bold": true
+        },
+        {
+          "text": "8. 合意した正式文書と食い違っていないか",
+          "bold": true
+        }
+      ],
+      "style": {
+        "body": {
+          "size": 20,
+          "child_size": 17,
+          "gap": 8,
+          "child_gap": 3
+        }
+      },
+      "notes": "やってはいけないこと8つです。どれも善意で起きます。draft を stable と言い張る、古い記述を残す、機密を書く、type を増やす、目次を更新しない、読まずに stable にする、指示書に知識を書く、正式文書との食い違いを放置する。それぞれ防ぎ方を決めておきます。"
+    },
+    {
+      "type": "table",
+      "title": "差分の確認は、3つの質問で進める",
+      "lead": "変更の量だけでは、見落とした影響を判断できません。",
+      "columns": [
+        "確認の質問",
+        "F-012の例"
+      ],
+      "rows": [
+        [
+          "何が変わった？",
+          "明細ごとの配送先選択を追加した。"
+        ],
+        [
+          "なぜ変わった？",
+          "複数の納品先を扱う合意に基づく。"
+        ],
+        [
+          "どこも直す？",
+          "出荷指示・設計・テストを点検する。"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 88,
+          "cell_size": 19
+        }
+      },
+      "eyebrow": "04｜続けるためのTips"
+    },
+    {
+      "type": "two_column",
+      "title": "小さな試行を、同じ課題で評価する",
+      "lead": "測定の提案です。実測した工数削減や精度ではありません。",
+      "left": {
+        "heading": "試す課題",
+        "bullets": [
+          "F-012の入力条件を説明する。",
+          "配送先変更の理由を探す。",
+          "未決の扱いを指摘する。"
+        ]
+      },
+      "right": {
+        "heading": "合否を確認",
+        "bullets": [
+          "原本と一致している。",
+          "要件から根拠へ戻れる。",
+          "未決を確定と扱わない。"
+        ]
+      },
+      "eyebrow": "04｜続けるためのTips"
+    },
+    {
+      "type": "closing",
+      "title": "受注登録の1件から試す",
+      "bullets": [
+        "作る：許可済みの資料から F-012 を draft にし、参照先を付ける。",
+        "育てる：合意した変更を要件と決定記録に反映する。未合意案は別に残す。",
+        "使う：通常・例外・答えのない質問で、回答と参照先を確かめる。",
+        "守る：形式検査と本文の照合を分け、見直す時点を日時で残す。",
+        {
+          "text": "まず行うこと：少数の要件で試し、時間と誤りを記録する",
+          "bold": true,
+          "color": "on_primary"
+        }
+      ],
+      "message": "コピー用の例は付録へ。ファイル名・根拠・日時を実際の値に置き換えます。",
+      "notes": "日数や効果は実測せず断定しない。最初の小さな試行を記録し、未確認の範囲を残す。"
+    },
+    {
+      "type": "section",
+      "number": "A",
+      "title": "付録：依頼文集とひな形",
+      "subtitle": "本編に出てきた依頼文とひな形を、コピーして使える形で並べます。最後に出典",
+      "notes": "付録です。依頼文①〜⑦、要件ファイルと決定記録のひな形、チェックリスト、出典を収めています。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "付録｜依頼文の一覧",
+      "title": "依頼文の一覧：作成・更新・要件",
+      "lead": "本編の見出しを手がかりに、使う依頼文を選びます。",
+      "columns": [
+        "番号",
+        "名前",
+        "誰が",
+        "いつ",
+        "本編"
+      ],
+      "rows": [
+        [
+          "①",
+          "初期ナレッジの一次抽出",
+          "AI 推進担当",
+          "9月の初期構築（ステップ3）",
+          "第2章：初期構築"
+        ],
+        [
+          "②",
+          "議事録の取り込み",
+          "書記（PMO）",
+          "会議の当日中",
+          "第2章：議事録取り込み"
+        ],
+        [
+          "③",
+          "毎朝の差分確認",
+          "全員",
+          "毎朝の業務開始時",
+          "第2章：朝の差分"
+        ],
+        [
+          "④",
+          "要件の矛盾と抜けの確認",
+          "アプリリード",
+          "要件定義の中盤・終盤",
+          "第3章：要件定義"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 78,
+          "header_h": 44,
+          "cell_size": 19,
+          "col_widths": [
+            0.8,
+            3.6,
+            2.6,
+            3.4,
+            2.6
+          ]
+        }
+      },
+      "notes": "依頼文の一覧です。番号、名前、誰が、いつ、本編の該当ページ。本編のコード部分をそのままコピーして使ってください。"
+    },
+    {
+      "type": "table",
+      "eyebrow": "付録｜依頼文の一覧",
+      "title": "依頼文の一覧：設計・テスト・集計",
+      "lead": "本編の見出しを手がかりに、使う依頼文を選びます。",
+      "columns": [
+        "番号",
+        "名前",
+        "誰が",
+        "いつ",
+        "本編"
+      ],
+      "rows": [
+        [
+          "⑤",
+          "影響分析と設計書ドラフト",
+          "アーキリード・アプリリード",
+          "変更要求のとき・設計着手時",
+          "第3章：設計"
+        ],
+        [
+          "⑥",
+          "テストケース作成と漏れ確認",
+          "テスター",
+          "テスト設計時・テスト完了前",
+          "付録：依頼文⑥"
+        ],
+        [
+          "⑦",
+          "状態の集計と壁打ち",
+          "PM・リード",
+          "週に一度",
+          "第3章：状態集計"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 78,
+          "header_h": 44,
+          "cell_size": 19,
+          "col_widths": [
+            0.8,
+            3.6,
+            2.6,
+            3.4,
+            2.6
+          ]
+        }
+      },
+      "notes": "依頼文の一覧です。番号、名前、誰が、いつ、本編の該当ページ。本編のコード部分をそのままコピーして使ってください。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "付録｜コピーして使う依頼文",
+      "title": "依頼文⑥：テスト案と漏れの確認",
+      "lead": "F-012の根拠と照合するための依頼文。本編のテスト表と合わせて使います。",
+      "language": "markdown",
+      "code": "# テストケースを作る\n［knowledge/requirements/F-012-受注登録.md］ と関連する knowledge/decisions/ から、\nテストケースを表で作って。列は「ケースID」「観点（正常／異常／境界）」「前提」「操作」\n「期待結果」「根拠のファイル」。\n要件に根拠の無いケースは表を分けて「（要件に無い。追加要件か確認）」と書いて\n\n# テスト漏れを確かめる\ndocs/test/［F-012-cases.md］（実施済みのケース）と\n［knowledge/requirements/F-012-受注登録.md］ を突き合わせて、\n要件にあるのにテストされていない項目と、テストにあるのに要件に無い項目を列挙して。\n決定記録（D-034 など）で変わった要件が、テストに反映されているかも見て\n\n# 最後に報告してほしいこと\n要件に根拠のないケース／判断に迷った項目／参照したファイルの一覧",
+      "notes": "テストの依頼文は2本。要件からケースを作ることと、テスト漏れの確認。要件に根拠の無いケースは分けて出させます。決定記録で変わった要件がテストに反映されているかも見ます。",
+      "style": {
+        "code": {
+          "size": 20,
+          "min_size": 16,
+          "line_height": 1.35
+        }
+      }
+    },
+    {
+      "type": "code",
+      "eyebrow": "付録｜ひな形①",
+      "title": "要件ファイルのひな形（requirements/）",
+      "lead": "架空の記入例。参照先・作成者・日時を実際の値に置き換え、本文を照合するまでは draft にします。",
+      "language": "yaml",
+      "code": "---\ntype: requirement\ntitle: F-000 機能名\ndescription: この要件で分かることを1文で書く。\nsources:\n  - resource: ../../inputs/text/functions.csv\n    title: 機能一覧の該当行\nstatus: draft\ngenerated: { by: \"human:training-author\", at: \"2026-09-01T09:00:00+09:00\" }\nstale_after: \"2026-12-26T00:00:00+09:00\"\n---\n# 要件\n誰が、どの条件で、何をするか。例外も残す。\n# 未決\n資料から分からないことを書く。\n# 関連\n根拠の行・節と、関連する要件への相対リンクを書く。\n\n<!-- verified は実際の照合後に、確認した主体と日時を記録する。 -->",
+      "style": {
+        "lead": {
+          "h": 40
+        },
+        "code": {
+          "y": 168,
+          "h": 490,
+          "size": 18,
+          "min_size": 16,
+          "line_height": 1.05,
+          "pad": 22
+        }
+      },
+      "notes": "このまま実案件へコピーして完了とはしない。全ての架空値を実際の作成内容へ置き換える。sources.resourceは知識ファイルから見た相対パス。stale_afterはUTCオフセット付き絶対日時でnow>=が抽出条件。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "付録｜ひな形②",
+      "title": "決定記録のひな形（decisions/）",
+      "lead": "架空の記入例。決定が覆ったら deprecated とし、後継へのリンクを残します。",
+      "language": "yaml",
+      "code": "---\ntype: decision\ntitle: D-000 決定の名前\nsources:\n  - resource: ../../inputs/meetings/2026-10-15.md\n    title: 合意した議事録の決定事項\nstatus: draft\ngenerated: { by: \"human:training-author\", at: \"2026-10-15T18:00:00+09:00\" }\nchange_request: CR-000\n---\n# 背景\n決定が必要になった状況と制約を書く。\n# 決定\n合意した内容と、適用する時点を書く。\n# 影響\n変更する要件・設計・テストへ相対リンクを付ける。\n# 却下した案\n案と採用しなかった理由を書く。",
+      "style": {
+        "lead": {
+          "h": 40
+        },
+        "code": {
+          "y": 168,
+          "h": 490,
+          "size": 18,
+          "min_size": 16,
+          "line_height": 1.05,
+          "pad": 22
+        }
+      },
+      "notes": "sources.resourceを持つ架空例。change_requestは本資料の独自欄。ADR原典は背景・決定・状態・影響を記録する慣行を示す。「却下した案」は本資料の追加。 仕様の根拠: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。本資料の役割分担は運用案。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "付録｜チェックリスト",
+      "title": "試行と見直しのチェックリスト",
+      "lead": "人が使う確認用です。確認した対象と、残った未確認事項も記録します。",
+      "language": "text",
+      "code": "# 最初の試行\n□ 対象の要件へ、knowledge/index.md から辿れる\n□ type、sources.resource、作成記録と draft がある\n□ 入力対象外の情報がないか、検査と目視で確認した\n□ YAML・日時・出典欄・リンクなどの形式検査が通る\n□ 使う本文を、元資料の行・節と照合した\n□ 通常・例外・対象外の質問で、回答と根拠を確認した\n\n# 定期的な見直し\n□ 確認待ちの draft を一覧にし、担当と次の確認を決めた\n□ now >= stale_after の対象を、UTC オフセット付き日時で抽出した\n□ 期限到達の対象は根拠と照合し、修正・期限更新・廃止を判断した\n□ 変更後の内容を、以前の verified だけで確認済みにしていない\n□ log.md に、確認した対象と未確認事項を記録した\n\n実施日：［　　　　　　］　確認した対象：［　　　　　　］",
+      "notes": "チェックリストです。初期構築の完了と、週次の棚卸し。人が使う確認用で、AI には送りません。",
+      "style": {
+        "code": {
+          "size": 20,
+          "min_size": 16,
+          "line_height": 1.35
+        }
+      }
+    },
+    {
+      "type": "table",
+      "eyebrow": "付録｜出典",
+      "title": "仕様と、この資料の運用案",
+      "lead": "仕様は固定した版に照合。日数・効果・利用製品の動作は保証していません。",
+      "columns": [
+        "項目",
+        "根拠・位置づけ",
+        "参照先"
+      ],
+      "rows": [
+        [
+          "OKF v0.2",
+          "sources / verified / status / stale_after 等。照合版は ad30107c31c0。",
+          {
+            "text": "現行の SPEC.md",
+            "url": "https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/main/SPEC.md"
+          }
+        ],
+        [
+          "照合した仕様の版",
+          "再確認時には main との差分を見る。",
+          {
+            "text": "固定コミットの SPEC.md",
+            "url": "https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md"
+          }
+        ],
+        [
+          "決定記録（ADR）",
+          "決定と理由、状態、影響を残す慣行。却下案の節は本資料の追加。",
+          {
+            "text": "Nygard: Architecture Decisions",
+            "url": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
+          }
+        ],
+        [
+          "CLAUDE.md",
+          "プロジェクトの指示を読む機能。指示の遵守を強制する設定ではない。",
+          {
+            "text": "Claude Code 公式文書",
+            "url": "https://code.claude.com/docs/en/memory"
+          }
+        ],
+        [
+          "形式検査",
+          "このリポジトリの実装。本文照合・期限抽出・機密検出とは区別。",
+          "tools/validate_okf.py"
+        ],
+        [
+          "この案件の運用",
+          "フォルダ分類、役割、PR、棚卸し、依頼文は提案。製品での実行確認は別途必要。",
+          "本資料の架空設定・運用案"
+        ]
+      ],
+      "style": {
+        "table": {
+          "row_h": 68,
+          "header_h": 44,
+          "cell_size": 17,
+          "col_widths": [
+            2.1,
+            5.8,
+            3.7
+          ]
+        }
+      },
+      "notes": "一次仕様を2026-09-05の再点検台帳と照合し、2026-09-06に固定版URLを再確認。https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md 。旧knowledge-catalogは保守停止のスナップショット。自動字幕の動画は効果や製品挙動の根拠から外した。"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "deck": "decks/08-okf-practice-expanded",
+  "slides": 63,
+  "deck_sha256": "29c61c32aa585bf25293bd876b0b0be366697c75ee939a50bf17d3bd6e5bf144",
+  "pptx_sha256": "0c7b3f6ed47298c98f2c13e6ffe788c55fa493d160548d830f0ab4ece4dae7cb",
+  "html_sha256": "a880e31d36c770f869088ed8806da1f78dadd8441a0956919e6fab0469fd5915",
+  "checks": {
+    "source_preserved": true,
+    "id_matches_folder": true,
+    "four_chapters": true,
+    "html_exists": true,
+    "images_exist": true,
+    "preview_count": true,
+    "zip_valid": true,
+    "slide_count": true,
+    "no_notes": true
+  },
+  "passed": true,
+  "commands": [
+    {
+      "name": "build",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "layout",
+      "exit": 0
+    },
+    {
+      "name": "preview",
+      "exit": 0
+    },
+    {
+      "name": "contact",
+      "exit": 0
+    },
+    {
+      "name": "svg-fonts",
+      "exit": 0
+    }
+  ],
+  "independent_review": "accepted; A+B",
+  "powerpoint_keynote_display": "unverified",
+  "learner_trial": "unverified",
+  "verified_at": "2026-09-08T00:10:57.636761+09:00",
+  "assets_sha256": {
+    "assets/concept-requirement.svg": "94598a1d73e4e38fd67b93110d4751d69bea8ac7a1aa7cc1b7794121d22578a0",
+    "assets/diagram-build-steps.svg": "463cbf95681eb83a256f7c9c3671b9939c09fc584342e44024b81b659cfc2569",
+    "assets/diagram-knowledge-lifecycle.svg": "d42afbf7fa4ed54c0205a47af462697d1b816ee63760196d9ea074d6cfc2ab28",
+    "assets/diagram-overwrite-and-decision.svg": "647e465e1fd1aab54f87a0c9d9fe6c75420f683327b57891c5ce8e18c9924d0d",
+    "assets/diagram-practice-cycle.svg": "9e70a60a46b1f1ab0ef73b60f42e85615bee9f0bd86746af24c4227692953a3e",
+    "assets/diagram-three-ask-patterns.svg": "45c8d530934e341dc7f6021bfd58ede666498effb676c7c66c80c2cd858ab4a9",
+    "assets/diagram-verified-two-layers.svg": "5274c92b2b6536011aaf8a829848c6330c29adfa88a73d67ffaf40c3ef416ab5",
+    "assets/figure-ledger.md": "14a84eeecac9e7577417180aebdbfe432fa4bc788791e47492d0af91036c0371",
+    "assets/requirement-details.svg": "8cc8e71c19958e5172c124924558a531fba5a473afaffb13b07af4928614b149",
+    "assets/warm-okfp-01.png": "5b53c669537ea6dda74b1a621700aaa5719e5d8842f1e86abfc564aac65f0c7c",
+    "assets/warm-okfp-02.png": "086b9f696b053e93ec726edcfaaaf96c5c2fcde557c01dc708a5d23ba75537a9",
+    "assets/warm-okfp-03.png": "419a6ae1a7efc54b48e1123df99f96c1ce8192948a013ba79f0b6f6a50715479",
+    "assets/warm-okfp-04.png": "b607adfcac433f129086ec3368ebcc8721ff76f1f0b448194b9390ea98ace3f9",
+    "assets/warm-okfp-05.png": "801abdb966226bb7c074ee79c7285cc73e7cef188ca7424e68e66b210b9911cb",
+    "assets/warm-okfp-06.png": "6e9985b0edc1d66db81233a6e5205b76306568c69b17a52a962d09be955db907"
+  }
+}

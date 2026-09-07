@@ -1,0 +1,61 @@
+{
+  "deck": "decks/07-okf-expanded",
+  "slides": 55,
+  "deck_sha256": "e4d82591ed875c48a7c3a5a9874cbef73763cb825e18090d1682aa8e87fd5963",
+  "pptx_sha256": "f1a81531f295779e2ef1737a2409c6bc8f4ca1fef955e848010c357838f1902c",
+  "html_sha256": "bb3682dcb5ae3c53d488b35cc8db8572fc6ba1150ebc1daab4c5ca4d246b1d99",
+  "checks": {
+    "source_preserved": true,
+    "id_matches_folder": true,
+    "four_chapters": true,
+    "html_exists": true,
+    "images_exist": true,
+    "preview_count": true,
+    "zip_valid": true,
+    "slide_count": true,
+    "no_notes": true
+  },
+  "passed": true,
+  "commands": [
+    {
+      "name": "build",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "layout",
+      "exit": 0
+    },
+    {
+      "name": "preview",
+      "exit": 0
+    },
+    {
+      "name": "contact",
+      "exit": 0
+    },
+    {
+      "name": "svg-fonts",
+      "exit": 0
+    }
+  ],
+  "independent_review": "accepted; A+B",
+  "powerpoint_keynote_display": "unverified",
+  "learner_trial": "unverified",
+  "verified_at": "2026-09-08T00:10:57.636761+09:00",
+  "assets_sha256": {
+    "assets/bundle-map.svg": "e58a2049b37ff50840e7363eb674de2701eb00ba1343c37bffdfeb8cf9e58af4",
+    "assets/concept-parts.svg": "869dbf41a0b464ba6f6d56401fc115cc179955bacc9e7904419a9eb423ae5298",
+    "assets/diagram-bundle-contents.svg": "a05c4f6416c741d29ad4b34b302ed675204abd081646bd0818800317604e34ec",
+    "assets/failure-layers.svg": "46dcd31b902178272157455052f57b8dba60c78dc070e40f4f006011290d47c1",
+    "assets/read-flow.svg": "a9670756a91b8df238e7276a0542336a164895726e56ff1d1d00d455d4085d26",
+    "assets/warm-okf-02.png": "b8aa7f0571b981af962c2c5bc1ec6b5fd284447b430cb3095b2e2adfbce04a0d",
+    "assets/warm-okf-04.png": "1df5cce659c20b1ece3940e5172e08fc053add59be3b2d618899bfcb937dd04a",
+    "assets/warm-okf-06.png": "51d34bd5d81702f04697c99640a035159e68b38404b7ca45ea450db1197d3de7",
+    "assets/warm-okf-07.png": "f9cec6386a61c7ad411cd6c84a97064bf4f3523fec2d322c255d2f99249b9758",
+    "assets/warm-okf-11.png": "dba6fe0c03c7eba070d76f49145bdf2747bcfe3cd52c3703f657332c8c0df5b1"
+  }
+}
