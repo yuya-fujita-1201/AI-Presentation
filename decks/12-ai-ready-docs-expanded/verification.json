@@ -1,0 +1,55 @@
+{
+  "deck": "decks/12-ai-ready-docs-expanded",
+  "slides": 55,
+  "deck_sha256": "32312a6138de0b01ba34e1431c41c08d4a9cb41f71ae74ad731ec45569ec8bb2",
+  "pptx_sha256": "aaf96ef21219f893f1f14bf08afbc6aae9b5670bc247515cca3ce0bcc695d039",
+  "html_sha256": "073b836d05c48be937c1b50e4b488e54158132f11fa9accab3205401625a8199",
+  "checks": {
+    "source_preserved": true,
+    "id_matches_folder": true,
+    "four_chapters": true,
+    "html_exists": true,
+    "images_exist": true,
+    "preview_count": true,
+    "zip_valid": true,
+    "slide_count": true,
+    "no_notes": true
+  },
+  "passed": true,
+  "commands": [
+    {
+      "name": "build",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "layout",
+      "exit": 0
+    },
+    {
+      "name": "preview",
+      "exit": 0
+    },
+    {
+      "name": "contact",
+      "exit": 0
+    },
+    {
+      "name": "svg-fonts",
+      "exit": 0
+    }
+  ],
+  "independent_review": "accepted; A+C",
+  "powerpoint_keynote_display": "unverified",
+  "learner_trial": "unverified",
+  "verified_at": "2026-09-08T00:10:57.636761+09:00",
+  "assets_sha256": {
+    "assets/diagram-1.svg": "23461286f54b2f428f73af77a5a4fe8590879f218e4da85ae7d7f660a8276ed0",
+    "assets/diagram-2.svg": "198062a2b44214b05765e920f62a691d12dbe894ee2bd197ea0306ca0f65ba3b",
+    "assets/diagram-3.svg": "cee45db6ddf29255e76acc127b5f2830d38956887c27528f225cbf3db126dfcc",
+    "assets/scene.png": "51d34bd5d81702f04697c99640a035159e68b38404b7ca45ea450db1197d3de7"
+  }
+}

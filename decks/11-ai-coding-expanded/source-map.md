@@ -1,0 +1,59 @@
+# 出典と教材の対応
+
+外部一次資料を2026-09-07に再確認。製品固有の手順と本研修の運用提案を区別する。
+
+- p1 AIコーディングの実務: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p2 この資料でできるようになること: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p3 4章で、小さな修正を自分で判断する: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p4 AIコーディングとは何か: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p5 AIコーディングは、開発の作業をAIと進めること: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p6 なぜ、書けるだけでは足りないのか: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p7 補完から、作業の依頼へ: https://code.claude.com/docs/en/best-practices
+- p8 任せ方も、作業の一部として設計する: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p9 誰が、何を持つか: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p10 最初は、直ったか分かる仕事から: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p11 「直しました」の後に見るもの: https://code.claude.com/docs/en/best-practices / training/cases/travel/policy-current.md#n02
+- p12 この修正で得たいメリット: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p13 依頼から、変更の確認まで: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p14 今日扱う機能の範囲: training/cases/travel/policy-current.md#n02 / training/labs/code-boundary/README.md
+- p15 同じプログラムで頼める3つの仕事: 構成または教材用の作例。
+- p16 この関数が受け取り、返すもの: 型の注記は、Pythonで実行時の入力検査を自動実装するものではない。実習は整数値の境界のみを確認する。
+- p17 不具合を含む関数: training/labs/code-boundary/README.md
+- p18 規程から決める期待値: training/cases/travel/policy-current.md#n02
+- p19 期待値を先に置く理由: https://code.claude.com/docs/en/best-practices / training/cases/travel/policy-current.md#n02
+- p20 正解の根拠を、コードの外に置く: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p21 小さな修正の依頼文: https://code.claude.com/docs/en/best-practices / training/labs/code-boundary/README.md
+- p22 実習ファイルの準備: training/labs/code-boundary/README.md
+- p23 修正前に、作業場所を確かめる: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p24 修正前の動作を確かめる: training/labs/code-boundary/README.md
+- p25 比較条件の差分: https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository / training/cases/travel/policy-current.md#n02
+- p26 差分が1行でも、内容を見る: https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository / training/labs/code-boundary/README.md
+- p27 修正後の動作を確かめる: training/labs/code-boundary/README.md
+- p28 確認した範囲を報告する: 構成または教材用の作例。
+- p29 確認結果に、範囲を添える: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p30 Gitで変更を読む場合: https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
+- p31 修正・保存・公開の区別: knowledge/ai-security/permissions-and-confirmation.md / https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository
+- p32 つまずいた場所から直す: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p33 止まった場所で、見るものを変える: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p34 ファイルが見つからないとき: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p35 直したファイルと実行対象を比べる: 構成または教材用の作例。
+- p36 練習：どこを直すべきか: training/cases/travel/policy-current.md#n02 / training/labs/code-boundary/README.md
+- p37 解答：上限を維持して条件を直す: training/cases/travel/policy-current.md#n02 / training/labs/code-boundary/README.md
+- p38 合格のために、確認条件を変えていないか: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p39 関係のない変更が増えたとき: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p40 AIへ返す、切り分け済みの追加依頼: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p41 要件が曖昧なら、先に問いを戻す: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p42 最初に任せる仕事の選び方: https://code.claude.com/docs/en/best-practices / knowledge/ai-coding/small-change-and-verification.md
+- p43 別の小さな変更へ応用する: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p44 次の作業へつなぐTips: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p45 引き継ぎに残す記録例: training/labs/code-boundary/README.md
+- p46 チームで共有する内容: https://code.claude.com/docs/en/best-practices / knowledge/agent-capabilities/prompts-and-project-rules.md
+- p47 次回使う依頼テンプレート: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p48 練習：次に確かめることは何か: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p49 解答：確認用スクリプトの変更を調べる: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p50 作業時間を比べるときの記録: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p51 小さな変更を確かめる: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p52 付録：用語と実習資料: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p53 実習で使った言葉: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://code.claude.com/docs/en/best-practices
+- p54 参照した資料: 構成または教材用の作例。
+- p55 実習ファイルと実行条件: training/labs/code-boundary/README.md

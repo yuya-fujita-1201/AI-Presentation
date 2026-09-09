@@ -1,0 +1,83 @@
+{
+  "date": "2026-09-07",
+  "topics": [
+    {
+      "source": "decks/06-rag-draft",
+      "deck": "decks/06-rag-expanded",
+      "before": 51,
+      "source_sha256": "ab617a22701924a6ac70225fcd7ece71b0e3dc7930f53adb1d2864c8af2ec21a",
+      "status": "accepted_artifact_qa",
+      "after": 57,
+      "deck_sha256": "cc661f31d5f52bd141ddad02cccdaacd500dafd28d1b797c71721920fad9b7b9"
+    },
+    {
+      "source": "decks/07-okf-visual-guide-revised",
+      "deck": "decks/07-okf-expanded",
+      "before": 41,
+      "source_sha256": "f81c2850eaef6921918e9fd3005e06e071fa02e9e458f897acf7c37855ed8efd",
+      "status": "accepted_artifact_qa",
+      "after": 55,
+      "deck_sha256": "e4d82591ed875c48a7c3a5a9874cbef73763cb825e18090d1682aa8e87fd5963"
+    },
+    {
+      "source": "decks/08-okf-practice-revised",
+      "deck": "decks/08-okf-practice-expanded",
+      "before": 56,
+      "source_sha256": "3c5751bc9556d012a260aacf29242111c0c53c2686b6e12a75c634e7cb991578",
+      "status": "accepted_artifact_qa",
+      "after": 63,
+      "deck_sha256": "29c61c32aa585bf25293bd876b0b0be366697c75ee939a50bf17d3bd6e5bf144"
+    },
+    {
+      "source": "decks/ai-topics-02-skills-mcp-cli-draft",
+      "deck": "decks/skills-mcp-cli-expanded",
+      "before": 33,
+      "source_sha256": "783dd6e7ceb45d88dcba6b5c0894c77b327e0ebf1990a4717314491cce1c2934",
+      "status": "accepted_artifact_qa",
+      "after": 52,
+      "deck_sha256": "29ce889826dae2b51dbd4c9e2f8f0de1ecde399d77c4de19b1eeb97f8e1f88f1"
+    },
+    {
+      "source": "decks/09-evaluation",
+      "deck": "decks/09-evaluation-expanded",
+      "before": 24,
+      "source_sha256": "4952303e0aa26f4410d3e9af18250c528df988444d27f5dd3a683f886709b8d4",
+      "status": "accepted_artifact_qa",
+      "after": 54,
+      "deck_sha256": "5b2ee4ad2b22805c1c7723e9f78266e2daa6f200e4c707ddd53229daa752ad04"
+    },
+    {
+      "source": "decks/10-ai-security",
+      "deck": "decks/10-ai-security-expanded",
+      "before": 24,
+      "source_sha256": "fc66603bab143a0fb281da13c96896286a1a32c43a6e1f7a9750cc6eda4f6251",
+      "status": "accepted_artifact_qa",
+      "after": 57,
+      "deck_sha256": "d718c34e2375696876723ba9eb903a7e2820231196f4280a47be040895cb1732"
+    },
+    {
+      "source": "decks/11-ai-coding",
+      "deck": "decks/11-ai-coding-expanded",
+      "before": 24,
+      "source_sha256": "9604c6823a6272bb072832bf124cf4c440a328c6bcf242626b096f7d07a5d231",
+      "status": "accepted_artifact_qa",
+      "after": 55,
+      "deck_sha256": "7601ffbbffa23b35efebfada932b51fcb168c491b467a414ab4ccc9299358b8c"
+    },
+    {
+      "source": "decks/12-ai-ready-docs",
+      "deck": "decks/12-ai-ready-docs-expanded",
+      "before": 26,
+      "source_sha256": "cc65d2107ebabba5037cc469e3c5eec2fb2448f743b7d2025cab9d8a8935b493",
+      "status": "accepted_artifact_qa",
+      "after": 55,
+      "deck_sha256": "32312a6138de0b01ba34e1431c41c08d4a9cb41f71ae74ad731ec45569ec8bb2"
+    }
+  ],
+  "total_before": 279,
+  "total_after": 448,
+  "unverified": [
+    "PowerPoint/Keynote native rendering",
+    "learner trials"
+  ]
+}

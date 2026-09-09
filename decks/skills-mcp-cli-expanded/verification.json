@@ -1,0 +1,54 @@
+{
+  "deck": "decks/skills-mcp-cli-expanded",
+  "slides": 52,
+  "deck_sha256": "29ce889826dae2b51dbd4c9e2f8f0de1ecde399d77c4de19b1eeb97f8e1f88f1",
+  "pptx_sha256": "7f8adef49328994d7e630f513004e7429bd6574a7a48264c48b0bea68f9f0342",
+  "html_sha256": "86179560fa319ab68e2b0330f45913ce2f69d5fb304fdd5a439971d11bd1443f",
+  "checks": {
+    "source_preserved": true,
+    "id_matches_folder": true,
+    "four_chapters": true,
+    "html_exists": true,
+    "images_exist": true,
+    "preview_count": true,
+    "zip_valid": true,
+    "slide_count": true,
+    "no_notes": true
+  },
+  "passed": true,
+  "commands": [
+    {
+      "name": "build",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "layout",
+      "exit": 0
+    },
+    {
+      "name": "preview",
+      "exit": 0
+    },
+    {
+      "name": "contact",
+      "exit": 0
+    },
+    {
+      "name": "svg-fonts",
+      "exit": 0
+    }
+  ],
+  "independent_review": "accepted; A+B",
+  "powerpoint_keynote_display": "unverified",
+  "learner_trial": "unverified",
+  "verified_at": "2026-09-08T00:10:57.636761+09:00",
+  "assets_sha256": {
+    "assets/diagram-mcp-host-client.svg": "11b831d4582359613ec10e683b0f0a6d5123cde72b9fae6c419a47c85c60fdbb",
+    "assets/diagram-procedure-action.svg": "6e9850b66c0601d60861ad8cda595b53b5da563cb656e3463c097f70d38c4373",
+    "assets/diagram-sales-check.svg": "a1f5218a6d3ed2db0199b328d1c19b4f72434976f99b22cb1a92b4e2a1878c6d"
+  }
+}

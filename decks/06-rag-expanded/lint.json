@@ -1,0 +1,19 @@
+{
+ "deck": "decks/06-rag-expanded",
+ "slides": 57,
+ "errors": [],
+ "warnings": [
+  "slide-50 bullets[0].children[1] ページ番号直書き「50ページ」（付録追加でずれる。実体: 実験値を、自社の正答率に読み替えない）",
+  "[集計] 「ではなく」1回 / ダッシュ0回 / 丸数字0個 / AI定型句0箇所 / punch 0/22枚が80字超 / 半角コロン混在0箇所（全角：36回）"
+ ],
+ "stats": {
+  "punch_total": 22,
+  "punch_over": 0,
+  "dewanaku": 1,
+  "dash": 0,
+  "circled": 0,
+  "ai_phrase": 0,
+  "half_colon": 0,
+  "full_colon": 36
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "deck": "decks/08-okf-practice-expanded",
+ "slides": 63,
+ "errors": [],
+ "warnings": [
+  "[集計] 「ではなく」0回 / ダッシュ0回 / 丸数字19個 / AI定型句0箇所 / punch 0/14枚が80字超 / 半角コロン混在0箇所（全角：43回）"
+ ],
+ "stats": {
+  "punch_total": 14,
+  "punch_over": 0,
+  "dewanaku": 0,
+  "dash": 0,
+  "circled": 19,
+  "ai_phrase": 0,
+  "half_colon": 0,
+  "full_colon": 43
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "deck": "decks/12-ai-ready-docs-expanded",
+ "slides": 55,
+ "errors": [],
+ "warnings": [
+  "[集計] 「ではなく」1回 / ダッシュ0回 / 丸数字0個 / AI定型句0箇所 / punch 0/4枚が80字超 / 半角コロン混在0箇所（全角：22回）"
+ ],
+ "stats": {
+  "punch_total": 4,
+  "punch_over": 0,
+  "dewanaku": 1,
+  "dash": 0,
+  "circled": 0,
+  "ai_phrase": 0,
+  "half_colon": 0,
+  "full_colon": 22
+ }
+}

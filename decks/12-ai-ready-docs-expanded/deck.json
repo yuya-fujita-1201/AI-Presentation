@@ -1,0 +1,1353 @@
+{
+  "meta": {
+    "id": "12-ai-ready-docs-expanded",
+    "title": "AIにも渡しやすい文書設計",
+    "theme": "warm-terracotta",
+    "date": "2026-09-07",
+    "author": "codex/gpt-6",
+    "layout_overrides": {
+      "bullets": {
+        "rule": {
+          "w": 0,
+          "h": 0
+        },
+        "title": {
+          "size": 38
+        },
+        "footer_l": {
+          "text": "AIにも渡しやすい文書設計",
+          "size": 13
+        },
+        "lead": {
+          "size": 24,
+          "h": 42
+        },
+        "body": {
+          "size": 28,
+          "gap": 24,
+          "line_height": 1.5
+        }
+      },
+      "table": {
+        "rule": {
+          "w": 0,
+          "h": 0
+        },
+        "title": {
+          "size": 38
+        },
+        "footer_l": {
+          "text": "AIにも渡しやすい文書設計",
+          "size": 13
+        },
+        "lead": {
+          "size": 24,
+          "h": 42
+        }
+      },
+      "code": {
+        "rule": {
+          "w": 0,
+          "h": 0
+        },
+        "title": {
+          "size": 38
+        },
+        "footer_l": {
+          "text": "AIにも渡しやすい文書設計",
+          "size": 13
+        },
+        "lead": {
+          "size": 24,
+          "h": 42
+        },
+        "code": {
+          "size": 25,
+          "min_size": 22,
+          "line_height": 1.55,
+          "h": 450
+        }
+      },
+      "image_text": {
+        "rule": {
+          "w": 0,
+          "h": 0
+        },
+        "title": {
+          "size": 38
+        },
+        "footer_l": {
+          "text": "AIにも渡しやすい文書設計",
+          "size": 13
+        },
+        "lead": {
+          "size": 24,
+          "h": 42
+        },
+        "body": {
+          "size": 23,
+          "gap": 22,
+          "line_height": 1.5
+        },
+        "punch": {
+          "size": 28
+        }
+      },
+      "two_column": {
+        "rule": {
+          "w": 0,
+          "h": 0
+        },
+        "title": {
+          "size": 38
+        },
+        "footer_l": {
+          "text": "AIにも渡しやすい文書設計",
+          "size": 13
+        },
+        "lead": {
+          "size": 24,
+          "h": 42
+        }
+      },
+      "closing": {
+        "rule": {
+          "w": 0,
+          "h": 0
+        },
+        "body": {
+          "size": 29,
+          "gap": 25
+        },
+        "message": {
+          "color": "on_primary",
+          "size": 26
+        }
+      }
+    },
+    "draft": true,
+    "knowledge_refs": [
+      "knowledge/ai-ready-docs/index.md",
+      "knowledge/agent-capabilities/prompts-and-project-rules.md",
+      "knowledge/agent-capabilities/writing-good-skills.md",
+      "knowledge/okf/file-format.md"
+    ]
+  },
+  "slides": [
+    {
+      "type": "title",
+      "title": "AIにも渡しやすい文書設計",
+      "subtitle": "出張規程からFAQを作り、根拠と更新条件を残す",
+      "meta": "AI社内勉強会 / 2026年9月 / 架空教材で練習",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "この資料でできるようになること",
+      "lead": "架空の出張規程から、使い続けられるFAQを1件作ります。",
+      "bullets": [
+        "AI向け文書設計の目的と、普通の文書との関係を説明する。",
+        "質問・答え・条件・根拠をそろえて書く。",
+        "規程が変わったとき、直す箇所と残す箇所を選ぶ。"
+      ],
+      "eyebrow": "はじめに",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "4章で、作成から更新までを追う",
+      "lead": "最初にテーマを理解し、次に文書の実物を読みます。",
+      "columns": [
+        "章",
+        "答える問い"
+      ],
+      "rows": [
+        [
+          "1 定義",
+          "何を、誰が読めるようにするか"
+        ],
+        [
+          "2 深掘り",
+          "条件と根拠をどう書き残すか"
+        ],
+        [
+          "3 応用",
+          "断片・旧版・誤答をどう直すか"
+        ],
+        [
+          "4 Tips",
+          "他の人が確認して使い続けられるか"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            1
+          ],
+          "cell_size": 23,
+          "header_size": 23,
+          "row_h": 80,
+          "header_h": 52
+        }
+      },
+      "eyebrow": "はじめに",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "section",
+      "number": "01",
+      "title": "AI向けドキュメント設計とは何か",
+      "subtitle": "目的、必要性、文書で行う工夫をつかみます。",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "AI向け文書設計は、読み違いを減らす準備",
+      "lead": "人とAIが、対象・条件・根拠をたどれるように文書を組み立てることです。",
+      "bullets": [
+        "何の質問に答える文書かを明らかにする。",
+        "答えが使える条件と、元の記述を一緒に残す。",
+        "内容を探し、確認し、更新できるつながりを作る。"
+      ],
+      "eyebrow": "01｜AI向けドキュメント設計とは何か",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "なぜ、説明の前提を書き残すのか",
+      "lead": "事情を知らない読み手は、「いつもの条件」を補えません。",
+      "bullets": [
+        "担当者は「上限」と聞けば国内出張を思い浮かべるかもしれない。",
+        "別部署の人やAIには、海外も対象なのか分からない。",
+        "対象・単位・適用日を文書に書けば、同じ条件を確かめられる。"
+      ],
+      "eyebrow": "01｜AI向けドキュメント設計とは何か",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "人とAIが読むときの前提",
+      "lead": "人にも必要な条件を、文書の中にはっきり書く。",
+      "columns": [
+        "読み手",
+        "文書に残したいこと"
+      ],
+      "rows": [
+        [
+          "事情を知る同僚",
+          "略語や「いつもの手順」を他の人も辿れる説明"
+        ],
+        [
+          "一部だけ読むAI",
+          "対象・適用日・根拠・不足情報が分かるまとまり"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            4
+          ],
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 84,
+          "header_h": 54
+        }
+      },
+      "notes": "https://developers.google.com/tech-writing/one/documents\nknowledge/ai-ready-docs/one-faq-with-evidence.md",
+      "eyebrow": "01｜AI向けドキュメント設計とは何か"
+    },
+    {
+      "type": "image_text",
+      "title": "文書の一部だけが渡る場面を考える",
+      "punch": "抜き出した部分にも、答えに必要な条件を残します。",
+      "bullets": [
+        "元規程：国内・出発日・金額・承認。",
+        "FAQ：1つの質問に必要な条件をまとめる。",
+        "回答：根拠の範囲で、次の行動を示す。"
+      ],
+      "path": "assets/diagram-1.svg",
+      "caption": "架空の出張規程を使った処理の関係",
+      "image_side": "right",
+      "eyebrow": "01｜AI向けドキュメント設計とは何か",
+      "style": {
+        "body": {
+          "size": 22,
+          "gap": 20,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "設計するのは、本文とつながり",
+      "lead": "きれいな文章にした後も、見つけ方と見直し方が必要です。",
+      "bullets": [
+        "本文：質問に答える情報を、意味のまとまりで書く。",
+        "つながり：目次からFAQ、FAQから原文へ進める。",
+        "更新：どの原文のどの版を使ったか、担当が分かるようにする。"
+      ],
+      "eyebrow": "01｜AI向けドキュメント設計とは何か",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "文書が整うと、何を確かめやすいか",
+      "lead": "以下は期待する効果と、その成立条件です。",
+      "columns": [
+        "期待すること",
+        "必要な条件"
+      ],
+      "rows": [
+        [
+          "資料を選びやすい",
+          "見出しと説明が内容に合う"
+        ],
+        [
+          "答えを確認しやすい",
+          "原文の該当箇所へたどれる"
+        ],
+        [
+          "変更を追いやすい",
+          "参照関係と適用日が残る"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            1
+          ],
+          "cell_size": 23,
+          "header_size": 23,
+          "row_h": 80,
+          "header_h": 52
+        }
+      },
+      "eyebrow": "01｜AI向けドキュメント設計とは何か",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "image_text",
+      "title": "そのFAQは、いつの出張に使うか",
+      "punch": "答えと一緒に、対象の条件と原文を残す",
+      "bullets": [
+        "同じ11,000円のホテルでも、出発日によって通常の上限が違う。",
+        "今日はFAQを1件作り、資料が変わった後の見直しまで考える。"
+      ],
+      "path": "assets/scene.png",
+      "caption": "資料を渡す場面の挿絵。検索や自動更新の実行結果ではない。",
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md\nhttps://developers.google.com/tech-writing/one/documents",
+      "eyebrow": "01｜AI向けドキュメント設計とは何か",
+      "style": {
+        "body": {
+          "size": 22,
+          "gap": 20,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "bullets",
+      "title": "書き方をそろえても、読む操作は必要",
+      "lead": "保存した文書をAIが読めるかは、利用環境で確かめます。",
+      "bullets": [
+        "手元のFAQを添付する、本文を渡すなどの操作を行う。",
+        "リンク先を参照できるかは、接続と閲覧範囲を確認する。",
+        "整形しただけで検索・正答・自動更新が動くとは扱わない。"
+      ],
+      "eyebrow": "01｜AI向けドキュメント設計とは何か",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "section",
+      "number": "02",
+      "title": "1件のFAQを、根拠から作る",
+      "subtitle": "対象を決め、原文を読み、条件を残して書きます。",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "旧版と新版の違い",
+      "lead": "以下はあおばサンプル株式会社の架空規程。",
+      "columns": [
+        "条件",
+        "旧版v1",
+        "新版v2"
+      ],
+      "rows": [
+        [
+          "対象の出発日",
+          "2026年1月1日〜8月31日",
+          "2026年9月1日以降"
+        ],
+        [
+          "通常の宿泊費上限",
+          "1人1泊税込10,000円",
+          "1人1泊税込12,000円"
+        ],
+        [
+          "対象",
+          "国内出張",
+          "国内出張"
+        ],
+        [
+          "予約前の承認",
+          "O03：上限超過見込みなら部長承認",
+          "N03：上限超過見込みなら部長承認"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            3,
+            3
+          ],
+          "cell_size": 21,
+          "header_size": 22,
+          "row_h": 78,
+          "header_h": 54
+        }
+      },
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "table",
+      "title": "11,000円の宿を判断する",
+      "lead": "予約日や申請日ではなく、出発日で版を選ぶ。",
+      "columns": [
+        "質問",
+        "読む版",
+        "判定・次の確認"
+      ],
+      "rows": [
+        [
+          "8月31日出発・国内",
+          "v1",
+          "10,000円を超える"
+        ],
+        [
+          "9月1日出発・国内",
+          "v2",
+          "12,000円以内"
+        ],
+        [
+          "出発日不明・国内",
+          "まだ選べない",
+          "出発日を確認する"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            3,
+            1,
+            2
+          ],
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 84,
+          "header_h": 54
+        }
+      },
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "bullets",
+      "title": "FAQにする質問を決める",
+      "lead": "9月10日出発の国内出張。1人1泊税込13,000円の宿を予約する前。",
+      "bullets": [
+        "質問は「予約する前に、何が必要ですか」。",
+        "N01で適用版、N02で上限、N03で事前承認を確かめる。",
+        "承認後の精算上限は、この資料からは決めない。"
+      ],
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "code",
+      "title": "条件が抜けたFAQ",
+      "lead": "次の下書きで、元資料にない意味が増えていないかを見る。",
+      "language": "text",
+      "code": "Q. ホテル代が高いときはどうすればよいですか。\nA. 承認を取れば全額精算できます。\n\n不足しているもの：\n対象の出張、金額、承認の時点、承認する人、根拠。",
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "code",
+      "title": "根拠と条件を残したFAQ",
+      "lead": "配布例の faq/over-limit.md から原文の節へリンクします。",
+      "language": "text",
+      "code": "Q. 9月10日出発の国内出張で、1人1泊税込13,000円の宿を\n   予約する前に何が必要ですか。\nA. 予約する前に部長の承認を受けます。\n条件：規程v2対象。1人1泊税込12,000円を超える見込み。\n根拠：[出張規程v2](../sources/policy-v2.md#rules)\n      対象の節にあるN01・N02・N03を確認。\n未確認：承認後の精算上限は記載されていません。",
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "image_text",
+      "title": "答えを支える3つの条項",
+      "punch": "金額の条項だけでは、適用日と承認手順が欠けます。",
+      "bullets": [
+        "N01：9月1日以降の国内出張に適用。",
+        "N02：通常の上限は1人1泊税込12,000円。",
+        "N03：超過見込みなら予約前に部長承認。"
+      ],
+      "path": "assets/diagram-2.svg",
+      "caption": "架空の出張規程を使った処理の関係",
+      "image_side": "right",
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "style": {
+        "body": {
+          "size": 22,
+          "gap": 20,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "1件の答えが辿れるまとまり",
+      "lead": "質問・答え・条件・根拠を、まとめて読める大きさにする。",
+      "bullets": [
+        "宿泊費の承認と、帰着後の申請期限は別の質問として整理する。",
+        "分けた先にも対象や出典を残し、関連FAQへリンクする。",
+        "細かく切るだけで、AIが正しく選べるとは決まらない。"
+      ],
+      "notes": "https://developers.google.com/tech-writing/one/documents\nknowledge/ai-ready-docs/one-faq-with-evidence.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "table",
+      "title": "分ける単位を、質問で決める",
+      "lead": "文字数だけで区切ると、判断に必要な条件が離れます。",
+      "columns": [
+        "質問",
+        "一緒に残すもの"
+      ],
+      "rows": [
+        [
+          "上限を超える宿を予約したい",
+          "対象・金額・予約前の承認"
+        ],
+        [
+          "帰着後の精算はいつまで",
+          "帰着日・期限・必要書類"
+        ],
+        [
+          "海外の上限はいくら",
+          "国内規程では未確認と示す"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            1
+          ],
+          "cell_size": 23,
+          "header_size": 23,
+          "row_h": 80,
+          "header_h": 52
+        }
+      },
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "code",
+      "title": "見出しと索引の例",
+      "lead": "ファイル名だけでなく、何を調べられるかを入口で案内する。",
+      "language": "text",
+      "code": "出張の質問\n\n・宿泊費が通常の上限を超える見込みの場合\n  faq/over-limit.md：予約前の承認と対象の出張\n\n・帰着後の精算申請\n  faq/expense-deadline.md：領収書と申請期限\n\n原文は sources/ に保存し、各FAQから参照する。\nリンクを開き、rules節のN01〜N03を原文と照合する。",
+      "notes": "https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md\nknowledge/okf/directory-structure.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "bullets",
+      "title": "見出しと短い説明の役割",
+      "lead": "ファイルを開く前に、答えがありそうか判断する手がかりです。",
+      "bullets": [
+        "「FAQまとめ」より「国内出張の宿泊費と予約前承認」と書く。",
+        "説明には対象と、答えられる質問を書く。",
+        "見出しを変えたら、本文がその範囲を扱うかも確かめる。"
+      ],
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "知識と指示と手順の置き場所",
+      "lead": "Skillは、再利用する作業手順と関連資料をまとめたものです。",
+      "columns": [
+        "内容",
+        "置き場所の例"
+      ],
+      "rows": [
+        [
+          "宿泊費の条件と根拠",
+          "FAQや規程などの参照資料"
+        ],
+        [
+          "元資料を変更しない共通ルール",
+          "対応環境のAGENTS.mdやCLAUDE.md"
+        ],
+        [
+          "FAQを作る繰り返しの手順",
+          "Skillの本文と関連資料"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            4
+          ],
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 84,
+          "header_h": 54
+        }
+      },
+      "notes": "knowledge/agent-capabilities/prompts-and-project-rules.md\nknowledge/agent-capabilities/writing-good-skills.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "bullets",
+      "title": "共通ルールのファイル",
+      "lead": "対応するアプリが、作業の前提や確認方法を参照する。",
+      "bullets": [
+        "AGENTS.mdは、対応するエージェントへプロジェクトの指示を伝える形式。",
+        "Claude CodeにはCLAUDE.mdなどの仕組みがある。",
+        "探索範囲と読み込み方は環境ごとに確認する。保存だけで全AIが読むわけではない。"
+      ],
+      "notes": "https://agents.md/\nhttps://code.claude.com/docs/en/memory",
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "code",
+      "title": "共通ルールに残す内容の例",
+      "lead": "毎回守る範囲と、必要な資料への入口を書く。",
+      "language": "text",
+      "code": "このフォルダでは架空規程からFAQの下書きを作る。\n出発日で規程の版を選ぶ。分からなければ聞き返す。\n規程の原本を変更しない。\nFAQは drafts/ に別名で保存する。\n回答には対象の条件と原文の段落を記載する。\n記載がない例外や承認後の精算上限を推測しない。",
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md\nknowledge/agent-capabilities/prompts-and-project-rules.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "code",
+      "title": "繰り返す手順をSkillへまとめる",
+      "lead": "Skill用手順の本文例。アプリへの導入前に動作を確かめる。",
+      "language": "text",
+      "code": "用途：出張の質問を、根拠付きFAQの下書きにする。\n入力：質問、出発日、国内/海外、規程の候補。\n手順：対象日で版を選び、答えを支える段落を読む。\n不足：出発日不明なら質問。資料になければ未確認と残す。\n出力：質問、答え、条件、根拠、未確認事項。\n完了条件：原文と照合し、保存したFAQを開いて確かめる。",
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md\nknowledge/agent-capabilities/writing-good-skills.md\nhttps://agentskills.io/specification",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "bullets",
+      "title": "Skillの入口と動作の確認",
+      "lead": "SKILL.mdにはnameとdescriptionを持つfrontmatterを置く。",
+      "bullets": [
+        "descriptionで、どんな依頼に使う手順かを具体的に示す。",
+        "対象の依頼で使えるかと、正しいFAQを作れるかを分けて試す。",
+        "指示ファイルもSkillも、OSや接続先の権限を制限する設定とは別。"
+      ],
+      "notes": "https://agentskills.io/specification\nknowledge/agent-capabilities/writing-good-skills.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "table",
+      "title": "出典と日付の意味",
+      "lead": "書いた日付が新しくても、過去の出張の適用版は変わらない。",
+      "columns": [
+        "項目",
+        "意味"
+      ],
+      "rows": [
+        [
+          "規程の適用開始日",
+          "どの日付の出張にルールを使うか"
+        ],
+        [
+          "generated.at",
+          "内容を作成・意味ある更新をした記録"
+        ],
+        [
+          "verified",
+          "誰がいつ根拠や実体と照合したかの記録"
+        ],
+        [
+          "stale_after",
+          "この時刻以降、古い可能性があるとして再確認する"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            4
+          ],
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 84,
+          "header_h": 54
+        }
+      },
+      "notes": "https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md\ntraining/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る"
+    },
+    {
+      "type": "bullets",
+      "title": "OKFを使う場合の最小の考え方",
+      "lead": "OKFは、知識をファイルで扱うための書式。",
+      "bullets": [
+        "非予約のMarkdownには、読めるYAMLと空でないtypeを付ける。",
+        "出典を書くsourcesの各項目には、resourceを指定する。",
+        "作っただけのFAQはdraftとして扱い、内容を確かめた範囲を別に記録する。"
+      ],
+      "notes": "https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "bullets",
+      "title": "形式が合うことと、答えが合うこと",
+      "lead": "検査する対象を分けると、何が残っているか分かる。",
+      "bullets": [
+        "YAMLやリンクの検査では、書式や参照先の存在を調べる。",
+        "原文との照合では、金額・対象日・予約前の承認を調べる。",
+        "どちらも通っただけで、検索や自動更新が実環境で動いたとは言えない。"
+      ],
+      "notes": "https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md\nknowledge/ai-ready-docs/update-dependent-faq.md",
+      "eyebrow": "02｜1件のFAQを、根拠から作る",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "section",
+      "number": "03",
+      "title": "読み違いと更新漏れを直す",
+      "subtitle": "FAQ・渡した資料・回答を見比べ、直す場所を選びます。",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "誤答が出たら、3か所を照合する",
+      "lead": "同じ誤答でも、文書を直すだけでは解決しない場合があります。",
+      "columns": [
+        "確認するもの",
+        "見つかる問題の例"
+      ],
+      "rows": [
+        [
+          "FAQと原文",
+          "承認の時点が抜けた"
+        ],
+        [
+          "実際に渡した資料",
+          "目次だけで本文が届いていない"
+        ],
+        [
+          "AIの回答",
+          "資料にない精算上限を加えた"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            1
+          ],
+          "cell_size": 23,
+          "header_size": 23,
+          "row_h": 80,
+          "header_h": 52
+        }
+      },
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "code",
+      "title": "断片にしたときの読み違い",
+      "lead": "次の1行だけが渡った場合、何が分からなくなるでしょうか。",
+      "language": "text",
+      "code": "12,000円が上限です。\n\n不足する条件：\n国内出張か／1人1泊か／税込か／どの出発日か\n超える見込みの場合、予約前に何をするか",
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "code",
+      "title": "断片の中にも、必要な条件を残す",
+      "lead": "原文と照合した条件を、短い説明に保ちます。",
+      "language": "text",
+      "code": "対象：2026年9月1日以降出発の国内出張。\n通常の上限：1人1泊税込12,000円。\n超える見込み：予約前に部長の承認を受ける。\n根拠：出張規程v2 N01・N02・N03。\n未確認：承認後の精算上限。",
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "image_text",
+      "title": "見つけた版と、使う版を分ける",
+      "punch": "新しいファイルが見つかっても、出張の時点で適用版を選びます。",
+      "bullets": [
+        "質問：8月31日出発、国内、11,000円。まだ予約していない。",
+        "適用版：8月までのv1を参照。",
+        "判定：10,000円を超え、予約前の承認が必要。"
+      ],
+      "path": "assets/diagram-3.svg",
+      "caption": "架空の出張規程を使った処理の関係",
+      "image_side": "right",
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "style": {
+        "body": {
+          "size": 22,
+          "gap": 20,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "規程が変わった後のFAQ",
+      "lead": "新しい規程を保存しても、FAQの本文は自動では直らない。",
+      "columns": [
+        "FAQ",
+        "見直す点"
+      ],
+      "rows": [
+        [
+          "上限はいくら",
+          "v1対象の過去質問に12,000円を上書きしない"
+        ],
+        [
+          "11,000円の宿",
+          "対象日で、上限内か超過かを改めて確かめる"
+        ],
+        [
+          "海外出張",
+          "国内向けの金額へ置き換えない"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            4
+          ],
+          "cell_size": 22,
+          "header_size": 22,
+          "row_h": 84,
+          "header_h": 54
+        }
+      },
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md\nknowledge/ai-ready-docs/update-dependent-faq.md",
+      "eyebrow": "03｜読み違いと更新漏れを直す"
+    },
+    {
+      "type": "bullets",
+      "title": "見直しを担当する流れ",
+      "lead": "これは研修の運用案。OKFが分担を強制するわけではない。",
+      "bullets": [
+        "収集担当は変更した原文と取得日を残し、編集担当へ知らせる。",
+        "編集担当は参照するFAQを探し、変更すべき答えと条件を直す。",
+        "別の確認担当は原文と照合し、採用した版と確認範囲を記録する。"
+      ],
+      "notes": "knowledge/ai-ready-docs/update-dependent-faq.md",
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "bullets",
+      "title": "更新するFAQを、参照先から探す",
+      "lead": "原文の変更箇所と、そこを参照するFAQを対応させます。",
+      "bullets": [
+        "金額が変わったなら、上限を説明するFAQを探す。",
+        "適用日だけ変わった場合も、質問条件と版選択を見直す。",
+        "参照先が書かれていないFAQは、本文を開いて影響を確認する。"
+      ],
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "何を変え、何を残すか",
+      "lead": "過去の条件を保ちつつ、新しい質問に答えられるようにします。",
+      "columns": [
+        "対象",
+        "更新の判断"
+      ],
+      "rows": [
+        [
+          "新しい出発日向けのFAQ",
+          "新規程の条件へ改訂する"
+        ],
+        [
+          "過去の出張向けのFAQ",
+          "当時の適用版と根拠を残す"
+        ],
+        [
+          "共通の目次",
+          "どの日付のFAQか分かる説明にする"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            1
+          ],
+          "cell_size": 23,
+          "header_size": 23,
+          "row_h": 80,
+          "header_h": 52
+        }
+      },
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "記録が新しくても、本文は確かめる",
+      "lead": "更新日時と適用日は、それぞれ違う問いに答えます。",
+      "bullets": [
+        "今日編集した過去出張のFAQにも、旧版の条件が必要。",
+        "確認者の記録は、実際に照合した本文に対して残す。",
+        "金額を変更したら、以前の確認済み表示を引き継がない。"
+      ],
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "別の業務へ置き換えるとき",
+      "lead": "構造は使い回し、条件はその業務の原文から決めます。",
+      "columns": [
+        "業務の質問",
+        "一緒に残す条件"
+      ],
+      "rows": [
+        [
+          "返品できるか",
+          "購入日・商品区分・対象外・期限"
+        ],
+        [
+          "障害時の連絡先は",
+          "時間帯・担当範囲・当番表の版"
+        ],
+        [
+          "値引きの承認者は",
+          "金額・担当部署・適用する規則"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            1
+          ],
+          "cell_size": 23,
+          "header_size": 23,
+          "row_h": 80,
+          "header_h": 52
+        }
+      },
+      "eyebrow": "03｜読み違いと更新漏れを直す",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "section",
+      "number": "04",
+      "title": "読み手と確かめるTips",
+      "subtitle": "演習で版を選び、再利用する型を持ち帰ります。",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "練習：古いFAQを直す",
+      "lead": "予約前の質問。8月31日出発・国内・1人1泊税込11,000円の宿。",
+      "bullets": [
+        "旧FAQに「予約前の部長承認が必要」とある。",
+        "担当者は今日、新版の12,000円に合わせて「承認不要」へ変えた。",
+        "この修正は正しいか。根拠と、残すべき条件を書く。"
+      ],
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "04｜読み手と確かめるTips",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "bullets",
+      "title": "解答：過去の出張には旧版を使う",
+      "lead": "2026年8月31日の出発にはv1が適用される。",
+      "bullets": [
+        "11,000円はv1の通常上限10,000円を超える。",
+        "予約前なら、O03に従って部長の承認を受ける。",
+        "すでに予約済みの精算可否は、この資料だけでは決められない。"
+      ],
+      "notes": "training/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "04｜読み手と確かめるTips",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "bullets",
+      "title": "別の人がFAQを読む確認",
+      "lead": "FAQだけを読み、対象と次の行動を説明してもらう。",
+      "bullets": [
+        "どの出発日・どの出張に使う答えかが分かるか。",
+        "示された原文を開き、答えを裏付ける段落に到達できるか。",
+        "分からないことが明示され、誰へ確認するかが分かるか。"
+      ],
+      "notes": "https://developers.google.com/tech-writing/one/documents\ntraining/cases/travel/policy-current.md\ntraining/cases/travel/policy-previous.md",
+      "eyebrow": "04｜読み手と確かめるTips",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    },
+    {
+      "type": "code",
+      "title": "FAQ作成を頼むテンプレート",
+      "lead": "［ ］を埋め、AIに渡せる元資料と一緒に使います。",
+      "language": "text",
+      "code": "質問：［誰が・何を知りたいか］\n対象：［日付・範囲・単位］\n資料：［原文のファイルと版］\n出力：質問／答え／条件／根拠／未確認事項。\n資料にない条件を補わず、不明点を列挙してください。\n原文は変更せず、FAQの下書きとして返してください。",
+      "eyebrow": "04｜読み手と確かめるTips",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "練習：見直す日時を過ぎたFAQ",
+      "lead": "stale_afterを過ぎましたが、本文と原規程はまだ同じです。",
+      "bullets": [
+        "すぐに誤りと判断できるか。",
+        "どの情報と照合し、何を記録するか。",
+        "新しい見直し時点を決める前に、誰が確認するか。"
+      ],
+      "eyebrow": "04｜読み手と確かめるTips",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "bullets",
+      "title": "解答：期限は再確認のきっかけ",
+      "lead": "日付だけで、正誤を決めるものではありません。",
+      "bullets": [
+        "現行の原規程と、FAQの対象・金額・承認条件を照合する。",
+        "変更がなければ、確認した範囲と日時を記録する。",
+        "担当と運用ルールに沿って、次の見直し時点を決める。"
+      ],
+      "eyebrow": "04｜読み手と確かめるTips",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      },
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "最初の試行で記録すること",
+      "lead": "効果は、同じ質問と条件で比べます。",
+      "columns": [
+        "観点",
+        "確認するもの"
+      ],
+      "rows": [
+        [
+          "探す",
+          "適用版のFAQへ到達できたか"
+        ],
+        [
+          "答える",
+          "対象と必要な行動が合うか"
+        ],
+        [
+          "確かめる",
+          "原文の該当箇所へ戻れたか"
+        ],
+        [
+          "更新する",
+          "参照するFAQを見つけられたか"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            1
+          ],
+          "cell_size": 23,
+          "header_size": 23,
+          "row_h": 80,
+          "header_h": 52
+        }
+      },
+      "eyebrow": "04｜読み手と確かめるTips",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "closing",
+      "title": "根拠へ戻れる文書",
+      "bullets": [
+        "答えと一緒に、対象の条件と原文を残す。",
+        "共通ルール・繰り返す手順・知識の役割を分ける。",
+        "元資料が変わったら、参照するFAQを点検する。"
+      ],
+      "message": "次のFAQを1件、別の人が確かめられる形で残す",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "section",
+      "number": "05",
+      "title": "付録：形式と参照資料",
+      "subtitle": "書式の詳細は、対応する仕様を確認します。",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "本編で使った用語",
+      "lead": "まず用途を思い出してから、書式を調べます。",
+      "columns": [
+        "用語",
+        "この資料での意味"
+      ],
+      "rows": [
+        [
+          "FAQ",
+          "よくある質問と、その答え"
+        ],
+        [
+          "粒度",
+          "1件として分ける情報の大きさ"
+        ],
+        [
+          "出典",
+          "答えの根拠となる元資料"
+        ],
+        [
+          "フロントマター",
+          "ファイル先頭の説明欄"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            1,
+            1
+          ],
+          "cell_size": 23,
+          "header_size": 23,
+          "row_h": 80,
+          "header_h": 52
+        }
+      },
+      "eyebrow": "05｜付録：形式と参照資料",
+      "notes": "このスライドは架空の出張規程による研修向けの設計・運用例です。\nhttps://developers.google.com/tech-writing/one/documents"
+    },
+    {
+      "type": "table",
+      "title": "参照した資料",
+      "lead": "外部資料は2026年9月6日に確認。架空規程と演習は当方の教材。",
+      "columns": [
+        "資料",
+        "用途"
+      ],
+      "rows": [
+        [
+          {
+            "text": "Google 文書作成教材",
+            "url": "https://developers.google.com/tech-writing/one/documents"
+          },
+          "読者・対象範囲・冒頭の要点の設計"
+        ],
+        [
+          {
+            "text": "OKF v0.2 仕様",
+            "url": "https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md"
+          },
+          "書式、出典、作成・確認・再確認の記録"
+        ],
+        [
+          {
+            "text": "AGENTS.md",
+            "url": "https://agents.md/"
+          },
+          "AGENTS.mdの用途"
+        ],
+        [
+          {
+            "text": "Claude Code メモリ",
+            "url": "https://code.claude.com/docs/en/memory"
+          },
+          "CLAUDE.mdの扱い"
+        ],
+        [
+          {
+            "text": "Agent Skills 仕様",
+            "url": "https://agentskills.io/specification"
+          },
+          "Agent Skillsの構造と必須項目"
+        ]
+      ],
+      "style": {
+        "table": {
+          "col_widths": [
+            2,
+            3
+          ],
+          "cell_size": 21,
+          "header_size": 22,
+          "row_h": 72,
+          "header_h": 54
+        }
+      },
+      "notes": "",
+      "eyebrow": "05｜付録：形式と参照資料"
+    },
+    {
+      "type": "bullets",
+      "title": "配布資料と次のテーマ",
+      "lead": "ここでは文書の中身と保守を練習した。",
+      "bullets": [
+        "新旧規程は training/cases/travel/ にある。",
+        "版を選ぶ補助実習は training/labs/source-packs/ にある。",
+        "書式を詳しく学ぶなら「OKF」、探して答える仕組みは「RAG」へ。"
+      ],
+      "notes": "training/cases/travel/README.md\ntraining/labs/source-packs/README.md",
+      "eyebrow": "05｜付録：形式と参照資料",
+      "style": {
+        "body": {
+          "size": 26,
+          "gap": 22,
+          "line_height": 1.45
+        }
+      }
+    }
+  ]
+}

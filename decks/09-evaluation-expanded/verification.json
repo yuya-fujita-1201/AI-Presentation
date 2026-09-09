@@ -1,0 +1,63 @@
+{
+  "deck": "decks/09-evaluation-expanded",
+  "slides": 54,
+  "deck_sha256": "5b2ee4ad2b22805c1c7723e9f78266e2daa6f200e4c707ddd53229daa752ad04",
+  "pptx_sha256": "941d4689d30365abbbfeaaa8c3e3f115ae385ff15d20a9376e0ae97f9ed19d8a",
+  "html_sha256": "6393cdc5d6c9aff305f4b02d0b23790d059e40cc2d0986239b6d72ca75bddf27",
+  "checks": {
+    "source_preserved": true,
+    "id_matches_folder": true,
+    "four_chapters": true,
+    "html_exists": true,
+    "images_exist": true,
+    "preview_count": true,
+    "zip_valid": true,
+    "slide_count": true,
+    "no_notes": true
+  },
+  "passed": true,
+  "commands": [
+    {
+      "name": "build",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "layout",
+      "exit": 0
+    },
+    {
+      "name": "preview",
+      "exit": 0
+    },
+    {
+      "name": "contact",
+      "exit": 0
+    },
+    {
+      "name": "svg-fonts",
+      "exit": 0
+    }
+  ],
+  "independent_review": "accepted; A+B",
+  "powerpoint_keynote_display": "unverified",
+  "learner_trial": "unverified",
+  "verified_at": "2026-09-08T00:10:57.636761+09:00",
+  "assets_sha256": {
+    "assets/agent.svg": "90e31f9667bcc218c318597f37437c08108923a434bc438bd0019e93bd6eebf2",
+    "assets/calibrate.svg": "a2b0d8faf35bdc65a12c726625cdd75f0f6d67910179d480caeb8ed7ef0ef728",
+    "assets/compare.svg": "8e39b1d6987e0f4a6c3b0ba01af018d49e9c72c01ab97b9af3d9e591bc9893c4",
+    "assets/criteria.svg": "55e3deb34d99013bbdcc9e2b1d6e4c40877b2a4730b642c69f6e3225ff384fef",
+    "assets/diagnose.svg": "2a8888eed52f9d83213265e7b95781f5ff57f89e20f6f0aca22b3a766068c7c3",
+    "assets/grading.svg": "a694ffc3e00bf74dc8ea385974cbaab75bfc1b3d60354875ec43991ddc364475",
+    "assets/holdout.svg": "c3eae64945ed768f7c227ebbe23790fa0de4ab57b17b559925e4c0c821d8326e",
+    "assets/need.svg": "7be8e4fd71a851c558632ebca64fb12003be06e09ef73825e35f5ee7724e8298",
+    "assets/parts.svg": "58188fd400b81775a0be812fbad015e509a1beed9d0724519a2d23f09f726a50",
+    "assets/scene.png": "dba6fe0c03c7eba070d76f49145bdf2747bcfe3cd52c3703f657332c8c0df5b1",
+    "assets/scope.svg": "d50868d89c81bbbc7e9f024d4d850b52f378eac2757b101d6ae8ab8f36f8c0c2",
+    "assets/trials.svg": "510c53ef42a9270f0649a2eba1695c33814ca3b41d23519b8f402d83b501b1e9"
+  }
+}

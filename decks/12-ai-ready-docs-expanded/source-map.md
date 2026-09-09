@@ -1,0 +1,59 @@
+# 出典と教材の対応
+
+外部一次資料を2026-09-07に再確認。製品固有の手順と本研修の運用提案を区別する。
+
+- p1 AIにも渡しやすい文書設計: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p2 この資料でできるようになること: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p3 4章で、作成から更新までを追う: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p4 AI向けドキュメント設計とは何か: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p5 AI向け文書設計は、読み違いを減らす準備: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p6 なぜ、説明の前提を書き残すのか: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p7 人とAIが読むときの前提: https://developers.google.com/tech-writing/one/documents / knowledge/ai-ready-docs/one-faq-with-evidence.md
+- p8 文書の一部だけが渡る場面を考える: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p9 設計するのは、本文とつながり: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p10 文書が整うと、何を確かめやすいか: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p11 そのFAQは、いつの出張に使うか: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md / https://developers.google.com/tech-writing/one/documents
+- p12 書き方をそろえても、読む操作は必要: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p13 1件のFAQを、根拠から作る: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p14 旧版と新版の違い: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p15 11,000円の宿を判断する: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p16 FAQにする質問を決める: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p17 条件が抜けたFAQ: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p18 根拠と条件を残したFAQ: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p19 答えを支える3つの条項: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p20 1件の答えが辿れるまとまり: https://developers.google.com/tech-writing/one/documents / knowledge/ai-ready-docs/one-faq-with-evidence.md
+- p21 分ける単位を、質問で決める: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p22 見出しと索引の例: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md / knowledge/okf/directory-structure.md
+- p23 見出しと短い説明の役割: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p24 知識と指示と手順の置き場所: knowledge/agent-capabilities/prompts-and-project-rules.md / knowledge/agent-capabilities/writing-good-skills.md
+- p25 共通ルールのファイル: https://agents.md/ / https://code.claude.com/docs/en/memory
+- p26 共通ルールに残す内容の例: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md / knowledge/agent-capabilities/prompts-and-project-rules.md
+- p27 繰り返す手順をSkillへまとめる: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md / knowledge/agent-capabilities/writing-good-skills.md / https://agentskills.io/specification
+- p28 Skillの入口と動作の確認: https://agentskills.io/specification / knowledge/agent-capabilities/writing-good-skills.md
+- p29 出典と日付の意味: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md / training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p30 OKFを使う場合の最小の考え方: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md
+- p31 形式が合うことと、答えが合うこと: https://github.com/GoogleCloudPlatform/open-knowledge-format/blob/ad30107c31c06aec8a7d5636e0d1058118604e6f/SPEC.md / knowledge/ai-ready-docs/update-dependent-faq.md
+- p32 読み違いと更新漏れを直す: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p33 誤答が出たら、3か所を照合する: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p34 断片にしたときの読み違い: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p35 断片の中にも、必要な条件を残す: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p36 見つけた版と、使う版を分ける: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p37 規程が変わった後のFAQ: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md / knowledge/ai-ready-docs/update-dependent-faq.md
+- p38 見直しを担当する流れ: knowledge/ai-ready-docs/update-dependent-faq.md
+- p39 更新するFAQを、参照先から探す: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p40 何を変え、何を残すか: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p41 記録が新しくても、本文は確かめる: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p42 別の業務へ置き換えるとき: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p43 読み手と確かめるTips: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p44 練習：古いFAQを直す: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p45 解答：過去の出張には旧版を使う: training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p46 別の人がFAQを読む確認: https://developers.google.com/tech-writing/one/documents / training/cases/travel/policy-current.md / training/cases/travel/policy-previous.md
+- p47 FAQ作成を頼むテンプレート: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p48 練習：見直す日時を過ぎたFAQ: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p49 解答：期限は再確認のきっかけ: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p50 最初の試行で記録すること: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p51 根拠へ戻れる文書: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p52 付録：形式と参照資料: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p53 本編で使った用語: このスライドは架空の出張規程による研修向けの設計・運用例です。 / https://developers.google.com/tech-writing/one/documents
+- p54 参照した資料: 構成または教材用の作例。
+- p55 配布資料と次のテーマ: training/cases/travel/README.md / training/labs/source-packs/README.md

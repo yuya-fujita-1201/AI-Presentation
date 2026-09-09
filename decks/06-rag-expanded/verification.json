@@ -1,0 +1,76 @@
+{
+  "deck": "decks/06-rag-expanded",
+  "slides": 57,
+  "deck_sha256": "cc661f31d5f52bd141ddad02cccdaacd500dafd28d1b797c71721920fad9b7b9",
+  "pptx_sha256": "df8df6fd1318ff5f934b7d815ea1107284ce62c2ff882b20de56d4e0e2a3adc5",
+  "html_sha256": "eb041d04b4ad4db2268943224dd96ace1e2642486e7ae2b23e09accd63f08bf9",
+  "checks": {
+    "source_preserved": true,
+    "id_matches_folder": true,
+    "four_chapters": true,
+    "html_exists": true,
+    "images_exist": true,
+    "preview_count": true,
+    "zip_valid": true,
+    "slide_count": true,
+    "no_notes": true
+  },
+  "passed": true,
+  "commands": [
+    {
+      "name": "build",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "layout",
+      "exit": 0
+    },
+    {
+      "name": "preview",
+      "exit": 0
+    },
+    {
+      "name": "contact",
+      "exit": 0
+    },
+    {
+      "name": "svg-fonts",
+      "exit": 0
+    }
+  ],
+  "independent_review": "accepted; A+B",
+  "powerpoint_keynote_display": "unverified",
+  "learner_trial": "unverified",
+  "verified_at": "2026-09-08T00:10:57.636761+09:00",
+  "assets_sha256": {
+    "assets/diagram-chunk-conditions.svg": "ab4f2d24dd04396d4e24514ad2fff8e898e28568d16bded5ed0b7443f0634189",
+    "assets/diagram-diagnose-records.svg": "786bb68eb163eb983067df7822cadd44d0357fe5020a9af5f9f2d40c4a8b695b",
+    "assets/diagram-rag-boundary-slider.svg": "c45214e94bc344f1cce481cbdabc8092027837d16b77348761f1f558d1e094ee",
+    "assets/diagram-rag-chunking.svg": "4b16b35b803050c5a054be99a111641ff0a669c7954b4cca15c90e02efc61a87",
+    "assets/diagram-rag-contextual-retrieval.svg": "62dc3348eec7242457d1d2045e606d4d4d61f96b84f025ce4dba0c2890a8ce74",
+    "assets/diagram-rag-dual-models.svg": "ccc7c7248e039143b8e323f907233f70dcf46ee6524aa4ccc9536cf7098ba118",
+    "assets/diagram-rag-knowledge-cutoff.svg": "aa2c9c30b9ac55254364497d662ccff5d42f816550f2cbb3e4424ac4e6803a3a",
+    "assets/diagram-rag-pipeline-stages.svg": "608f5c8e2e3e9d04b965921b07bfc7b98936d5775e18721da93173a39250cfb5",
+    "assets/diagram-rag-position.svg": "1ccb9aa9290e3664dbfe6a8e5ed0eb65712efe0ae8eecf3678133f2afcc7f2e5",
+    "assets/diagram-rag-query-rewrite.svg": "9760ffcd9716d055b9d11c005daee6161be13e63ef003da800dcbf3f93858b2b",
+    "assets/diagram-rag-three-layers.svg": "6c3d9e420ed4051b14d9c636f49e9036827fc16c4a4316d657a5bb65a4cc0e2d",
+    "assets/diagram-rag-triangle.svg": "1a12a2702a35faf5fd68689b9291a24acde578fe3455475d886879c06c948342",
+    "assets/diagram-rag-two-step.svg": "8b56e23d82eb9e2d306b2efedb4092ae8be122a3a190e49efdefcbc8bd53fbcd",
+    "assets/diagram-rag-vector-space.svg": "876638fc936bc8502b3559cbba82ba3de35798ebcb32923ea718f22cdd567f0c",
+    "assets/diagram-rerank-candidates.svg": "c7466e05ffd334172a4d4b384025c77367c26e594c9e9fce67a832bc5b280571",
+    "assets/warm-rag-01.png": "ff09ac66718d2027a2a383090aca7f1c3d664eccce31955ef32d0c8df0e0c7cc",
+    "assets/warm-rag-02.png": "5c3caef96d341c4e257a3517caccf7963909b052f11b9c7465e0db66923df302",
+    "assets/warm-rag-03.png": "bbe5926ca2a2091955dcb441d04d2e2697a0dbfd31f88c438904795acfdd2409",
+    "assets/warm-rag-04.png": "1a40b7f836b5c823050050a947a03e8753fa9eaf5ce0a246be65b34025545d7c",
+    "assets/warm-rag-05.png": "4f585352e8b9220c89d05bb791ffb39eb385f59a18a2ca2ea8b12306558177b5",
+    "assets/warm-rag-06.png": "45fbda8dd3e296fab0e430406f4bb46605e61c5bd96cf6860a8526c8555bb968",
+    "assets/warm-rag-07.png": "523299c1fcc170354d8723a712d1a2521c0857853cfbca6f18b9fdef13fe7eb6",
+    "assets/warm-rag-08.png": "b31ffd9241eb8f2180bce1de5d5a25bee53e486fe862114c31970144dee7e941",
+    "assets/warm-rag-09.png": "ec328be319a5743858a91be65bcef089097339e2be0e82323e9ccf93048334c2",
+    "assets/warm-rag-10.png": "90be3f361d055cf1d87d5c8b9bde4ebebf77bf847ec476d7331cd39df9f381c9"
+  }
+}
