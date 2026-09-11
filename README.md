@@ -1,18 +1,25 @@
 # AI-Presentation — スライド生成プラグイン配布リポジトリ
 
-このリポジトリは Claude Code プラグイン **`slide-deck`**（JSON をソースにスライドを HTML / PowerPoint にビルドする仕組み）を配布する**マーケットプレイス**です。
+このリポジトリは Claude Code プラグイン **`slide-deck`**（JSON をソースにスライドを HTML / PowerPoint にビルドする仕組み）を配布します。JSON でスライドの内容とデザインを管理し、19 種類のスライドタイプ（構成図・データフロー・シーケンス等の自動配線図解を含む）、テーマ切替・追加、機械検証、PDF 書き出しに対応します。
 
 ## 使う人向け（インストール）
 
-```
-/plugin marketplace add yuya-fujita-1201/AI-Presentation
-/plugin install slide-deck@ai-presentation
-```
+社内配布は **`plugins` フォルダの Zip を受け取って展開**する形式です（マーケットプレイスからのダウンロードではありません）。
 
-インストール後の初回セットアップ・使い方はプラグインの README を参照:
+1. 配布された Zip を任意の場所に展開する
+2. 展開して出てきた `slide-deck` フォルダを指定して Claude Code を起動する:
+
+   ```bash
+   claude --plugin-dir <展開先>/slide-deck
+   ```
+
+   （IDE 拡張を使う場合は設定でプラグインフォルダを指定します）
+3. これで `create-deck` / `add-theme` / `review-deck` / `export-pdf` / `setup` の 5 スキルが使えます
+
+初回セットアップ・使い方はプラグインの README を参照:
 → [`plugins/slide-deck/README.md`](plugins/slide-deck/README.md)
 
-かんたんには、依存を入れて（`/slide-deck:setup`）、スライド作成を頼めば `create-deck` スキルが deck.json を作ってビルドします。
+かんたんには、依存を入れて（`/slide-deck:setup`）、スライド作成を頼めば `create-deck` スキルが deck.json を作ってビルドします。使い方の全体像はスライド版マニュアル [`plugins/slide-deck/USER-GUIDE.html`](plugins/slide-deck/USER-GUIDE.html) にまとまっています。
 
 ## リポジトリ構成
 

@@ -1146,7 +1146,8 @@ def _norm_edges(slide: dict, kind: str) -> List[dict]:
 
 
 COMMON_SLIDE_KEYS = {"type", "title", "eyebrow", "lead", "notes", "style", "legend", "cols", "rows",
-                     "col_headers", "row_headers", "groups"}
+                     "col_headers", "row_headers", "groups",
+                     "legend_page", "legend_title", "legend_eyebrow", "legend_lead", "legend_items"}
 ALLOWED_KEYS = {
     "architecture": COMMON_SLIDE_KEYS | {"nodes", "edges", "stages", "lanes"},
     "dataflow": COMMON_SLIDE_KEYS | {"nodes", "edges", "stages", "flows", "lanes"},

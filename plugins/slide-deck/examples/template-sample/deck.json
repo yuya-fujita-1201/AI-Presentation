@@ -2,9 +2,10 @@
   "meta": {
     "id": "template-sample",
     "title": "テンプレート タイプ ギャラリー",
-    "subtitle": "19スライドタイプの見た目サンプル（default テーマ）",
+    "subtitle": "19スライドタイプの見た目サンプル（accenture-purple テーマ）",
     "author": "yuya.fujita",
-    "date": "2026-09-04",
+    "date": "2026-09-11",
+    "theme": "accenture-purple",
     "layout_overrides": {
       "bullets": {
         "lead": {
@@ -26,7 +27,7 @@
       "type": "title",
       "title": "テンプレート タイプ ギャラリー",
       "subtitle": "19スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
-      "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / default テーマ",
+      "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / accenture-purple テーマ",
       "notes": "表紙（title）— 左帯(bar)＋タイトル＋サブタイトル＋meta。"
     },
     {
@@ -194,9 +195,12 @@
       "type": "image",
       "eyebrow": "TYPE 09 / image",
       "title": "画像（image）",
-      "path": "assets/flow-sample.svg",
-      "caption": "SVG/PNG を全幅で配置。関係図・ポンチ絵など自由作図はこのタイプ（SVGはビルド時に自動PNG化）。",
-      "notes": "TYPE 09 / image — フロー図サンプルSVGを全幅表示。"
+      "path": "assets/cityscape-sample.svg",
+      "caption": "写真・イラストなどの画像を全幅で大きく配置（SVG/PNG/JPG対応、SVGはビルド時に自動PNG化）。",
+      "style": {
+        "img": { "x": 72, "y": 150, "w": 1136, "h": 492 }
+      },
+      "notes": "TYPE 09 / image — 画像を領域いっぱいに全幅表示。style.img で表示領域を調整。"
     },
     {
       "type": "image_text",
@@ -211,7 +215,7 @@
         "メッセージと図解を同時に見せたいときの主力タイプ"
       ],
       "path": "assets/flow-sample.svg",
-      "caption": "image と同じSVGを本文の隣に配置した例。",
+      "caption": "図を本文の隣に配置した例（image_side で左右反転）。",
       "image_side": "right",
       "notes": "TYPE 10 / image_text — 図＋パンチライン＋本文の統合レイアウト。"
     },
@@ -529,7 +533,11 @@
       "type": "architecture",
       "eyebrow": "TYPE 15 / architecture",
       "title": "システム構成図（architecture）",
-      "lead": "コンポーネントを type（役割）付きで置き、線は自動配線。境界（groups）で領域を囲む。",
+      "lead": "type を AWS 風タイルアイコンで表示（style.diagram.icon_style: \"aws\"）。線は自動配線、境界は groups。",
+      "legend_page": true,
+      "legend_lead": "タイルの色は役割、variant は強調、矢印の線種は接続の性質を表す。",
+      "legend": false,
+      "style": { "diagram": { "icon_style": "aws" } },
       "nodes": [
         {
           "id": "users",
@@ -698,6 +706,8 @@
       "eyebrow": "TYPE 16 / dataflow",
       "title": "データフロー（dataflow）",
       "lead": "stages で工程を、row で並行する流れを表す。ラベルに classification を添えられる。",
+      "legend_page": true,
+      "legend_lead": "アイコンはデータを扱う要素の役割、矢印の線種はデータの流れ方を表す。",
       "stages": [
         "収集",
         "取込",
@@ -826,6 +836,8 @@
       "eyebrow": "TYPE 17 / lifecycle",
       "title": "ライフサイクル（lifecycle）",
       "lead": "状態は kind（開始/進行中/待機/分岐/成功/失敗）ごとに形と色を変える。",
+      "legend_page": true,
+      "legend_lead": "箱の形と色（kind）は状態の性質、矢印の線種は遷移の性質を表す。",
       "lanes": [
         {
           "name": "主要フェーズ"
@@ -974,6 +986,8 @@
       "eyebrow": "TYPE 18 / sequence",
       "title": "シーケンス図（sequence）",
       "lead": "参加者を横に並べ、messages の順にやり取りを上から描く。return は破線の戻り。",
+      "legend_page": true,
+      "legend_lead": "参加者カードのアイコンは役割、矢印の線種はメッセージの種類を表す。",
       "participants": [
         {
           "id": "user",

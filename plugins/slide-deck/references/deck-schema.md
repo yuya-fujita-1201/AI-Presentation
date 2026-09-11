@@ -301,6 +301,8 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 
 注意: コンポーネントの役割は `type`（アイコンの形）で表し、強調したいノード／境界越えの通信は `variant`（ノードは `emphasis`、エッジは `security` 等）で表す。主経路が1本の左→右（または上→下）になるよう `row`/`col` を揃えると線が交差しにくい。
 
+**AWS 風タイルアイコン**: `style.diagram.icon_style` を `"aws"` にすると、`type` を **カテゴリ色の角丸タイル＋白いグリフ**（AWS の構成図アイコン風）で描く（既定は `"line"` の線画グリフ）。実物の AWS アイコン画像は使わず自作しているので、テーマ・PPTX・HTML すべてで同じに出る。タイル色は `icon_tile_<type>` トークンで上書きでき（既定: frontend=マゼンタ / backend=オレンジ / database=ブルー / cloud=ティール / security=レッド / messagebus=ピンク / external=スレート / generic=グレー）、タイルの大きさは `icon_tile_size`（既定 30）。`architecture` / `dataflow` / `sequence` で有効（`lifecycle` は kind の形で表すのでタイルにはしない）。`legend_page` の凡例はこの設定を自動で引き継ぐので、図と凡例で見た目が揃う。
+
 ### `dataflow` — データフロー
 ```json
 { "type": "dataflow", "eyebrow": "DATA", "title": "データフロー",
@@ -391,6 +393,36 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 目安: 参加者7人以下、メッセージ12本以下（超えると `too-dense` 警告）。ラベルが矢印の長さより長いと `label-collision` 警告。
 
 注意: 参加者カード・メッセージの矢印は「図解タイプ共通」節と同じノード/エッジのトークン・語彙で着色されるが、自動配線・groups・凡例（横切り回避を含む）は grid 系3タイプ専用でここには無い（メッセージは常に横一直線）。
+
+### `diagram_legend` — 図解タイプの凡例ページ
+```json
+{ "type": "diagram_legend", "eyebrow": "SYSTEM — 凡例", "title": "システム構成図の記号",
+  "lead": "アイコンは役割、色は強調、矢印の線種は接続の性質を表す。",
+  "items": [
+    [{"icon": "backend"},     "バックエンド", "API・アプリケーションサーバ"],
+    [{"node": "emphasis"},    "主要ノード",   "強調色＝主経路の中心"],
+    [{"kind": "decision"},    "分岐",         "条件による分岐（ひし形）"],
+    [{"edge": "default"},     "実線矢印",     "同期の呼び出し・主なデータの流れ"],
+    [{"edge": "dashed"},      "破線矢印",     "非同期・任意・補助的な経路"],
+    [{"edge": "return"},      "戻り矢印",     "開いた破線矢印＝応答・戻り値"]
+  ] }
+```
+`architecture` / `dataflow` / `lifecycle` / `sequence` の記号を、swimlane の凡例ページと同じ「記号＋名前＋説明」の2カラム表で見せる専用タイプ。**記号は実図と同じ描画関数（`_node_visual` / `_edge_visual`）で描く**ので凡例と本体の見た目が必ず一致する。
+
+**自動挿入（推奨）**: 図解スライド（`architecture` / `dataflow` / `lifecycle` / `sequence`）に **`"legend_page": true`** を付けると、そのスライドの直前に `diagram_legend` ページが自動挿入される（swimlane の `legend` と同じ仕組み。ただし**既定はオフ**で、付けたスライドにだけ着く）。`items` は**そのスライドで実際に使われている** `type` / `variant` / `kind` / エッジの種類だけから自動生成されるので、図に出てこない記号は載らない。オプション: `legend_title`（凡例の見出し）/ `legend_eyebrow`（既定はスライドの `eyebrow` に「 — 凡例」を付けたもの）/ `legend_lead`（説明文）/ `legend_items`（自動生成を使わず内容を明示。形式は下記）。`icon_style:"aws"` などアイコン関連の `style.diagram` トークンは凡例に自動で引き継がれる。
+
+`diagram_legend` を直接スライドとして書けば、任意の位置・内容の凡例ページも作れる。その場合は次の `items` を指定する。
+
+`items` は `[サンプル, ラベル, 説明]` の配列。**サンプルはキー1つの辞書**で、種類は次の4つ:
+
+| サンプル | 描くもの |
+|---|---|
+| `{"icon": "<type>"}` | ノードカード＋type アイコン（`frontend` / `backend` / `database` / `cloud` / `security` / `messagebus` / `external`） |
+| `{"node": "<variant>"}` | variant の色見本ボックス（`emphasis` / `security` / `dashed` / `muted`） |
+| `{"kind": "<kind>"}` | lifecycle の状態記号（`start` / `active` / `waiting` / `decision` / `success` / `failure` / `neutral` / `external`。形とグリフ付き） |
+| `{"edge": "<variant>"}` | 矢印1本（`default`＝実線 / `emphasis`＝太線 / `security`＝鎖線 / `dashed`＝破線 / `return`＝開いた破線の戻り矢印） |
+
+領域は `area`（2カラムのグリッド。`cols` / `col_gap` / `row_h` / `sym_w` / `label_size` / `desc_size`）と `diagram`（記号の色トークン。`architecture` と同じ語彙＋lifecycle の kind トークン）。色を変えるときは `meta.theme` の切替か `style.diagram.*` で行う。
 
 ## 検証（ビルド時にチェックされる内容）
 

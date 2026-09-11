@@ -647,6 +647,55 @@ def _legend_symbol_html(shape, vk, x, cy, sym_w, theme, f):
     return _sw_node_html(nd, theme, f)
 
 
+def _diag_legend_sym_size(sample):
+    """diagram_legend の 1 シンボルの箱サイズ（w, h）。edge は h=0（線）。"""
+    if "edge" in sample:
+        return (88, 0)
+    if "kind" in sample:
+        k = sample["kind"]
+        if k == "decision":
+            return (54, 40)
+        if k == "start":
+            return (108, 34)
+        return (108, 40)
+    return (108, 40)  # icon / node（variant 色見本）
+
+
+def _diag_legend_sym_html(sample, x, cy, sym_w, d, theme, hf, uid=""):
+    """diagram_legend の 1 シンボル（type アイコン / variant 色 / lifecycle kind / edge 矢印）を
+    実図と同じ描画関数（_diag_node_html / _edge_visual）で描く。中心 x..x+sym_w に配置。"""
+    w, h = _diag_legend_sym_size(sample)
+    cx = x + sym_w / 2
+    if "edge" in sample:
+        ev = _edge_visual({"variant": sample["edge"]}, d)
+        ec = col(theme, ev["color"]); wpx = ev["w"]
+        dash = f' stroke-dasharray="{ev["dash"]}"' if ev["dash"] else ""
+        x1, x2 = cx - w / 2, cx + w / 2
+        mid = f"dlm-{uid}"
+        if ev["open"]:
+            marker = (f'<marker id="{mid}" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto" '
+                      f'markerUnits="userSpaceOnUse"><path d="M1,1 L9,5 L1,9" fill="none" stroke="{ec}" stroke-width="1.6"/></marker>')
+        else:
+            marker = (f'<marker id="{mid}" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto" '
+                      f'markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8 z" fill="{ec}"/></marker>')
+        return (f'<svg style="position:absolute;left:0;top:0;width:{CANVAS_W}px;height:{CANVAS_H}px;'
+                f'pointer-events:none;" viewBox="0 0 {CANVAS_W} {CANVAS_H}"><defs>{marker}</defs>'
+                f'<line x1="{x1:.0f}" y1="{cy:.0f}" x2="{x2:.0f}" y2="{cy:.0f}" stroke="{ec}" '
+                f'stroke-width="{wpx}"{dash} marker-end="url(#{mid})"/></svg>')
+    box = {"label": "", "x": cx - w / 2, "y": cy - h / 2, "w": w, "h": h}
+    if "kind" in sample:
+        k = sample["kind"]
+        box["kind"] = k
+        box["shape"] = "diamond" if k == "decision" else ("pill" if k == "start" else "rect")
+        return _diag_node_html(box, {}, d, theme, "lifecycle", hf)
+    box["shape"] = "rect"
+    if "node" in sample:
+        box["variant"] = sample["node"]
+    else:
+        box["type"] = sample["icon"]
+    return _diag_node_html(box, {}, d, theme, "architecture", hf)
+
+
 def norm_legend_items(items):
     """swimlane の legend_items を (shape, variant_or_kind, label, desc) の4要素タプル配列に正規化する。
     4要素配列（リスト/タプル）はそのまま、辞書は {shape, variant|kind, label, desc} から変換する。"""
@@ -761,6 +810,42 @@ def _icon_svg(kind: str, size: float, color_hex: str, extra_style: str = "") -> 
             f'stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
 
+# AWS 風タイルアイコン（icon_style:"aws"）: type ごとのカテゴリ色の角丸タイル＋白いグリフ。
+# 実物の AWS アイコン画像は使わず、役割（type）を AWS のカテゴリ配色に寄せて自作している。
+# 各色は diagram トークン icon_tile_<type> で上書きできる。
+ICON_TILE_COLORS = {
+    "frontend": "#C925D1",    # マゼンタ（Front-End Web & Mobile 風）
+    "backend": "#ED7100",     # オレンジ（Compute 風）
+    "database": "#2E73B8",    # ブルー（Database 風）
+    "cloud": "#01A88D",       # ティール（General / Managed 風）
+    "security": "#DD344C",    # レッド（Security 風）
+    "messagebus": "#E7157B",  # ピンク（Application Integration 風）
+    "external": "#5A6B86",    # スレート（外部システム）
+    "generic": "#7D8998",     # グレー（汎用）
+}
+
+
+def _icon_tile_color(d: dict, ntype: str):
+    return d.get(f"icon_tile_{ntype}") or ICON_TILE_COLORS.get(ntype, ICON_TILE_COLORS["generic"])
+
+
+def _icon_tile_svg(kind: str, tile: float, fill_hex: str, glyph_hex: str = "#ffffff", radius: float = 6) -> str:
+    """カテゴリ色の角丸タイルの中央に白いグリフを置く（AWS アイコン風）。"""
+    path = ICON_PATHS.get(kind)
+    glyph = ""
+    if path:
+        inner = tile * 0.58
+        off = (tile - inner) / 2
+        scale = inner / 16.0
+        glyph = (f'<g transform="translate({off:.2f},{off:.2f}) scale({scale:.3f})">'
+                 f'<path d="{path}" fill="none" stroke="{glyph_hex}" stroke-width="{1.6/scale:.2f}" '
+                 f'stroke-linecap="round" stroke-linejoin="round"/></g>')
+    return (f'<svg width="{tile:.0f}" height="{tile:.0f}" viewBox="0 0 {tile:.1f} {tile:.1f}" '
+            f'style="flex:none;" aria-hidden="true">'
+            f'<rect x="0.5" y="0.5" width="{tile-1:.1f}" height="{tile-1:.1f}" rx="{radius}" ry="{radius}" '
+            f'fill="{fill_hex}"/>{glyph}</svg>')
+
+
 def _glyph_svg(kind: str, size: float, color_hex: str, x: float, y: float) -> str:
     path = KIND_GLYPHS.get(kind)
     if not path:
@@ -793,16 +878,23 @@ def _diag_node_html(b: dict, fit: dict, d: dict, theme, kind: str, heading_font_
         rad = f"{h/2:.0f}px" if vis["shape"] == "pill" else f"{radius}px"
         parts.append(f'<div style="{box_css}background:{fill};border:{vis["border_w"]}px {bstyle} {border};border-radius:{rad};"></div>')
         icon_w = 0.0
-    # type アイコン（左・縦中央）
+    # type アイコン（左・縦中央）。icon_style:"aws" ならカテゴリ色タイル、既定は線画グリフ。
     icon_size = d.get("icon_size", 16)
     ntype = b.get("type") or "generic"
     if kind != "lifecycle" and ntype in ICON_PATHS and vis["shape"] == "rect":
-        # muted variant はアイコンも muted に落とす（type は形で表す・色は variant が担う、の唯一の例外）
-        icon_tok = d.get("muted_color", "muted") if (b.get("variant") == "muted") else d.get("icon_color", "accent")
-        parts.append(f'<div style="position:absolute;left:{x+pad:.1f}px;top:{y + h/2 - icon_size/2:.1f}px;'
-                     f'width:{icon_size}px;height:{icon_size}px;">'
-                     + _icon_svg(ntype, icon_size, col(theme, icon_tok)) + "</div>")
-        icon_w = icon_size + 6
+        if d.get("icon_style") == "aws":
+            tsz = d.get("icon_tile_size", 30)
+            tile_hex = col(theme, _icon_tile_color(d, ntype))
+            parts.append(f'<div style="position:absolute;left:{x+pad:.1f}px;top:{y + h/2 - tsz/2:.1f}px;'
+                         f'width:{tsz}px;height:{tsz}px;">' + _icon_tile_svg(ntype, tsz, tile_hex) + "</div>")
+            icon_w = tsz + 8
+        else:
+            # muted variant はアイコンも muted に落とす（type は形で表す・色は variant が担う、の唯一の例外）
+            icon_tok = d.get("muted_color", "muted") if (b.get("variant") == "muted") else d.get("icon_color", "accent")
+            parts.append(f'<div style="position:absolute;left:{x+pad:.1f}px;top:{y + h/2 - icon_size/2:.1f}px;'
+                         f'width:{icon_size}px;height:{icon_size}px;">'
+                         + _icon_svg(ntype, icon_size, col(theme, icon_tok)) + "</div>")
+            icon_w = icon_size + 6
     # テキストブロック（アイコンの右側の残り幅で中央寄せ）
     tx = x + pad + icon_w
     tw = max(10.0, w - 2 * pad - icon_w)
@@ -1013,8 +1105,110 @@ def sequence_html(slide, st, theme, page: int, heading_font_css: str) -> str:
     return "".join(parts)
 
 
+# diagram_legend の自動生成用: 記号 → (ラベル, 説明) の既定辞書と、凡例に載せる順序。
+DIAG_LEGEND_ICON = {
+    "frontend": ("フロントエンド", "画面・UI（Web / モバイル）"),
+    "backend": ("バックエンド", "API・アプリケーションサーバ"),
+    "database": ("データベース", "DB・ストレージ・キャッシュ"),
+    "cloud": ("クラウド", "マネージドサービス"),
+    "security": ("セキュリティ", "認証・認可・境界防御"),
+    "messagebus": ("メッセージ基盤", "キュー・イベントストリーム"),
+    "external": ("外部システム", "自社外のサービス・利用者"),
+    "generic": ("コンポーネント", "汎用の構成要素"),
+}
+DIAG_LEGEND_NODE_VARIANT = {
+    "emphasis": ("主要ノード", "強調色＝主経路の中心"),
+    "security": ("セキュア対象", "認証・境界防御の対象"),
+    "dashed": ("任意・外部", "任意・将来・外部の要素"),
+    "muted": ("参考", "背景・参考の要素"),
+}
+DIAG_LEGEND_KIND = {
+    "start": ("開始", "フローの起点"),
+    "active": ("進行中", "通常の状態"),
+    "waiting": ("待機", "外部入力・承認待ち"),
+    "decision": ("分岐", "条件による分岐"),
+    "success": ("成功・完了", "正常終了"),
+    "failure": ("失敗・中止", "異常終了"),
+    "neutral": ("中立", "補助的な状態"),
+    "external": ("外部", "外部要因の状態"),
+}
+DIAG_LEGEND_EDGE = {
+    "default": ("実線矢印", "同期の呼び出し・主な流れ"),
+    "emphasis": ("主要フロー", "太線＝最重要の経路"),
+    "security": ("セキュア経路", "認証付き・境界をまたぐ通信"),
+    "dashed": ("破線矢印", "非同期・任意・補助的な経路"),
+    "return": ("戻り矢印", "応答・戻り値（開いた破線）"),
+}
+DIAG_LEGEND_TITLE = {
+    "architecture": "システム構成図の記号（architecture）",
+    "dataflow": "データフローの記号（dataflow）",
+    "lifecycle": "ライフサイクルの記号（lifecycle）",
+    "sequence": "シーケンス図の記号（sequence）",
+}
+_ICON_ORDER = ["frontend", "backend", "database", "cloud", "security", "messagebus", "external", "generic"]
+_NODE_VARIANT_ORDER = ["emphasis", "security", "dashed", "muted"]
+_KIND_ORDER = ["start", "active", "waiting", "decision", "success", "failure", "neutral", "external"]
+_EDGE_ORDER = ["default", "emphasis", "security", "dashed", "return"]
+
+
+def _edge_variant_of(e: dict) -> str:
+    """エッジの実効 variant（swimlane 互換の style:"dashed" も dashed とみなす）。"""
+    v = e.get("variant")
+    if v:
+        return v
+    if e.get("style") == "dashed":
+        return "dashed"
+    return "default"
+
+
+def auto_diagram_legend_items(slide: dict, t: str) -> list:
+    """図解スライドの実内容（使われている type / variant / kind / edge variant）だけから
+    diagram_legend の items（[sample, label, desc] の配列）を組み立てる。"""
+    nodes = slide.get("nodes") or slide.get("states") or slide.get("participants") or []
+    edges = (slide.get("edges") or slide.get("transitions")
+             or slide.get("messages") or slide.get("flows") or [])
+    items = []
+    if t == "lifecycle":
+        for k in _KIND_ORDER:
+            if any((n.get("kind") or "active") == k for n in nodes):
+                items.append([{"kind": k}, *DIAG_LEGEND_KIND[k]])
+    else:
+        for ty in _ICON_ORDER:
+            if any((n.get("type") or "generic") == ty for n in nodes):
+                items.append([{"icon": ty}, *DIAG_LEGEND_ICON[ty]])
+        for v in _NODE_VARIANT_ORDER:
+            if any(n.get("variant") == v for n in nodes):
+                items.append([{"node": v}, *DIAG_LEGEND_NODE_VARIANT[v]])
+    for v in _EDGE_ORDER:
+        if any(_edge_variant_of(e) == v for e in edges):
+            items.append([{"edge": v}, *DIAG_LEGEND_EDGE[v]])
+    return items
+
+
+def build_diagram_legend_slide(slide: dict, t: str) -> dict:
+    """図解スライドの直前に挿入する diagram_legend スライドを生成する。"""
+    leg = {"type": "diagram_legend",
+           "title": slide.get("legend_title", DIAG_LEGEND_TITLE.get(t, "凡例"))}
+    eyebrow = slide.get("legend_eyebrow")
+    if eyebrow is None and slide.get("eyebrow"):
+        eyebrow = slide["eyebrow"] + " — 凡例"
+    if eyebrow:
+        leg["eyebrow"] = eyebrow
+    if slide.get("legend_lead"):
+        leg["lead"] = slide["legend_lead"]
+    leg["items"] = slide.get("legend_items") or auto_diagram_legend_items(slide, t)
+    # 図本体と凡例で記号の見た目を揃えるため、アイコン関連の diagram トークンだけ引き継ぐ
+    # （icon_style:"aws" のタイル色など。geometry 系は持ち込まない）。
+    src_diag = (slide.get("style") or {}).get("diagram") or {}
+    icon_keys = {k: v for k, v in src_diag.items()
+                 if k in ("icon_style", "icon_tile_size", "icon_size", "icon_color") or k.startswith("icon_tile_")}
+    if icon_keys:
+        leg["style"] = {"diagram": icon_keys}
+    return leg
+
+
 def expand_slides(deck, layout):
-    """ビルド前処理: agenda のあふれを複数ページに分割し、swimlane の直前に凡例ページを挿入する。"""
+    """ビルド前処理: agenda のあふれを複数ページに分割し、swimlane / 図解タイプの直前に凡例ページを挿入する。"""
     out = []
     for s in deck.get("slides", []):
         t = s.get("type")
@@ -1025,6 +1219,9 @@ def expand_slides(deck, layout):
             if "legend_items" in s:
                 leg["items"] = norm_legend_items(s["legend_items"])
             out.append(leg)
+            out.append(s)
+        elif t in DIAGRAM_TYPES and s.get("legend_page"):
+            out.append(build_diagram_legend_slide(s, t))
             out.append(s)
         elif t == "agenda":
             items = s.get("items", [])
@@ -2330,6 +2527,31 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                               "size": a.get("desc_size", 13), "color": "muted"}, theme, esc(desc)))
         parts.append(footer_html(st, deck, theme, page, total))
 
+    elif t == "diagram_legend":
+        if slide.get("eyebrow") and "eyebrow" in st:
+            parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"]), font_family=HEADING_FONT_CSS))
+        parts.append(div(st["title"], theme, esc(slide.get("title", "凡例")), font_family=HEADING_FONT_CSS, heading=True))
+        parts.append(rect(st["rule"], theme))
+        if slide.get("lead") and "lead" in st:
+            parts.append(div(st["lead"], theme, esc(slide["lead"])))
+        a = st["area"]; d = st["diagram"]
+        entries = slide.get("items") or []
+        cols = a.get("cols", 2); rows = -(-len(entries) // cols)
+        col_gap = a.get("col_gap", 56); row_h = a.get("row_h", 54); sym_w = a.get("sym_w", 140)
+        col_w = (a["w"] - (cols - 1) * col_gap) / cols
+        for i, entry in enumerate(entries):
+            sample, label = entry[0], entry[1]
+            desc = entry[2] if len(entry) > 2 else ""
+            c = i // rows; r = i % rows
+            x = a["x"] + c * (col_w + col_gap); y = a["y"] + r * row_h
+            parts.append(_diag_legend_sym_html(sample, x, y + row_h / 2, sym_w, d, theme, HEADING_FONT_CSS, uid=f"{page}-{i}"))
+            tx = x + sym_w + 8
+            parts.append(div({"x": tx, "y": y + 6, "w": col_w - sym_w - 8, "h": 22,
+                              "size": a.get("label_size", 16), "color": "text", "bold": True}, theme, esc(label)))
+            parts.append(div({"x": tx, "y": y + 29, "w": col_w - sym_w - 8, "h": 20,
+                              "size": a.get("desc_size", 13), "color": "muted"}, theme, esc(desc)))
+        parts.append(footer_html(st, deck, theme, page, total))
+
     return "".join(parts)
 
 
@@ -3195,6 +3417,59 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             slide.shapes.add_group_shape(legend_shapes)
         footer(slide, st, page, total)
 
+    def _diag_legend_sym_pptx(slide, sample, x, cy, sym_w, d):
+        """diagram_legend の 1 シンボルを実図と同じ描画関数で PPTX に描く。"""
+        cx = x + sym_w / 2
+        if "edge" in sample:
+            ev = _edge_visual({"variant": sample["edge"]}, d)
+            w = 88
+            _poly_pptx(slide, [(cx - w / 2, cy), (cx + w / 2, cy)], C(ev["color"]), ev["w"],
+                       ev["pptx_dash"], arrow_end=True, open_arrow=ev["open"])
+            return
+        w, h = _diag_legend_sym_size(sample)
+        box = {"label": "", "x": cx - w / 2, "y": cy - h / 2, "w": w, "h": h}
+        if "kind" in sample:
+            k = sample["kind"]
+            box["kind"] = k
+            box["shape"] = "diamond" if k == "decision" else ("pill" if k == "start" else "rect")
+            _diag_node_pptx(slide, box, {}, d, "lifecycle")
+            return
+        box["shape"] = "rect"
+        if "node" in sample:
+            box["variant"] = sample["node"]
+        else:
+            box["type"] = sample["icon"]
+        _diag_node_pptx(slide, box, {}, d, "architecture")
+
+    def s_diagram_legend(slide, data, st, page, total):
+        if data.get("eyebrow") and "eyebrow" in st:
+            text_region(slide, st["eyebrow"], data["eyebrow"], font=HEADING_FONT)
+        text_region(slide, st["title"], data.get("title", "凡例"), font=HEADING_FONT)
+        rect_region(slide, st["rule"])
+        if data.get("lead") and "lead" in st:
+            text_region(slide, st["lead"], data["lead"])
+        a = st["area"]; d = st["diagram"]
+        start_idx = len(slide.shapes)
+        entries = data.get("items") or []
+        cols = a.get("cols", 2); rows = -(-len(entries) // cols)
+        col_gap = a.get("col_gap", 56); row_h = a.get("row_h", 54); sym_w = a.get("sym_w", 140)
+        col_w = (a["w"] - (cols - 1) * col_gap) / cols
+        for i, entry in enumerate(entries):
+            sample, label = entry[0], entry[1]
+            desc = entry[2] if len(entry) > 2 else ""
+            c = i // rows; r = i % rows
+            x = a["x"] + c * (col_w + col_gap); y = a["y"] + r * row_h; cy = y + row_h / 2
+            _diag_legend_sym_pptx(slide, sample, x, cy, sym_w, d)
+            tx = x + sym_w + 8
+            text_region(slide, {"x": tx, "y": y + 6, "w": col_w - sym_w - 8, "h": 22,
+                                "size": a.get("label_size", 16), "color": "text", "bold": True}, label)
+            text_region(slide, {"x": tx, "y": y + 29, "w": col_w - sym_w - 8, "h": 20,
+                                "size": a.get("desc_size", 13), "color": "muted"}, desc)
+        shapes = list(slide.shapes)[start_idx:]
+        if len(shapes) > 1:
+            slide.shapes.add_group_shape(shapes)
+        footer(slide, st, page, total)
+
     # -----------------------------------------------------------------------
     # ネイティブ図解タイプ（architecture / dataflow / lifecycle / sequence）の PPTX 描画。
     # ジオメトリは diagram_engine、見た目の解決は _node_visual / _edge_visual（HTML と共通）。
@@ -3319,9 +3594,16 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             icon_size = d.get("icon_size", 16)
             ntype = b.get("type") or "generic"
             if kind != "lifecycle" and ntype in ICON_PATHS:
-                icon_tok = d.get("muted_color", "muted") if (b.get("variant") == "muted") else d.get("icon_color", "accent")
-                _icon_pptx(slide, ntype, x + pad, y + h / 2 - icon_size / 2, icon_size, C(icon_tok))
-                icon_w = icon_size + 6
+                if d.get("icon_style") == "aws":
+                    tsz = d.get("icon_tile_size", 30)
+                    add_rect(slide, x + pad, y + h / 2 - tsz / 2, tsz, tsz, C(_icon_tile_color(d, ntype)), radius=6)
+                    gs = tsz * 0.58
+                    _icon_pptx(slide, ntype, x + pad + (tsz - gs) / 2, y + h / 2 - gs / 2, gs, C("#ffffff"))
+                    icon_w = tsz + 8
+                else:
+                    icon_tok = d.get("muted_color", "muted") if (b.get("variant") == "muted") else d.get("icon_color", "accent")
+                    _icon_pptx(slide, ntype, x + pad, y + h / 2 - icon_size / 2, icon_size, C(icon_tok))
+                    icon_w = icon_size + 6
             tx = x + pad + icon_w
             tw = max(10.0, w - 2 * pad - icon_w)
         size = fit.get("size", d.get("node_size", 14)) if fit else d.get("node_size", 14)
@@ -3492,7 +3774,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         "agenda": s_agenda, "steps": s_steps, "matrix": s_matrix, "cards": s_cards,
         "swimlane": s_swimlane, "swimlane_legend": s_swimlane_legend,
         "architecture": s_architecture, "dataflow": s_dataflow, "lifecycle": s_lifecycle,
-        "sequence": s_sequence,
+        "sequence": s_sequence, "diagram_legend": s_diagram_legend,
     }
 
     slides = deck.get("slides", [])

@@ -425,7 +425,7 @@ class BuildIntegrationTests(unittest.TestCase):
         ]}
         (cls.deck_dir / "deck.json").write_text(json.dumps(deck, ensure_ascii=False), encoding="utf-8")
         cls.result = subprocess.run([sys.executable, str(TOOLS / "build_deck.py"), str(cls.deck_dir)],
-                                    cwd=ROOT, capture_output=True, text=True)
+                                    cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
 
     @classmethod
     def tearDownClass(cls):
@@ -449,7 +449,7 @@ class BuildIntegrationTests(unittest.TestCase):
 
     def test_check_diagram_runs(self):
         r = subprocess.run([sys.executable, str(TOOLS / "check_diagram.py"), str(self.deck_dir)],
-                           cwd=ROOT, capture_output=True, text=True)
+                           cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
         self.assertEqual(r.returncode, 0, msg=r.stdout + r.stderr)
         self.assertIn("check_diagram:", r.stdout)
 
@@ -461,7 +461,7 @@ class BuildIntegrationTests(unittest.TestCase):
              "nodes": [{"id": "a", "label": "A", "row": 0, "col": 0}, {"id": "b", "label": "B", "row": 0, "col": 3}]}]}
         (bad_dir / "deck.json").write_text(json.dumps(deck, ensure_ascii=False), encoding="utf-8")
         r = subprocess.run([sys.executable, str(TOOLS / "check_diagram.py"), str(bad_dir), "--strict"],
-                           cwd=ROOT, capture_output=True, text=True)
+                           cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
         self.assertEqual(r.returncode, 1)
         self.assertIn("out-of-grid", r.stdout)
 
@@ -473,7 +473,7 @@ class BuildIntegrationTests(unittest.TestCase):
              "nodes": [{"id": "a", "label": "A", "row": 0, "col": 0}], "edges": [{"from": "a", "to": "ghost"}]}]}
         (err_dir / "deck.json").write_text(json.dumps(deck, ensure_ascii=False), encoding="utf-8")
         r = subprocess.run([sys.executable, str(TOOLS / "build_deck.py"), str(err_dir), "--html"],
-                           cwd=ROOT, capture_output=True, text=True)
+                           cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
         self.assertEqual(r.returncode, 1)
         self.assertIn("unknown-endpoint", r.stderr)
 

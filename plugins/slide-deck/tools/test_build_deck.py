@@ -48,7 +48,9 @@ import build_deck  # noqa: E402  (テーマ/expand_slides/resolve_style 直接�
 def run_build(deck_dir, *extra_args):
     """build_deck.py <deck_dir> [args...] をサブプロセスで実行し CompletedProcess を返す。"""
     cmd = [sys.executable, str(BUILD_DECK), str(deck_dir), *extra_args]
-    return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    # build_deck.py は UTF-8 で出力するため、実行環境のロケール（Windows 日本語は cp932）に
+    # 依存せず UTF-8 で復号する。指定しないと 0xEF 等でデコード失敗・文字化けする。
+    return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
 
 
 def write_deck(tmp_path, deck, deck_id="t", bom=False):
@@ -103,14 +105,15 @@ class SampleDeckBuildTests(unittest.TestCase):
         flags = [slide.has_notes_slide for slide in prs.slides]
         self.assertTrue(all(f is False for f in flags), msg=f"has_notes_slide: {flags}")
 
-    def test_slide_count_matches_expand_slides_and_is_20(self):
-        """swimlane の凡例自動挿入で deck.json の19枚から20枚に増える想定。"""
+    def test_slide_count_matches_expand_slides_and_is_24(self):
+        """deck.json は19枚。swimlane の凡例(+1)と、図解4タイプの legend_page 自動挿入(+4)で
+        PPTX は24枚になる想定。"""
         from pptx import Presentation
         prs = Presentation(str(self.pptx_path))
         deck, _theme, layout = build_deck.load_deck(SAMPLE_DECK)
         expanded = build_deck.expand_slides(deck, layout)
         self.assertEqual(len(expanded["slides"]), len(prs.slides))
-        self.assertEqual(len(expanded["slides"]), 20)
+        self.assertEqual(len(expanded["slides"]), 24)
 
 
 class ManualDeckBuildTests(unittest.TestCase):
@@ -401,6 +404,94 @@ class ValidateDeckErrorTests(unittest.TestCase):
         result = run_build(deck_dir)
         self.assertEqual(result.returncode, 0, msg=result.stderr)
         self.assertTrue((deck_dir / "build" / "t.html").exists())
+
+
+class DiagramLegendTests(unittest.TestCase):
+    """diagram_legend: type アイコン / variant 色 / lifecycle kind / edge 矢印の
+    4 系統のシンボルが HTML・PPTX ともにエラーなく描画され、ラベルが出力される。"""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.tmp_path = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def _legend_deck(self):
+        deck = minimal_deck()
+        deck["slides"] = [{
+            "type": "diagram_legend",
+            "title": "凡例テスト",
+            "lead": "リード",
+            "items": [
+                [{"icon": "database"}, "データベース", "DB の説明"],
+                [{"node": "emphasis"}, "主要ノード", "強調色の説明"],
+                [{"kind": "decision"}, "分岐", "ひし形の説明"],
+                [{"edge": "dashed"}, "破線矢印", "非同期の説明"],
+                [{"edge": "return"}, "戻り矢印", "戻り値の説明"],
+            ],
+        }]
+        return deck
+
+    def test_diagram_legend_builds_html_and_pptx(self):
+        deck_dir = write_deck(self.tmp_path, self._legend_deck())
+        result = run_build(deck_dir)
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        html = (deck_dir / "build" / "t.html").read_text(encoding="utf-8")
+        for label in ("データベース", "主要ノード", "分岐", "破線矢印", "戻り矢印"):
+            self.assertIn(label, html)
+
+    def test_diagram_legend_pptx_has_no_notes(self):
+        from pptx import Presentation
+        deck_dir = write_deck(self.tmp_path, self._legend_deck())
+        result = run_build(deck_dir)
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        prs = Presentation(str(deck_dir / "build" / "t.pptx"))
+        self.assertTrue(all(s.has_notes_slide is False for s in prs.slides))
+
+    def test_legend_page_auto_inserts_and_derives_items(self):
+        """legend_page:true で直前に diagram_legend が挿入され、items は実際に使われている
+        記号だけから生成される（未使用の記号は載らない）。"""
+        layout = build_deck.load_json(ROOT / "templates" / "layouts" / "default.json")
+        deck = {"meta": {"id": "t"}, "slides": [{
+            "type": "architecture", "title": "A", "eyebrow": "SYS", "legend_page": True,
+            "nodes": [{"id": "a", "type": "backend"}, {"id": "b", "type": "database", "variant": "emphasis"}],
+            "edges": [{"from": "a", "to": "b", "variant": "dashed"}],
+        }]}
+        expanded = build_deck.expand_slides(deck, layout)
+        self.assertEqual(len(expanded["slides"]), 2)
+        leg = expanded["slides"][0]
+        self.assertEqual(leg["type"], "diagram_legend")
+        self.assertEqual(leg["eyebrow"], "SYS — 凡例")
+        samples = [it[0] for it in leg["items"]]
+        for expected in ({"icon": "backend"}, {"icon": "database"}, {"node": "emphasis"}, {"edge": "dashed"}):
+            self.assertIn(expected, samples)
+        self.assertNotIn({"icon": "frontend"}, samples)  # 使っていない記号は載らない
+
+    def test_legend_page_absent_does_not_insert(self):
+        layout = build_deck.load_json(ROOT / "templates" / "layouts" / "default.json")
+        deck = {"meta": {"id": "t"}, "slides": [{
+            "type": "architecture", "title": "A",
+            "nodes": [{"id": "a", "type": "backend", "row": 0, "col": 0}], "edges": [],
+        }]}
+        expanded = build_deck.expand_slides(deck, layout)
+        self.assertEqual(len(expanded["slides"]), 1)
+
+    def test_aws_icon_style_uses_category_tile_colors(self):
+        deck = minimal_deck()
+        deck["slides"] = [{
+            "type": "architecture", "title": "A",
+            "style": {"diagram": {"icon_style": "aws"}},
+            "nodes": [{"id": "a", "type": "backend", "label": "API", "row": 0, "col": 0},
+                      {"id": "b", "type": "database", "label": "DB", "row": 0, "col": 1}],
+            "edges": [{"from": "a", "to": "b"}],
+        }]
+        deck_dir = write_deck(self.tmp_path, deck)
+        result = run_build(deck_dir)
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        html = (deck_dir / "build" / "t.html").read_text(encoding="utf-8")
+        self.assertIn("#ED7100", html)  # backend タイル色（オレンジ）
+        self.assertIn("#2E73B8", html)  # database タイル色（ブルー）
 
 
 if __name__ == "__main__":

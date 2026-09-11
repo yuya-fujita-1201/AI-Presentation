@@ -2,9 +2,9 @@
   "meta": {
     "id": "user-guide",
     "title": "slide-deck プラグイン ユーザーガイド",
-    "subtitle": "ダウンロードした人向けの使い方マニュアル",
+    "subtitle": "Zip を受け取った人向けの使い方マニュアル",
     "author": "slide-deck plugin",
-    "date": "2026-09-04",
+    "date": "2026-09-11",
     "theme": "accenture-purple",
     "layout_overrides": {
       "image_text": {
@@ -80,21 +80,21 @@
     {
       "type": "image_text",
       "eyebrow": "1章 / STEP 1",
-      "title": "2つのコマンドで導入できる",
+      "title": "Zipを展開して読み込むだけ",
       "bullets": [
         {
-          "text": "/plugin marketplace add yuya-fujita-1201/AI-Presentation",
+          "text": "配布された plugins のZipを入手して任意の場所に展開する",
           "bold": true,
           "color": "primary"
         },
-        "/plugin install slide-deck@ai-presentation",
-        "5つのスキルが使えるようになる",
-        "URLは配布元のリポジトリに読み替える"
+        "展開して出てきた slide-deck フォルダを指定して Claude Code を起動",
+        "claude --plugin-dir <展開先>/slide-deck",
+        "5つのスキルが使えるようになる（設定変更は不要）"
       ],
-      "path": "assets/terminal-install-image.png",
-      "caption": "実行イメージ（応答文言は簡略化したもの）",
+      "path": "assets/folder-plugin.png",
+      "caption": "展開後の slide-deck フォルダ（このフォルダを --plugin-dir に渡す）",
       "image_side": "right",
-      "notes": "将来は組織用リポジトリを配布する想定。"
+      "notes": "社内配布はマーケットプレイスではなくZip配布。展開した slide-deck フォルダを --plugin-dir で読み込む。IDE拡張なら設定でプラグインフォルダを指定する。"
     },
     {
       "type": "image_text",
@@ -269,8 +269,8 @@
       "eyebrow": "2章 / 一覧",
       "title": "19種類のテンプレートから選べる",
       "path": "assets/gallery.png",
-      "caption": "全19種＋swimlane直前に自動挿入される凡例ページ1枚（examples/template-sample）",
-      "notes": "実物はexamples/template-sample/deck.jsonを参照。"
+      "caption": "全19種。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される（examples/template-sample）",
+      "notes": "実物はexamples/template-sample/deck.jsonを参照。図解タイプは legend_page で凡例が自動挿入される。"
     },
     {
       "type": "image_text",
@@ -361,13 +361,14 @@
           "color": "primary"
         },
         "構成図・データフロー・状態遷移・シーケンスをJSONのノードとエッジで書くと自動配線される",
+        "typeにAWS風タイルアイコン、legend_pageで記号の凡例ページを自動挿入できる",
         "check_diagram.pyが重なりを座標付きで指摘しAIが直す",
         "画像と違いテーマに追随しPPTXで編集できる"
       ],
       "path": "assets/type-16-architecture.png",
-      "caption": "type=architecture の見本",
+      "caption": "type=architecture の見本（AWS風タイルアイコン）",
       "image_side": "right",
-      "notes": "図解4種。詳細はreferences/diagram-guide.mdを参照。"
+      "notes": "図解4種。AWS風アイコンは style.diagram.icon_style:\"aws\"。詳細はreferences/diagram-guide.mdを参照。"
     },
     {
       "type": "bullets",
