@@ -4,7 +4,7 @@
     "title": "slide-deck プラグイン ユーザーガイド",
     "subtitle": "Zip を受け取った人向けの使い方マニュアル",
     "author": "slide-deck plugin",
-    "date": "2026-09-11",
+    "date": "2026-09-15",
     "theme": "accenture-purple",
     "layout_overrides": {
       "image_text": {
@@ -40,7 +40,7 @@
       "title": "このガイドの構成",
       "lead": "全3章。読みたい章から読んでも進められます。",
       "items": [
-        "第1章：セットアップ（前提・導入・動作確認）",
+        "第1章：セットアップ（前提・アプリ導入／Claude Code・動作確認）",
         "第2章：使いこなす（頼み方・タイプ・微修正・配布）",
         "第3章：仕組み（deck.jsonの裏側とJSON設計の理由）",
         "まとめ：最初の1枚を作るまで"
@@ -58,14 +58,15 @@
       "type": "bullets",
       "eyebrow": "1章 / 始める前に",
       "title": "動くPCなら誰でも始められる",
-      "lead": "必要なのはこの2つだけです。",
+      "lead": "前提はこれだけ。導入は「アプリに追加」か「Claude Code」の2通りから選べます。",
       "bullets": [
         {
-          "text": "Claude Codeが使えること（CLIまたはIDE拡張）",
+          "text": "Claudeが使えること（アプリ／Claude Code／IDE拡張）",
           "bold": true,
           "color": "primary"
         },
-        "Python 3.9以上（バージョンはあとで確認する）",
+        "アプリに追加するだけの「かんたん導入」なら以下は不要",
+        "Python 3.9以上（Claude Codeで手元ビルドする場合のみ）",
         "未導入ならpython.orgから入手してインストールする",
         "git、またはZIPをダウンロードできるブラウザ",
         "初回のみネットワーク接続（依存ライブラリの取得用）"
@@ -79,7 +80,45 @@
     },
     {
       "type": "image_text",
-      "eyebrow": "1章 / STEP 1",
+      "eyebrow": "1章 / かんたん導入（Claudeアプリ）",
+      "title": "アプリに追加するだけで使い始められる",
+      "bullets": [
+        {
+          "text": "配布された slide-deck.zip を手元に用意する",
+          "bold": true,
+          "color": "primary"
+        },
+        "左メニューの「カスタマイズ」を開き「プラグイン」タブを選ぶ",
+        "右上の「追加」から「プラグインをアップロード」を選ぶ",
+        "コマンド操作は不要（Claude Code を入れていなくてもよい）"
+      ],
+      "path": "assets/app-plugin-menu.png",
+      "caption": "カスタマイズ → プラグイン → 追加 → プラグインをアップロード",
+      "image_side": "right",
+      "notes": "claude.ai / デスクトップアプリのプラグイン機能。Zipを直接読み込ませる方式で、CLIの --plugin-dir とは別ルート。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "1章 / かんたん導入（Claudeアプリ）",
+      "title": "Zipをドロップしてアップロードする",
+      "bullets": [
+        {
+          "text": "slide-deck.zip を枠にドラッグ&ドロップ（または参照から選択）",
+          "bold": true,
+          "color": "primary"
+        },
+        ".zip / .plugin アーカイブに対応している",
+        "「アップロード」を押すとワークスペースに追加される",
+        "アーカイブ直下に .claude-plugin/plugin.json が入っている必要がある"
+      ],
+      "path": "assets/app-plugin-upload.png",
+      "caption": "プラグインをアップロード画面（slide-deck.zip をドロップ）",
+      "image_side": "left",
+      "notes": "アップロードするZipは配布された slide-deck.zip をそのまま使う（トップレベルに .claude-plugin/plugin.json がある構造）。展開は不要。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "1章 / STEP 1（Claude Code の場合）",
       "title": "Zipを展開して読み込むだけ",
       "bullets": [
         {
