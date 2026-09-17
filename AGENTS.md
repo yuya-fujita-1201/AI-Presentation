@@ -22,7 +22,7 @@
 
 ## ビルド・検証手順（作業したエージェント自身が完結させる）
 
-前提: **Python 3.9 以上 + python-pptx** が必要（プレビューPNGは Playwright、一覧シートは Pillow、PDF抽出は pymupdf）。初回は `python plugins/slide-deck/tools/setup_deps.py`（または `pip install -r plugins/slide-deck/requirements.txt`）で導入。ローカル CLI セッションで実行する。クラウドサンドボックスなど python-pptx / Playwright / 生成画像の目視ができない環境では、ビルド・検証をローカルのエージェントに引き継ぐ。
+前提: **Python 3.14 以上 + python-pptx** が必要（プレビューPNGは Playwright、一覧シートは Pillow、PDF抽出は pymupdf）。初回は `python plugins/slide-deck/tools/setup_deps.py`（または `pip install -r plugins/slide-deck/requirements.txt`）で導入。ローカル CLI セッションで実行する。クラウドサンドボックスなど python-pptx / Playwright / 生成画像の目視ができない環境では、ビルド・検証をローカルのエージェントに引き継ぐ。
 
 1. ビルド: `python plugins/slide-deck/tools/build_deck.py <deck_dir>`（HTML と PPTX を `build/` に生成。環境により `python3`、Windows で見つからなければ `py -3`）
 2. 機械チェック（必須）: `python plugins/slide-deck/tools/check_layout.py <deck_dir>`（はみ出し・重なり・文字あふれ）と `python plugins/slide-deck/tools/lint_deck_text.py <deck_dir>`（文字量・AI定型句）を実行し、exit 1 なら報告に沿って deck.json を直して再ビルドする。`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane` を使った場合は `python plugins/slide-deck/tools/check_diagram.py <deck_dir>`（配線・ラベルの座標診断）も実行する

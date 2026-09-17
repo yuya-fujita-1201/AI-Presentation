@@ -5,7 +5,7 @@
 Archify（https://github.com/tt-a1i/archify , MIT）の方式
 「AI は型付き JSON（構造・意味・配置）だけを書き、決定論的なコードが検証して描く」を
 Python で取り込んだもの。build_deck.py（HTML / PPTX）と check_diagram.py（診断 CLI）が共用する。
-外部依存なし（Python 3.9+）。
+外部依存なし（Python 3.14+）。
 
 役割:
   - グリッド配置: 領域を rows×cols のセルに分割し、ノード箱をセル中央に置く

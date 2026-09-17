@@ -50,7 +50,7 @@ AI-Presentation/
 
 ## 開発・動作確認（このリポジトリ内）
 
-**Python 3.9 以上**が必要（`X | Y` 型注釈は使わない等、3.9 互換の構文のみ）。プラグインを導入しなくても、同梱スクリプトを直接叩いて動作確認できます（`python` が無ければ `python3`、Windows で見つからなければ `py -3`。PowerShell / Git Bash のどちらでも同じコマンドで動きます）:
+**Python 3.14 以上**が必要（依存は `plugins/slide-deck/uv.lock` にハッシュ固定。`pyproject.toml` に `requires-python` を宣言）。プラグインを導入しなくても、同梱スクリプトを直接叩いて動作確認できます（`python` が無ければ `python3`、Windows で見つからなければ `py -3`。PowerShell / Git Bash のどちらでも同じコマンドで動きます）:
 
 ```bash
 # 依存セットアップ（requirements.txt からでも可: pip install -r plugins/slide-deck/requirements.txt）

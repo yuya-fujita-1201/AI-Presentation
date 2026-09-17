@@ -1,0 +1,22 @@
+[project]
+name = "slide-deck"
+version = "0.4.4"
+description = "JSON(deck.json)をソースにスライドを HTML / PowerPoint(16:9) にビルドする Claude Code プラグイン。"
+requires-python = ">=3.14"
+dependencies = [
+    "python-pptx>=1.0,<2.0",
+]
+
+# 任意機能の依存（用途別 extras）。既定では入らない。
+#   images  … 画像からのテーマ抽出 / 一覧サムネイル（theme_from_sample.py, contact_sheet.py）
+#   preview … プレビューPNG生成（preview_deck.py, check_layout.py）。別途 `playwright install chromium` が必要
+#   pdf     … PDF からのテーマ抽出（theme_from_sample.py --pdf）
+[project.optional-dependencies]
+images = ["Pillow>=10"]
+preview = ["playwright>=1.40"]
+pdf = ["pymupdf>=1.24"]
+
+# このプロジェクトはインストール可能な Python パッケージではなく、
+# ツール群（tools/*.py）が使う依存環境を宣言するだけ。uv にビルドを試みさせない。
+[tool.uv]
+package = false

@@ -4,7 +4,7 @@
     "title": "slide-deck プラグイン ユーザーガイド",
     "subtitle": "Zip を受け取った人向けの使い方マニュアル",
     "author": "slide-deck plugin",
-    "date": "2026-09-15",
+    "date": "2026-09-17",
     "theme": "accenture-purple",
     "layout_overrides": {
       "image_text": {
@@ -66,7 +66,7 @@
           "color": "primary"
         },
         "アプリに追加するだけの「かんたん導入」なら以下は不要",
-        "Python 3.9以上（Claude Codeで手元ビルドする場合のみ）",
+        "Python 3.14以上（Claude Codeで手元ビルドする場合のみ）",
         "未導入ならpython.orgから入手してインストールする",
         "git、またはZIPをダウンロードできるブラウザ",
         "初回のみネットワーク接続（依存ライブラリの取得用）"

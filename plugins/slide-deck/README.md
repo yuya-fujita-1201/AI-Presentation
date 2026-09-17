@@ -19,7 +19,7 @@ claude --plugin-dir <展開先>/slide-deck
 
 ## 初回セットアップ（依存関係）
 
-**Python 3.9 以上が必要**。依存の導入は `/slide-deck:setup` から Claude Code 経由で行うのが最も簡単（内部で下記スクリプトを呼ぶだけ）。この README のとおりターミナルから自分で叩く場合は次節の注意を参照。
+**Python 3.14 以上が必要**。依存の導入は `/slide-deck:setup` から Claude Code 経由で行うのが最も簡単（内部で下記スクリプトを呼ぶだけ）。この README のとおりターミナルから自分で叩く場合は次節の注意を参照。
 
 ```
 /slide-deck:setup            # 必須(python-pptx)

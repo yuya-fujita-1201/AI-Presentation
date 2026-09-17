@@ -1,6 +1,7 @@
-# slide-deck プラグインの Python 依存関係
+# slide-deck プラグインの Python 依存関係（Python 3.14 以上）
 # 導入: pip install -r requirements.txt
 # もしくは /slide-deck:setup（tools/setup_deps.py）を使う
+# 再現可能な固定版が必要なら uv を使う: `uv sync`（pyproject.toml + uv.lock からハッシュ固定で導入）
 # PEP 668 (externally-managed-environment) で失敗する場合は venv を作るか、
 # tools/setup_deps.py 実行時に案内される --user / --break-system-packages を検討する
 

@@ -8,7 +8,7 @@ allowed-tools: Bash(python:*), Bash(python3:*), Bash(py:*)
 
 # setup — slide-deck の初回セットアップ
 
-スライド生成に必要な依存を確認・インストールする。**Python 3.9 以上が入っていることが前提**（`python --version`。無ければ [python.org](https://www.python.org/) から導入）。
+スライド生成に必要な依存を確認・インストールする。**Python 3.14 以上が入っていることが前提**（`python --version`。無ければ [python.org](https://www.python.org/) から導入）。
 
 ## 依存の役割
 | パッケージ | 要否 | 用途 |
