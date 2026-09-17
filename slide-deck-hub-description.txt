@@ -8,6 +8,6 @@ slide-deck ― JSONからスライドをHTML/PowerPointに自動ビルドするC
 ・HTMLとPPTXの座標がほぼ完全一致。編集はブラウザで即プレビューできます。
 ・レイアウトのはみ出し・重なり・文字あふれ、図解の配線衝突を機械チェックする検証ツールを同梱し、品質を自動で担保。配布用PDF書き出しにも対応。
 
-【使い方・前提】create-deck / add-theme / review-deck / export-pdf / setup の5スキルで、作成から検証・配布まで完結。Python 3.14以上とpython-pptxが必要です。
+【導入・使い方・前提】Claudeアプリの Code タブにzipをアップロードするか、Claude Code CLI で読み込めばすぐ使えます。create-deck / add-theme / review-deck / export-pdf / setup の5スキルで、作成から検証・配布まで完結。Python 3.14以上とpython-pptxが必要です。
 
 手作業でのスライド清書を、パラメーター編集と再ビルドに置き換えます。
