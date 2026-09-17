@@ -806,14 +806,21 @@ def place_labels(routed: List[dict], boxes: Dict[str, dict], label_size: float,
             placed.append(best)
             if best_pen > 0.0:
                 subj = f"{subject_prefix}{e.get('from')}→{e.get('to')}"
+                has_cls = bool(e.get("classification"))
+                fixes = [
+                    f"edges の該当要素に \"label_at\": [{round(best['cx'])}, {round(best['cy'] - lh - 6)}] のように位置を指定する",
+                    "ノードの row/col を離してセグメントを長くする",
+                ]
+                if has_cls:
+                    fixes.append("classification を全角 6 字（約 60px）以内に短くする（ラベルより長いとピルが広がって衝突しやすくなる）")
+                fixes.append("意味を保ったまま文言を短くする（意味のあるラベルは削らない）")
+                if not has_cls:
+                    fixes.append("列数（cols）を減らす、または style.diagram.node_wr を 0.7 程度に下げてノード間の隙間を広げる")
                 diags.append(diag_warn(
                     "label-collision", subj,
                     f"エッジ {e.get('from')}→{e.get('to')} のラベル「{text}」が他の要素と重なります",
                     {"label": text, "at": [round(best['cx']), round(best['cy'])], "overlap": round(best_pen)},
-                    [f"edges の該当要素に \"label_at\": [{round(best['cx'])}, {round(best['cy'] - lh - 6)}] のように位置を指定する",
-                     "ノードの row/col を離してセグメントを長くする",
-                     "意味を保ったまま文言を短くする（意味のあるラベルは削らない）",
-                     "列数（cols）を減らす、または style.diagram.node_wr を 0.7 程度に下げてノード間の隙間を広げる"]))
+                    fixes))
 
 
 # ---------------------------------------------------------------------------

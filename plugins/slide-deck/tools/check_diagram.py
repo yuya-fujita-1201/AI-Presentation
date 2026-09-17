@@ -60,6 +60,24 @@ def diagnose_slide(slide: dict, st: dict, t: str):
     return diags
 
 
+def _build_page_map(deck, layout):
+    """deck.json 0-based インデックス → ビルド後 1-based ページ番号。
+    swimlane_legend / diagram_legend の自動挿入と agenda のページ分割を考慮する。"""
+    orig = deck.get("slides", [])
+    try:
+        expanded = build_deck.expand_slides(deck, layout)
+        exp_list = expanded.get("slides", [])
+    except Exception:
+        return {}
+    page_map = {}
+    for page_no, exp_slide in enumerate(exp_list, 1):
+        for orig_idx, orig_slide in enumerate(orig):
+            if exp_slide is orig_slide and orig_idx not in page_map:
+                page_map[orig_idx] = page_no
+                break
+    return page_map
+
+
 def main():
     build_deck.setup_console()
     ap = argparse.ArgumentParser(description="図解スライドの機械診断（Archify validate 相当）")
@@ -74,6 +92,7 @@ def main():
         build_deck.fail(f"{deck_dir / 'deck.json'} が見つかりません")
     deck, theme, layout = build_deck.load_deck(deck_dir)
     slides = deck.get("slides", [])
+    page_map = _build_page_map(deck, layout)
     report = {"deck": str(deck_dir), "slides": [], "summary": {"error": 0, "warning": 0, "info": 0}}
     checked = 0
     for i, slide in enumerate(slides):
@@ -83,25 +102,28 @@ def main():
         if t not in DIAGRAM_TYPES:
             continue
         checked += 1
+        build_page = page_map.get(i)
         try:
             st = build_deck.resolve_style(layout, deck, slide)
         except SystemExit as ex:
-            report["slides"].append({"index": i + 1, "type": t, "diagnostics": [
+            report["slides"].append({"index": i + 1, "build_page": build_page, "type": t, "diagnostics": [
                 de.diag_error("schema", "style", str(ex).replace("error: ", ""), {}, [])]})
             report["summary"]["error"] += 1
             continue
         diags = diagnose_slide(slide, st, t)
         for d in diags:
             report["summary"][d["level"]] = report["summary"].get(d["level"], 0) + 1
-        report["slides"].append({"index": i + 1, "type": t, "diagnostics": diags})
+        report["slides"].append({"index": i + 1, "build_page": build_page, "type": t, "diagnostics": diags})
 
     if args.json:
         Path(args.json).write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
 
     for entry in report["slides"]:
+        bp = entry.get("build_page")
+        page_note = f"（ビルド後 {bp} 枚目）" if bp is not None else ""
         for d in entry["diagnostics"]:
             mark = {"error": "error", "warning": "warning", "info": "note"}.get(d["level"], d["level"])
-            print(f"{mark}: {entry['index']}枚目（type={entry['type']}）: {de.format_diagnostic(d)}")
+            print(f"{mark}: {entry['index']}枚目{page_note}（type={entry['type']}）: {de.format_diagnostic(d)}")
     s = report["summary"]
     print(f"check_diagram: 図解スライド {checked} 枚 error={s['error']} warning={s['warning']} info={s['info']}"
           + ("（--strict）" if args.strict else ""))

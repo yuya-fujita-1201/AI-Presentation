@@ -441,9 +441,9 @@ def swimlane_geometry(slide, st, slide_no=None):
         shape = nd.get("shape", "task")
         if shape == "decision":
             # ひし形は箱に内接する形で描く（HTML は SVG polygon、PPTX は DIAMOND プリセット）。
-            # 旧実装（正方形を 45° 回転）と同じ見た目の大きさになるよう外接矩形を 0.93 倍にとる。
+            # 0.88 倍でレーン帯の上下境界から約 6% の余白を確保し、ストロークがはみ出さないようにする。
             # 当たり判定（配線・ラベル衝突）もこの外接矩形で行うので、菱形の角がすり抜けない。
-            w = min(col_w, row_h) * 0.93; h = w
+            w = min(col_w, row_h) * 0.88; h = w
         elif shape in ("terminal", "connector"):
             w = col_w * f.get("node_wr", 0.72); h = row_h * 0.42
         elif shape == "marker":
@@ -2522,7 +2522,8 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             parts.append(_legend_symbol_html(shape, vk, x, y + row_h / 2, sym_w, theme, sym))
             tx = x + sym_w + 8
             parts.append(div({"x": tx, "y": y + 6, "w": col_w - sym_w - 8, "h": 22,
-                              "size": a.get("label_size", 16), "color": "text", "bold": True}, theme, esc(label)))
+                              "size": a.get("label_size", 16), "color": "text", "bold": True,
+                              "line_height": 1.15}, theme, esc(label)))
             parts.append(div({"x": tx, "y": y + 29, "w": col_w - sym_w - 8, "h": 20,
                               "size": a.get("desc_size", 13), "color": "muted"}, theme, esc(desc)))
         parts.append(footer_html(st, deck, theme, page, total))
@@ -2547,7 +2548,8 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             parts.append(_diag_legend_sym_html(sample, x, y + row_h / 2, sym_w, d, theme, HEADING_FONT_CSS, uid=f"{page}-{i}"))
             tx = x + sym_w + 8
             parts.append(div({"x": tx, "y": y + 6, "w": col_w - sym_w - 8, "h": 22,
-                              "size": a.get("label_size", 16), "color": "text", "bold": True}, theme, esc(label)))
+                              "size": a.get("label_size", 16), "color": "text", "bold": True,
+                              "line_height": 1.15}, theme, esc(label)))
             parts.append(div({"x": tx, "y": y + 29, "w": col_w - sym_w - 8, "h": 20,
                               "size": a.get("desc_size", 13), "color": "muted"}, theme, esc(desc)))
         parts.append(footer_html(st, deck, theme, page, total))
