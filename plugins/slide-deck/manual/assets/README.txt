@@ -29,7 +29,6 @@ type-20-closing.png ... スライドタイプ closing のサムネイル（640x3
 
 gallery.png ... 上記20枚のサムネイルを5列×4行（各セルにタイプ名ラベル、余白12px、背景白）に並べた一覧画像（横1600px）。Pillow の Image.paste + ImageDraw で作成。
 
-terminal-install-image.png ... Claude Code で「/plugin marketplace add yuya-fujita-1201/AI-Presentation」→「/plugin install slide-deck@ai-presentation」を打つ場面のイメージ図（実行不可のため、想定される応答文言を添えたモックアップ。右上に「イメージ」バッジ）。ダーク背景・等幅フォントのHTMLを自作し、Playwrightでスクリーンショット（2倍解像度）。
 terminal-setup.png ... 「python setup_deps.py --check」の実際の出力をターミナル風HTMLに流し込みPlaywrightでスクリーンショットしたもの（2倍解像度）。表示パスはユーザー環境を想定しWindows風（C:\Users\you\...）に置換済み、コマンド自体の出力内容（OK/未判定など）は実行結果そのまま。
 terminal-build.png ... scratchpad に作った小さなデッキ decks/kickoff に対する「python build_deck.py decks/kickoff」の実際の出力をターミナル風HTMLに流し込みPlaywrightでスクリーンショットしたもの（2倍解像度、パスはWindows風に置換）。
 terminal-preview.png ... 同デッキに対する「python preview_deck.py decks/kickoff 1 2」の実際の出力を同様にスクリーンショットしたもの（2倍解像度、パスはWindows風に置換）。

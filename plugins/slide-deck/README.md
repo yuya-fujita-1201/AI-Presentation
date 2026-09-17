@@ -9,10 +9,13 @@ JSON（`deck.json`）をソースにして、スライドを **HTML / PowerPoint
 
 ## インストール
 
+社内配布は **`slide-deck` フォルダの Zip を受け取って展開**する形式（マーケットプレイスからのダウンロードではない）。配布された Zip を任意の場所に展開し、出てきた `slide-deck` フォルダを指定して Claude Code を起動する:
+
 ```
-/plugin marketplace add yuya-fujita-1201/AI-Presentation
-/plugin install slide-deck@ai-presentation
+claude --plugin-dir <展開先>/slide-deck
 ```
+
+（IDE 拡張を使う場合は設定でプラグインフォルダを指定する）
 
 ## 初回セットアップ（依存関係）
 
@@ -49,7 +52,7 @@ JSON（`deck.json`）をソースにして、スライドを **HTML / PowerPoint
 
 ## 手動で使う（スキルを介さず）
 
-> **注意**: `${CLAUDE_PLUGIN_ROOT}` は Claude Code がスキル本文（SKILL.md）を実行するときにだけ内部で実パスへ置換する専用トークンで、PowerShell や Git Bash を素で開いて手入力しても定義されない（未定義変数として空文字に展開され、`python "/tools/xxx.py"` のような誤ったパスになって失敗する）。ここから先のコマンドは Claude Code のスキル実行を介さずターミナルから直接叩く想定なので、`${CLAUDE_PLUGIN_ROOT}` の代わりに **このプラグインのディレクトリへ `cd` してから相対パスで実行する**。このリポジトリを clone している場合はそのディレクトリが `plugins/slide-deck/`。`/plugin install` で導入した場合はお使いの Claude Code のプラグイン導入先ディレクトリを確認して読み替える。
+> **注意**: `${CLAUDE_PLUGIN_ROOT}` は Claude Code がスキル本文（SKILL.md）を実行するときにだけ内部で実パスへ置換する専用トークンで、PowerShell や Git Bash を素で開いて手入力しても定義されない（未定義変数として空文字に展開され、`python "/tools/xxx.py"` のような誤ったパスになって失敗する）。ここから先のコマンドは Claude Code のスキル実行を介さずターミナルから直接叩く想定なので、`${CLAUDE_PLUGIN_ROOT}` の代わりに **このプラグインのディレクトリへ `cd` してから相対パスで実行する**。このリポジトリを clone している場合はそのディレクトリが `plugins/slide-deck/`。配布 Zip を展開して使っている場合は展開先の `slide-deck/` ディレクトリに読み替える。
 
 ```bash
 cd path/to/plugins/slide-deck   # このプラグインのディレクトリに移動（例: このリポジトリなら plugins/slide-deck）
