@@ -58,15 +58,14 @@
       "type": "bullets",
       "eyebrow": "1章 / 始める前に",
       "title": "動くPCなら誰でも始められる",
-      "lead": "前提はこれだけ。導入は「アプリに追加」か「Claude Code」の2通りから選べます。",
+      "lead": "前提はこれだけ。導入はアプリの Code タブか Claude Code CLI の2通り（Chat タブは不可）。",
       "bullets": [
         {
-          "text": "Claudeが使えること（アプリ／Claude Code／IDE拡張）",
+          "text": "Claude Code が使えること（Claudeアプリの Code タブ／Claude Code CLI／IDE拡張）",
           "bold": true,
           "color": "primary"
         },
-        "アプリに追加するだけの「かんたん導入」なら以下は不要",
-        "Python 3.14以上（Claude Codeで手元ビルドする場合のみ）",
+        "Python 3.14以上（プラグインが内部で使うため必須）",
         "未導入ならpython.orgから入手してインストールする",
         "git、またはZIPをダウンロードできるブラウザ",
         "初回のみネットワーク接続（依存ライブラリの取得用）"
@@ -80,26 +79,26 @@
     },
     {
       "type": "image_text",
-      "eyebrow": "1章 / かんたん導入（Claudeアプリ）",
-      "title": "アプリに追加するだけで使い始められる",
+      "eyebrow": "1章 / 導入A（Claudeアプリの Code タブ）",
+      "title": "アプリの Code タブに追加して使い始める",
       "bullets": [
         {
-          "text": "配布された slide-deck.zip を手元に用意する",
+          "text": "アプリ上部で「Code」タブに切り替える（Chat タブでは動きません）",
           "bold": true,
           "color": "primary"
         },
+        "配布された slide-deck.zip を手元に用意する",
         "左メニューの「カスタマイズ」を開き「プラグイン」タブを選ぶ",
-        "右上の「追加」から「プラグインをアップロード」を選ぶ",
-        "コマンド操作は不要（Claude Code を入れていなくてもよい）"
+        "右上の「追加」から「プラグインをアップロード」を選ぶ"
       ],
       "path": "assets/app-plugin-menu.png",
-      "caption": "カスタマイズ → プラグイン → 追加 → プラグインをアップロード",
+      "caption": "Code タブ → カスタマイズ → プラグイン → 追加 → プラグインをアップロード",
       "image_side": "right",
-      "notes": "claude.ai / デスクトップアプリのプラグイン機能。Zipを直接読み込ませる方式で、CLIの --plugin-dir とは別ルート。"
+      "notes": "Claudeアプリ（デスクトップ / web）の Code タブはローカルの Claude Code 環境で動くため Python を実行できる。Chat タブはコード実行不可なのでプラグインは動かない。Zipを直接読み込ませる方式で、CLI の --plugin-dir とは別ルート。"
     },
     {
       "type": "image_text",
-      "eyebrow": "1章 / かんたん導入（Claudeアプリ）",
+      "eyebrow": "1章 / 導入A（Claudeアプリの Code タブ）",
       "title": "Zipをドロップしてアップロードする",
       "bullets": [
         {
@@ -109,16 +108,16 @@
         },
         ".zip / .plugin アーカイブに対応している",
         "「アップロード」を押すとワークスペースに追加される",
-        "アーカイブ直下に .claude-plugin/plugin.json が入っている必要がある"
+        "追加後は Code タブでスキルに頼むだけ（初回のみ依存を導入）"
       ],
       "path": "assets/app-plugin-upload.png",
       "caption": "プラグインをアップロード画面（slide-deck.zip をドロップ）",
       "image_side": "left",
-      "notes": "アップロードするZipは配布された slide-deck.zip をそのまま使う（トップレベルに .claude-plugin/plugin.json がある構造）。展開は不要。"
+      "notes": "アップロードするZipは配布された slide-deck.zip をそのまま使う（トップレベルに .claude-plugin/plugin.json がある構造）。展開は不要。Code タブで動くため、初回のみ python-pptx 等の依存を導入すればスキルが使える。"
     },
     {
       "type": "image_text",
-      "eyebrow": "1章 / STEP 1（Claude Code の場合）",
+      "eyebrow": "1章 / 導入B（Claude Code CLI）",
       "title": "Zipを展開して読み込むだけ",
       "bullets": [
         {
@@ -137,7 +136,7 @@
     },
     {
       "type": "image_text",
-      "eyebrow": "1章 / STEP 2",
+      "eyebrow": "1章 / 共通①（導入A・Bの後）セットアップ",
       "title": "導入状況は1コマンドで確認できる",
       "bullets": [
         {
@@ -156,7 +155,7 @@
     },
     {
       "type": "image_text",
-      "eyebrow": "1章 / STEP 3",
+      "eyebrow": "1章 / 共通② ビルド",
       "title": "ビルドでHTMLとPPTXが一度にできる",
       "bullets": [
         {
@@ -175,7 +174,7 @@
     },
     {
       "type": "image_text",
-      "eyebrow": "1章 / STEP 4",
+      "eyebrow": "1章 / 共通③ プレビュー",
       "title": "プレビューで見た目をその場で確認する",
       "bullets": [
         {
@@ -308,8 +307,8 @@
       "eyebrow": "2章 / 一覧",
       "title": "19種類のテンプレートから選べる",
       "path": "assets/gallery.png",
-      "caption": "全19種。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される（examples/template-sample）",
-      "notes": "実物はexamples/template-sample/deck.jsonを参照。図解タイプは legend_page で凡例が自動挿入される。"
+      "caption": "全19種。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される（次ページ以降に各タイプの見本）",
+      "notes": "各タイプのレンダリング済み見本は、このガイドの次ページ以降に掲載している。deck.json の書き方の参考として examples/template-sample/deck.json（配布物にはソースのみ同梱。ビルド後HTMLは非同梱で、見本はこのUSER-GUIDE自体が該当）を利用できる。図解タイプは legend_page で凡例が自動挿入される。"
     },
     {
       "type": "image_text",
