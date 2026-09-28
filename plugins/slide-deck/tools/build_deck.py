@@ -37,6 +37,7 @@ import sys
 import unicodedata
 from pathlib import Path
 from string import Template
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
 CANVAS_W, CANVAS_H = 1280, 720
@@ -1776,6 +1777,13 @@ def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
                 if len(row) != len(cols):
                     fail(f"{i + 1}枚目（type=table）: {ridx + 1}行目のセル数（{len(row)}）が "
                          f"columns 数（{len(cols)}）と一致しません")
+                # セルの url はスキーム許可リストで検証する。javascript: 等を href に
+                # 出すと XSS になるため、黙って無視せずビルド時点でエラーにして気付かせる。
+                for cidx, cell in enumerate(row):
+                    if isinstance(cell, dict) and cell.get("url") and not is_allowed_link_url(cell["url"]):
+                        fail(f"{i + 1}枚目（type=table）: {ridx + 1}行{cidx + 1}列目の url に"
+                             f"使用できないリンク先が指定されています: '{cell['url']}'"
+                             f"（使用できるのは {' / '.join(ALLOWED_LINK_SCHEMES)} のみ）")
             widths = st.get("table", {}).get("col_widths")
             if widths and len(widths) != len(cols):
                 fail(f"{i + 1}枚目（type=table）: col_widths の要素数（{len(widths)}）が "
@@ -1827,9 +1835,46 @@ def fit_code_size(code: str, r: dict):
     return size, lines
 
 
+# 表セルのリンク（HTML の href / PPTX の外部ハイパーリンク）に出力してよい URL スキームの
+# 許可リスト。esc() は < > & " ' を実体参照に変換するが、スキームそのものは無害化できない。
+# javascript: / data: / vbscript: などをそのまま href に載せると、生成した HTML を開いた人の
+# 画面で任意のスクリプトが動く（XSS）ため、href に出す直前に urlparse でスキームを取り出し、
+# この許可リストに無いものはリンクにせず通常の文字列セルとして出力する。
+ALLOWED_LINK_SCHEMES = ("http", "https", "mailto")
+# セル全体が URL のときに自動リンク化するスキーム（明示指定の url より狭い＝
+# deck-schema.md の「セル全体が http:// または https:// のURLなら自動リンク」に対応）。
+AUTOLINK_SCHEMES = ("http", "https")
+
+
+def url_scheme(value) -> str:
+    """value をリンク先 URL として解釈できるときに小文字のスキームを返す（不可なら ""）。
+
+    空白・制御文字を含む文字列は URL として扱わない。ブラウザは href 内のタブや改行を
+    取り除いてから解釈するため、"java<改行>script:..." のような細工を素通しさせないため。
+    """
+    text = str(value)
+    if not text or any(c.isspace() or ord(c) < 0x20 for c in text):
+        return ""
+    try:
+        parsed = urlparse(text)
+    except ValueError:  # 壊れた IPv6 リテラル等、urlparse が解釈できない文字列
+        return ""
+    scheme = parsed.scheme.lower()
+    if scheme in ("http", "https") and not parsed.netloc:
+        return ""  # "https:///path" のようにホストが無いものはリンクにしない
+    if scheme == "mailto" and not parsed.path:
+        return ""  # "mailto:" だけの空アドレス
+    return scheme
+
+
 def is_http_url(value) -> bool:
-    """Return True only when the entire table-cell value is an HTTP(S) URL."""
-    return bool(re.fullmatch(r"https?://\S+", str(value)))
+    """セル値全体が自動リンク化の対象（HTTP(S) URL）かどうか。"""
+    return url_scheme(value) in AUTOLINK_SCHEMES
+
+
+def is_allowed_link_url(value) -> bool:
+    """{"text": ..., "url": ...} の url をリンクとして出力してよいかどうか。"""
+    return url_scheme(value) in ALLOWED_LINK_SCHEMES
 
 
 def table_cell_parts(value):
@@ -1839,7 +1884,7 @@ def table_cell_parts(value):
     if isinstance(value, dict):
         text = str(value.get("text", ""))
         url = value.get("url")
-        return text, str(url) if url and is_http_url(url) else None
+        return text, str(url) if url and is_allowed_link_url(url) else None
     text = str(value)
     return text, text if is_http_url(text) else None
 

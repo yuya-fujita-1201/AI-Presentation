@@ -24,8 +24,13 @@ x/y それぞれでクラスタリングして row/col（グリッド位置）�
     python tools/archify_import.py <archify.json> --eyebrow "TYPE / architecture"
     python tools/archify_import.py <archify.json> --tolerance 70    # architecture の座標量子化の距離閾値(px)
     python tools/archify_import.py <archify.json> --out slide.json  # 変換結果をファイルに保存（stdout には出さない）
-    python tools/archify_import.py <archify.json> --into <deck_dir> # deck.json の slides 末尾に追記して保存
-                                                                     # （deck.json が無ければ新規作成）
+    python tools/archify_import.py <archify.json> --into <deck_dir> # 追記内容を表示するだけ（既存 deck.json は書き換えない）
+    python tools/archify_import.py <archify.json> --into <deck_dir> --confirm  # 承認後に実際に追記して保存
+
+--into は既存の deck.json を読み込んで末尾に 1 スライド追記し、同じパスへ上書き保存する。
+利用者が手で書いたデッキを壊しうるため、既存の deck.json がある場合は --confirm が無いと
+書き込まずに終了する（exit code 1、追記される内容は stdout に出す）。--confirm を付ける前に、
+その内容を利用者に提示して明示的な承認を得ること。deck.json が無い（新規作成）なら --confirm は不要。
 
 変換結果は必ず diagram_engine.validate_grid_diagram（architecture/dataflow/lifecycle）/
 layout_sequence（sequence）/ build_deck._validate_swimlane（swimlane、幾何診断込み）で検証し、
@@ -515,6 +520,20 @@ def validate_slide(slide: dict, deck_dir: Path = None) -> bool:
     return not has_error
 
 
+def describe_into_target(slide: dict, deck_dir: Path) -> str:
+    """--into の書き込み先と追記後の枚数を 1 行で説明する（承認ゲートの提示用）。"""
+    deck_path = deck_dir / "deck.json"
+    existing = 0
+    if deck_path.exists():
+        try:
+            deck = build_deck.load_json(deck_path)
+            existing = len(deck.get("slides", [])) if isinstance(deck, dict) else 0
+        except SystemExit:      # 壊れた JSON。件数は出せないが説明は返す（検証は save_into_deck）
+            existing = 0
+    return (f"{deck_path}（既存 {existing} 枚 → 追記後 {existing + 1} 枚。"
+            f"{existing + 1}枚目に type={slide.get('type')} を追加）")
+
+
 def save_into_deck(slide: dict, deck_dir: Path, ir: dict) -> None:
     deck_dir.mkdir(parents=True, exist_ok=True)
     deck_path = deck_dir / "deck.json"
@@ -545,7 +564,11 @@ def main() -> int:
     ap.add_argument("--tolerance", type=float, default=DEFAULT_TOLERANCE,
                      help=f"architecture の pos/size 座標を row/col に量子化する距離閾値(px)（既定 {DEFAULT_TOLERANCE:g}）")
     ap.add_argument("--into", metavar="DECK_DIR",
-                     help="このディレクトリの deck.json の slides 末尾に追記して保存する（無ければ新規作成）")
+                     help="このディレクトリの deck.json の slides 末尾に追記して保存する（無ければ新規作成）。"
+                          "既存の deck.json がある場合は --confirm が無いと書き込まない")
+    ap.add_argument("--confirm", action="store_true",
+                     help="既存 deck.json への追記・上書き保存を承認済みであることを示す。"
+                          "追記内容を利用者に提示して明示的な承認を得たあとにのみ付ける")
     ap.add_argument("--out", metavar="FILE", help="変換結果のスライド JSON をこのファイルに保存する（省略時は stdout）")
     args = ap.parse_args()
 
@@ -561,14 +584,25 @@ def main() -> int:
     deck_dir = Path(args.into).resolve() if args.into else None
     ok = validate_slide(slide, deck_dir)
 
+    # 承認ゲート: 既存の deck.json（利用者が手で書いたかもしれないファイル）を確認なしに
+    # 上書きしない。--confirm が無い場合は追記される内容を出すだけで書き込まずに終了する。
+    needs_approval = bool(args.into) and (deck_dir / "deck.json").exists() and not args.confirm
+
     payload = json.dumps(slide, ensure_ascii=False, indent=2)
     if args.out:
         Path(args.out).write_text(payload + "\n", encoding="utf-8")
         build_deck.note(f"変換結果を書き出しました: {args.out}")
-    elif not args.into:
-        print(payload)
+    elif not args.into or needs_approval:
+        print(payload)          # 承認ゲート時も、追記される内容を確認できるよう出力する
 
     if args.into:
+        if needs_approval:
+            build_deck.note("--into の書き込み先に既存の deck.json があります: "
+                            + describe_into_target(slide, deck_dir))
+            build_deck.note("追記される内容（上の stdout 出力、または --out で指定したファイル）を"
+                            "利用者に提示し、明示的な承認を得てから --confirm を付けて再実行してください")
+            build_deck.note("上書きせずに内容だけ保存したい場合は --out <file> を使ってください")
+            build_deck.fail("承認（--confirm）が無いため deck.json への追記を中止しました")
         save_into_deck(slide, deck_dir, ir)
 
     return 0 if ok else 1

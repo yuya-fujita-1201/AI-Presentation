@@ -14,7 +14,10 @@ from __future__ import annotations
 
 import contextlib
 import io
+import json
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -315,6 +318,69 @@ class LifecycleConversionTest(unittest.TestCase):
     def test_validates_clean(self):
         slide, _ = _convert(self.IR)
         self.assertTrue(_validate_ok(slide))
+
+
+
+# ---------------------------------------------------------------------------
+# --into の承認ゲート（既存 deck.json を確認なしに上書きしない）
+# ---------------------------------------------------------------------------
+
+class IntoApprovalGateTest(unittest.TestCase):
+    """--into は既存 deck.json がある場合、--confirm が無ければ書き込まない。"""
+
+    SCRIPT = TOOLS_DIR / "archify_import.py"
+
+    def _run(self, tmp: Path, *args):
+        return subprocess.run(
+            [sys.executable, str(self.SCRIPT), str(tmp / "archify.json"), *args],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+        )
+
+    @contextlib.contextmanager
+    def _workspace(self, existing_deck=None):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            (tmp / "archify.json").write_text(
+                json.dumps(ArchitectureConversionTest.IR, ensure_ascii=False), encoding="utf-8"
+            )
+            deck_dir = tmp / "deck"
+            if existing_deck is not None:
+                deck_dir.mkdir()
+                (deck_dir / "deck.json").write_text(
+                    json.dumps(existing_deck, ensure_ascii=False), encoding="utf-8"
+                )
+            yield tmp, deck_dir
+
+    def test_existing_deck_is_not_overwritten_without_confirm(self):
+        original = {"meta": {"title": "手書きデッキ"}, "slides": [{"type": "title", "title": "既存"}]}
+        with self._workspace(original) as (tmp, deck_dir):
+            proc = self._run(tmp, "--into", str(deck_dir))
+            self.assertNotEqual(0, proc.returncode, proc.stdout + proc.stderr)
+            self.assertIn("--confirm", proc.stderr)
+            # ファイルは 1 バイトも変わっていない
+            self.assertEqual(
+                original,
+                json.loads((deck_dir / "deck.json").read_text(encoding="utf-8")),
+            )
+            # 追記される内容は stdout に出るので、利用者に提示して承認を取れる
+            self.assertEqual("architecture", json.loads(proc.stdout)["type"])
+
+    def test_existing_deck_is_appended_with_confirm(self):
+        original = {"meta": {"title": "手書きデッキ"}, "slides": [{"type": "title", "title": "既存"}]}
+        with self._workspace(original) as (tmp, deck_dir):
+            proc = self._run(tmp, "--into", str(deck_dir), "--confirm")
+            self.assertEqual(0, proc.returncode, proc.stdout + proc.stderr)
+            deck = json.loads((deck_dir / "deck.json").read_text(encoding="utf-8"))
+            self.assertEqual(2, len(deck["slides"]))
+            self.assertEqual("既存", deck["slides"][0]["title"])
+            self.assertEqual("architecture", deck["slides"][1]["type"])
+
+    def test_new_deck_does_not_require_confirm(self):
+        with self._workspace(None) as (tmp, deck_dir):
+            proc = self._run(tmp, "--into", str(deck_dir))
+            self.assertEqual(0, proc.returncode, proc.stdout + proc.stderr)
+            deck = json.loads((deck_dir / "deck.json").read_text(encoding="utf-8"))
+            self.assertEqual(1, len(deck["slides"]))
 
 
 if __name__ == "__main__":

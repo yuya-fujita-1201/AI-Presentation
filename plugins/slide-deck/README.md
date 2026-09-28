@@ -81,9 +81,14 @@ python tools/check_theme.py <theme名>
 python tools/new_theme.py <name>
 # サンプルスライド(PPTX/HTML/PDF/画像)からテーマを生成
 python tools/theme_from_sample.py <sample-file> --name <name>
-# Archify の diagram JSON をスライド1枚に変換（deck.json の slides 末尾に追記も可）
-python tools/archify_import.py <archify.json> --into <deck_dir>
+# Archify の diagram JSON をスライド1枚に変換（--into で deck.json の slides 末尾に追記も可）
+python tools/archify_import.py <archify.json> --into <deck_dir>            # 追記内容を表示するだけ（書き込まない）
+python tools/archify_import.py <archify.json> --into <deck_dir> --confirm  # 承認後に実際に追記して保存
 ```
+> ⚠️ `--into` は既存の `deck.json` を読み込み、末尾に 1 枚追記して**同じパスへ上書き保存**する。
+> 既存ファイルがある場合、`--confirm` を付けないと書き込まずに終了し（exit 1）、追記される内容だけを出力する。
+> **`--confirm` を付ける前に、その内容を利用者に提示して明示的な承認を得ること。**
+> 上書きせずに結果だけ欲しいときは `--out <file>` を使う。
 `python` が無ければ `python3`（Windows は `py -3`）に読み替える。コマンド自体は PowerShell / Git Bash のどちらでも同じもので動く（`cd` の区切り文字はどちらもそのままで可）。
 
 ## 構成

@@ -1,7 +1,7 @@
 ---
 name: create-deck
 description: JSON(deck.json)をソースにスライドを HTML / PowerPoint(16:9) にビルドする。ユーザーがプレゼン資料・スライド・デッキの新規作成（構成図・シーケンス図などの図解を含む）、または既存 deck.json の編集・微修正（特定スライドの位置・サイズ・色・フォントなどの個別調整を含む）を求めたときに使う。内容もデザインも deck.json のパラメーターで管理し、色はテーマトークンで指定する。デッキ全体の配色・フォントのセット（テーマ）そのものを新規に追加・切替したいだけなら add-theme を使う。
-allowed-tools: Bash, Read, Write, Edit, Glob, Grep
+allowed-tools: Bash, Read, Write, Edit, Glob, Grep, AskUserQuestion
 ---
 
 # create-deck — deck.json からスライドをビルドする
@@ -105,6 +105,28 @@ PNG を開いて「文字切れ・要素の重なり・表の収まり・画像�
 4. 件数が減っていれば次の1件へ。**2ラウンド続けて件数が減らなければそこで止め、残った診断をそのままユーザーに正直に報告する**（見た目の帳尻合わせで「解消した」と言わない）
 
 診断が見ているのは**座標上の問題**だけで、矢印の向きやラベルの意味が実態と合っているかまでは判定できない。`preview_deck.py` の PNG で必ず目視して意味の正しさを確認する。
+
+## 既存ファイルを上書きする前の承認ゲート（厳守）
+
+利用者が手で書いた `deck.json` を確認なしに上書き・追記しない。**書き換える前に必ず `AskUserQuestion` で承認を取る。**
+
+対象になる操作:
+- `tools/archify_import.py <archify.json> --into <deck_dir>` — 既存 `deck.json` を読み込み、`slides` 末尾に 1 枚追記して**同じパスへ上書き保存**する
+- Write / Edit ツールで既存の `deck.json` を丸ごと書き換える場合
+
+archify_import の手順（この順を守る）:
+1. まず `--confirm` を**付けずに**実行する。既存 `deck.json` があるときは書き込まずに終了し（exit 1）、追記される内容が stdout に、書き込み先と追記後の枚数が stderr に出る
+   ```bash
+   python "${CLAUDE_PLUGIN_ROOT}/tools/archify_import.py" <archify.json> --into <deck_dir>
+   ```
+2. その出力（どのファイルに・何枚目として・どんなスライドが追加されるか）を利用者に提示し、`AskUserQuestion` で「この内容で `<deck_dir>/deck.json` に追記してよいか」を確認する
+3. 承認が得られたときだけ `--confirm` を付けて再実行する
+   ```bash
+   python "${CLAUDE_PLUGIN_ROOT}/tools/archify_import.py" <archify.json> --into <deck_dir> --confirm
+   ```
+4. 承認が得られなければ上書きせず、`--out <file>` で別ファイルに書き出して利用者に渡す
+
+`deck.json` がまだ無い（新規作成）場合は上書きにならないため、この承認ゲートは不要。詳細は `${CLAUDE_PLUGIN_ROOT}/references/diagram-guide.md` の「6. Archify JSON の取り込み」。
 
 ## 微修正のルール（重要）
 - 位置・サイズ・フォント・色の変更依頼が来たら、**スライドを作り直さず該当スライドの `style` に差分だけ書く**。デッキ全体なら `meta.layout_overrides`

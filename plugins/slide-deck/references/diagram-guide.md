@@ -136,8 +136,20 @@ python "$TOOLS/archify_import.py" <archify.json>                   # 変換結�
 python "$TOOLS/archify_import.py" <archify.json> --eyebrow "TYPE / architecture"
 python "$TOOLS/archify_import.py" <archify.json> --tolerance 70    # architecture の座標量子化の距離閾値(px)（既定70）
 python "$TOOLS/archify_import.py" <archify.json> --out slide.json  # 変換結果をファイルに保存
-python "$TOOLS/archify_import.py" <archify.json> --into <deck_dir> # deck.json の slides 末尾に追記（無ければ新規作成）
+python "$TOOLS/archify_import.py" <archify.json> --into <deck_dir> # 追記内容を表示するだけ（既存 deck.json は書き換えない）
+python "$TOOLS/archify_import.py" <archify.json> --into <deck_dir> --confirm  # 承認後に実際に追記して保存
 ```
+
+### `--into` の承認ゲート（既存 deck.json の上書き前に必ず確認する）
+
+`--into` は既存の `deck.json` を読み込み、`slides` の末尾に 1 枚追記して**同じパスへ上書き保存**する。利用者が手で書いたデッキを壊しうるため、次の順で進める:
+
+1. まず `--confirm` を**付けずに**実行する。既存 `deck.json` があると書き込まずに終了し（exit 1）、追記される内容が stdout に、書き込み先と追記後の枚数が stderr に出る
+2. その内容（どのファイルに・何枚目として・どんなスライドが追加されるか）を**利用者に提示し、明示的な承認を得る**（エージェントが実行する場合は `AskUserQuestion` で確認する）
+3. 承認が得られたときだけ `--confirm` を付けて再実行する
+4. 承認が得られない場合は上書きせず、`--out <file>` で別ファイルに書き出して渡す
+
+`deck.json` が無い（新規作成）場合は上書きにならないため `--confirm` は不要。
 
 Archify の `diagram_type` は次のように対応するタイプへ変換される（`workflow` だけ `swimlane` に変わる点に注意）:
 
