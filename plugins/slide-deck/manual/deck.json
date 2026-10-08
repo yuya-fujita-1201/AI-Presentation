@@ -4,7 +4,7 @@
     "title": "slide-deck プラグイン ユーザーガイド",
     "subtitle": "Zip を受け取った人向けの使い方マニュアル",
     "author": "slide-deck plugin",
-    "date": "2026-09-17",
+    "date": "2026-10-08",
     "theme": "accenture-purple",
     "layout_overrides": {
       "image_text": {
@@ -305,9 +305,9 @@
     {
       "type": "image",
       "eyebrow": "2章 / 一覧",
-      "title": "19種類のテンプレートから選べる",
+      "title": "21種類のテンプレートから選べる",
       "path": "assets/gallery.png",
-      "caption": "全19種。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される（次ページ以降に各タイプの見本）",
+      "caption": "全21種。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される（次ページ以降に各タイプの見本）",
       "notes": "各タイプのレンダリング済み見本は、このガイドの次ページ以降に掲載している。deck.json の書き方の参考として examples/template-sample/deck.json（配布物にはソースのみ同梱。ビルド後HTMLは非同梱で、見本はこのUSER-GUIDE自体が該当）を利用できる。図解タイプは legend_page で凡例が自動挿入される。"
     },
     {
@@ -407,6 +407,44 @@
       "caption": "type=architecture の見本（AWS風タイルアイコン）",
       "image_side": "right",
       "notes": "図解4種。AWS風アイコンは style.diagram.icon_style:\"aws\"。詳細はreferences/diagram-guide.mdを参照。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "2章 / タイプ紹介",
+      "title": "工程表は日付を書くだけで引ける",
+      "bullets": [
+        {
+          "text": "schedule：矢羽根スケジュール（工程表）を描く",
+          "bold": true,
+          "color": "primary"
+        },
+        "期間を日付で書けば矢羽根・節目・現在線が時間軸に揃う",
+        "四半期の見出し・担当の帯・凡例も自動で付く",
+        "PPTXでは矢羽根を1本ずつ後から直せる"
+      ],
+      "path": "assets/type-20-schedule.png",
+      "caption": "type=schedule の見本",
+      "image_side": "left",
+      "notes": "座標は書かない。start/end は \"YYYY-MM-DD\" / \"YYYY-MM\" / 列見出し / 数値。詳細は references/deck-schema.md の schedule 節。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "2章 / タイプ紹介",
+      "title": "進捗報告は信号付きの表で見せる",
+      "bullets": [
+        {
+          "text": "status_table：チームごとの進捗を1枚の表にまとめる",
+          "bold": true,
+          "color": "primary"
+        },
+        "赤・黄・緑の信号で状況が一目で分かる",
+        "実績と計画は見出し付きの階層箇条書きで書く",
+        "PPTXは表のまま出るので文字や色を直接直せる"
+      ],
+      "path": "assets/type-21-status_table.png",
+      "caption": "type=status_table の見本",
+      "image_side": "right",
+      "notes": "行ごとに label / status / cells。凡例（右上）は legend で変更、legend:false で非表示。"
     },
     {
       "type": "bullets",
