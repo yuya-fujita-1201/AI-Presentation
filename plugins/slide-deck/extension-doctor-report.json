@@ -189,7 +189,7 @@
       "severity": "warn",
       "fix_class": "needs-review",
       "file": "C:\\workspace\\AI-Presentation\\plugins\\slide-deck\\tools\\check_diagram.py",
-      "line": 119,
+      "line": 123,
       "detail_ja": "出力パス（`open(..., 'w')` / `write_text` / `writeFileSync` 等）が スキルの `tmp/` 境界に拘束されていません。`resolve().is_relative_to(tmp_dir)` 等で 書き込み先を `tmp/` 配下に限定してください。",
       "detail_en": "An output path (`open(..., 'w')` / `write_text` / `writeFileSync`) is not bound to the skill `tmp/` boundary. Constrain writes to `tmp/` via `resolve().is_relative_to(tmp_dir)` (or a `tempfile` helper).",
       "proposed_patch": null
@@ -320,6 +320,18 @@
       "title_en": "Orphan script not referenced by any SKILL.md",
       "severity": "warn",
       "fix_class": "needs-review",
+      "file": "C:\\workspace\\AI-Presentation\\plugins\\slide-deck\\tools\\schedule_engine.py",
+      "line": null,
+      "detail_ja": "`tools/schedule_engine.py` はどの SKILL.md / README からも参照されていません。他のスクリプトから import されている可能性があるため自動除外は行いません。配布物に未レビューのコードが混入していないか確認し、不要なら `.gitignore` に追加して zip から除外するか削除してください。",
+      "detail_en": "`tools/schedule_engine.py` is not referenced by any SKILL.md / README. It may still be imported by another script, so it is NOT auto-excluded. Review whether it ships unreviewed code in the bundle; if unneeded, add it to .gitignore to exclude it from the distributed zip, or remove it.",
+      "proposed_patch": "# Review: orphan script (not auto-excluded — may be imported by another script):\ntools/schedule_engine.py\n"
+    },
+    {
+      "pattern_id": "P23",
+      "title_ja": "SKILL.md から参照されない孤立スクリプトがあります",
+      "title_en": "Orphan script not referenced by any SKILL.md",
+      "severity": "warn",
+      "fix_class": "needs-review",
       "file": "C:\\workspace\\AI-Presentation\\plugins\\slide-deck\\tools\\test_archify_import.py",
       "line": null,
       "detail_ja": "`tools/test_archify_import.py` はどの SKILL.md / README からも参照されていません。他のスクリプトから import されている可能性があるため自動除外は行いません。配布物に未レビューのコードが混入していないか確認し、不要なら `.gitignore` に追加して zip から除外するか削除してください。",
@@ -361,6 +373,30 @@
       "detail_ja": "`tools/test_diagram_engine.py` はどの SKILL.md / README からも参照されていません。他のスクリプトから import されている可能性があるため自動除外は行いません。配布物に未レビューのコードが混入していないか確認し、不要なら `.gitignore` に追加して zip から除外するか削除してください。",
       "detail_en": "`tools/test_diagram_engine.py` is not referenced by any SKILL.md / README. It may still be imported by another script, so it is NOT auto-excluded. Review whether it ships unreviewed code in the bundle; if unneeded, add it to .gitignore to exclude it from the distributed zip, or remove it.",
       "proposed_patch": "# Review: orphan script (not auto-excluded — may be imported by another script):\ntools/test_diagram_engine.py\n"
+    },
+    {
+      "pattern_id": "P23",
+      "title_ja": "SKILL.md から参照されない孤立スクリプトがあります",
+      "title_en": "Orphan script not referenced by any SKILL.md",
+      "severity": "warn",
+      "fix_class": "needs-review",
+      "file": "C:\\workspace\\AI-Presentation\\plugins\\slide-deck\\tools\\test_schedule_engine.py",
+      "line": null,
+      "detail_ja": "`tools/test_schedule_engine.py` はどの SKILL.md / README からも参照されていません。他のスクリプトから import されている可能性があるため自動除外は行いません。配布物に未レビューのコードが混入していないか確認し、不要なら `.gitignore` に追加して zip から除外するか削除してください。",
+      "detail_en": "`tools/test_schedule_engine.py` is not referenced by any SKILL.md / README. It may still be imported by another script, so it is NOT auto-excluded. Review whether it ships unreviewed code in the bundle; if unneeded, add it to .gitignore to exclude it from the distributed zip, or remove it.",
+      "proposed_patch": "# Review: orphan script (not auto-excluded — may be imported by another script):\ntools/test_schedule_engine.py\n"
+    },
+    {
+      "pattern_id": "P23",
+      "title_ja": "SKILL.md から参照されない孤立スクリプトがあります",
+      "title_en": "Orphan script not referenced by any SKILL.md",
+      "severity": "warn",
+      "fix_class": "needs-review",
+      "file": "C:\\workspace\\AI-Presentation\\plugins\\slide-deck\\tools\\test_status_table.py",
+      "line": null,
+      "detail_ja": "`tools/test_status_table.py` はどの SKILL.md / README からも参照されていません。他のスクリプトから import されている可能性があるため自動除外は行いません。配布物に未レビューのコードが混入していないか確認し、不要なら `.gitignore` に追加して zip から除外するか削除してください。",
+      "detail_en": "`tools/test_status_table.py` is not referenced by any SKILL.md / README. It may still be imported by another script, so it is NOT auto-excluded. Review whether it ships unreviewed code in the bundle; if unneeded, add it to .gitignore to exclude it from the distributed zip, or remove it.",
+      "proposed_patch": "# Review: orphan script (not auto-excluded — may be imported by another script):\ntools/test_status_table.py\n"
     },
     {
       "pattern_id": "P26",

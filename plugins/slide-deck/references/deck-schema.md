@@ -116,6 +116,25 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
   "style": { "table": { "row_fills": { "3": "highlight_fill" } } } }
 ```
 
+### `status_table` — 進捗ステータス表（信号＋実績／計画）
+```json
+{ "type": "status_table", "title": "1. 全体・個別進捗報告（1/2）", "lead": "10/9(金)時点で、各チーム予定通り進行中。",
+  "columns": ["チーム", "進捗状況", "実績（10/9時点）", "計画（今週末時点）"],
+  "rows": [
+    { "label": "PMO", "status": "green",
+      "cells": [
+        [ { "text": "進捗管理、課題管理等", "children": ["（継続）進捗管理", { "text": "論点議論", "children": ["顧客対応：…"] }] } ],
+        [ "計画の項目" ]
+      ] }
+  ] }
+```
+- 1列目＝ラベル列（`label`、`highlight_fill` 地）、2列目＝信号（`status` の色の ●）、3列目以降＝内容列。`cells` の数は `columns` 数 − 2 と一致させる（不一致はビルドエラー）。
+- セル内は文字列 or `{ "text", "children" }` の入れ子。最上位は ✓＋下線、2階層目以降は • で、階層ごとに字下げされる（PPTX ではネイティブ箇条書き）。
+- `status` は凡例の `key`、テーマトークン、`#hex` のいずれか。凡例（右上）は `legend: [{ "key", "color", "label" }]` で指定し、省略時は赤（日程再調整が必要）／黄（リカバリ予定有）／緑（予定通り）の3色。`legend: false` で非表示、`legend_title` で凡例左の見出しを変更。
+- 行の高さはセル内容から自動計算し、`table.fill_height`（既定 true）なら表の高さ（`table.h`）いっぱいまで比例配分する。内容が収まらない見込みならビルド時に warning。
+- 領域: `title`（凡例と重ならないよう既定幅 690px）, `rule`, `lead`, `legend`, `table`（`col_widths` / `header_h` / `cell_size` / `label_size` / `status_size` / `indent` / `border_color` / `check_char` / `bullet_char` / `heading_underline` 等）, `footer_l/r`。
+- 1枚3行程度が目安。PPTX は PowerPoint のネイティブ表として出力されるので、文字や信号の色を PowerPoint 上でも編集できる。
+
 ### `code` — コード / 設定例
 ```json
 { "type": "code", "title": "見出し", "language": "yaml", "code": "type: Concept\n..." }
@@ -399,6 +418,38 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 目安: 参加者7人以下、メッセージ12本以下（超えると `too-dense` 警告）。ラベルが矢印の長さより長いと `label-collision` 警告。
 
 注意: 参加者カード・メッセージの矢印は「図解タイプ共通」節と同じノード/エッジのトークン・語彙で着色されるが、自動配線・groups・凡例（横切り回避を含む）は grid 系3タイプ専用でここには無い（メッセージは常に横一直線）。
+
+### `schedule` — 矢羽根スケジュール（ガント／工程表）
+```json
+{ "type": "schedule", "eyebrow": "SCHEDULE", "title": "全体スケジュール",
+  "timeline": { "start": "2026-09", "end": "2027-08", "unit": "month" },
+  "periods": [ { "label": "FY27 Q1（2026/9〜11月）", "span": 3 }, { "label": "Q2", "span": 3 } ],
+  "today": "2026-10-05",
+  "rows": [
+    { "group": "節目", "label": "マイルストーン",
+      "milestones": [ { "at": "2026-10-31", "label": "10月末 RV完了" } ] },
+    { "group": "開発", "label": "要件定義〜テスト", "sub": "開発チーム",
+      "bars": [
+        { "start": "2026-09", "end": "2026-10", "label": "要件定義" },
+        { "start": "2026-11", "end": "2026-12-25", "label": "運用", "variant": "ongoing" } ] }
+  ],
+  "legend_labels": { "main": "主要タスク（成果物を出す）" },
+  "note": "※ 注記（凡例の右端に表示）" }
+```
+領域: `title`, `rule`, `lead`, `chart`, `footer_l/r`。左に行見出し（`label`＋小さな `sub`）、上に時間軸（`periods` の大見出し＋列見出し）、右に矢羽根・節目・現在線を描く。**座標は書かない**。期間（日付・列）だけを書けば、エンジン（`tools/schedule_engine.py`）が時間軸に合わせて位置を計算するので、HTML と PPTX のどちらでも矢羽根の始点・終点が軸とズレない。PPTX では矢羽根＝ホームベース／山形、節目＝ひし形、見出し＝四角形のネイティブ図形で描き、文字も図形に直接入れるため、PowerPoint 上で1本ずつ選んで文言・色・長さを直せる（図全体は1つのグループ。ダブルクリックで中の図形を編集できる）。
+
+- **時間軸**: `timeline`（`unit` は `month`＝"YYYY-MM"〜"YYYY-MM" / `week`＝"YYYY-MM-DD"〜"YYYY-MM-DD"、列見出しは自動で「9月」「10/5」形式）か、`columns`（列見出しの配列を直接指定）のどちらかが必須。両方書くと `columns` が見出しの表示文字列として使われる（数は timeline の列数と一致させる）。
+- **位置の書き方**（`bars[].start` / `end`、`milestones[].at`、`today`）: `"YYYY-MM-DD"`（timeline 指定時。日単位で按分）/ `"YYYY-MM"`（start は月初、end は月末）/ 列見出しの文字列（例 `"10月"`。start は列の左端、end は列の右端）/ 数値（列単位。0 が先頭列の左端）。時間軸の範囲外・`end` が `start` 以前はビルドエラー。
+- **行 `rows[]`**: `label`（必須推奨）/ `sub`（担当など小さく2段目）/ `group`（連続する同じ値を左端の縦帯にまとめる）/ `bars[]` / `milestones[]`。節目は専用の行（例「マイルストーン」）に置くのを推奨（近いラベルは自動で段をずらし、行の高さも自動で確保する）。
+- **矢羽根 `bars[]`**: `{ start, end, label, variant, shape, label_pos }`。`variant`: `main`（既定・primary 塗り）/ `accent`（accent 塗り）/ `muted`（muted 塗り）/ `prep`（淡色＋枠）/ `ongoing`（白地＋枠）/ `tbd`（白地＋破線枠＝要調整・未確定）。`shape`: `arrow`（既定・ホームベース）/ `chevron`（山形）/ `bar`（四角）。ラベルが矢羽根に収まらないと文字を縮め、それでも入らなければ `bar-label-overflow` 警告（`"label_pos": "after"` で矢羽根の右に出せる）。同じ行で期間が重なると `bar-overlap` 警告。
+- **節目 `milestones[]`**: `{ at, label }`。ひし形＋下にラベル。
+- **`periods[]`**: `{ label, span }`（span＝列数）。四半期・年度などの大見出し。境界の縦罫線は太線になる。
+- **`today`**: 現在線（縦の破線）。日付で書くと凡例に「現在（10/5）」と自動表示。
+- **凡例**: 既定で図の下に1行（使われた variant ＋ 節目 ＋ 現在線だけ）。`legend: false` で非表示、`legend_labels`（キーは variant 名・`milestone`・`today`）で文言を変更。収まらなければ文字を縮めてから自動で折り返す（`legend-wrapped` note）。`note` は凡例行の右端に出る注記。
+- **行の高さ**: 図の高さ（lead があれば `chart.y/h`、無ければ `chart.y_no_lead/h_no_lead` で上に詰める）から自動で等分し、`min_row_h`〜`max_row_h` に収める。行が多く `min_row_h` を下回ると `too-dense` 警告（目安 14 行以下）。行が低いと行見出しの文字も比例して縮む。
+- **主な `style.chart` トークン**: `label_w`（行見出し欄の幅、既定 250）/ `group_w` / `period_h` / `col_h` / `min_row_h` / `max_row_h` / `bar_hr`（行高に対する矢羽根の高さ比）/ `bar_max_h` / `bar_head`（矢頭の深さ上限 px）/ `bar_gap` / `<variant>_fill` / `<variant>_border` / `<variant>_color` / `period_fill` / `col_fill` / `group_fill` / `row_alt_fill` / `grid_color` / `milestone_fill` / `today_color` / 各 `*_size`。
+
+診断は `check_diagram.py` で確認できる（スキーマ的な誤りはビルドエラー、文字あふれ・重なりは警告）。
 
 ### `diagram_legend` — 図解タイプの凡例ページ
 ```json

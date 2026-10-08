@@ -63,7 +63,7 @@ python tools/build_deck.py <deck_dir>
 python tools/preview_deck.py <deck_dir> [番号...]
 # 構造チェック（はみ出し・重なり・文字あふれ）
 python tools/check_layout.py <deck_dir>
-# 図解タイプの配線・ラベル診断（architecture/dataflow/lifecycle/sequence/swimlane）
+# 図解タイプの配線・ラベル診断（architecture/dataflow/lifecycle/sequence/swimlane/schedule）
 python tools/check_diagram.py <deck_dir>
 # SVG図版のフォント機械チェック（明朝体等へのフォールバックを検出）
 python tools/check_svg_fonts.py <deck_dir>
@@ -101,7 +101,7 @@ plugins/slide-deck/
 ├── tools/                       # build_deck / preview_deck / check_layout / check_svg_fonts /
 │                                 #   lint_deck_text / deck_metrics / contact_sheet / check_theme /
 │                                 #   export_pdf / new_theme / theme_from_sample / setup_deps /
-│                                 #   diagram_engine / check_diagram / archify_import
+│                                 #   diagram_engine / schedule_engine / check_diagram / archify_import
 ├── templates/                   # themes/（default, accenture-purple） layouts/（default）
 ├── references/                  # deck-schema.md（スキーマ） themes.md（テーマ）
 │                                 #   content-guide.md（コンテンツ） diagram-guide.md（図解の描き方）

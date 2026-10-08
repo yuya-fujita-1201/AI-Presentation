@@ -47,6 +47,7 @@ CANVAS_W, CANVAS_H = 1280, 720
 # 他ツールから import build_deck されるケースでも解決できるよう明示的に追加する。
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import diagram_engine as de  # noqa: E402
+import schedule_engine as se  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -1147,6 +1148,164 @@ DIAG_LEGEND_TITLE = {
     "sequence": "シーケンス図の記号（sequence）",
 }
 _ICON_ORDER = ["frontend", "backend", "database", "cloud", "security", "messagebus", "external", "generic"]
+
+
+# ---------------------------------------------------------------------------
+# 矢羽根スケジュール（schedule）の見た目解決と HTML 描画。
+# ジオメトリと診断は schedule_engine が担当し、PPTX 側（build_pptx 内の s_schedule）も
+# 同じジオメトリと schedule_bar_visual() を使うので、HTML と PPTX で位置・配色が一致する。
+# ---------------------------------------------------------------------------
+
+def schedule_bar_visual(variant: str, c: dict) -> dict:
+    """variant → 塗り・枠・文字色のトークン（style.chart の <variant>_fill / _border / _color）。"""
+    defaults = {
+        "main": ("primary", None, "on_primary"),
+        "accent": ("accent", None, "on_primary"),
+        "muted": ("muted", None, "on_primary"),
+        "prep": ("highlight_fill", "accent", "primary"),
+        "ongoing": ("background", "primary", "primary"),
+        "tbd": ("background", "accent", "primary"),
+    }
+    fill, border, color = defaults.get(variant, defaults["main"])
+    return {"fill": c.get(f"{variant}_fill", fill), "border": c.get(f"{variant}_border", border),
+            "color": c.get(f"{variant}_color", color), "dashed": variant == "tbd"}
+
+
+def _schedule_poly_svg(points, x, y, w, h, fill, stroke, dashed, stroke_w=1.5) -> str:
+    pts = " ".join(f"{px - x:.2f},{py - y:.2f}" for px, py in points)
+    st = f'stroke="{stroke}" stroke-width="{stroke_w}"' if stroke else 'stroke="none"'
+    if stroke and dashed:
+        st += ' stroke-dasharray="5 3"'
+    return (f'<svg width="{w:.2f}" height="{h:.2f}" style="position:absolute;left:0;top:0;overflow:visible;">'
+            f'<polygon points="{pts}" fill="{fill}" {st} stroke-linejoin="miter"/></svg>')
+
+
+def schedule_html(slide, st, theme, heading_font_css: str) -> str:
+    c = st["chart"]
+    geo = se.layout_schedule(slide, c)
+    rg = geo["region"]
+    out = []
+
+    def cc(key, default):
+        return col(theme, c.get(key, default))
+
+    grid = cc("grid_color", "border")
+    strong_w = c.get("grid_strong_w", 2)
+    # 行の縞（見出し欄＋時間軸）。行境界は border-top（グループ境界は太線）で描き、
+    # 1〜2px の細い要素を作らない（check_layout の rule 判定で文字との交差と誤認させないため）。
+    hl = {round(h["y"], 2): h for h in geo["hlines"]}
+    for r in geo["rows"]:
+        bg = cc("row_alt_fill", "on_primary_soft") if r["alt"] else col(theme, "background")
+        line = hl.get(round(r["y"], 2))
+        bw = strong_w if line and line["strong"] else 1
+        out.append(f'<div style="{pos({"x": r["x"], "y": r["y"], "w": rg["x"] + rg["w"] - r["x"], "h": r["h"]})}'
+                   f'background:{bg};border-top:{bw}px solid {grid};box-sizing:border-box;"></div>')
+    # 列の縦罫線（列幅の箱の左罫線。期間境界・両端は太線）
+    if geo["rows"]:
+        top = geo["columns"][0]["y"] if geo["columns"] else geo["rows"][0]["y"]
+        bottom = geo["rows"][-1]["y"] + geo["rows"][-1]["h"]
+        vl = geo["vlines"]
+        for k in range(len(vl) - 1):
+            lw = strong_w if vl[k]["strong"] else 1
+            right = f"border-right:{strong_w}px solid {grid};" if k == len(vl) - 2 else ""
+            out.append(f'<div style="{pos({"x": vl[k]["x"], "y": top, "w": vl[k + 1]["x"] - vl[k]["x"], "h": bottom - top})}'
+                       f'border-left:{lw}px solid {grid};{right}box-sizing:border-box;"></div>')
+        out.append(f'<div style="{pos({"x": rg["x"], "y": bottom - 1, "w": rg["w"], "h": strong_w + 1})}'
+                   f'border-top:{strong_w}px solid {grid};box-sizing:border-box;"></div>')
+    # 見出し（期間・列）
+    for p in geo["periods"]:
+        out.append(f'<div style="{pos(p)}display:flex;align-items:center;justify-content:center;'
+                   f'background:{cc("period_fill", "primary")};color:{cc("period_color", "on_primary")};'
+                   f'font-family:{esc(heading_font_css)};font-weight:700;font-size:{p["size"]}px;white-space:nowrap;'
+                   f'border-right:2px solid {col(theme, "background")};box-sizing:border-box;">{esc(p["label"])}</div>')
+    for k in geo["columns"]:
+        out.append(f'<div style="{pos(k)}display:flex;align-items:center;justify-content:center;'
+                   f'background:{cc("col_fill", "highlight_fill")};color:{cc("col_color", "text")};'
+                   f'font-size:{k["size"]}px;white-space:nowrap;border-right:1px solid {col(theme, "background")};'
+                   f'box-sizing:border-box;">{esc(k["label"])}</div>')
+    # 左端のグループ帯（縦書き）
+    for g in geo["groups"]:
+        out.append(f'<div style="{pos(g)}display:flex;align-items:center;justify-content:center;'
+                   f'background:{cc("group_fill", "primary")};border-top:2px solid {col(theme, "background")};'
+                   f'box-sizing:border-box;"><span style="writing-mode:vertical-rl;text-orientation:mixed;'
+                   f'color:{cc("group_color", "on_primary")};font-weight:700;font-size:{c.get("group_size", 13)}px;'
+                   f'white-space:nowrap;">{esc(g["label"])}</span></div>')
+    # 行見出し（label ＋ sub）
+    pad = c.get("label_pad", 10)
+    for r in geo["rows"]:
+        sub = (f'<div style="font-size:{r["sub_size"]}px;color:{cc("sub_color", "muted")};white-space:nowrap;'
+               f'line-height:1.3;">{esc(r["sub"])}</div>') if r["sub"] else ""
+        out.append(f'<div style="{pos(r)}display:flex;flex-direction:column;justify-content:center;'
+                   f'padding:0 {pad}px;box-sizing:border-box;">'
+                   f'<div style="font-size:{r["size"]}px;color:{cc("label_color", "text")};white-space:nowrap;'
+                   f'line-height:1.3;">{esc(r["label"])}</div>{sub}</div>')
+    # 現在線（矢羽根より下のレイヤー。10px 幅の箱の中央に破線を描き、細い罫線要素にしない）
+    if geo["today"]:
+        t = geo["today"]
+        tc = cc("today_color", "accent")
+        out.append(f'<div style="{pos({"x": t["x"] - 5, "y": t["y1"], "w": 10, "h": t["y2"] - t["y1"]})}'
+                   f'background:repeating-linear-gradient(to bottom,{tc} 0 5px,transparent 5px 9px);'
+                   f'background-size:2px 100%;background-repeat:no-repeat;background-position:center top;"></div>')
+    # 矢羽根
+    for b in geo["bars"]:
+        vis = schedule_bar_visual(b["variant"], c)
+        stroke = col(theme, vis["border"]) if vis["border"] else None
+        inner = _schedule_poly_svg(b["points"], b["x"], b["y"], b["w"], b["h"],
+                                   col(theme, vis["fill"]), stroke, vis["dashed"])
+        if b["label"] and b["label_pos"] != "after":
+            inner += (f'<div style="position:absolute;left:{b["tx"] - b["x"]:.2f}px;top:0;width:{b["tw"]:.2f}px;'
+                      f'height:{b["h"]:.2f}px;display:flex;align-items:center;justify-content:center;'
+                      f'font-size:{b["size"]}px;font-weight:700;color:{col(theme, vis["color"])};'
+                      f'white-space:nowrap;">{esc(b["label"])}</div>')
+        out.append(f'<div style="{pos(b)}">{inner}</div>')
+        if b["label"] and b["label_pos"] == "after":
+            out.append(f'<div style="{pos({"x": b["x"] + b["w"] + 6, "y": b["y"], "w": de.text_width(b["label"], b["size"]) + 4, "h": b["h"]})}'
+                       f'display:flex;align-items:center;font-size:{b["size"]}px;font-weight:700;'
+                       f'color:{cc("label_color", "text")};white-space:nowrap;">{esc(b["label"])}</div>')
+    # 節目（ひし形＋ラベル）
+    for m in geo["milestones"]:
+        d = m["d"]
+        pts = [(m["cx"], m["cy"] - d / 2), (m["cx"] + d / 2, m["cy"]), (m["cx"], m["cy"] + d / 2), (m["cx"] - d / 2, m["cy"])]
+        out.append(f'<div style="{pos({"x": m["cx"] - d / 2, "y": m["cy"] - d / 2, "w": d, "h": d})}">'
+                   + _schedule_poly_svg(pts, m["cx"] - d / 2, m["cy"] - d / 2, d, d,
+                                        cc("milestone_fill", "accent"), cc("milestone_border", "primary"), False, 1)
+                   + '</div>')
+        if m["label"]:
+            out.append(f'<div style="{pos({"x": m["lx"], "y": m["ly"], "w": m["lw"], "h": m["lh"]})}'
+                       f'text-align:center;font-size:{m["size"]}px;font-weight:700;line-height:{m["lh"]}px;'
+                       f'color:{cc("milestone_color", "text")};white-space:nowrap;">{esc(m["label"])}</div>')
+    # 凡例と注記
+    lg = geo["legend"]
+    if lg:
+        for it in lg["items"]:
+            sx, sy, sw, sh = it["x"], it["y"], it["sym_w"], it["sym_h"]
+            if it["kind"] == "bar":
+                vis = schedule_bar_visual(it["variant"], c)
+                g = se._bar_geometry(sx, sx + sw, sy, sh, "arrow", 7)
+                out.append(f'<div style="{pos({"x": sx, "y": sy, "w": sw, "h": sh})}">'
+                           + _schedule_poly_svg(g["points"], sx, sy, sw, sh, col(theme, vis["fill"]),
+                                                col(theme, vis["border"]) if vis["border"] else None, vis["dashed"], 1.2)
+                           + '</div>')
+            elif it["kind"] == "milestone":
+                pts = [(sx + 6, sy + 1), (sx + 12, sy + 7), (sx + 6, sy + 13), (sx, sy + 7)]
+                out.append(f'<div style="{pos({"x": sx, "y": sy, "w": 12, "h": 14})}">'
+                           + _schedule_poly_svg(pts, sx, sy, 12, 14, cc("milestone_fill", "accent"),
+                                                cc("milestone_border", "primary"), False, 1) + '</div>')
+            else:
+                tc = cc("today_color", "accent")
+                out.append(f'<div style="{pos({"x": sx, "y": sy - 2, "w": 12, "h": sh + 4})}'
+                           f'background:repeating-linear-gradient(to bottom,{tc} 0 4px,transparent 4px 7px);'
+                           f'background-size:2px 100%;background-repeat:no-repeat;background-position:center top;"></div>')
+            out.append(f'<div style="{pos({"x": it["tx"], "y": sy - 2, "w": it["tw"], "h": sh + 4})}'
+                       f'display:flex;align-items:center;font-size:{it["size"]}px;'
+                       f'color:{cc("legend_color", "text")};white-space:nowrap;">{esc(it["label"])}</div>')
+        if lg["note"]:
+            out.append(f'<div style="{pos({"x": lg["note_x"], "y": lg["note_y"] - 2, "w": lg["note_w"], "h": lg["h"] + 4})}'
+                       f'display:flex;align-items:center;font-size:{lg["note_size"]}px;'
+                       f'color:{cc("note_color", "muted")};white-space:nowrap;">{esc(lg["note"])}</div>')
+    return "".join(out)
+
+
 _NODE_VARIANT_ORDER = ["emphasis", "security", "dashed", "muted"]
 _KIND_ORDER = ["start", "active", "waiting", "decision", "success", "failure", "neutral", "external"]
 _EDGE_ORDER = ["default", "emphasis", "security", "dashed", "return"]
@@ -1302,6 +1461,76 @@ def estimate_bullets_height(items, r: dict) -> float:
             clines = estimate_lines(c.get("text", ""), csize, child_width)
             total += clines * csize * lh + child_gap
     return total
+
+
+DEFAULT_STATUS_LEGEND = [
+    {"key": "red", "color": "#FF0000", "label": "遅延(マイルストーンの日程再調整が必要)"},
+    {"key": "yellow", "color": "#FFC000", "label": "遅延(マイルストーンの日程再調整は不要。リカバリ予定有)"},
+    {"key": "green", "color": "#00B050", "label": "予定通りまたは前倒し"},
+]
+STATUS_LEGEND_TITLE = "進捗状況\nステータス\n定義"
+
+
+def status_legend(slide: dict) -> list:
+    """status_table の凡例。slide.legend 未指定なら既定の信号3色、false なら非表示（空配列）。"""
+    legend = slide.get("legend", DEFAULT_STATUS_LEGEND)
+    return legend if isinstance(legend, list) else []
+
+
+def status_color(slide: dict, status) -> str:
+    """行の status（凡例 key、テーマトークン、#hex のいずれか）を色指定に解決する。"""
+    for it in status_legend(slide) or DEFAULT_STATUS_LEGEND:
+        if it.get("key") == status:
+            return it.get("color", "text")
+    return status or "text"
+
+
+def flatten_status_items(items, level: int = 0) -> list:
+    """status_table のセル内容（文字列 or {text, children} の入れ子）を (level, text) の平坦な列にする。"""
+    out = []
+    for it in items or []:
+        if isinstance(it, dict):
+            out.append((level, str(it.get("text", ""))))
+            out += flatten_status_items(it.get("children"), level + 1)
+        else:
+            out.append((level, str(it)))
+    return out
+
+
+def status_table_geometry(slide: dict, st: dict) -> dict:
+    """status_table の列・行の座標を計算する（HTML/PPTX 共通）。
+    行の高さはセル内容の見積もり高さを基準にし、fill_height なら余白を各行へ比例配分して表の高さを埋める。"""
+    tr = st["table"]
+    cols = slide.get("columns", [])
+    widths = tr.get("col_widths") or [1] * len(cols)
+    if len(widths) != len(cols):
+        widths = [1] * len(cols)
+    unit = tr["w"] / sum(widths)
+    xs, ws, x = [], [], tr["x"]
+    for w in widths:
+        xs.append(x)
+        ws.append(w * unit)
+        x += w * unit
+    size, lh, indent = tr["cell_size"], tr["line_height"], tr["indent"]
+    rows = []
+    for row in slide.get("rows", []):
+        cells = [flatten_status_items(c) for c in row.get("cells", [])]
+        need = tr["label_size"] * 1.4 + 2 * tr["pad_y"]
+        for j, paras in enumerate(cells):
+            avail = ws[j + 2] - 2 * tr["pad_x"] if j + 2 < len(ws) else 100
+            h = sum(estimate_lines(text, size, avail - indent * (lv + 1)) * size * lh + tr["item_gap"]
+                    for lv, text in paras)
+            need = max(need, h + 2 * tr["pad_y"])
+        rows.append({"row": row, "cells": cells, "need": need})
+    avail_h = tr["h"] - tr["header_h"]
+    total_need = sum(r["need"] for r in rows) or 1
+    scale = avail_h / total_need if tr.get("fill_height", True) and total_need < avail_h else 1.0
+    y = tr["y"] + tr["header_h"]
+    for r in rows:
+        r["y"], r["h"] = y, r["need"] * scale
+        y += r["h"]
+    return {"xs": xs, "ws": ws, "rows": rows, "header_y": tr["y"], "bottom": y,
+            "overflow": max(0.0, total_need - avail_h)}
 
 
 def steps_card_height(b: dict, steps, card_w: float) -> float:
@@ -1487,6 +1716,11 @@ def _check_overflow(slide: dict, st: dict, i: int, t: str):
             if over > threshold:
                 warn(f"{i + 1}枚目（type=table）: 表が枠の高さを約{int(over)}px超える見込みです。"
                      f"行数を減らすか style.table.row_h を下げてください")
+    elif t == "status_table" and st.get("table"):
+        over = status_table_geometry(slide, st)["overflow"]
+        if over > threshold:
+            warn(f"{i + 1}枚目（type=status_table）: 表が枠の高さを約{int(over)}px超える見込みです。"
+                 f"項目を減らすかスライドを分ける、または style.table.cell_size を下げてください")
 
 
 # ---------------------------------------------------------------------------
@@ -1789,6 +2023,33 @@ def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
                 fail(f"{i + 1}枚目（type=table）: col_widths の要素数（{len(widths)}）が "
                      f"columns 数（{len(cols)}）と一致しません")
 
+        if t == "status_table":
+            cols = slide.get("columns", [])
+            if len(cols) < 3:
+                fail(f"{i + 1}枚目（type=status_table）: columns は「ラベル列・状況列・内容列1つ以上」の3つ以上が必要です")
+            rows = slide.get("rows", [])
+            if not isinstance(rows, list):
+                fail(f"{i + 1}枚目（type=status_table）: rows は配列（リスト）で指定してください")
+            for ridx, row in enumerate(rows):
+                if not isinstance(row, dict):
+                    fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目は "
+                         f"{{\"label\", \"status\", \"cells\"}} のオブジェクトで指定してください")
+                cells = row.get("cells", [])
+                if not isinstance(cells, list) or len(cells) != len(cols) - 2:
+                    fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の cells 数が "
+                         f"内容列の数（columns - 2 = {len(cols) - 2}）と一致しません")
+                for c in cells:
+                    if not isinstance(c, list):
+                        fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の cells の各要素は配列で指定してください")
+                color = status_color(slide, row.get("status"))
+                if not is_color_value(theme, color):
+                    fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の status '{row.get('status')}' が "
+                         f"凡例の key・テーマトークン・#hex のいずれでもありません")
+            widths = st.get("table", {}).get("col_widths")
+            if widths and len(widths) != len(cols):
+                fail(f"{i + 1}枚目（type=status_table）: col_widths の要素数（{len(widths)}）が "
+                     f"columns 数（{len(cols)}）と一致しません")
+
         if t in ("image", "image_text"):
             _validate_image_path(slide, i, t, deck_dir)
 
@@ -1820,6 +2081,11 @@ def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
             diags = []
             de.layout_sequence(slide, st["diagram"], diags)
             _report_diagnostics(diags, i, t)
+
+        if t == "schedule":
+            _report_diagnostics(se.validate_schedule(slide), i, t)
+            _report_diagnostics(se.layout_schedule(slide, st["chart"])["diagnostics"], i, t,
+                                geometry_only=True)
 
         _check_overflow(slide, st, i, t)
 
@@ -2269,6 +2535,82 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
         html.append("</tbody></table></div>")
         parts.append("".join(html))
 
+    elif t == "status_table":
+        chrome()
+        lg = st["legend"]
+        legend = status_legend(slide)
+        if legend:
+            bc = col(theme, lg["border_color"])
+            row_h = lg["h"] / len(legend)
+            legend_title = esc(slide.get("legend_title", STATUS_LEGEND_TITLE)).replace("\n", "<br>")
+            out = [f'<div style="{pos(lg)}border:1px solid {bc};box-sizing:border-box;">']
+            out.append(
+                f'<div style="position:absolute;left:0;top:0;width:{lg["title_w"]}px;height:100%;'
+                f'background:{col(theme, lg["title_fill"])};color:{col(theme, lg["title_color"])};'
+                f'font-size:{lg["size"] + 1}px;font-weight:700;line-height:{lg["line_height"]};'
+                f'font-family:{esc(HEADING_FONT_CSS)};display:flex;align-items:center;justify-content:center;'
+                f'text-align:center;">{legend_title}</div>'
+            )
+            for k, it in enumerate(legend):
+                top = k * row_h
+                bt = f"border-top:1px solid {bc};" if k else ""
+                out.append(
+                    f'<div style="position:absolute;left:{lg["title_w"]}px;top:{top:.1f}px;width:{lg["symbol_w"]}px;'
+                    f'height:{row_h:.1f}px;{bt}border-left:1px solid {bc};box-sizing:border-box;display:flex;'
+                    f'align-items:center;justify-content:center;font-size:{lg["symbol_size"]}px;'
+                    f'color:{col(theme, it.get("color", "text"))};">●</div>'
+                    f'<div style="position:absolute;left:{lg["title_w"] + lg["symbol_w"]}px;top:{top:.1f}px;'
+                    f'width:{lg["w"] - lg["title_w"] - lg["symbol_w"]}px;height:{row_h:.1f}px;{bt}'
+                    f'border-left:1px solid {bc};box-sizing:border-box;display:flex;align-items:center;'
+                    f'padding:0 {lg["pad_x"]}px;font-size:{lg["size"]}px;line-height:{lg["line_height"]};'
+                    f'background:{col(theme, lg["fill"])};color:{col(theme, lg["color"])};">{esc(it.get("label", ""))}</div>'
+                )
+            out.append("</div>")
+            parts.append("".join(out))
+
+        tr = st["table"]
+        geo = status_table_geometry(slide, st)
+        bc = col(theme, tr["border_color"])
+        xs, ws = geo["xs"], geo["ws"]
+
+        def cell_div(j, y, h, fill, inner, extra=""):
+            return (f'<div style="position:absolute;left:{xs[j]:.1f}px;top:{y:.1f}px;width:{ws[j]:.1f}px;'
+                    f'height:{h:.1f}px;background:{col(theme, fill)};border:1px solid {bc};'
+                    f'margin:-0.5px 0 0 -0.5px;box-sizing:border-box;overflow:hidden;{extra}">{inner}</div>')
+
+        center = "display:flex;align-items:center;justify-content:center;text-align:center;"
+        for j, name in enumerate(slide.get("columns", [])):
+            parts.append(cell_div(
+                j, geo["header_y"], tr["header_h"], tr["header_fill"], esc(name),
+                f'{center}color:{col(theme, tr["header_color"])};font-size:{tr["header_size"]}px;font-weight:700;'))
+        mk = col(theme, tr["marker_color"])
+        for r in geo["rows"]:
+            row = r["row"]
+            parts.append(cell_div(
+                0, r["y"], r["h"], tr["label_fill"], esc(row.get("label", "")),
+                f'{center}color:{col(theme, tr["label_color"])};font-size:{tr["label_size"]}px;'))
+            status = row.get("status")
+            label = next((it.get("label", "") for it in status_legend(slide) if it.get("key") == status), "")
+            parts.append(cell_div(
+                1, r["y"], r["h"], tr["status_fill"],
+                f'<span title="{esc(label)}" style="color:{col(theme, status_color(slide, status))};'
+                f'font-size:{tr["status_size"]}px;line-height:1;">●</span>', center))
+            for j, paras in enumerate(r["cells"]):
+                body = []
+                for lv, text in paras:
+                    left = tr["indent"] * (lv + 1)
+                    marker = tr["check_char"] if lv == 0 else tr["bullet_char"]
+                    deco = "text-decoration:underline;" if lv == 0 and tr.get("heading_underline") else ""
+                    body.append(
+                        f'<div style="position:relative;padding-left:{left}px;margin-bottom:{tr["item_gap"]}px;">'
+                        f'<span style="position:absolute;left:{left - tr["indent"]}px;color:{mk};">{esc(marker)}</span>'
+                        f'<span style="{deco}">{esc(text)}</span></div>'
+                    )
+                parts.append(cell_div(
+                    j + 2, r["y"], r["h"], tr["cell_fill"], "".join(body),
+                    f'padding:{tr["pad_y"]}px {tr["pad_x"]}px;font-size:{tr["cell_size"]}px;'
+                    f'line-height:{tr["line_height"]};color:{col(theme, tr["cell_color"])};'))
+
     elif t == "code":
         chrome()
         r = st["code"]
@@ -2548,6 +2890,10 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
     elif t == "sequence":
         chrome()
         parts.append(sequence_html(slide, st, theme, page, HEADING_FONT_CSS))
+
+    elif t == "schedule":
+        chrome()
+        parts.append(schedule_html(slide, st, theme, HEADING_FONT_CSS))
 
     elif t == "swimlane_legend":
         if slide.get("eyebrow") and "eyebrow" in st:
@@ -3057,6 +3403,109 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 set_run(run, visible_text, tr["cell_size"], C(tr["cell_color"]))
                 if cell_url:
                     run.hyperlink.address = cell_url
+
+    def _cell_borders(cell, hex_color, width_pt=1.0):
+        """セルの上下左右の罫線を設定する（schema 順 lnL/lnR/lnT/lnB を塗りより前に置く）。"""
+        tcPr = cell._tc.get_or_add_tcPr()
+        for tag in ("a:lnL", "a:lnR", "a:lnT", "a:lnB"):
+            old = tcPr.find(qn(tag))
+            if old is not None:
+                tcPr.remove(old)
+        for tag in ("a:lnB", "a:lnT", "a:lnR", "a:lnL"):
+            ln = tcPr.makeelement(qn(tag), {"w": str(int(Pt(width_pt))), "cap": "flat"})
+            fill = ln.makeelement(qn("a:solidFill"), {})
+            fill.append(fill.makeelement(qn("a:srgbClr"), {"val": hex_color}))
+            ln.append(fill)
+            tcPr.insert(0, ln)
+
+    def _plain_table(slide, n_rows, n_cols, x, y, widths, heights):
+        gfx = slide.shapes.add_table(n_rows, n_cols, IN(x), IN(y), IN(sum(widths)), IN(sum(heights)))
+        table = gfx.table
+        table.first_row = False
+        table.horz_banding = False
+        for j, w in enumerate(widths):
+            table.columns[j].width = IN(w)
+        for i, h in enumerate(heights):
+            table.rows[i].height = IN(h)
+        return table
+
+    def _fill_cell(cell, fill, border_hex, pad_x=4, pad_y=2, anchor="middle"):
+        from pptx.enum.text import MSO_ANCHOR
+        cell.fill.solid()
+        cell.fill.fore_color.rgb = C(fill)
+        cell.vertical_anchor = MSO_ANCHOR.MIDDLE if anchor == "middle" else MSO_ANCHOR.TOP
+        cell.margin_left = cell.margin_right = IN(pad_x)
+        cell.margin_top = cell.margin_bottom = IN(pad_y)
+        cell.text_frame.word_wrap = True
+        _cell_borders(cell, border_hex)
+
+    def s_status_table(slide, data, st, page, total):
+        chrome(slide, data, st, page, total)
+        lg = st["legend"]
+        legend = status_legend(data)
+        if legend:
+            lbc = str(C(lg["border_color"]))
+            row_h = lg["h"] / len(legend)
+            lt = _plain_table(slide, len(legend), 3, lg["x"], lg["y"],
+                              [lg["title_w"], lg["symbol_w"], lg["w"] - lg["title_w"] - lg["symbol_w"]],
+                              [row_h] * len(legend))
+            for k, it in enumerate(legend):
+                for j in range(3):
+                    _fill_cell(lt.cell(k, j), lg["title_fill"] if j == 0 else lg["fill"], lbc, pad_x=lg["pad_x"], pad_y=1)
+                p = lt.cell(k, 1).text_frame.paragraphs[0]
+                p.alignment = ALIGN["center"]
+                set_run(p.add_run(), "●", lg["symbol_size"], C(it.get("color", "text")))
+                p = lt.cell(k, 2).text_frame.paragraphs[0]
+                p.line_spacing = lg["line_height"]
+                set_run(p.add_run(), str(it.get("label", "")), lg["size"], C(lg["color"]))
+            title_cell = lt.cell(0, 0)
+            if len(legend) > 1:
+                title_cell.merge(lt.cell(len(legend) - 1, 0))
+            tf = title_cell.text_frame
+            for n, line in enumerate(str(data.get("legend_title", STATUS_LEGEND_TITLE)).split("\n")):
+                p = tf.paragraphs[0] if n == 0 else tf.add_paragraph()
+                p.alignment = ALIGN["center"]
+                p.line_spacing = lg["line_height"]
+                set_run(p.add_run(), line, lg["size"] + 1, C(lg["title_color"]), bold=True, name=HEADING_FONT)
+
+        tr = st["table"]
+        geo = status_table_geometry(data, st)
+        bc = str(C(tr["border_color"]))
+        cols = data.get("columns", [])
+        table = _plain_table(slide, len(geo["rows"]) + 1, len(cols), tr["x"], tr["y"], geo["ws"],
+                             [tr["header_h"]] + [r["h"] for r in geo["rows"]])
+        for j, name in enumerate(cols):
+            cell = table.cell(0, j)
+            _fill_cell(cell, tr["header_fill"], bc)
+            p = cell.text_frame.paragraphs[0]
+            p.alignment = ALIGN["center"]
+            set_run(p.add_run(), str(name), tr["header_size"], C(tr["header_color"]), bold=True)
+        for i, r in enumerate(geo["rows"]):
+            row = r["row"]
+            cell = table.cell(i + 1, 0)
+            _fill_cell(cell, tr["label_fill"], bc)
+            p = cell.text_frame.paragraphs[0]
+            p.alignment = ALIGN["center"]
+            set_run(p.add_run(), str(row.get("label", "")), tr["label_size"], C(tr["label_color"]))
+            cell = table.cell(i + 1, 1)
+            _fill_cell(cell, tr["status_fill"], bc)
+            p = cell.text_frame.paragraphs[0]
+            p.alignment = ALIGN["center"]
+            set_run(p.add_run(), "●", tr["status_size"], C(status_color(data, row.get("status"))))
+            for j, paras in enumerate(r["cells"]):
+                cell = table.cell(i + 1, j + 2)
+                _fill_cell(cell, tr["cell_fill"], bc, pad_x=tr["pad_x"], pad_y=tr["pad_y"], anchor="top")
+                tf = cell.text_frame
+                for n, (lv, text) in enumerate(paras):
+                    p = tf.paragraphs[0] if n == 0 else tf.add_paragraph()
+                    p.line_spacing = tr["line_height"]
+                    p.space_after = PTS(tr["item_gap"])
+                    marker = tr["check_char"] if lv == 0 else tr["bullet_char"]
+                    _set_bullet(p, marker, C(tr["marker_color"]), tr["indent"] * (lv + 1), tr["indent"])
+                    run = p.add_run()
+                    set_run(run, text, tr["cell_size"], C(tr["cell_color"]))
+                    if lv == 0 and tr.get("heading_underline"):
+                        run.font.underline = True
 
     def s_code(slide, data, st, page, total):
         chrome(slide, data, st, page, total)
@@ -3813,15 +4262,163 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         if len(group_shapes) > 1:
             slide.shapes.add_group_shape(group_shapes)
 
+    def s_schedule(slide, data, st, page, total):
+        """矢羽根スケジュール。PowerPoint で後から直せるよう、すべてネイティブ図形
+        （矢羽根＝ホームベース/山形、節目＝ひし形、見出し＝四角形、罫線＝直線）で描き、
+        文字は図形自体のテキストとして入れる（画像化しない）。"""
+        from pptx.enum.text import MSO_ANCHOR
+        chrome(slide, data, st, page, total)
+        c = st["chart"]
+        geo = se.layout_schedule(data, c)
+        rg = geo["region"]
+        start_idx = len(slide.shapes)
+        grid = C(c.get("grid_color", "border"))
+        strong_w = c.get("grid_strong_w", 2)
+        # 行の縞（見出し欄＋時間軸）
+        for r in geo["rows"]:
+            if r["alt"]:
+                add_rect(slide, r["x"], r["y"], rg["x"] + rg["w"] - r["x"], r["h"], C(c.get("row_alt_fill", "on_primary_soft")))
+        # 見出し（期間・列）
+        for p in geo["periods"]:
+            sp = add_rect(slide, p["x"], p["y"], p["w"], p["h"], C(c.get("period_fill", "primary")),
+                          border=C("background"))
+            sp.line.width = Pt(1.5)
+            _shape_text(sp, p["label"], p["size"], C(c.get("period_color", "on_primary")), bold=True)
+            sp.text_frame.word_wrap = False
+        for k in geo["columns"]:
+            sp = add_rect(slide, k["x"], k["y"], k["w"], k["h"], C(c.get("col_fill", "highlight_fill")))
+            _shape_text(sp, k["label"], k["size"], C(c.get("col_color", "text")))
+            sp.text_frame.word_wrap = False
+        # 罫線（列境界・行境界。期間境界・グループ境界・外枠は太線）
+        if geo["rows"]:
+            top = geo["columns"][0]["y"] if geo["columns"] else geo["rows"][0]["y"]
+            for v in geo["vlines"]:
+                _poly_pptx(slide, [(v["x"], top), (v["x"], v["y2"])], grid,
+                           strong_w if v["strong"] else 1, arrow_end=False)
+            for h in geo["hlines"]:
+                _poly_pptx(slide, [(h["x1"], h["y"]), (h["x2"], h["y"])], grid,
+                           strong_w if h["strong"] else 1, arrow_end=False)
+        # 左端のグループ帯（縦書き）
+        for g in geo["groups"]:
+            sp = add_rect(slide, g["x"], g["y"], g["w"], g["h"], C(c.get("group_fill", "primary")),
+                          border=C("background"))
+            sp.line.width = Pt(1.5)
+            _shape_text(sp, g["label"], c.get("group_size", 13), C(c.get("group_color", "on_primary")), bold=True)
+            sp.text_frame.word_wrap = False
+            sp.text_frame._txBody.bodyPr.set("vert", "vert270")
+        # 行見出し（label ＋ sub の2段落）
+        pad = c.get("label_pad", 10)
+        for r in geo["rows"]:
+            tf = add_box(slide, {"x": r["x"] + pad, "y": r["y"], "w": r["w"] - 2 * pad, "h": r["h"]})
+            tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+            tf.word_wrap = False
+            p0 = tf.paragraphs[0]
+            p0.line_spacing = 1.1
+            set_run(p0.add_run(), r["label"], r["size"], C(c.get("label_color", "text")))
+            if r["sub"]:
+                p1 = tf.add_paragraph()
+                p1.line_spacing = 1.1
+                set_run(p1.add_run(), r["sub"], r["sub_size"], C(c.get("sub_color", "muted")))
+        # 現在線（矢羽根より下のレイヤー）
+        if geo["today"]:
+            t = geo["today"]
+            _poly_pptx(slide, [(t["x"], t["y1"]), (t["x"], t["y2"])], C(c.get("today_color", "accent")),
+                       c.get("today_w", 1.5), "dash", arrow_end=False)
+        # 矢羽根（ホームベース / 山形 / 四角形）。矢頭の深さは adj＝head / 短辺 で HTML と一致させる
+        preset = {"arrow": MSO_SHAPE.PENTAGON, "chevron": MSO_SHAPE.CHEVRON, "bar": MSO_SHAPE.RECTANGLE}
+        for b in geo["bars"]:
+            vis = schedule_bar_visual(b["variant"], c)
+            sp = slide.shapes.add_shape(preset[b["shape"]], IN(b["x"]), IN(b["y"]), IN(b["w"]), IN(b["h"]))
+            if b["shape"] != "bar":
+                sp.adjustments[0] = b["head"] / max(1.0, min(b["w"], b["h"]))
+            sp.fill.solid()
+            sp.fill.fore_color.rgb = C(vis["fill"])
+            if vis["border"]:
+                sp.line.color.rgb = C(vis["border"])
+                sp.line.width = Pt(1.5 * 0.75)
+                _set_dash(sp, "dash" if vis["dashed"] else None)
+            else:
+                sp.line.fill.background()
+            sp.shadow.inherit = False
+            if b["label"] and b["label_pos"] != "after":
+                _shape_text(sp, b["label"], b["size"], C(vis["color"]), bold=True)
+                sp.text_frame.word_wrap = False
+            elif b["label"]:
+                tf = add_box(slide, {"x": b["x"] + b["w"] + 6, "y": b["y"],
+                                     "w": de.text_width(b["label"], b["size"]) + 8, "h": b["h"]})
+                tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+                tf.word_wrap = False
+                set_run(tf.paragraphs[0].add_run(), b["label"], b["size"], C(c.get("label_color", "text")), bold=True)
+        # 節目（ひし形＋ラベル）
+        for m in geo["milestones"]:
+            d = m["d"]
+            sp = slide.shapes.add_shape(MSO_SHAPE.DIAMOND, IN(m["cx"] - d / 2), IN(m["cy"] - d / 2), IN(d), IN(d))
+            sp.fill.solid()
+            sp.fill.fore_color.rgb = C(c.get("milestone_fill", "accent"))
+            sp.line.color.rgb = C(c.get("milestone_border", "primary"))
+            sp.line.width = Pt(0.75)
+            sp.shadow.inherit = False
+            if m["label"]:
+                tf = add_box(slide, {"x": m["lx"] - 10, "y": m["ly"], "w": m["lw"] + 20, "h": m["lh"]})
+                tf.word_wrap = False
+                p = tf.paragraphs[0]
+                p.alignment = PP_ALIGN.CENTER
+                set_run(p.add_run(), m["label"], m["size"], C(c.get("milestone_color", "text")), bold=True)
+        # 凡例と注記
+        lg = geo["legend"]
+        if lg:
+            for it in lg["items"]:
+                sx, sy, sw, sh = it["x"], it["y"], it["sym_w"], it["sym_h"]
+                if it["kind"] == "bar":
+                    vis = schedule_bar_visual(it["variant"], c)
+                    sp = slide.shapes.add_shape(MSO_SHAPE.PENTAGON, IN(sx), IN(sy), IN(sw), IN(sh))
+                    sp.adjustments[0] = 7 / max(1.0, min(sw, sh))
+                    sp.fill.solid()
+                    sp.fill.fore_color.rgb = C(vis["fill"])
+                    if vis["border"]:
+                        sp.line.color.rgb = C(vis["border"])
+                        sp.line.width = Pt(0.9)
+                        _set_dash(sp, "dash" if vis["dashed"] else None)
+                    else:
+                        sp.line.fill.background()
+                    sp.shadow.inherit = False
+                elif it["kind"] == "milestone":
+                    sp = slide.shapes.add_shape(MSO_SHAPE.DIAMOND, IN(sx), IN(sy + 1), IN(12), IN(12))
+                    sp.fill.solid()
+                    sp.fill.fore_color.rgb = C(c.get("milestone_fill", "accent"))
+                    sp.line.color.rgb = C(c.get("milestone_border", "primary"))
+                    sp.line.width = Pt(0.75)
+                    sp.shadow.inherit = False
+                else:
+                    _poly_pptx(slide, [(sx + 6, sy - 2), (sx + 6, sy + sh + 2)], C(c.get("today_color", "accent")),
+                               c.get("today_w", 1.5), "dash", arrow_end=False)
+                tf = add_box(slide, {"x": it["tx"], "y": sy - 2, "w": it["tw"] + 8, "h": sh + 4})
+                tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+                tf.word_wrap = False
+                set_run(tf.paragraphs[0].add_run(), it["label"], it["size"], C(c.get("legend_color", "text")))
+            if lg["note"]:
+                tf = add_box(slide, {"x": lg["note_x"] - 8, "y": lg["note_y"] - 2, "w": lg["note_w"] + 8, "h": lg["h"] + 4})
+                tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+                tf.word_wrap = False
+                p = tf.paragraphs[0]
+                p.alignment = PP_ALIGN.RIGHT
+                set_run(p.add_run(), lg["note"], lg["note_size"], C(c.get("note_color", "muted")))
+        # M-50: 図全体を1つのグループにまとめる（PowerPoint でまとめて移動・拡縮でき、
+        # グループ内の矢羽根・文字は個別に選択して編集できる）。
+        group_shapes = list(slide.shapes)[start_idx:]
+        if len(group_shapes) > 1:
+            slide.shapes.add_group_shape(group_shapes)
+
     builders = {
         "title": s_title, "section": s_section, "bullets": s_bullets,
-        "two_column": s_two_column, "table": s_table, "code": s_code,
+        "two_column": s_two_column, "table": s_table, "status_table": s_status_table, "code": s_code,
         "quote": s_quote, "image": s_image, "image_text": s_image_text,
         "closing": s_closing,
         "agenda": s_agenda, "steps": s_steps, "matrix": s_matrix, "cards": s_cards,
         "swimlane": s_swimlane, "swimlane_legend": s_swimlane_legend,
         "architecture": s_architecture, "dataflow": s_dataflow, "lifecycle": s_lifecycle,
         "sequence": s_sequence, "diagram_legend": s_diagram_legend,
+        "schedule": s_schedule,
     }
 
     slides = deck.get("slides", [])

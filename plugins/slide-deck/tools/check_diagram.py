@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""図解タイプ（architecture / dataflow / lifecycle / sequence / swimlane）の機械診断。
+"""図解タイプ（architecture / dataflow / lifecycle / sequence / swimlane / schedule）の機械診断。
 
 Archify（https://github.com/tt-a1i/archify ）の `validate --json` に相当する。ビルドせずに
 deck.json だけを読み、図解スライドごとに次を検査して「修理指示（fixes）」付きで報告する:
@@ -34,7 +34,7 @@ sys.path.insert(0, str(TOOLS_DIR))
 import build_deck  # noqa: E402
 import diagram_engine as de  # noqa: E402
 
-DIAGRAM_TYPES = ("architecture", "dataflow", "lifecycle", "sequence", "swimlane")
+DIAGRAM_TYPES = ("architecture", "dataflow", "lifecycle", "sequence", "swimlane", "schedule")
 
 
 def diagnose_slide(slide: dict, st: dict, t: str):
@@ -57,6 +57,10 @@ def diagnose_slide(slide: dict, st: dict, t: str):
             return diags
         geo = build_deck.swimlane_geometry(slide, st)
         diags += geo.get("diagnostics", [])
+    elif t == "schedule":
+        diags += build_deck.se.validate_schedule(slide)
+        if not any(d["level"] == "error" for d in diags):
+            diags += build_deck.se.layout_schedule(slide, st["chart"])["diagnostics"]
     return diags
 
 

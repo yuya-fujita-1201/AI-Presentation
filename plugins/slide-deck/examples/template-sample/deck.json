@@ -2,7 +2,7 @@
   "meta": {
     "id": "template-sample",
     "title": "テンプレート タイプ ギャラリー",
-    "subtitle": "19スライドタイプの見た目サンプル（accenture-purple テーマ）",
+    "subtitle": "21スライドタイプの見た目サンプル（accenture-purple テーマ）",
     "author": "yuya.fujita",
     "date": "2026-09-11",
     "theme": "accenture-purple",
@@ -26,7 +26,7 @@
     {
       "type": "title",
       "title": "テンプレート タイプ ギャラリー",
-      "subtitle": "19スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
+      "subtitle": "21スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
       "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / accenture-purple テーマ",
       "notes": "表紙（title）— 左帯(bar)＋タイトル＋サブタイトル＋meta。"
     },
@@ -1124,6 +1124,229 @@
         }
       ],
       "notes": "TYPE 18 / sequence — participants を横並び、messages は配列順に上から等間隔。activations/segments は任意。"
+    },
+    {
+      "type": "schedule",
+      "eyebrow": "TYPE 19 / schedule",
+      "title": "矢羽根スケジュール（schedule）",
+      "lead": "期間を日付で書くだけで、矢羽根・節目・現在線を時間軸に合わせて自動配置します。",
+      "timeline": {
+        "start": "2026-10",
+        "end": "2027-09",
+        "unit": "month"
+      },
+      "periods": [
+        {
+          "label": "FY27 上期",
+          "span": 6
+        },
+        {
+          "label": "FY27 下期",
+          "span": 6
+        }
+      ],
+      "today": "2026-11-16",
+      "rows": [
+        {
+          "group": "節目",
+          "label": "マイルストーン",
+          "milestones": [
+            {
+              "at": "2026-12-25",
+              "label": "12/25 要件確定"
+            },
+            {
+              "at": "2027-03-31",
+              "label": "3月末 開発完了"
+            },
+            {
+              "at": "2027-06-30",
+              "label": "6月末 本番稼働"
+            }
+          ]
+        },
+        {
+          "group": "開発",
+          "label": "要件定義",
+          "sub": "業務チーム",
+          "bars": [
+            {
+              "start": "2026-10",
+              "end": "2026-12-25",
+              "label": "要件定義"
+            }
+          ]
+        },
+        {
+          "group": "開発",
+          "label": "設計・開発",
+          "sub": "開発チーム",
+          "bars": [
+            {
+              "start": "2026-12",
+              "end": "2027-01",
+              "label": "設計"
+            },
+            {
+              "start": "2027-02",
+              "end": "2027-03",
+              "label": "開発",
+              "shape": "chevron"
+            }
+          ]
+        },
+        {
+          "group": "開発",
+          "label": "テスト・移行",
+          "sub": "品質チーム",
+          "bars": [
+            {
+              "start": "2027-04",
+              "end": "2027-05",
+              "label": "総合テスト",
+              "variant": "muted"
+            },
+            {
+              "start": "2027-06",
+              "end": "2027-06",
+              "label": "移行"
+            }
+          ]
+        },
+        {
+          "group": "展開",
+          "label": "利用者トレーニング",
+          "sub": "推進チーム",
+          "bars": [
+            {
+              "start": "2027-01",
+              "end": "2027-01",
+              "label": "教材",
+              "variant": "prep"
+            },
+            {
+              "start": "2027-05",
+              "end": "2027-06",
+              "label": "トレーニング",
+              "variant": "accent"
+            }
+          ]
+        },
+        {
+          "group": "展開",
+          "label": "運用・定着化",
+          "sub": "運用チーム",
+          "bars": [
+            {
+              "start": "2027-07",
+              "end": "2027-09",
+              "label": "運用・モニタリング",
+              "variant": "ongoing"
+            }
+          ]
+        },
+        {
+          "group": "展開",
+          "label": "次期計画",
+          "sub": "PMO",
+          "bars": [
+            {
+              "start": "2027-04",
+              "end": "2027-09",
+              "label": "次期の範囲は別途計画",
+              "variant": "tbd"
+            }
+          ]
+        }
+      ],
+      "notes": "TYPE 19 / schedule — timeline と rows（bars / milestones）を書くと矢羽根の位置はエンジンが計算する。PPTX はネイティブ図形なので後から編集できる。"
+    },
+    {
+      "type": "status_table",
+      "eyebrow": "TYPE 20 / status_table",
+      "title": "進捗ステータス表（status_table）",
+      "lead": "信号（赤・黄・緑）と、実績・計画の階層箇条書きを1枚の表にまとめます。",
+      "columns": [
+        "チーム",
+        "進捗状況",
+        "実績（今週）",
+        "計画（来週）"
+      ],
+      "rows": [
+        {
+          "label": "PMO",
+          "status": "green",
+          "cells": [
+            [
+              {
+                "text": "進捗・課題管理",
+                "children": [
+                  "週次の進捗レビューを実施",
+                  "課題一覧を更新（新規2件）"
+                ]
+              }
+            ],
+            [
+              {
+                "text": "進捗・課題管理",
+                "children": [
+                  "月次報告資料の作成"
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "label": "開発",
+          "status": "yellow",
+          "cells": [
+            [
+              {
+                "text": "機能開発",
+                "children": [
+                  {
+                    "text": "画面A・Bを実装",
+                    "children": [
+                      "Bは仕様確認待ちで2日遅延"
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "text": "機能開発",
+                "children": [
+                  "画面Bを完了し遅延をリカバリ"
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "label": "移行",
+          "status": "red",
+          "cells": [
+            [
+              {
+                "text": "データ移行",
+                "children": [
+                  "移行元データの品質問題が判明"
+                ]
+              }
+            ],
+            [
+              {
+                "text": "データ移行",
+                "children": [
+                  "移行リハーサル日程を再調整"
+                ]
+              }
+            ]
+          ]
+        }
+      ],
+      "notes": "TYPE 20 / status_table — 行ごとに label / status / cells を書く。PPTX はネイティブ表なので文字や信号の色を後から編集できる。"
     },
     {
       "type": "closing",

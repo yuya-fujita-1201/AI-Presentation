@@ -20,7 +20,7 @@
 - 画像は `<deck_dir>/assets/` に置き、`image` / `image_text` タイプの `path` で相対参照する（PNG / JPG / SVG 対応）
 - **微修正の依頼（位置・サイズ・フォント・色の変更）が来たら、スライドを作り直さず該当スライドの `style` に差分だけ書く**。デッキ全体なら `meta.layout_overrides`、全デッキ共通なら `plugins/slide-deck/templates/layouts/default.json`
 - 微修正後は `build_deck.py <deck_dir> --html` → `preview_deck.py <deck_dir> <番号>` で該当スライドだけ目視確認してから PPTX を再生成する
-- ビルド前後の機械チェックとして `check_layout.py <deck_dir>`（はみ出し・重なり・文字あふれ）と `lint_deck_text.py <deck_dir>`（文字量・AI定型句）を通す（`create-deck` スキルの手順4、または `review-deck` スキルでまとめて実行できる）。図解タイプ（`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane`）を使ったら `check_diagram.py <deck_dir>`（配線・ラベルの座標診断）も通す
+- ビルド前後の機械チェックとして `check_layout.py <deck_dir>`（はみ出し・重なり・文字あふれ）と `lint_deck_text.py <deck_dir>`（文字量・AI定型句）を通す（`create-deck` スキルの手順4、または `review-deck` スキルでまとめて実行できる）。図解タイプ（`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane` / `schedule`）を使ったら `check_diagram.py <deck_dir>`（配線・ラベルの座標診断）も通す
 - 色は hex 直書きせずテーマトークン（`primary` / `accent` 等）で指定。テーマ変更は `meta.theme` の切替のみ（同梱: `default` / `accenture-purple`）
 - **PPTX にスピーカーノートを絶対に入れない**（python-pptx の notes_slide は Keynote 互換性を破壊する）。`notes` フィールドは HTML でのみ表示される
 - PPTX 生成後の検証: zip 整合（`unzip -t` 等）と `Presentation()` 再パースの 2 点を必ず実施し、全スライドで `has_notes_slide` が False であることを確認する

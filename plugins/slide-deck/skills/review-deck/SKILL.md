@@ -30,7 +30,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/lint_deck_text.py" <deck_dir>
 python "${CLAUDE_PLUGIN_ROOT}/tools/deck_metrics.py" <deck_dir>
 ```
 
-### 5. 図解チェック（architecture/dataflow/lifecycle/sequence/swimlane の配線・ラベル診断）
+### 5. 図解チェック（architecture/dataflow/lifecycle/sequence/swimlane/schedule の配線・ラベル診断）
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/tools/check_diagram.py" <deck_dir>
 ```

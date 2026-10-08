@@ -39,6 +39,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/setup_deps.py" --check
 - `table` の行数は 6 行以内（それ以上は分割するか要約する）
 - `cards` は 3〜6 枚（列数 `columns` は 3 前後）
 - `architecture` / `dataflow` / `lifecycle` はノード 12 個以下・列（`col`）6 以下、`sequence` は参加者 7 人以下・メッセージ 12 本以下を目安にする（超えると `check_diagram.py` が `too-dense` 等で警告する）
+- `schedule` は行 14 行以下を目安にする。座標は書かず、期間を日付（"YYYY-MM-DD" / "YYYY-MM"）か列見出しで書く（矢羽根の位置はエンジンが時間軸から計算する）
 - 1スライドに情報を詰め込みすぎない。伝えたいメッセージが2つ以上あるなら、スライドを分ける
 
 #### スライドタイプの選び方
@@ -46,6 +47,8 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/setup_deps.py" --check
 |---|---|
 | 比較・対比 | `two_column`（2案）/ `table`（項目×複数案） |
 | 手順・フロー | `steps`（単純な工程）/ `swimlane`（役割をまたぐ業務フロー） |
+| スケジュール・工程表（矢羽根・ガント） | `schedule` |
+| 進捗報告（信号＋実績／計画） | `status_table` |
 | 2軸での位置づけ | `matrix` |
 | 列挙・整理 | `bullets`（線形）/ `cards`（並列カード） |
 | システム構成・連携図 | `architecture` |
@@ -59,7 +62,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/setup_deps.py" --check
 
 #### 図解が欲しいとき（優先順位）
 図解＝画像とは限らない。次の優先順位で選ぶ:
-1. **ネイティブ図解タイプで表現できないか検討する**（上の「スライドタイプの選び方」）。`steps` / `swimlane` / `matrix` / `cards` / `architecture` / `dataflow` / `lifecycle` / `sequence` はデッキのテーマに追随し、あとから位置・色を `style` で微修正できるので、これらで表現できるなら画像より優先する
+1. **ネイティブ図解タイプで表現できないか検討する**（上の「スライドタイプの選び方」）。`steps` / `swimlane` / `matrix` / `cards` / `architecture` / `dataflow` / `lifecycle` / `sequence` / `schedule` はデッキのテーマに追随し、あとから位置・色を `style` で微修正できるので、これらで表現できるなら画像より優先する
 2. 上記で表現できない図版（スクリーンショット、既存の図表資料など）だけ `image` / `image_text` を使う。画像の入手は次の順で検討する: **(a) ユーザーから提供された画像を使う → (b) デッキの `assets/` にある既存画像を流用 → (c) 簡単な図なら SVG を自分で書いて `assets/` に置く**（利用可能なら画像生成ツールで代替してもよい）
 3. 画像は 4:3 前後（例: 1024×768）が最も収まりが良い（`image_text` の `img` 領域は既定 524×378px、`image` 単独の `img` 領域は既定 1136×440px なので極端な縦長・横長は避ける）
 
@@ -76,9 +79,9 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/build_deck.py" <deck_dir> --html  # HTML の
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/tools/check_layout.py" <deck_dir>       # はみ出し・重なり・文字あふれを検出
 python "${CLAUDE_PLUGIN_ROOT}/tools/lint_deck_text.py" <deck_dir>     # 文字量・AI定型句などの文言チェック
-python "${CLAUDE_PLUGIN_ROOT}/tools/check_diagram.py" <deck_dir>      # architecture/dataflow/lifecycle/sequence/swimlane の配線・ラベルを診断
+python "${CLAUDE_PLUGIN_ROOT}/tools/check_diagram.py" <deck_dir>      # architecture/dataflow/lifecycle/sequence/swimlane/schedule の配線・ラベルを診断
 ```
-いずれも exit 1 で終了した場合は、報告された内容（該当スライド番号・領域）に沿って deck.json の `style` を直してから再ビルドし、再度チェックする。新しいテーマを使った場合は `python "${CLAUDE_PLUGIN_ROOT}/tools/check_theme.py" <theme名>` でコントラストも確認する。図解タイプ（`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane`）を1枚でも使ったデッキは `check_diagram.py` も必ず実行し、直し方は次項「4.5 図解タイプの修理ループ」に従う。
+いずれも exit 1 で終了した場合は、報告された内容（該当スライド番号・領域）に沿って deck.json の `style` を直してから再ビルドし、再度チェックする。新しいテーマを使った場合は `python "${CLAUDE_PLUGIN_ROOT}/tools/check_theme.py" <theme名>` でコントラストも確認する。図解タイプ（`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane` / `schedule`）を1枚でも使ったデッキは `check_diagram.py` も必ず実行し、直し方は次項「4.5 図解タイプの修理ループ」に従う。
 
 チェックを通過したら目視確認する:
 ```bash

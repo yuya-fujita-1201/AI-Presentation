@@ -1,6 +1,6 @@
 # AI-Presentation — スライド生成プラグイン配布リポジトリ
 
-このリポジトリは Claude Code プラグイン **`slide-deck`**（JSON をソースにスライドを HTML / PowerPoint にビルドする仕組み）を配布します。JSON でスライドの内容とデザインを管理し、19 種類のスライドタイプ（構成図・データフロー・シーケンス等の自動配線図解を含む）、テーマ切替・追加、機械検証、PDF 書き出しに対応します。
+このリポジトリは Claude Code プラグイン **`slide-deck`**（JSON をソースにスライドを HTML / PowerPoint にビルドする仕組み）を配布します。JSON でスライドの内容とデザインを管理し、21 種類のスライドタイプ（構成図・データフロー・シーケンス等の自動配線図解、矢羽根スケジュール、進捗ステータス表を含む）、テーマ切替・追加、機械検証、PDF 書き出しに対応します。
 
 ## 使う人向け（インストール）
 
@@ -35,7 +35,7 @@ AI-Presentation/
 │       ├── tools/                #   build_deck.py / preview_deck.py / check_layout.py / check_svg_fonts.py /
 │       │                         #   lint_deck_text.py / deck_metrics.py / contact_sheet.py / check_theme.py /
 │       │                         #   export_pdf.py / new_theme.py / theme_from_sample.py / setup_deps.py /
-│       │                         #   diagram_engine.py / check_diagram.py / archify_import.py
+│       │                         #   diagram_engine.py / schedule_engine.py / check_diagram.py / archify_import.py
 │       ├── templates/            #   themes/ layouts/
 │       ├── references/           #   deck-schema.md / themes.md / content-guide.md / diagram-guide.md
 │       ├── examples/             #   全スライドタイプの見本デッキ
