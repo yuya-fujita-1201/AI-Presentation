@@ -64,6 +64,9 @@ JS = r"""
   if (!slide) return {error: 'no active slide'};
   const stage = slide.getBoundingClientRect();
   const out = {clip: [], bleed: [], overlap: [], lines: [], spill: [], rule: []};
+  // canvas（PPTX 取り込み）は元資料の図形配置をそのまま再現するため、元から存在する重なり・罫線交差・
+  // 箱からの文字のはみ出しは判定しない。見切れ（clip）とスライド外へのはみ出し（bleed）だけを見る
+  const isCanvas = slide.dataset.type === 'canvas';
   const all = Array.from(slide.querySelectorAll('*'));
   const desc = (el) => (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 40);
   const tag = (el) => el.tagName.toLowerCase() + (el.className && typeof el.className === 'string' ? '.' + el.className.split(' ')[0] : '');
@@ -72,6 +75,7 @@ JS = r"""
   for (const el of all) {
     const cs = getComputedStyle(el);
     if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+    if (el.classList && el.classList.contains('cv-clip')) continue; // canvas の Excel 由来セル: 意図的に隠している
     if (cs.overflow === 'hidden' || cs.overflowY === 'hidden' || cs.overflowX === 'hidden') {
       const dh = el.scrollHeight - el.clientHeight;
       const dw = el.scrollWidth - el.clientWidth;
@@ -110,7 +114,7 @@ JS = r"""
   }
 
   // (3) overlap: 互いに親子でない文字要素同士
-  for (let i = 0; i < rects.length; i++) {
+  for (let i = 0; i < (isCanvas ? 0 : rects.length); i++) {
     for (let j = i + 1; j < rects.length; j++) {
       const a = rects[i], b = rects[j];
       if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
@@ -124,7 +128,7 @@ JS = r"""
   }
 
   // (5) spill: 高さが明示された文字要素で、文字実体が割り当て高さを超えている（overflow visible でも検出）
-  for (const {el, box} of rects) {
+  for (const {el, box} of (isCanvas ? [] : rects)) {
     if (!el.style || !el.style.height) continue;
     if (deco(el)) continue;
     const cs = getComputedStyle(el);
@@ -141,7 +145,7 @@ JS = r"""
     if (cs.display === 'none') return false;
     return (r.height > 0 && r.height <= 4 && r.width > 40) || (r.width > 0 && r.width <= 4 && r.height > 40);
   }).map(el => ({el, box: el.getBoundingClientRect()}));
-  for (const {el, box} of rects) {
+  for (const {el, box} of (isCanvas ? [] : rects)) {
     for (const ru of rules) {
       if (ru.el.contains(el) || el.contains(ru.el)) continue;
       const x = Math.min(box.right, ru.box.right) - Math.max(box.left, ru.box.left);
@@ -220,10 +224,12 @@ def main():
         browser = pw.chromium.launch()
         page = browser.new_page(viewport={"width": 1280, "height": 720})
         url = html_path.resolve().as_uri()
+        page.goto(f"{url}#{nums[0]}")
+        page.wait_for_timeout(400)
         for n in nums:
-            page.goto(f"{url}#{n}")
-            page.reload()
-            page.wait_for_timeout(150)
+            # ページを読み直さずビューアの show() で切り替える（大きいデッキでの高速化）
+            page.evaluate("(n) => show(n - 1)", n)
+            page.wait_for_timeout(60)
             res = page.evaluate(JS, {"tol": args.tol, "overlapMin": args.overlap_min})
             if any(res.get(k) for k in ("clip", "bleed", "overlap", "lines", "spill", "rule")):
                 report["slides"][f"slide-{n:02d}"] = res

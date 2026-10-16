@@ -15,5 +15,8 @@ Pillow>=10
 # インストール後に `playwright install chromium` の実行も必要
 # playwright>=1.40
 
+# 任意: 既存 PPTX 取り込み（pptx_import.py）で埋め込み Excel を表にする
+# openpyxl>=3.1
+
 # 任意: PDFからのテーマ抽出（theme_from_sample.py --pdf）
 # pymupdf>=1.24

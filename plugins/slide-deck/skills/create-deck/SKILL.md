@@ -1,6 +1,6 @@
 ---
 name: create-deck
-description: JSON(deck.json)をソースにスライドを HTML / PowerPoint(16:9) にビルドする。ユーザーがプレゼン資料・スライド・デッキの新規作成（構成図・シーケンス図などの図解を含む）、または既存 deck.json の編集・微修正（特定スライドの位置・サイズ・色・フォントなどの個別調整を含む）を求めたときに使う。内容もデザインも deck.json のパラメーターで管理し、色はテーマトークンで指定する。デッキ全体の配色・フォントのセット（テーマ）そのものを新規に追加・切替したいだけなら add-theme を使う。
+description: JSON(deck.json)をソースにスライドを HTML / PowerPoint(16:9) にビルドする。ユーザーがプレゼン資料・スライド・デッキの新規作成（構成図・シーケンス図などの図解を含む）、既存 deck.json の編集・微修正（特定スライドの位置・サイズ・色・フォントなどの個別調整を含む）、または既存 PowerPoint の見た目そのままの HTML 化を求めたときに使う。内容もデザインも deck.json のパラメーターで管理し、色はテーマトークンで指定する。デッキ全体の配色・フォントのセット（テーマ）そのものを新規に追加・切替したいだけなら add-theme を使う。
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep, AskUserQuestion
 ---
 
@@ -21,6 +21,20 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/setup_deps.py" --check
 ### 1. スキーマと見本を把握する
 - スキーマの正: `${CLAUDE_PLUGIN_ROOT}/references/deck-schema.md`（全スライドタイプ・`style` で上書きできる領域とプロパティ）
 - 全タイプの見本: `${CLAUDE_PLUGIN_ROOT}/examples/template-sample/deck.json`（新規はこれをコピーして書き換えるのが早い）
+
+### 1.2 既存 PPTX を見た目そのままに HTML 化する場合（canvas 型・取り込み専用）
+新規に構成を考えるのではなく「既存の PowerPoint 資料をそのまま HTML にしたい」依頼では、型に当てはめて作り直さず（矢羽根や自由配置の図が崩れる）、`pptx_import.py` で canvas 型に取り込む。canvas は取り込み専用で、新規スライドを canvas で手書きしない（テーマ・共通パーツが効かない）。手順1.5〜2は省略し、次を行う:
+```bash
+python "${CLAUDE_PLUGIN_ROOT}/tools/pptx_import.py" <src.pptx> --into <deck_dir>
+# deck.json が既にある場合は書き込まずに終了する（丸ごと置き換えになるため）。
+# 利用者に置き換えてよいか確認し、承認を得たら --confirm を付けて再実行（元は deck.json.bak に退避される）
+python "${CLAUDE_PLUGIN_ROOT}/tools/build_deck.py" <deck_dir> --html
+python "${CLAUDE_PLUGIN_ROOT}/tools/preview_deck.py" <deck_dir>
+pwsh "${CLAUDE_PLUGIN_ROOT}/tools/export_pptx_png.ps1" -Src <src.pptx> -OutDir <deck_dir>/_work/ref   # Windows + PowerPoint
+python "${CLAUDE_PLUGIN_ROOT}/tools/compare_ref.py" <deck_dir> <deck_dir>/_work/ref
+python "${CLAUDE_PLUGIN_ROOT}/tools/check_layout.py" <deck_dir> --no-build
+```
+`export_pptx_png.ps1` は Windows + PowerPoint がある環境でのみ使える（無ければ比較は省略し、プレビューを目視する）。`build/compare/scores.txt` の差分が大きいスライドから `cmp-NN.png`（上=元、下=HTML）を目視し、ずれは該当要素の座標・文字サイズを deck.json で直す（再取り込みすると手修正は消える点をユーザーに伝える）。プラグインのコード（`pptx_import.py` / `canvas_engine.py`）はその場で書き換えない。ラスタ画像は埋め込まず枠になること、PPTX に再出力すると図形は個別に編集できるが SVG アイコンは画像になることもユーザーに伝える。仕様は deck-schema.md の「canvas」節。
 
 ### 1.5 内容を設計する（デザインの前に構成を決める）
 `${CLAUDE_PLUGIN_ROOT}/references/content-guide.md` を読み、deck.json を書き始める前に**内容そのもの**を設計する。デザイン（配色・レイアウト）が整っていても、構成が悪く根拠のないスライドは伝わらない。

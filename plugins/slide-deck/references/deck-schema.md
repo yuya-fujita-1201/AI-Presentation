@@ -481,6 +481,55 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 
 領域は `area`（2カラムのグリッド。`cols` / `col_gap` / `row_h` / `sym_w` / `label_size` / `desc_size`）と `diagram`（記号の色トークン。`architecture` と同じ語彙＋lifecycle の kind トークン）。色を変えるときは `meta.theme` の切替か `style.diagram.*` で行う。
 
+### `canvas` — 座標指定の自由配置（既存 PPTX の取り込み専用）
+
+テーマのタイトル・罫線・フッターを付けず、1280×720 の座標に図形・文字・表を直接置く。用途は、既存の PowerPoint 資料を**見た目を崩さず** HTML 化すること（矢羽根付きのガントチャートやスイムレーン図など、他のタイプに当てはまらない自由配置の図）に限る。**`tools/pptx_import.py` で生成するもので、新規スライドを canvas で手書きしない**（テーマ切替・共通パーツ・自動レイアウトが効かないため。新規の図解・スケジュールは `architecture` / `schedule` 等を使う）。元 PPTX のマスター上の図形は各スライドの `elements` に展開される。
+
+```json
+{ "type": "canvas", "title": "全体スケジュール", "background": "#FFFFFF", "notes": "（任意）",
+  "elements": [
+    { "x": 280, "y": 280, "w": 51, "h": 21, "geom": "homePlate", "adj": {"adj": 13400},
+      "fill": "#FFFFFF", "line": {"color": "#7F7F7F", "width": 0.75},
+      "text": {"insets": [0, 0, 0, 0], "anchor": "ctr",
+               "paragraphs": [{"align": "ctr", "runs": [{"text": "CRP", "size": 9.33, "color": "#000000", "font": ["Meiryo UI"]}]}]} },
+    { "x": 68, "y": 262, "w": 1153, "h": 0, "geom": "line", "line": {"color": "#919191", "width": 0.75, "dash": "dash"} },
+    { "kind": "table", "x": 40, "y": 250, "w": 1180, "h": 400, "cols": [200, 160], "rows": [ {"h": 40, "cells": [ ... ]} ] },
+    { "kind": "svg", "x": 446, "y": 362, "w": 40, "h": 38, "svg": "<svg ...>…</svg>", "alt": "繰り返し" },
+    { "kind": "placeholder", "x": 128, "y": 0, "w": 528, "h": 321, "label": "画像（スクリーンショット）" }
+  ] }
+```
+
+- 単位はすべて px（文字サイズも px。pt × 4/3）。要素は配列の順に重なる（後ろほど手前）
+- `background` は `#RRGGBB`。色は `"#RRGGBB"` か `{"color": "#RRGGBB", "alpha": 0.5}`（テーマトークンは使わない＝元資料の色をそのまま持つ）。色・`anchor` / `align` / `dash` / `cap` / 矢じりの値・フォント名・パス命令はビルド時に検証され、規定外の値はエラーになる
+- PPTX に出力すると図形・線・表は PowerPoint ネイティブの図形になり、1つずつ編集できる（`svg` / `backdrop` は画像、`group` は解除して子要素を個別に配置）
+
+| kind | 内容 |
+|---|---|
+| `shape`（既定） | 図形。`geom` は `rect`（既定）/ `roundRect` / `ellipse` / `triangle` / `homePlate`（矢羽根）/ `chevron` / `flowChartDecision` / `flowChartMerge` / `flowChartDocument` / `can` / `flowChartMagneticDisk` / `borderCallout1` / `borderCallout2` / 線（`line` / `straightConnector1` / `bentConnector2`〜`5`）/ `custom`（`path` に `{"cmds": [["M",x,y],["L",x,y],["C",…],["Z"]], "fill": bool, "stroke": bool}` の配列）。`adj` は PowerPoint の調整値（`{"adj": 13400}` 等）。`rot`（度）/ `flipH` / `flipV` / `shadow`（`{dx, dy, blur, color}`）も可 |
+| `table` | 表。`cols`（列幅 px）と `rows`（`{"h", "cells"}`）。セルは `paragraphs` / `fill` / `pad`（[左,上,右,下]）/ `anchor`（`t`/`ctr`/`b`）/ `borders`（`l`/`r`/`t`/`b` に線指定）/ `span` / `rowspan` / `merged`（結合で隠れるセル。`"h"` か `"v"`）/ `vert`（縦書き）/ `nowrap`（折り返さない）/ `clip`（はみ出しを隠す） |
+| `svg` | ベクターアイコン（インライン SVG。要素・属性とも許可リスト方式で浄化され、`script` / `foreignObject` / イベント属性 / 外部参照（`#` 以外の href・`url()`）は除去される。DOCTYPE を含むものや解析できないものはエラー。id は衝突しないよう自動で接頭辞が付く）。PPTX では PNG 化して貼る |
+| `backdrop` | 全面背景の写真の近似（`grid`: `{"cols", "rows", "colors": [...]}` の色格子をぼかして描く。画像は埋め込まない） |
+| `placeholder` | 埋め込まない画像の代わりの枠（`label` を中央に表示） |
+| `group` | 回転したグループ（`rot` / `origin`: [cx, cy] / `children`） |
+
+- `fill` は色のほか `{"gradient": {"angle": 90, "stops": [[0, "#…"], [100, "#…"]]}}` / `{"pattern": "ltDnDiag", "fg": "#…", "bg": "#…"}`
+- `line` は `{"color", "width", "dash"（dash/sysDash/sysDot/lgDash…）, "cap", "head"/"tail": {"type": "triangle|arrow|stealth|oval|diamond", "w", "len"}}`
+- `text` は `{"insets": [左,上,右,下], "anchor", "anchorCtr", "wrap": false（折り返しなし）, "vert": true（縦書き）, "rot", "paragraphs": [...]}`。文字は図形ごとの文字領域（楕円なら内接矩形、ひし形なら中央の半分など PowerPoint と同じ）に置かれる
+- 段落は `{"align": "l|ctr|r|just", "lineHeight": 1.0（行間100%の倍率）| "lineHeightPx", "spaceBefore", "spaceAfter", "marL", "indent", "bullet": {"char", "color", "size", "font"}, "runs": [...]}`。ランは `{"text", "size", "bold", "italic", "underline", "strike", "baseline", "color", "highlight", "font": ["Arial", "Meiryo UI"]}` か改行 `{"br": true}`
+
+**取り込み手順**（既存 PPTX → canvas デッキ）:
+```bash
+python tools/pptx_import.py <src.pptx> --into <deck_dir> [--title "…"] [--slides 1 5]
+# ↑ deck.json が既にあると書き込まずに終了する（丸ごと置き換えになるため）。承認後に --confirm を付けて再実行（元は deck.json.bak に退避）
+python tools/build_deck.py <deck_dir> --html
+python tools/preview_deck.py <deck_dir>
+pwsh tools/export_pptx_png.ps1 -Src <src.pptx> -OutDir <deck_dir>/_work/ref   # Windows + PowerPoint で元資料を画像化
+python tools/compare_ref.py <deck_dir> <deck_dir>/_work/ref                  # 上=元・下=HTML の比較画像と差分スコア
+python tools/check_layout.py <deck_dir>                                       # 見切れ・スライド外へのはみ出し
+```
+- ラスタ画像（スクリーンショット等）は埋め込まず `placeholder` にする。SVG アイコンはベクターのまま、全面背景の写真は `backdrop` で近似、埋め込み Excel はブックの表示範囲（`oleSize`）を表にする（`openpyxl` が必要。範囲が 300行 × 60列・6000セルを超える場合は枠になる）
+- `check_layout.py` は canvas では「見切れ（clip）」「スライド外へのはみ出し（bleed）」だけを判定する（重なり等は元資料の配置そのものなので判定しない）
+
 ## 検証（ビルド時にチェックされる内容）
 
 `build_deck.py` はビルド前に deck.json 全体を検証する。**エラー（`error:`）はビルドを停止**し、**警告（`warning:`）はビルドを続けたまま報告**する。メッセージには可能な限り「N枚目（type=xxx）」が含まれるので、報告されたスライド番号から修正箇所を特定できる。

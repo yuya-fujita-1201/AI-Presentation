@@ -111,16 +111,20 @@ def main():
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
         page = browser.new_page(viewport={"width": 1280, "height": 720})
+        page.goto(f"{url}#{nums[0]}")
+        page.wait_for_timeout(400)
+        # 下部ツールバー（#toolbar）とノート欄がスライド下端に重なるため隠す
+        page.evaluate("""() => {
+          for (const id of ['toolbar', 'notes', 'hud']) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+          }
+          window.dispatchEvent(new Event('resize'));
+        }""")
         for n in nums:
-            page.goto(f"{url}#{n}")
-            page.reload()
-            page.wait_for_timeout(250)
-            page.evaluate("""() => {
-              const hud = document.getElementById('hud');
-              const notes = document.getElementById('notes');
-              if (hud) hud.style.display = 'none';
-              if (notes) notes.style.display = 'none';
-            }""")
+            # 1枚ごとにページを読み直すと大きいデッキで遅いので、ビューアの show() で切り替える
+            page.evaluate("(n) => show(n - 1)", n)
+            page.wait_for_timeout(80)
             out = out_dir / f"slide-{n:02d}.png"
             page.screenshot(path=str(out))
             print(f"PNG: {out}")

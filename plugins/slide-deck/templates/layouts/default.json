@@ -5,6 +5,7 @@
     "brand": { "x": 1080, "y": 43, "w": 140, "h": 34, "size": 23, "color": "accent", "bold": true, "align": "right" }
   },
   "types": {
+    "canvas": {},
     "title": {
       "bar":      { "x": 0, "y": 0, "w": 15, "h": 720, "fill": "accent" },
       "title":    { "x": 72, "y": 270, "w": 1136, "h": 150, "size": 60, "color": "heading_text", "bold": true,

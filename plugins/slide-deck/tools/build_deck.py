@@ -47,6 +47,7 @@ CANVAS_W, CANVAS_H = 1280, 720
 # 他ツールから import build_deck されるケースでも解決できるよう明示的に追加する。
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import diagram_engine as de  # noqa: E402
+import canvas_engine as ce  # noqa: E402
 import schedule_engine as se  # noqa: E402
 
 
@@ -1998,6 +1999,14 @@ def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
 
         st = resolve_style(layout, deck, slide)
 
+        if t == "canvas":
+            # canvas は色を hex / {color, alpha} / gradient / pattern で直接持つため、専用の検証のみ行う
+            ce.validate_canvas(slide, i, fail, warn)
+            bg = slide.get("background", "#FFFFFF")
+            if not (isinstance(bg, str) and _HEX_RE.match(bg)):
+                fail(f"{i + 1}枚目（type=canvas）: background は #RRGGBB で指定してください（'{bg}'）")
+            continue
+
         # 色検証: 解決済みスタイル辞書と、スライド生データ（bullets の color 等）の両方を走査
         issues: list = []
         _walk_colors(st, "", theme, i, t, issues)
@@ -2426,7 +2435,11 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             parts.append(div(st["lead"], theme, esc(slide["lead"])))
         parts.append(footer_html(st, deck, theme, page, total))
 
-    if t == "title":
+    if t == "canvas":
+        # 座標指定の自由配置。テーマのクロム（タイトル・罫線・フッター）は付けない
+        parts.append(ce.canvas_html(slide))
+
+    elif t == "title":
         parts.append(rect(st["bar"], theme))
         parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True))
         if slide.get("subtitle"):
@@ -2965,25 +2978,58 @@ html, body { height: 100%; background: #101014; overflow: hidden; }
 }
 .slide.active { display: block; }
 .slide li::marker { color: var(--mk, inherit); }
-#hud {
-  position: fixed; right: 16px; bottom: 12px; color: #9a94ab;
-  font: 13px/1 $F_BODY; user-select: none; z-index: 10;
+#toolbar {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 48px; z-index: 30;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: #1b1b24; color: #c9c3d6; font: 13px/1 $F_BODY; user-select: none;
 }
+#toolbar button {
+  height: 32px; min-width: 40px; padding: 0 14px; border: 1px solid #4a4458; border-radius: 4px;
+  background: #2a2635; color: #fff; font: inherit; cursor: pointer;
+}
+#toolbar button:hover:not(:disabled) { background: $C_ACCENT; border-color: $C_ACCENT; }
+#toolbar button:disabled { opacity: .35; cursor: default; }
+#toolbar input {
+  width: 56px; height: 32px; border: 1px solid #4a4458; border-radius: 4px;
+  background: #fff; color: #1b1b24; font: inherit; text-align: center;
+}
+#toolbar .hint { position: absolute; right: 16px; color: #8a849b; font-size: 12px; }
 #notes {
-  position: fixed; left: 0; right: 0; bottom: 0; max-height: 32vh; overflow: auto;
+  position: fixed; left: 0; right: 0; bottom: 48px; max-height: 32vh; overflow: auto;
   background: rgba(16, 10, 26, 0.94); color: #e6def3; padding: 16px 28px 20px;
   font: 15px/1.7 $F_BODY; z-index: 20; border-top: 2px solid $C_ACCENT;
 }
 #notes .label { color: $C_ACCENT; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+
+/* 一覧表示（body.overview）: 全スライドを縮小グリッドで並べ、クリックでそのスライドを開く */
+body.overview { overflow-y: auto; }
+body.overview #stage {
+  position: static; transform: none !important; width: auto; height: auto;
+  display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 24px;
+  padding: 24px 24px 72px;
+}
+body.overview .slide {
+  position: relative; inset: auto; display: block !important; flex-shrink: 0; cursor: pointer;
+  transform: scale(0.22); transform-origin: top left;
+  /* transform はレイアウト上の大きさを変えないため、縮小分を負のマージンで詰める */
+  margin: 0 calc(${W}px * -0.78) calc(${H}px * -0.78) 0;
+  outline: 10px solid transparent;
+}
+body.overview .slide:hover { outline-color: $C_ACCENT; }
+body.overview .slide::after {
+  content: attr(data-page); position: absolute; left: 0; bottom: 0; z-index: 5;
+  padding: 4px 22px; background: $C_ACCENT; color: #fff; font-size: 64px; font-weight: bold;
+}
+
 @media print {
   /* X-2: #stage の JS 由来の transform（画面フィット用の translate/scale）と、
      body の overflow:hidden/height:100% は、印刷時に複数ページへ正しく流し込む妨げになる
-     ため無効化する（.slide/#hud/#notes だけを print 用にしても、この2つが残ると
+     ため無効化する（.slide/#toolbar/#notes だけを print 用にしても、この2つが残ると
      スライドが縮小・クリップされて壊れた出力になることを Playwright の page.pdf() で確認済み）。*/
   html, body { height: auto !important; overflow: visible !important; background: #fff !important; }
   #stage { position: static !important; top: auto !important; left: auto !important; transform: none !important; width: auto !important; height: auto !important; }
-  .slide { position: relative !important; display: block !important; page-break-after: always; transform: none !important; }
-  #hud, #notes { display: none !important; }
+  .slide { position: relative !important; display: block !important; page-break-after: always; transform: none !important; margin: 0 !important; outline: none !important; }
+  #toolbar, #notes { display: none !important; }
   /* 主要ブラウザは印刷ダイアログの「背景のグラフィック」が既定でOFF（Playwright の
      page.pdf() も printBackground の既定値が false）で、これが無いと背景色で塗られた
      要素（section の全面背景・table のヘッダ色・cards/matrix の塗り・code 背景等、
@@ -2991,38 +3037,85 @@ html, body { height: 100%; background: #101014; overflow: hidden; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
   @page { size: ${W}px ${H}px; margin: 0; }
 }
+$CANVAS_CSS
 </style>
 </head>
 <body>
 <div id="stage">
 $SLIDES
 </div>
-<div id="hud"><span id="pageno"></span>&nbsp;&nbsp;[&larr;/&rarr;] 移動 [N] ノート</div>
+<div id="toolbar">
+  <button type="button" id="btn-prev" title="前へ（←）">&#9664;</button>
+  <input type="number" id="page-input" min="1" max="$TOTAL" aria-label="ページ番号">&nbsp;/&nbsp;$TOTAL
+  <button type="button" id="btn-next" title="次へ（→）">&#9654;</button>
+  <button type="button" id="btn-overview" title="全スライドの一覧（Esc で戻る）">一覧</button>
+  <span class="hint">[&larr;/&rarr;] 移動　[N] ノート　番号入力+Enter でジャンプ</span>
+</div>
 <div id="notes" hidden><div class="label">SPEAKER NOTES</div><div id="notes-body"></div></div>
 <script>
 var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
 var stage = document.getElementById('stage');
-var pageno = document.getElementById('pageno');
+var toolbar = document.getElementById('toolbar');
 var notes = document.getElementById('notes');
 var notesBody = document.getElementById('notes-body');
+var pageInput = document.getElementById('page-input');
+var prevButton = document.getElementById('btn-prev');
+var nextButton = document.getElementById('btn-next');
+var overviewButton = document.getElementById('btn-overview');
 var idx = 0;
 
+function isOverview() { return document.body.classList.contains('overview'); }
+
 function fit() {
+  if (isOverview()) { return; }
   var s = Math.min(window.innerWidth / $W, window.innerHeight / $H);
   stage.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
 }
+
+function setOverview(on) {
+  document.body.classList.toggle('overview', on);
+  overviewButton.textContent = on ? 'スライドに戻る' : '一覧';
+  prevButton.disabled = on || idx === 0;
+  nextButton.disabled = on || idx === slides.length - 1;
+  if (on) { slides[idx].scrollIntoView({ block: 'center' }); }
+  else { fit(); }
+}
+
 function show(i) {
   idx = Math.max(0, Math.min(slides.length - 1, i));
   slides.forEach(function (s, j) { s.classList.toggle('active', j === idx); });
-  pageno.textContent = (idx + 1) + ' / ' + slides.length;
+  pageInput.value = idx + 1;
+  prevButton.disabled = idx === 0;
+  nextButton.disabled = idx === slides.length - 1;
   location.replace('#' + (idx + 1));
   var n = slides[idx].getAttribute('data-notes') || '';
   notesBody.textContent = n || '（このスライドにノートはありません）';
 }
 function toggleNotes() { notes.hidden = !notes.hidden; }
 
+prevButton.addEventListener('click', function () { show(idx - 1); });
+nextButton.addEventListener('click', function () { show(idx + 1); });
+overviewButton.addEventListener('click', function () { setOverview(!isOverview()); });
+pageInput.addEventListener('change', function () {
+  var n = parseInt(pageInput.value, 10);
+  if (isNaN(n)) { pageInput.value = idx + 1; return; }
+  show(n - 1);
+  setOverview(false);
+  pageInput.blur();
+});
+stage.addEventListener('click', function (e) {
+  if (!isOverview()) { return; }
+  var slide = e.target.closest('.slide');
+  if (!slide) { return; }
+  show(slides.indexOf(slide));
+  setOverview(false);
+});
+
 window.addEventListener('resize', fit);
 window.addEventListener('keydown', function (e) {
+  if (e.target === pageInput) { return; }
+  if (e.key === 'Escape' && isOverview()) { setOverview(false); return; }
+  if (isOverview()) { return; }
   if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { show(idx + 1); e.preventDefault(); }
   else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(idx - 1); e.preventDefault(); }
   else if (e.key === 'Home') { show(0); }
@@ -3030,7 +3123,8 @@ window.addEventListener('keydown', function (e) {
   else if (e.key === 'n' || e.key === 'N') { toggleNotes(); }
 });
 window.addEventListener('click', function (e) {
-  if (notes.contains(e.target)) { return; }
+  if (isOverview()) { return; }
+  if (notes.contains(e.target) || toolbar.contains(e.target)) { return; }
   if (e.clientX > window.innerWidth / 2) { show(idx + 1); } else { show(idx - 1); }
 });
 
@@ -3044,6 +3138,8 @@ show(isNaN(start) ? 0 : start - 1);
 
 
 def slide_bg(slide, st, theme):
+    if slide.get("type") == "canvas":
+        return slide.get("background", "#FFFFFF")
     if "bg" in st:
         return col(theme, st["bg"].get("fill", "primary"))
     return col(theme, "background")
@@ -3065,7 +3161,7 @@ def build_html(deck, theme, layout, deck_dir: Path, out_path: Path):
         aria_label = f"{i + 1} / {total}: {title_txt}" if title_txt else f"{i + 1} / {total}"
         rendered.append(
             f'<section class="slide" aria-label="{esc(aria_label)}" '
-            f'style="background:{bg};color:{col(theme, "text")};"'
+            f'style="background:{bg};color:{col(theme, "text")};" data-page="{i + 1}" data-type="{esc(slide.get("type", ""))}"'
             f"{notes_attr}>{body}</section>"
         )
     doc = HTML_TEMPLATE.safe_substitute(
@@ -3074,6 +3170,8 @@ def build_html(deck, theme, layout, deck_dir: Path, out_path: Path):
         W=str(CANVAS_W), H=str(CANVAS_H),
         C_ACCENT=col(theme, "accent"),
         F_BODY=font_css(theme["fonts"]["body"]),
+        TOTAL=str(total),
+        CANVAS_CSS=ce.CANVAS_CSS if any(s.get("type") == "canvas" for s in slides) else "",
     )
     try:
         out_path.write_text(doc, encoding="utf-8")
@@ -4409,7 +4507,47 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         if len(group_shapes) > 1:
             slide.shapes.add_group_shape(group_shapes)
 
+    canvas_cache = deck_dir / "build" / "_canvas_cache"
+
+    def _canvas_svg_png(el):
+        canvas_cache.mkdir(parents=True, exist_ok=True)
+        import hashlib
+        key = hashlib.sha1(el["svg"].encode("utf-8")).hexdigest()[:16]
+        png = canvas_cache / f"svg_{key}_{int(el['w'])}x{int(el['h'])}.png"
+        if not png.exists():
+            src = canvas_cache / f"svg_{key}.svg"
+            svg = re.sub(r"<svg\b", f'<svg width="{el["w"]}" height="{el["h"]}" preserveAspectRatio="none"',
+                         el["svg"], count=1)
+            src.write_text(svg, encoding="utf-8")
+            try:
+                svg_to_png(src, png, browser)
+            except Exception as e:  # noqa: BLE001
+                warn(f"canvas の SVG を PNG 化できませんでした（{e}）。PPTX では省略します")
+                return None
+        return png
+
+    def _canvas_backdrop_png(el):
+        try:
+            from PIL import Image, ImageFilter
+        except ImportError:
+            return None
+        canvas_cache.mkdir(parents=True, exist_ok=True)
+        g = el["grid"]
+        im = Image.new("RGB", (g["cols"], g["rows"]))
+        im.putdata([tuple(int(c[k:k + 2], 16) for k in (1, 3, 5)) for c in g["colors"]])
+        im = im.resize((int(el["w"]), int(el["h"])), Image.BICUBIC).filter(ImageFilter.GaussianBlur(el["w"] / g["cols"] * 0.6))
+        import hashlib
+        png = canvas_cache / f"bd_{hashlib.sha1(''.join(g['colors']).encode()).hexdigest()[:16]}.png"
+        im.save(png)
+        return png
+
+    def s_canvas(slide, d, st, page, total):
+        bg = d.get("background", "#FFFFFF")
+        els = [{"kind": "shape", "x": 0, "y": 0, "w": CANVAS_W, "h": CANVAS_H, "fill": bg, "name": "背景"}]
+        ce.add_canvas_to_pptx(slide, els + d.get("elements", []), _canvas_svg_png, _canvas_backdrop_png)
+
     builders = {
+        "canvas": s_canvas,
         "title": s_title, "section": s_section, "bullets": s_bullets,
         "two_column": s_two_column, "table": s_table, "status_table": s_status_table, "code": s_code,
         "quote": s_quote, "image": s_image, "image_text": s_image_text,
@@ -4427,8 +4565,9 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
     # M-25: デッキ内に SVG 画像があるときだけ Playwright/Chromium を1回起動し、
     # 全スライド分の svg_to_png() で使い回す（1点ごとの再起動を防ぐ）。
     needs_svg = any(
-        d.get("type") in ("image", "image_text")
-        and str(d.get("path", "")).lower().endswith(".svg")
+        (d.get("type") in ("image", "image_text")
+         and str(d.get("path", "")).lower().endswith(".svg"))
+        or (d.get("type") == "canvas" and any(e.get("kind") == "svg" for e in ce.flatten(d.get("elements", []))))
         for d in slides
     )
     browser = None
@@ -4443,7 +4582,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         for i, data in enumerate(slides):
             st = resolve_style(layout, deck, data)
             slide = prs.slides.add_slide(blank)
-            if "bg" not in st:
+            if "bg" not in st and data["type"] != "canvas":
                 add_rect(slide, 0, 0, CANVAS_W, CANVAS_H, C("background"))
             builders[data["type"]](slide, data, st, i + 1, total)
             if deck.get("meta", {}).get("brand") and "brand" in st:

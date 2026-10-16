@@ -89,6 +89,16 @@ python tools/archify_import.py <archify.json> --into <deck_dir> --confirm  # 承
 > 既存ファイルがある場合、`--confirm` を付けないと書き込まずに終了し（exit 1）、追記される内容だけを出力する。
 > **`--confirm` を付ける前に、その内容を利用者に提示して明示的な承認を得ること。**
 > 上書きせずに結果だけ欲しいときは `--out <file>` を使う。
+
+```bash
+# 既存 PPTX を見た目そのままに canvas 型デッキへ取り込む（取り込み専用。新規作成には使わない）
+python tools/pptx_import.py <src.pptx> --into <deck_dir>            # deck.json が既にあれば書き込まずに終了
+python tools/pptx_import.py <src.pptx> --into <deck_dir> --confirm  # 承認後に置き換え（元は deck.json.bak に退避）
+# 元 PPTX を PNG 化（Windows + PowerPoint）→ プレビューと並べて比較
+pwsh tools/export_pptx_png.ps1 -Src <src.pptx> -OutDir <deck_dir>/_work/ref
+python tools/compare_ref.py <deck_dir> <deck_dir>/_work/ref
+```
+> ⚠️ `pptx_import.py --into` は deck.json を**丸ごと置き換える**（追記ではない）。既存ファイルがある場合は `--confirm` が無いと書き込まない。
 `python` が無ければ `python3`（Windows は `py -3`）に読み替える。コマンド自体は PowerShell / Git Bash のどちらでも同じもので動く（`cd` の区切り文字はどちらもそのままで可）。
 
 ## 構成
@@ -101,7 +111,9 @@ plugins/slide-deck/
 ├── tools/                       # build_deck / preview_deck / check_layout / check_svg_fonts /
 │                                 #   lint_deck_text / deck_metrics / contact_sheet / check_theme /
 │                                 #   export_pdf / new_theme / theme_from_sample / setup_deps /
-│                                 #   diagram_engine / schedule_engine / check_diagram / archify_import
+│                                 #   diagram_engine / schedule_engine / check_diagram / archify_import /
+│                                 #   canvas_engine / pptx_import / pptx_import_excel /
+│                                 #   compare_ref / export_pptx_png.ps1
 ├── templates/                   # themes/（default, accenture-purple） layouts/（default）
 ├── references/                  # deck-schema.md（スキーマ） themes.md（テーマ）
 │                                 #   content-guide.md（コンテンツ） diagram-guide.md（図解の描き方）
@@ -127,8 +139,18 @@ plugins/slide-deck/
 
 参考: 「ArchifyでAIに図を描かせる新しいやり方」（クロノITチャンネル, https://www.youtube.com/watch?v=L2KPenldwdo ）
 
+## 既存 PPTX の取り込み（`canvas` 型）
+
+- **`canvas` 型**: 1280×720 の座標に図形（矢羽根・フローチャート記号・コネクタ・矢印等）・文字・表・SVG アイコンを直接置く**取り込み専用**のスライドタイプ。既存 PowerPoint 資料を見た目のまま HTML 化するためのもので、テーマ（色・フォント）とタイトル・罫線・フッターは適用されない。新規スライドは他のタイプで作る。仕様は [`references/deck-schema.md`](references/deck-schema.md) の「canvas」節
+- **`tools/pptx_import.py`**: 既存 PPTX を canvas 型の deck.json に変換する。プレースホルダー/マスター/既定スタイルの継承、表スタイル、色マッピングの上書き、図形ごとの文字領域を PowerPoint と同じ規則で解決する。マスター上の図形は各スライドに展開される。ラスタ画像は埋め込まず枠（placeholder）にする。埋め込み Excel の表化には `openpyxl`（任意）が必要
+- **PPTX への再出力**: 図形・線・表は PowerPoint ネイティブの図形として出力され、1つずつ編集できる（SVG アイコンは PNG 画像、グループは解除）
+- **`tools/compare_ref.py` / `tools/export_pptx_png.ps1`**: 元 PPTX の画像とプレビューを並べた比較画像と差分スコアを出す
+- HTML ビューアに下部ツールバー（前後移動・ページ番号ジャンプ・一覧表示）を追加。`preview_deck.py` / `check_layout.py` はツールバーを隠して撮影し、1枚ごとの再読み込みをやめて高速化。`check_layout.py` は canvas では見切れ・スライド外へのはみ出しのみを判定する
+
+原案はチームメンバーによる v2.0.0 提案（canvas 型と PPTX 取り込み）。取り込み時に、注入対策（色・フォント・SVG の検証と許可リスト方式のサニタイズ）、`--into` の承認ゲート、XML パーサの安全化、Excel 取り込み範囲の上限を追加した。
+
 ## 設計上の注意
 
 - **PPTX にスピーカーノートを出力しない**（python-pptx の notes_slide は macOS Keynote 互換性を壊す）。`notes` は HTML 側でのみ表示。
-- 色は hex 直書きせずテーマトークンで指定。テーマ切替は `meta.theme` のみ。
+- 色は hex 直書きせずテーマトークンで指定。テーマ切替は `meta.theme` のみ。（例外: 取り込み専用の `canvas` 型は元資料の色をそのまま hex で持つ）
 - 生成物（`build/`）は直接編集せず、deck.json を直して再ビルドする。
