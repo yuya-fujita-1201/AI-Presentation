@@ -58,7 +58,7 @@
 
 全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）、`relation`、`line_balance`。提案書向けタイプでは結論の帯 `conclusion` と出典の行 `source` も使える（下記「提案書向けタイプ共通」）。
 
-- `relation`（任意）: そのスライドで見せる内容の関係。描画には使わず、`lint_deck_text.py` がタイプとの不一致を警告する。値と合うタイプ: `parallel`（並列）→ cards / bullets / two_column / table / matrix / image_text / status_table / summary / row_matrix、`sequence`（順序）→ steps / swimlane / schedule / sequence / dataflow / agenda / row_matrix、`flow`（流れ）→ dataflow / swimlane / steps / sequence / architecture、`hierarchy`（階層）→ architecture / bullets / table / org、`cause`（因果）→ steps / dataflow / two_column / bullets / reasons、`contrast`（対比）→ two_column / table / matrix / status_table / reasons / row_matrix、`cycle`（循環）→ lifecycle
+- `relation`（任意）: そのスライドで見せる内容の関係。描画には使わず、`lint_deck_text.py` がタイプとの不一致を警告する。値と合うタイプ: `parallel`（並列）→ cards / bullets / two_column / table / matrix / image_text / status_table / summary / row_matrix / house、`sequence`（順序）→ steps / swimlane / schedule / sequence / dataflow / agenda / row_matrix、`flow`（流れ）→ dataflow / swimlane / steps / sequence / architecture、`hierarchy`（階層）→ architecture / bullets / table / org / house / kpi_tree、`cause`（因果）→ steps / dataflow / two_column / bullets / reasons、`contrast`（対比）→ two_column / table / matrix / status_table / reasons / row_matrix、`cycle`（循環）→ lifecycle / cycle
 - `line_balance`（任意）: `false` でそのスライドの泣き別れ対策を止める。既定では `title` / `subtitle` / `lead` / `punch` / `message` と箇条書き（bullets / closing / image_text / two_column）の最終行が1〜2文字になるとき、ビルド時に文節の切れ目（助詞・読点の後など）で改行を入れる。改行（`\n`）を書いてある文字列は触らない
 
 `eyebrow`（タイトル上の小さなサブタイトル。15px・アクセント色・太字。章や系列の目印に使う）は、見出し（`chrome()`）を持つほぼ全タイプで指定できる: `bullets` / `two_column` / `table` / `code` / `image` / `image_text` に加え `agenda` / `steps` / `matrix` / `cards` / `swimlane` / `architecture` / `dataflow` / `lifecycle` / `sequence` でも使える（`title` / `section` / `quote` / `closing` のような固有レイアウトのタイプは対象外）。
@@ -139,6 +139,14 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 - 行の高さはセル内容から自動計算し、`table.fill_height`（既定 true）なら表の高さ（`table.h`）いっぱいまで比例配分する。内容が収まらない見込みならビルド時に warning。
 - 領域: `title`（凡例と重ならないよう既定幅 690px）, `rule`, `lead`, `legend`, `table`（`col_widths` / `header_h` / `cell_size` / `label_size` / `status_size` / `indent` / `border_color` / `check_char` / `bullet_char` / `heading_underline` 等）, `footer_l/r`。
 - 1枚3行程度が目安。PPTX は PowerPoint のネイティブ表として出力されるので、文字や信号の色を PowerPoint 上でも編集できる。
+
+### 既存タイプの拡張（提案書の型に合わせたオプション）
+- `agenda`: 項目に `desc`（説明文）を書くと、項目名の下に小さく説明が入る（行の高さは自動で 64px に広がる）。`{"text": "背景と目的", "desc": "…"}`
+- `table`: `row_header: true` で1列目を行見出し（淡い色の塗り・太字）、`total_row: true` で最終行を合計行（`surface` 塗り・太字）にする。色は `style.table.label_fill` / `total_fill` / `label_color`
+- `two_column`: `connector: "arrow"` で左右の箱の間に灰色の三角（左から右への流れ・因果）を置く（目的 → 骨子など）
+- `steps`: `header_style: "arrow"` で見出しを工程の矢羽根（先頭は五方向、2つ目以降は山形）にし、間の「›」をなくす
+- `matrix`: `points: [{"label": "本番ガード", "x": 0.8, "y": 0.9, "highlight": true, "n": 1}]` で格子の上に項目を番号付きの点で置く（`x` は右、`y` は上ほど大きい 0〜1）。散布して優先度を見せるときに使う
+- `code`: `annotations: [{"line": 6, "title": "確認", "text": "…"}]` で右に番号付きの注釈を並べ、該当行に同じ番号の丸と左端の印を付ける（コードの幅は自動で6割に狭まり、文字は横幅にも収まるよう縮む）
 
 ### `code` — コード / 設定例
 ```json
@@ -456,12 +464,12 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 
 診断は `check_diagram.py` で確認できる（スキーマ的な誤りはビルドエラー、文字あふれ・重なりは警告）。
 
-### 提案書向けタイプ共通（`summary` / `reasons` / `statement` / `row_matrix` / `org`）
+### 提案書向けタイプ共通（`summary` / `reasons` / `statement` / `row_matrix` / `org` / `house` / `cycle` / `kpi_tree`）
 
 提案書・報告書の定型ページを、人が作った提案書と同じ型で描くタイプ。レイアウトは `tools/proposal_engine.py` が計算し、HTML と PPTX の両方でネイティブ図形（PowerPoint では四角・矢羽根・線を1つずつ編集できる）になる。文字の大きさはテーマのフォントの実測字幅で行数を見積もり、枠に収まる最大のサイズを自動で選ぶ。`statement` 以外はタイトル・罫線・リード・フッターを持ち、本文は `body` 領域（lead が無ければ `y_no_lead` まで上に詰める）に描く。色・寸法は `style.body.<トークン>` で上書きできる（トークン名は `templates/layouts/default.json` の各タイプの `body`）。
 
-**共通パーツ**（いまは提案書向けタイプで使える）:
-- `conclusion`: 本文の下に結論の帯（`primary` 塗り・白抜き太字・中央揃え）を付ける。帯の分だけ本文が上に詰まる。見た目は `style.conclusion`（`h` / `gap` / `size` / `fill` / `color`）
+**共通パーツ**（`title` / `section` / `quote` / `closing` / `canvas` / `statement` 以外の全タイプで使える）:
+- `conclusion`: 本文の下に結論の帯（`primary` 塗り・白抜き太字・中央揃え）を付ける。帯の分だけ本文の領域が上に詰まる（既存タイプでは本文の領域の高さを、`table` では行の高さを自動で詰める）。見た目は `style.conclusion`（`h` / `gap` / `size` / `fill` / `color`）
 - `source`: 本文の下に出典の行（12px・`muted`）を付ける。試算値は「試算の前提: …」と書く。見た目は `style.source`
 
 ### `summary` — 要旨（番号の箱＋要点＋説明の行）
@@ -507,6 +515,30 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
   "links": [ { "from": "po", "to": "apm", "label": "ステアリング" } ] }
 ```
 左右（片方だけでも可）に組織のツリーを描く。ノードは `id` と `parent`（同じ側の親の id）で親子を表し、見出し帯（左は `muted`、右は `primary`）＋本文（`name` / `members`）の箱になる。親子はカギ線で結ぶ。`scope` を書いた側は破線の枠で囲み、文字列なら札（既定「ご支援範囲」）を付ける。`links` は組織をまたぐ連携（点線＋ラベル）。id の重複・存在しない parent / links はビルドエラー。目安: 各側 **3階層・1段4ノード以内**。
+
+### `house` — 全体像（屋根・柱・土台）
+```json
+{ "type": "house", "title": "ご提案の全体像",
+  "roof": { "title": "目指す姿｜安全に増やせるmod基盤", "text": "（任意）補足" },
+  "pillars": [ { "title": "① 統制", "items": ["入口を絞る", "成果物: 方針書"] }, { "title": "② 構築", "text": "本文でも可" } ],
+  "foundations": [ { "title": "土台", "text": "管理設定の配布" }, "文字列も可" ] }
+```
+屋根（台形の帯に目指す姿）、柱（見出し帯＋箇条書きの列）、土台（全幅の帯。最後が一番下）で提案の全体像を示す。柱の文字は収まる大きさに自動で縮む。目安: **柱3〜4本**（6本以上は警告）。
+
+### `cycle` — 循環（中央の円＋円弧の矢印＋段のパネル）
+```json
+{ "type": "cycle", "title": "定着の仕組み", "center": "毎月",
+  "stages": [ { "title": "計測", "items": ["使用状況", "失敗"] }, { "title": "改善", "text": "本文でも可" }, { "title": "審査" }, { "title": "配布" } ] }
+```
+中央に円弧の矢印の輪（番号丸つき）、左右に段のパネルを置く。右列が前半（上から）、左列が後半（下から）で、時計回りに読める。`center` は輪の中央の文字（任意）。目安: **3〜6段**（2段以下はビルドエラー、7段以上は警告）。
+
+### `kpi_tree` — KPI ツリー（目標 → 方向性 → KPI＋目標値＋測り方）
+```json
+{ "type": "kpi_tree", "title": "期待する効果とKPI", "root": "mod基盤の価値",
+  "headers": ["目標", "施策の方向性", "KPIと目標値", "", "測り方・具体例"],
+  "branches": [ { "title": "止める（統制）", "kpis": [ { "title": "未承認modの稼働を無くす", "value": "0台", "note": "月次で棚卸し" } ] } ] }
+```
+左の目標から施策の方向性へ、方向性から KPI の行へカギ線でつなぎ、各 KPI に目標値（大きな数字）と測り方を添える。`headers` は列の見出し（4つ目は目標値の列で通常は空）。`note` の代わりに `items`（箇条書き）も可。目安: **KPI 6行以内**。
 
 ### `diagram_legend` — 図解タイプの凡例ページ
 ```json

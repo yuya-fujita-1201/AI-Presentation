@@ -106,14 +106,14 @@ class SampleDeckBuildTests(unittest.TestCase):
         self.assertTrue(all(f is False for f in flags), msg=f"has_notes_slide: {flags}")
 
     def test_slide_count_matches_expand_slides_and_is_26(self):
-        """deck.json は21枚。swimlane の凡例(+1)と、図解4タイプの legend_page 自動挿入(+4)で
-        PPTX は26枚になる想定（schedule / status_table は凡例ページを挿入しない）。"""
+        """deck.json は29枚。swimlane の凡例(+1)と、図解4タイプの legend_page 自動挿入(+4)で
+        PPTX は34枚になる想定（schedule / status_table / 提案書向けタイプは凡例ページを挿入しない）。"""
         from pptx import Presentation
         prs = Presentation(str(self.pptx_path))
         deck, _theme, layout = build_deck.load_deck(SAMPLE_DECK)
         expanded = build_deck.expand_slides(deck, layout)
         self.assertEqual(len(expanded["slides"]), len(prs.slides))
-        self.assertEqual(len(expanded["slides"]), 31)
+        self.assertEqual(len(expanded["slides"]), 34)
 
 
 class ManualDeckBuildTests(unittest.TestCase):

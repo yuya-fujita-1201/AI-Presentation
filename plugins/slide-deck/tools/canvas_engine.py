@@ -969,7 +969,8 @@ def add_canvas_to_pptx(slide, elements, png_for_svg=None, png_for_backdrop=None)
     from pptx.oxml import parse_xml
     from pptx.util import Emu
     tree = slide.shapes._spTree
-    sid = 100
+    # 同じスライドに何度追加しても図形 ID が重ならないよう、既存の最大 ID の次から振る
+    sid = max([100] + [int(v) for v in tree.xpath(".//p:cNvPr/@id") if str(v).isdigit()])
     for el in flatten(sanitize_elements(elements)):
         sid += 1
         k = el.get("kind", "shape")

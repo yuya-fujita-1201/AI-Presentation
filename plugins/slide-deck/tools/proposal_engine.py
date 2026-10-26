@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import ja_text
 
-PROPOSAL_TYPES = ("summary", "reasons", "statement", "row_matrix", "org")
+PROPOSAL_TYPES = ("summary", "reasons", "statement", "row_matrix", "org", "house", "cycle", "kpi_tree")
 LINE_H = 1.2          # canvas_engine.LINE_HEIGHT と同じ（行の高さ = 文字サイズ × 1.2 × lineHeight）
 PARA_LH = 1.15        # 本文段落の行間（lineHeight）
 
@@ -137,6 +137,20 @@ def as_items(v) -> list:
 # 本文領域と共通パーツ（結論帯・出典）
 # ---------------------------------------------------------------------------
 
+CONTENT_BOTTOM = 644   # 本文の下端（フッターの上）。結論帯・出典はここから上に積む
+
+
+def reserve(slide: dict, st: dict) -> float:
+    """結論帯・出典のために本文の下から空ける高さ（px）。"""
+    r = 0.0
+    if slide.get("conclusion"):
+        cb = st.get("conclusion", {})
+        r += cb.get("h", 40) + cb.get("gap", 12)
+    if slide.get("source"):
+        r += st.get("source", {}).get("reserve", 20)
+    return r
+
+
 def body_region(slide: dict, st: dict) -> dict:
     """本文を描ける矩形。lead が無ければ上に詰め、結論帯・出典の分を下から差し引く。"""
     b = dict(st.get("body", {"x": 72, "y": 192, "w": 1136, "h": 452}))
@@ -144,31 +158,138 @@ def body_region(slide: dict, st: dict) -> dict:
         bottom = b["y"] + b["h"]
         b["y"] = b["y_no_lead"]
         b["h"] = bottom - b["y"]
-    cb = st.get("conclusion", {})
-    if slide.get("conclusion"):
-        b["h"] -= cb.get("h", 40) + cb.get("gap", 12)
-    if slide.get("source"):
-        b["h"] -= st.get("source", {}).get("reserve", 20)
+    b["h"] -= reserve(slide, st)
     return b
 
 
 def common_parts(slide: dict, st: dict, ctx: Ctx, body: dict) -> list:
-    """下端の結論帯（conclusion）と出典の行（source）。"""
+    """下端の結論帯（conclusion）と出典の行（source）。body は結論帯の分を差し引いた本文の矩形。"""
     out = []
+    y = body["y"] + body["h"]
     if slide.get("conclusion"):
         cb = st.get("conclusion", {})
-        y = body["y"] + body["h"] + cb.get("gap", 12)
+        y += cb.get("gap", 12)
         out.append(ctx.box(body["x"], y, body["w"], cb.get("h", 40), fill=cb.get("fill", "primary"),
                            paras=[ctx.para(slide["conclusion"], cb.get("size", 17), cb.get("color", "on_primary"),
                                            bold=True, head=True, align="ctr")],
                            anchor="ctr", insets=(16, 2, 16, 2), name="結論"))
+        y += cb.get("h", 40)
     if slide.get("source"):
         sr = st.get("source", {})
-        y = body["y"] + body["h"] + (st.get("conclusion", {}).get("h", 40) + st.get("conclusion", {}).get("gap", 12)
-                                     if slide.get("conclusion") else 0) + 4
-        out.append(ctx.box(body["x"], y, body["w"], sr.get("h", 18),
+        out.append(ctx.box(body["x"], y + 4, body["w"], sr.get("h", 18),
                            paras=[ctx.para(slide["source"], sr.get("size", 12), sr.get("color", "muted"), lh=1.0)],
                            anchor="t", name="出典"))
+    return out
+
+
+# 結論帯・出典を付けられない（全面・固有レイアウトの）タイプ
+NO_BOTTOM_PARTS = {"title", "section", "quote", "closing", "canvas", "statement"}
+# 本文の高さを詰めるときに触らない領域（タイトルまわり・フッター）
+CHROME_REGIONS = {"eyebrow", "title", "rule", "lead", "footer_l", "footer_r", "brand", "conclusion", "source", "legend"}
+
+
+def shrink_for_bottom(slide: dict, st: dict) -> dict:
+    """既存タイプで結論帯・出典を付けるとき、本文の領域の下端を詰める（resolve_style から呼ぶ）。"""
+    t = slide.get("type")
+    r = reserve(slide, st)
+    if not r or t in NO_BOTTOM_PARTS or t in PROPOSAL_TYPES:
+        return st
+    limit = CONTENT_BOTTOM - r
+    for name, reg in st.items():
+        if name in CHROME_REGIONS or not isinstance(reg, dict) or "y" not in reg:
+            continue
+        lim = limit - (46 if (t == "matrix" and name == "grid") else 0)   # matrix は格子の下に軸ラベルがある
+        if "h" in reg and reg["y"] + reg["h"] > lim:
+            reg["h"] = max(lim - reg["y"], 40)
+        if name == "table" and "row_h" in reg:
+            # 表は行の高さで決まるので、収まらなければ行を詰める（下限は文字の高さ程度）
+            n = len(slide.get("rows", []) or [])
+            if n and reg["y"] + reg.get("header_h", 0) + reg["row_h"] * n > limit:
+                reg["row_h"] = max((limit - reg["y"] - reg.get("header_h", 0)) / n, reg.get("cell_size", 16) * 1.6)
+    return st
+
+
+def extras(slide: dict, st: dict, theme: dict) -> list:
+    """既存タイプに重ねて描く追加の要素（結論帯・出典、two_column の三角、matrix の点、code の注釈）。"""
+    t = slide.get("type")
+    if t in PROPOSAL_TYPES or t == "canvas":
+        return []
+    ctx = Ctx(theme)
+    out = []
+    if t == "two_column" and slide.get("connector") in ("arrow", "triangle"):
+        lb, rb = st.get("left", {}), st.get("right", {})
+        gx = lb.get("x", 72) + lb.get("w", 548)
+        gw = rb.get("x", 660) - gx
+        cy = lb.get("y", 192) + lb.get("h", 452) / 2
+        tw = max(min(gw - 10, 26), 10)
+        out.append(ctx.tri_right(gx + (gw - tw) / 2, cy - 22, tw, 44, "border", name="流れ"))
+    if t == "matrix" and slide.get("points"):
+        out += matrix_points(slide, st, ctx)
+    if t == "code" and slide.get("annotations"):
+        out += code_annotations(slide, st, ctx)
+    if t not in NO_BOTTOM_PARTS and (slide.get("conclusion") or slide.get("source")):
+        r = reserve(slide, st)
+        body = {"x": 72, "y": CONTENT_BOTTOM - r, "w": 1136, "h": 0}
+        out += common_parts(slide, st, ctx, body)
+    return out
+
+
+def matrix_points(slide: dict, st: dict, ctx: Ctx) -> list:
+    """2×2 マトリクスの上に項目を点で置く（x・y は 0〜1。x は右、y は上ほど大きい）。"""
+    g = st.get("grid", {})
+    gx, gy, gw, gh = g.get("x", 172), g.get("y", 208), g.get("w", 1000), g.get("h", 372)
+    d = 26
+    out = []
+    for k, pt in enumerate(slide.get("points", [])):
+        if not isinstance(pt, dict):
+            continue
+        px = gx + min(max(float(pt.get("x", 0.5)), 0), 1) * gw
+        py = gy + (1 - min(max(float(pt.get("y", 0.5)), 0), 1)) * gh
+        hi = bool(pt.get("highlight"))
+        out.append(ctx.box(px - d / 2, py - d / 2, d, d, geom="ellipse", fill="accent" if hi else "primary",
+                           line="background", line_w=1.5,
+                           paras=[ctx.para(str(pt.get("n", k + 1)), 13, "on_primary", bold=True, align="ctr", lh=1.0)],
+                           anchor="ctr", name=f"点{k + 1}"))
+        if pt.get("label"):
+            left = px > gx + gw * 0.75
+            lw = 200
+            out.append(ctx.box(px - d / 2 - 6 - lw if left else px + d / 2 + 6, py - 11, lw, 22,
+                               paras=[ctx.para(pt["label"], 14, "heading_text", bold=hi, align="r" if left else "l",
+                                               lh=1.0)], anchor="ctr", name=f"点{k + 1}の名前"))
+    return out
+
+
+def code_annotations(slide: dict, st: dict, ctx: Ctx) -> list:
+    """コードの右に番号付きの注釈を並べ、該当行に同じ番号の丸と左端の印を置く。"""
+    import build_deck   # 循環 import を避けて遅延 import（コードの文字サイズは build_deck と同じ計算を使う）
+    r = st.get("code", {})
+    size, _ = build_deck.fit_code_size(slide.get("code", ""), r)
+    lh = r.get("line_height", 1.45)
+    pad = r.get("pad", 28)
+    nx = r["x"] + r["w"] + 34   # コードと注釈の間に、行の番号丸を置く溝を空ける
+    nw = 72 + 1136 - nx
+    anns = [a for a in slide.get("annotations", []) if isinstance(a, dict)]
+    out = []
+    n = max(len(anns), 1)
+    gap = 10
+    nh = min((r["h"] - gap * (n - 1)) / n, 120)
+    for k, a in enumerate(anns):
+        line = int(a.get("line", 0) or 0)
+        if line > 0:
+            ly = r["y"] + pad + (line - 1) * size * lh + size * lh / 2
+            if ly < r["y"] + r["h"] - 8:
+                out.append(ctx.box(r["x"] + r["w"] + 1, ly - 11, 22, 22, geom="ellipse", fill="accent",
+                                   paras=[ctx.para(str(k + 1), 12, "on_primary", bold=True, align="ctr", lh=1.0)],
+                                   anchor="ctr", name=f"注釈の行{k + 1}"))
+                out.append(ctx.box(r["x"] + 8, ly - size * lh / 2, 4, size * lh, fill="accent", name=f"注釈の印{k + 1}"))
+        y = r["y"] + k * (nh + gap)
+        out.append(ctx.box(nx, y + 2, 26, 26, geom="ellipse", fill="accent",
+                           paras=[ctx.para(str(k + 1), 13, "on_primary", bold=True, align="ctr", lh=1.0)],
+                           anchor="ctr", name=f"注釈番号{k + 1}"))
+        paras = [ctx.para(a.get("title", ""), 16, "heading_text", bold=True, head=True, after=3 if a.get("text") else 0)]
+        if a.get("text"):
+            paras.append(ctx.para(a["text"], 14, "text"))
+        out.append(ctx.box(nx + 36, y, nw - 36, nh, paras=paras, anchor="t", name=f"注釈{k + 1}"))
     return out
 
 
@@ -539,12 +660,285 @@ def layout_org(slide, st, ctx, body):
     return out
 
 
+# ---------------------------------------------------------------------------
+# house — 全体像（屋根＝目指す姿 / 柱＝取り組み / 土台＝基盤）
+# ---------------------------------------------------------------------------
+
+def layout_house(slide, st, ctx, body):
+    g = st.get("body", {})
+    roof = slide.get("roof") or {}
+    roof = roof if isinstance(roof, dict) else {"title": str(roof)}
+    pillars = slide.get("pillars", []) or []
+    founds = [f if isinstance(f, dict) else {"title": str(f)} for f in slide.get("foundations", []) or []]
+    gap = g.get("gap", 10)
+    roof_h = g.get("roof_h", 84) if roof else 0
+    found_h = g.get("found_h", 36)
+    fz = len(founds) * (found_h + gap)
+    out = []
+    x0, w = body["x"], body["w"]
+    if roof:
+        inset = g.get("roof_inset", 40)
+        # 屋根は台形（左右の斜辺＋上辺）。文字は中央の帯に置く
+        out.append({"kind": "shape", "geom": "custom", "x": round(x0, 2), "y": round(body["y"], 2), "w": round(w, 2),
+                    "h": round(roof_h, 2), "fill": ctx.c(g.get("roof_fill", "primary")), "name": "屋根",
+                    "path": [{"cmds": [["M", 0, round(roof_h, 2)], ["L", inset * 3, 0], ["L", round(w - inset * 3, 2), 0],
+                                       ["L", round(w, 2), round(roof_h, 2)], ["Z"]], "fill": True, "stroke": False}]})
+        paras = [ctx.para(roof.get("title", ""), g.get("roof_size", 20), g.get("roof_color", "on_primary"), bold=True,
+                          head=True, align="ctr", lh=1.1, after=2 if roof.get("text") else 0)]
+        if roof.get("text"):
+            paras.append(ctx.para(roof["text"], g.get("roof_sub_size", 14), g.get("roof_sub_color", "on_primary_soft"),
+                                  align="ctr", lh=1.1))
+        out.append(ctx.box(x0 + inset * 3, body["y"] + 6, w - inset * 6, roof_h - 8, paras=paras, anchor="ctr",
+                           name="屋根の文字"))
+    top = body["y"] + roof_h + (gap if roof else 0)
+    ph = body["y"] + body["h"] - top - fz
+    n = max(len(pillars), 1)
+    pgap = g.get("pillar_gap", 12)
+    pw = (w - pgap * (n - 1)) / n
+    head_h = g.get("pillar_head_h", 38)
+    pad = g.get("pad", 12)
+
+    def need(sz):
+        for p in pillars:
+            p = p if isinstance(p, dict) else {"title": str(p)}
+            text, its = as_items(p.get("items") if p.get("items") is not None else p.get("text"))
+            hh = (text_h(text, sz, pw - 2 * pad) if text else 0) + items_h(its, sz, pw - 2 * pad, 3)
+            if hh + 2 * pad > ph - head_h:
+                return False
+        return True
+
+    size = _fit(g.get("sizes", [15, 14, 13, 12, 11]), need)
+    for k, p in enumerate(pillars):
+        p = p if isinstance(p, dict) else {"title": str(p)}
+        x = x0 + k * (pw + pgap)
+        out.append(ctx.box(x, top, pw, head_h, fill=g.get("pillar_head_fill", "highlight_fill"),
+                           paras=[ctx.para(p.get("title", ""), g.get("pillar_head_size", 16),
+                                           g.get("pillar_head_color", "heading_text"), bold=True, head=True,
+                                           align="ctr", lh=1.05)], anchor="ctr", insets=(8, 2, 8, 2), name=f"柱{k + 1}"))
+        text, its = as_items(p.get("items") if p.get("items") is not None else p.get("text"))
+        paras = ([ctx.para(text, size, g.get("text_color", "text"), after=3 if its else 0)] if text else [])
+        paras += [ctx.para(t, size, g.get("text_color", "text"), bullet="•", after=3) for t in its]
+        out.append(ctx.box(x, top + head_h, pw, ph - head_h, fill="background", line=g.get("border_color", "border"),
+                           paras=paras or None, anchor="t", insets=(pad, pad, pad, pad), name=f"柱{k + 1}の内容"))
+    y = top + ph + gap
+    for k, f in enumerate(founds):
+        label = f.get("title", "")
+        if f.get("text"):
+            label = f"{label}｜{f['text']}" if label else f["text"]
+        out.append(ctx.box(x0, y, w, found_h, fill=g.get("found_fill", "primary") if k == len(founds) - 1
+                           else g.get("found_fill2", "accent"),
+                           paras=[ctx.para(label, g.get("found_size", 15), g.get("found_color", "on_primary"), bold=True,
+                                           head=True, align="ctr", lh=1.0)], anchor="ctr", insets=(12, 0, 12, 0),
+                           name=f"土台{k + 1}"))
+        y += found_h + gap
+    return out
+
+
+# ---------------------------------------------------------------------------
+# cycle — 循環（中央の円＋円弧の矢印＋左右の段のパネル）
+# ---------------------------------------------------------------------------
+
+def _arc_pts(cx, cy, r, a0, a1, steps=12):
+    import math
+    return [(cx + r * math.cos(math.radians(a0 + (a1 - a0) * i / steps)),
+             cy + r * math.sin(math.radians(a0 + (a1 - a0) * i / steps))) for i in range(steps + 1)]
+
+
+def layout_cycle(slide, st, ctx, body):
+    import math
+    g = st.get("body", {})
+    stages = [s if isinstance(s, dict) else {"title": str(s)} for s in slide.get("stages", []) or []]
+    n = max(len(stages), 1)
+    ring_w = min(g.get("ring_d", 300), body["h"], body["w"] * 0.32)
+    cx, cy = body["x"] + body["w"] / 2, body["y"] + body["h"] / 2
+    r = ring_w / 2 - 14
+    col = g.get("ring_color", "border")
+    out = []
+    # 円弧の矢印（段と段の間。始点・終点は番号丸の外側から）
+    badge = g.get("badge_d", 30)
+    gap_deg = math.degrees((badge / 2 + 6) / r) if r > 0 else 10
+    for k in range(n):
+        a0 = -90 + 360 * k / n + gap_deg
+        a1 = -90 + 360 * (k + 1) / n - gap_deg
+        pts = _arc_pts(cx, cy, r, a0, a1)
+        out.append(ctx.path(pts, col, g.get("ring_w", 6)))
+        # 矢じり（終点の接線方向を向いた三角）
+        ex, ey = pts[-1]
+        ang = math.radians(a1 + 90)
+        size = g.get("head", 14)
+        tip = (ex + math.cos(ang) * size * 0.6, ey + math.sin(ang) * size * 0.6)
+        nx, ny = math.cos(math.radians(a1)), math.sin(math.radians(a1))
+        p1 = (ex - math.cos(ang) * size * 0.4 + nx * size * 0.5, ey - math.sin(ang) * size * 0.4 + ny * size * 0.5)
+        p2 = (ex - math.cos(ang) * size * 0.4 - nx * size * 0.5, ey - math.sin(ang) * size * 0.4 - ny * size * 0.5)
+        xs, ys = [tip[0], p1[0], p2[0]], [tip[1], p1[1], p2[1]]
+        x0, y0 = min(xs), min(ys)
+        out.append({"kind": "shape", "geom": "custom", "x": round(x0, 2), "y": round(y0, 2),
+                    "w": round(max(xs) - x0, 2), "h": round(max(ys) - y0, 2), "fill": ctx.c(col), "name": f"矢じり{k + 1}",
+                    "path": [{"cmds": [["M", round(tip[0] - x0, 2), round(tip[1] - y0, 2)],
+                                       ["L", round(p1[0] - x0, 2), round(p1[1] - y0, 2)],
+                                       ["L", round(p2[0] - x0, 2), round(p2[1] - y0, 2)], ["Z"]],
+                              "fill": True, "stroke": False}]})
+    # 番号丸（各段の位置）
+    for k in range(n):
+        a = math.radians(-90 + 360 * k / n)
+        bx, by = cx + r * math.cos(a), cy + r * math.sin(a)
+        out.append(ctx.box(bx - badge / 2, by - badge / 2, badge, badge, geom="ellipse", fill=g.get("badge_fill", "primary"),
+                           paras=[ctx.para(str(k + 1), 14, g.get("badge_color", "on_primary"), bold=True, align="ctr",
+                                           lh=1.0)], anchor="ctr", name=f"段番号{k + 1}"))
+    if slide.get("center"):
+        cd = ring_w * 0.42
+        out.append(ctx.box(cx - cd / 2, cy - cd / 2, cd, cd, geom="ellipse", fill=g.get("center_fill", "surface"),
+                           paras=[ctx.para(slide["center"], g.get("center_size", 20), g.get("center_color", "heading_text"),
+                                           bold=True, head=True, align="ctr", lh=1.1)], anchor="ctr", name="中心"))
+    # 左右のパネル（右列＝前半を上から、左列＝後半を下から → 時計回りに読める）
+    right = list(range((n + 1) // 2))
+    left = list(range((n + 1) // 2, n))[::-1]
+    pgap = g.get("panel_gap", 14)
+    side_gap = g.get("side_gap", 24)
+    pw = (body["w"] - ring_w) / 2 - side_gap
+    pad = g.get("pad", 12)
+
+    def place(idx, x):
+        m = max(len(idx), 1)
+        ph = (body["h"] - pgap * (m - 1)) / m
+        return [(k, x, body["y"] + j * (ph + pgap), ph) for j, k in enumerate(idx)]
+
+    slots = place(right, cx + ring_w / 2 + side_gap) + place(left, body["x"])
+
+    def need(sz):
+        for k, x, y, ph in slots:
+            s = stages[k] if k < len(stages) else {}
+            text, its = as_items(s.get("items") if s.get("items") is not None else s.get("text"))
+            hh = text_h(s.get("title", ""), sz + 2, pw - badge - 2 * pad, head=True, bold=True) + \
+                (text_h(text, sz, pw - badge - 2 * pad) if text else 0) + items_h(its, sz, pw - badge - 2 * pad, 2)
+            if hh + 2 * pad > ph:
+                return False
+        return True
+
+    size = _fit(g.get("sizes", [15, 14, 13, 12, 11]), need)
+    for k, x, y, ph in slots:
+        if k >= len(stages):
+            continue
+        s = stages[k]
+        text, its = as_items(s.get("items") if s.get("items") is not None else s.get("text"))
+        # 番号丸と本文の塊をまとめてパネルの縦中央に置く（番号丸は見出しの行にそろえる）
+        hh = text_h(s.get("title", ""), size + 2, pw - badge - 2 * pad, head=True, bold=True) + 3 +             (text_h(text, size, pw - badge - 2 * pad) + 2 if text else 0) + items_h(its, size, pw - badge - 2 * pad, 2)
+        off = max((ph - hh) / 2, pad / 2)
+        title_line = (size + 2) * LINE_H * PARA_LH
+        out.append(ctx.box(x, y, pw, ph, fill=g.get("panel_fill", "surface"), name=f"段{k + 1}"))
+        out.append(ctx.box(x + pad, y + off + title_line / 2 - (badge - 6) / 2, badge - 6, badge - 6, geom="ellipse",
+                           fill=g.get("badge_fill", "primary"),
+                           paras=[ctx.para(str(k + 1), 13, g.get("badge_color", "on_primary"), bold=True, align="ctr",
+                                           lh=1.0)], anchor="ctr", name=f"段{k + 1}の番号"))
+        paras = [ctx.para(s.get("title", ""), size + 2, g.get("title_color", "heading_text"), bold=True, head=True,
+                          after=3)]
+        if text:
+            paras.append(ctx.para(text, size, g.get("text_color", "text"), after=2))
+        paras += [ctx.para(t, size, g.get("text_color", "text"), bullet="•", after=2) for t in its]
+        out.append(ctx.box(x + badge + pad, y, pw - badge - pad, ph, paras=paras, anchor="t",
+                           insets=(0, off, pad, 0), name=f"段{k + 1}の内容"))
+    return out
+
+
+# ---------------------------------------------------------------------------
+# kpi_tree — KPI ツリー（目標 → 方向性 → KPI＋目標値＋測り方）
+# ---------------------------------------------------------------------------
+
+def layout_kpi_tree(slide, st, ctx, body):
+    g = st.get("body", {})
+    branches = [b if isinstance(b, dict) else {"title": str(b)} for b in slide.get("branches", []) or []]
+    heads = slide.get("headers")
+    head_h = g.get("head_h", 28) if heads else 0
+    out = []
+    root_w, br_w, kpi_w, val_w = g.get("root_w", 150), g.get("branch_w", 170), g.get("kpi_w", 230), g.get("value_w", 120)
+    gap_x = g.get("gap_x", 26)
+    xs = [body["x"]]
+    for w_ in (root_w, br_w, kpi_w):
+        xs.append(xs[-1] + w_ + gap_x)
+    vx = xs[3] + val_w + 12
+    note_w = body["x"] + body["w"] - vx
+    top = body["y"] + head_h + (6 if heads else 0)
+    rows = [(bi, k) for bi, b in enumerate(branches) for k in range(max(len(b.get("kpis", []) or []), 1))]
+    nrows = max(len(rows), 1)
+    rgap = g.get("row_gap", 8)
+    bgap = g.get("branch_gap", 14)
+    avail = body["y"] + body["h"] - top - rgap * (nrows - len(branches)) - bgap * max(len(branches) - 1, 0)
+    rh = avail / nrows
+    if heads:
+        for j, (x, w_) in enumerate(zip(xs + [vx], [root_w, br_w, kpi_w + val_w + 12, 0, note_w])):
+            if j == 3 or j >= len(heads) or not heads[j]:
+                continue
+            out.append(ctx.box(x, body["y"], w_ if j != 4 else note_w, head_h,
+                               paras=[ctx.para(heads[j], 13, g.get("head_color", "muted"), bold=True, align="ctr", lh=1.0)],
+                               anchor="ctr", name=f"見出し{j + 1}"))
+            out.append(ctx.path([(x, body["y"] + head_h), (x + (w_ if j != 4 else note_w), body["y"] + head_h)],
+                                g.get("border_color", "border"), 0.75))
+    y = top
+    branch_boxes, kpi_rows = [], []
+    for bi, b in enumerate(branches):
+        kpis = b.get("kpis", []) or [{}]
+        h_b = rh * len(kpis) + rgap * (len(kpis) - 1)
+        branch_boxes.append((y, h_b))
+        out.append(ctx.box(xs[1], y + h_b / 2 - min(h_b, 64) / 2, br_w, min(h_b, 64), fill=g.get("branch_fill", "primary"),
+                           paras=[ctx.para(b.get("title", ""), g.get("branch_size", 15), g.get("branch_color", "on_primary"),
+                                           bold=True, head=True, align="ctr", lh=1.1)], anchor="ctr", insets=(8, 2, 8, 2),
+                           name=f"方向性{bi + 1}"))
+        for k, kp in enumerate(kpis):
+            kp = kp if isinstance(kp, dict) else {"title": str(kp)}
+            ky = y + k * (rh + rgap)
+            kpi_rows.append((bi, ky))
+            out.append(ctx.box(xs[2], ky, kpi_w, rh, fill=g.get("kpi_fill", "surface"),
+                               paras=[ctx.para(kp.get("title", ""), g.get("kpi_size", 14), g.get("kpi_color", "heading_text"),
+                                               bold=True, align="ctr", lh=1.1)], anchor="ctr", insets=(8, 2, 8, 2),
+                               name=f"KPI{bi + 1}-{k + 1}"))
+            if kp.get("value"):
+                out.append(ctx.box(xs[3], ky, val_w, rh, line=g.get("border_color", "border"),
+                                   paras=[ctx.para(kp["value"], g.get("value_size", 24), g.get("value_color", "primary"),
+                                                   bold=True, head=True, align="ctr", lh=1.0)], anchor="ctr",
+                                   name=f"目標値{bi + 1}-{k + 1}"))
+            text, its = as_items(kp.get("items") if kp.get("items") is not None else kp.get("note"))
+            paras = ([ctx.para(text, 13, g.get("note_color", "text"), after=2)] if text else [])
+            paras += [ctx.para(t, 13, g.get("note_color", "text"), bullet="•", after=2) for t in its]
+            if paras:
+                out.append(ctx.box(vx, ky, note_w, rh, paras=paras, anchor="ctr", insets=(4, 2, 4, 2),
+                                   name=f"測り方{bi + 1}-{k + 1}"))
+            # 方向性 → KPI のカギ線
+            mid = xs[2] - gap_x / 2
+            out.append(ctx.path([(mid, ky + rh / 2), (xs[2], ky + rh / 2)], g.get("line_color", "muted"), 1.0))
+        if len(kpis) > 1:
+            mid = xs[2] - gap_x / 2
+            out.append(ctx.path([(mid, y + rh / 2), (mid, y + h_b - rh / 2)], g.get("line_color", "muted"), 1.0))
+        out.append(ctx.path([(xs[1] + br_w, y + h_b / 2), (xs[2] - gap_x / 2, y + h_b / 2)], g.get("line_color", "muted"), 1.0))
+        y += h_b + bgap
+    # 目標（根）
+    total_top, total_bot = top, y - bgap
+    rh_root = min(total_bot - total_top, g.get("root_h", 120))
+    ry = (total_top + total_bot) / 2 - rh_root / 2
+    out.append(ctx.box(xs[0], ry, root_w, rh_root, fill=g.get("root_fill", "primary"),
+                       paras=[ctx.para(slide.get("root", ""), g.get("root_size", 17), g.get("root_color", "on_primary"),
+                                       bold=True, head=True, align="ctr", lh=1.15)], anchor="ctr", insets=(10, 4, 10, 4),
+                       name="目標"))
+    if branch_boxes:
+        mid = xs[1] - gap_x / 2
+        cys = [yb + hb / 2 for yb, hb in branch_boxes]
+        out.append(ctx.path([(xs[0] + root_w, (total_top + total_bot) / 2), (mid, (total_top + total_bot) / 2)],
+                            g.get("line_color", "muted"), 1.0))
+        if len(cys) > 1:
+            out.append(ctx.path([(mid, min(cys)), (mid, max(cys))], g.get("line_color", "muted"), 1.0))
+        for c_y in cys:
+            out.append(ctx.path([(mid, c_y), (xs[1], c_y)], g.get("line_color", "muted"), 1.0))
+    return out
+
+
 LAYOUTS = {
     "summary": layout_summary,
     "reasons": layout_reasons,
     "statement": layout_statement,
     "row_matrix": layout_row_matrix,
     "org": layout_org,
+    "house": layout_house,
+    "cycle": layout_cycle,
+    "kpi_tree": layout_kpi_tree,
 }
 
 
@@ -556,15 +950,6 @@ def layout(slide: dict, st: dict, theme: dict) -> list:
         return layout_statement(slide, st, ctx)
     body = body_region(slide, st)
     return LAYOUTS[t](slide, st, ctx, body) + common_parts(slide, st, ctx, body)
-
-
-def chrome_parts(slide: dict, st: dict, theme: dict) -> list:
-    """既存タイプにも付ける共通パーツ（結論帯・出典）。本文の領域は st の主要領域の下端から求める。"""
-    if not (slide.get("conclusion") or slide.get("source")):
-        return []
-    ctx = Ctx(theme)
-    body = body_region(slide, st)
-    return common_parts(slide, st, ctx, body)
 
 
 def validate(slide: dict, i: int, fail, warn) -> None:
@@ -599,6 +984,24 @@ def validate(slide: dict, i: int, fail, warn) -> None:
         ratios = slide.get("col_ratios")
         if ratios is not None and (not isinstance(ratios, list) or len(ratios) != nc):
             fail(f"{where}: col_ratios は columns と同じ数の数値の配列で指定してください")
+    elif t == "house":
+        if not isinstance(slide.get("pillars"), list) or not slide["pillars"]:
+            fail(f"{where}: pillars（柱の配列）が必要です")
+        if len(slide["pillars"]) > 5:
+            warn(f"{where}: 柱が{len(slide['pillars'])}本あります（3〜4本が目安）")
+    elif t == "cycle":
+        stages = slide.get("stages")
+        if not isinstance(stages, list) or len(stages) < 3:
+            fail(f"{where}: stages（3つ以上の段の配列）が必要です")
+        if len(stages) > 6:
+            warn(f"{where}: 段が{len(stages)}つあります（3〜6つが目安）")
+    elif t == "kpi_tree":
+        br = slide.get("branches")
+        if not slide.get("root") or not isinstance(br, list) or not br:
+            fail(f"{where}: root（目標）と branches（[{{title, kpis}}] の配列）が必要です")
+        n = sum(max(len(b.get("kpis", []) or []), 1) for b in br if isinstance(b, dict))
+        if n > 7:
+            warn(f"{where}: KPI が{n}行あります（6行以内が目安）")
     elif t == "org":
         sides = [s for s in (slide.get("left"), slide.get("right")) if isinstance(s, dict)]
         if not sides:

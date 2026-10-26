@@ -289,7 +289,13 @@ def resolve_style(layout, deck, slide):
     st = deep_merge(st, overrides.get("common", {}))
     st = deep_merge(st, overrides.get(t, {}))
     st = deep_merge(st, slide.get("style", {}))
-    return st
+    if t == "code" and slide.get("annotations") and "w" not in (slide.get("style", {}).get("code") or {}):
+        st["code"]["w"] = round(st["code"]["w"] * 0.6)   # 右の 4 割を注釈の欄にする
+    if t == "agenda" and any(isinstance(it, dict) and it.get("desc") for it in slide.get("items", []) or []) \
+            and "row_h" not in (slide.get("style", {}).get("body") or {}):
+        st["body"]["row_h"] = max(st["body"].get("row_h", 44), 64)   # 説明文の2行目が入る高さ
+        st["body"]["gap"] = min(st["body"].get("gap", 10), 8)
+    return pe.shrink_for_bottom(slide, st)
 
 
 _HEX_RE = re.compile(r"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$")
@@ -342,6 +348,15 @@ def font_pptx(value):
     """fonts.* の値（文字列 or 配列）から PPTX に設定する先頭の1フォント名を返す。"""
     names = _font_names(value)
     return names[0] if names else None
+
+
+def steps_arrow_header(i, n, x, y, card_w, gap, header_h, b, theme):
+    """steps の見出しを工程の矢羽根（先頭は五方向、2つ目以降は山形）にした canvas 要素。
+    矢じりは次のカードとの隙間に食い込ませ、全段が1本の流れに見えるようにする。"""
+    ext = gap - 4 if i < n - 1 else 0
+    return {"kind": "shape", "geom": "homePlate" if i == 0 else "chevron", "x": round(x, 2), "y": round(y, 2),
+            "w": round(card_w + ext, 2), "h": header_h, "adj": {"adj": 28000},
+            "fill": pe.Ctx(theme).c(b.get("header_fill", "primary")), "name": f"工程{i + 1}"}
 
 
 def norm_items(items):
@@ -2171,7 +2186,11 @@ def fit_code_size(code: str, r: dict):
     size = r["size"]
     lh = r["line_height"]
     avail = r["h"] - 2 * r["pad"]
-    while size > r.get("min_size", 12) and len(lines) * size * lh > avail:
+    avail_w = r["w"] - 2 * r["pad"]
+    # 等幅フォントの字幅（半角 0.58em・全角 1.1em）で最長行の幅も見て、横にはみ出さないサイズにする
+    longest = max(sum(1.1 if unicodedata.east_asian_width(ch) in ("W", "F") else 0.58 for ch in ln.expandtabs(4))
+                  for ln in lines)
+    while size > r.get("min_size", 12) and (len(lines) * size * lh > avail or longest * size > avail_w):
         size -= 1
     return size, lines
 
@@ -2602,7 +2621,13 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             else:
                 bg = col(theme, tr["row_alt_fill"]) if i % 2 else col(theme, "background")
             html.append("<tr>")
-            for cell in row:
+            is_total = bool(slide.get("total_row")) and i == len(slide.get("rows", [])) - 1
+            for j, cell in enumerate(row):
+                is_label = bool(slide.get("row_header")) and j == 0
+                cbg = (col(theme, tr.get("total_fill", "surface")) if is_total
+                       else col(theme, tr.get("label_fill", "highlight_fill")) if is_label else bg)
+                cweight = "font-weight:700;" if (is_total or is_label) else ""
+                ccolor = col(theme, tr.get("label_color", "heading_text")) if (is_total or is_label) else col(theme, tr["cell_color"])
                 visible_text, cell_url = table_cell_parts(cell)
                 cell_text = esc(visible_text)
                 if cell_url:
@@ -2612,7 +2637,7 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                         f'text-underline-offset:2px;">{cell_text}</a>'
                     )
                 html.append(
-                    f'<td style="background:{bg};color:{col(theme, tr["cell_color"])};'
+                    f'<td style="background:{cbg};color:{ccolor};{cweight}'
                     f'font-size:{tr["cell_size"]}px;height:{tr["row_h"]}px;{cells_pad}'
                     f'box-sizing:border-box;border-bottom:1px solid {col(theme, tr.get("border_color", "border"))};">{cell_text}</td>'
                 )
@@ -2805,9 +2830,16 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             parts.append(div({"x": x, "y": y+noff, "w": num_w, "h": row_h, "size": b.get("num_size", 24),
                               "color": b.get("num_color", "accent"), "bold": True, "line_height": 1.1},
                              theme, f"{num_start+i+1:02d}"))
-            parts.append(div({"x": x+num_w, "y": y+toff, "w": col_w-num_w, "h": row_h, "size": b.get("text_size", 20),
+            inner = esc(it["text"])
+            ty = y + toff
+            if it.get("desc"):
+                ds = b.get("desc_size", 14)
+                ty = y + (row_h - b.get("text_size", 20) * 1.2 - ds * 1.35) / 2
+                inner += (f'<br><span style="font-size:{ds}px;font-weight:400;'
+                          f'color:{col(theme, b.get("desc_color", "muted"))};">{esc(it["desc"])}</span>')
+            parts.append(div({"x": x+num_w, "y": ty, "w": col_w-num_w, "h": row_h, "size": b.get("text_size", 20),
                               "color": (b.get("active_color", "primary") if active else b.get("text_color", "text")),
-                              "bold": bool(active), "line_height": 1.2}, theme, esc(it["text"])))
+                              "bold": bool(active) or bool(it.get("desc")), "line_height": 1.2}, theme, inner))
 
     elif t == "steps":
         chrome()
@@ -2825,9 +2857,12 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             parts.append(f'<div style="{pos({"x": x, "y": row_y, "w": card_w, "h": card_h})}'
                          f'background:{col(theme, b.get("card_fill","surface"))};'
                          f'border-radius:{radius}px;{card_border}"></div>')
-            parts.append(f'<div style="{pos({"x": x, "y": row_y, "w": card_w, "h": header_h})}'
-                         f'background:{col(theme, b.get("header_fill","primary"))};'
-                         f'border-radius:{radius}px {radius}px 0 0;"></div>')
+            if slide.get("header_style") == "arrow":
+                parts.append(ce.canvas_html({"elements": [steps_arrow_header(i, n, x, row_y, card_w, gap, header_h, b, theme)]}))
+            else:
+                parts.append(f'<div style="{pos({"x": x, "y": row_y, "w": card_w, "h": header_h})}'
+                             f'background:{col(theme, b.get("header_fill","primary"))};'
+                             f'border-radius:{radius}px {radius}px 0 0;"></div>')
             parts.append(div({"x": x+pad, "y": row_y+9, "w": card_w-2*pad, "h": 18, "size": 13,
                               "color": b.get("num_color", "accent"), "bold": True}, theme, f"STEP {i+1}"))
             parts.append(div({"x": x+pad, "y": row_y+28, "w": card_w-2*pad, "h": header_h-26,
@@ -2843,7 +2878,7 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             items_extra = "display:flex;flex-direction:column;justify-content:center;" if b.get("valign", "top") == "middle" else ""
             parts.append(f'<div style="{pos(itemr)}{items_extra}">'
                          + bullets_html(norm_items(step.get("items", [])), itemr, theme) + "</div>")
-            if i < n-1:
+            if i < n-1 and slide.get("header_style") != "arrow":
                 parts.append(div({"x": x+card_w, "y": row_y+card_h/2-18, "w": gap, "h": 36,
                                   "size": b.get("chevron_size", 28), "color": b.get("chevron_color", "accent"),
                                   "align": "center", "bold": True}, theme, "›"))
@@ -3030,6 +3065,9 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                               "size": a.get("desc_size", 13), "color": "muted"}, theme, esc(desc)))
         parts.append(footer_html(st, deck, theme, page, total))
 
+    over = pe.extras(slide, st, theme)
+    if over:
+        parts.append(ce.canvas_html({"elements": over}))
     return "".join(parts)
 
 
@@ -3243,8 +3281,7 @@ def build_html(deck, theme, layout, deck_dir: Path, out_path: Path):
         C_ACCENT=col(theme, "accent"),
         F_BODY=font_css(theme["fonts"]["body"]),
         TOTAL=str(total),
-        CANVAS_CSS=ce.CANVAS_CSS if any(s.get("type") == "canvas" or s.get("type") in pe.PROPOSAL_TYPES
-                                        for s in slides) else "",
+        CANVAS_CSS=ce.CANVAS_CSS,
     )
     try:
         out_path.write_text(doc, encoding="utf-8")
@@ -3570,10 +3607,16 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             set_run(p.add_run(), str(name), tr["header_size"], C(tr["header_color"]), bold=True)
         row_fills = tr.get("row_fills", {})
         for i, row in enumerate(rows):
+            is_total = bool(data.get("total_row")) and i == len(rows) - 1
             for j, val in enumerate(row):
+                is_label = bool(data.get("row_header")) and j == 0
                 cell = table.cell(i + 1, j)
                 cell.fill.solid()
-                if str(i) in row_fills:
+                if is_total:
+                    cell.fill.fore_color.rgb = C(tr.get("total_fill", "surface"))
+                elif is_label:
+                    cell.fill.fore_color.rgb = C(tr.get("label_fill", "highlight_fill"))
+                elif str(i) in row_fills:
                     cell.fill.fore_color.rgb = C(row_fills[str(i)])
                 else:
                     cell.fill.fore_color.rgb = C(tr["row_alt_fill"]) if i % 2 else C("background")
@@ -3585,7 +3628,9 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 p.line_spacing = tr["line_height"]
                 visible_text, cell_url = table_cell_parts(val)
                 run = p.add_run()
-                set_run(run, visible_text, tr["cell_size"], C(tr["cell_color"]))
+                strong = is_total or is_label
+                set_run(run, visible_text, tr["cell_size"],
+                        C(tr.get("label_color", "heading_text")) if strong else C(tr["cell_color"]), bold=strong)
                 if cell_url:
                     run.hyperlink.address = cell_url
 
@@ -3801,9 +3846,15 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                          border=C(b["active_border"]) if b.get("active_border") else None)
             text_region(slide, {"x": x, "y": y+noff, "w": num_w, "h": row_h, "size": b.get("num_size", 24),
                                 "color": b.get("num_color", "accent"), "bold": True, "line_height": 1.1}, f"{num_start+i+1:02d}")
-            text_region(slide, {"x": x+num_w, "y": y+toff, "w": col_w-num_w, "h": row_h, "size": b.get("text_size", 20),
-                                "color": (b.get("active_color", "primary") if active else b.get("text_color", "text")),
-                                "bold": bool(active), "line_height": 1.2}, it["text"])
+            ty = y + toff
+            if it.get("desc"):
+                ty = y + (row_h - b.get("text_size", 20) * 1.2 - b.get("desc_size", 14) * 1.35) / 2
+            tf_ag = text_region(slide, {"x": x+num_w, "y": ty, "w": col_w-num_w, "h": row_h, "size": b.get("text_size", 20),
+                                        "color": (b.get("active_color", "primary") if active else b.get("text_color", "text")),
+                                        "bold": bool(active) or bool(it.get("desc")), "line_height": 1.2}, it["text"])
+            if it.get("desc"):
+                p_desc = tf_ag.add_paragraph()
+                set_run(p_desc.add_run(), it["desc"], b.get("desc_size", 14), C(b.get("desc_color", "muted")))
 
     def s_steps(slide, data, st, page, total):
         from pptx.enum.text import MSO_ANCHOR
@@ -3818,7 +3869,10 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             x = b["x"] + i * (card_w + gap)
             add_rect(slide, x, row_y, card_w, card_h, C(b.get("card_fill", "surface")), radius=radius,
                      border=C(b["card_border"]) if b.get("card_border") else None)
-            add_rect(slide, x, row_y, card_w, header_h, C(b.get("header_fill", "primary")), radius=radius)
+            if data.get("header_style") == "arrow":
+                ce.add_canvas_to_pptx(slide, [steps_arrow_header(i, n, x, row_y, card_w, gap, header_h, b, theme)])
+            else:
+                add_rect(slide, x, row_y, card_w, header_h, C(b.get("header_fill", "primary")), radius=radius)
             text_region(slide, {"x": x+pad, "y": row_y+9, "w": card_w-2*pad, "h": 18, "size": 13,
                                 "color": b.get("num_color", "accent"), "bold": True}, f"STEP {i+1}")
             text_region(slide, {"x": x+pad, "y": row_y+28, "w": card_w-2*pad, "h": header_h-26,
@@ -3833,7 +3887,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             # （HTML と同じ考え方。ヘッダー帯は動かさない）。
             if b.get("valign", "top") == "middle":
                 tf_items.vertical_anchor = MSO_ANCHOR.MIDDLE
-            if i < n-1:
+            if i < n-1 and data.get("header_style") != "arrow":
                 text_region(slide, {"x": x+card_w, "y": row_y+card_h/2-18, "w": gap, "h": 36,
                                     "size": b.get("chevron_size", 28), "color": b.get("chevron_color", "accent"),
                                     "align": "center", "bold": True}, "›")
@@ -4678,6 +4732,9 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             if "bg" not in st and data["type"] != "canvas":
                 add_rect(slide, 0, 0, CANVAS_W, CANVAS_H, C("background"))
             builders[data["type"]](slide, data, st, i + 1, total)
+            over = pe.extras(data, st, theme)
+            if over:
+                ce.add_canvas_to_pptx(slide, over)
             if deck.get("meta", {}).get("brand") and "brand" in st:
                 text_region(slide, st["brand"], deck.get("meta", {}).get("brand", ""))
             # 注意: notes は意図的に PPTX へ出力しない（Keynote 互換性問題のため）

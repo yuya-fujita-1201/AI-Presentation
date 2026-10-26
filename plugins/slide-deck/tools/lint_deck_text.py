@@ -90,13 +90,13 @@ BIG_NUMBER = re.compile(r"(?<![A-Za-z0-9_.,/:#\-×*])(\d{4,})(?![A-Za-z0-9_.,/:\
 # --- relation（内容の関係）とスライドタイプの対応 -------------------------------------
 RELATION_TYPES = {
     "parallel": ["cards", "bullets", "two_column", "table", "matrix", "image_text", "status_table", "summary",
-                 "row_matrix"],
+                 "row_matrix", "house"],
     "sequence": ["steps", "swimlane", "schedule", "sequence", "dataflow", "agenda", "row_matrix"],
     "flow": ["dataflow", "swimlane", "steps", "sequence", "architecture"],
-    "hierarchy": ["architecture", "bullets", "table", "org"],
+    "hierarchy": ["architecture", "bullets", "table", "org", "house", "kpi_tree"],
     "cause": ["steps", "dataflow", "two_column", "bullets", "reasons"],
     "contrast": ["two_column", "table", "matrix", "status_table", "reasons", "row_matrix"],
-    "cycle": ["lifecycle"],
+    "cycle": ["lifecycle", "cycle"],
 }
 # 順序を表す見出し（cards の見出しがこれで始まるなら steps の方が合う）
 ORDERED_HEADING = re.compile(r"^\s*(STEP|Step|step|PHASE|Phase|phase|フェーズ|ステップ|第\s*\d|\d+\s*[.．)）:：]|[①-⑳])")

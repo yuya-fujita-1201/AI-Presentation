@@ -4,7 +4,7 @@
     "title": "slide-deck プラグイン ユーザーガイド",
     "subtitle": "Zip を受け取った人向けの使い方マニュアル",
     "author": "slide-deck plugin",
-    "date": "2026-10-08",
+    "date": "2026-10-26",
     "theme": "accenture-purple",
     "layout_overrides": {
       "image_text": {
@@ -305,9 +305,9 @@
     {
       "type": "image",
       "eyebrow": "2章 / 一覧",
-      "title": "21種類のテンプレートから選べる",
+      "title": "29種類のテンプレートから選べる",
       "path": "assets/gallery.png",
-      "caption": "全21種。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される（次ページ以降に各タイプの見本）",
+      "caption": "全29種（画像は v1.4 までの21種）。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される",
       "notes": "各タイプのレンダリング済み見本は、このガイドの次ページ以降に掲載している。deck.json の書き方の参考として examples/template-sample/deck.json（配布物にはソースのみ同梱。ビルド後HTMLは非同梱で、見本はこのUSER-GUIDE自体が該当）を利用できる。図解タイプは legend_page で凡例が自動挿入される。"
     },
     {

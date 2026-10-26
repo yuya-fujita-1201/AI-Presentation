@@ -2,7 +2,7 @@
   "meta": {
     "id": "template-sample",
     "title": "テンプレート タイプ ギャラリー",
-    "subtitle": "26スライドタイプの見た目サンプル（accenture-purple テーマ）",
+    "subtitle": "29スライドタイプの見た目サンプル（accenture-purple テーマ）",
     "author": "yuya.fujita",
     "date": "2026-10-26",
     "theme": "accenture-purple",
@@ -26,7 +26,7 @@
     {
       "type": "title",
       "title": "テンプレート タイプ ギャラリー",
-      "subtitle": "26スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
+      "subtitle": "29スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
       "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / accenture-purple テーマ",
       "notes": "表紙（title）— 左帯(bar)＋タイトル＋サブタイトル＋meta。"
     },
@@ -34,7 +34,7 @@
       "type": "agenda",
       "eyebrow": "TYPE 02 / agenda",
       "title": "アジェンダ ─ 利用できるテンプレート",
-      "lead": "全26タイプを掲載順に並べた目次。番号は各ページの TYPE 番号と一致する（行の高さを詰めて1枚に収めている）。",
+      "lead": "全29タイプを掲載順に並べた目次。番号は各ページの TYPE 番号と一致する（行の高さを詰めて1枚に収めている）。",
       "items": [
         "title（表紙）",
         {
@@ -64,13 +64,16 @@
         "statement（言い切り）",
         "row_matrix（行見出し×列の整理表）",
         "org（体制図）",
+        "house（全体像）",
+        "cycle（循環）",
+        "kpi_tree（KPI ツリー）",
         "closing（まとめ）"
       ],
-      "notes": "TYPE 02 / agenda — 全26タイプを掲載順に列挙。番号＝TYPE 番号。既定（row_h 44・gap 10）だと8行超で2段・16項目超で次ページになるため、style.body で行を詰めて3段×9行（max_cols: 3）に収めている。",
+      "notes": "TYPE 02 / agenda — 全29タイプを掲載順に列挙。番号＝TYPE 番号。既定（row_h 44・gap 10）だと8行超で2段・16項目超で次ページになるため、style.body で行を詰めて3段×10行（max_cols: 3）に収めている。",
       "style": {
         "body": {
-          "row_h": 34,
-          "gap": 7,
+          "row_h": 31,
+          "gap": 6,
           "text_size": 15,
           "num_size": 17,
           "num_w": 40,
@@ -225,7 +228,7 @@
       "punch": "deck.json を1つ書けば HTML と PPTX が同時にできる",
       "bullets": [
         "deck.json: 内容と見た目の差分（style）を書くソース",
-        "build_deck.py: 26タイプを描画し、2つの形式に書き出す",
+        "build_deck.py: 29タイプを描画し、2つの形式に書き出す",
         "HTML: ブラウザでその場で確認する",
         "PPTX: PowerPoint で開いてそのまま配布する"
       ],
@@ -1558,10 +1561,139 @@
       "notes": "TYPE 25 / org — nodes は id と parent で親子を表す。scope に文字列を書くと枠の札になる。"
     },
     {
+      "type": "house",
+      "eyebrow": "TYPE 26 / house",
+      "title": "全体像（house）",
+      "lead": "屋根（目指す姿）を柱（取り組み）が支え、土台（基盤）が下から支える構図で、提案の全体像を1枚で見せる。",
+      "roof": {
+        "title": "目指す姿｜安全に増やせる仕組み",
+        "text": "roof の title と text（任意）"
+      },
+      "pillars": [
+        {
+          "title": "① 統制",
+          "items": [
+            "入口と実行時を統制する",
+            "成果物: 方針書・管理設定"
+          ]
+        },
+        {
+          "title": "② 構築",
+          "items": [
+            "優先5本を設計・実装する",
+            "成果物: mod・評価結果"
+          ]
+        },
+        {
+          "title": "③ 定着",
+          "items": [
+            "CoE と審査フローを作る",
+            "成果物: ガイド・手順書"
+          ]
+        }
+      ],
+      "foundations": [
+        {
+          "title": "土台",
+          "text": "管理設定の配布"
+        },
+        {
+          "title": "土台",
+          "text": "審査基準と計測基盤"
+        }
+      ],
+      "notes": "TYPE 26 / house — pillars は3〜4本が目安。foundations は下から積む帯（最後が一番下）。"
+    },
+    {
+      "type": "cycle",
+      "eyebrow": "TYPE 27 / cycle",
+      "title": "循環（cycle）",
+      "lead": "中央の円と円弧の矢印で、繰り返す運用（計測→改善→審査→配布）を見せる。段のパネルは時計回りに読める位置に並ぶ。",
+      "center": "毎月",
+      "stages": [
+        {
+          "title": "計測",
+          "items": [
+            "使用状況・失敗・効果"
+          ]
+        },
+        {
+          "title": "改善",
+          "items": [
+            "誤検知の調整",
+            "利用者の声"
+          ]
+        },
+        {
+          "title": "審査",
+          "items": [
+            "validate で再確認",
+            "四半期の棚卸し"
+          ]
+        },
+        {
+          "title": "配布",
+          "items": [
+            "段階配布",
+            "切り戻し手順"
+          ]
+        }
+      ],
+      "notes": "TYPE 27 / cycle — stages は3〜6段。右列が前半（上から）、左列が後半（下から）。"
+    },
+    {
+      "type": "kpi_tree",
+      "eyebrow": "TYPE 28 / kpi_tree",
+      "title": "KPI ツリー（kpi_tree）",
+      "lead": "目標 → 施策の方向性 → KPI と目標値 → 測り方を左から右へつなぎ、効果の測り方を1枚で示す。",
+      "headers": [
+        "目標",
+        "施策の方向性",
+        "KPIと目標値",
+        "",
+        "測り方・具体例"
+      ],
+      "root": "基盤の価値",
+      "branches": [
+        {
+          "title": "止める（統制）",
+          "kpis": [
+            {
+              "title": "未承認の稼働を無くす",
+              "value": "0台",
+              "note": "月次で端末を棚卸しする"
+            }
+          ]
+        },
+        {
+          "title": "見える（可視化）",
+          "kpis": [
+            {
+              "title": "全チームが使用量を見られる",
+              "value": "100%",
+              "note": "導入率を週次で集計する"
+            }
+          ]
+        },
+        {
+          "title": "速くなる（開発体験）",
+          "kpis": [
+            {
+              "title": "レビューの差し戻しを減らす",
+              "value": "−20%",
+              "note": "利用チームと非利用チームを比べる"
+            }
+          ]
+        }
+      ],
+      "conclusion": "目標値は最初のフェーズの実測で見直す",
+      "notes": "TYPE 28 / kpi_tree — branches の各要素に kpis（title / value / note）。KPI は合計6行以内が目安。"
+    },
+    {
       "type": "closing",
-      "title": "26タイプで社内資料の大半を作れる",
+      "title": "29タイプで社内資料の大半を作れる",
       "bullets": [
-        "表・箇条書き・比較から図解まで、26タイプをネイティブに描画する",
+        "表・箇条書き・比較から図解まで、29タイプをネイティブに描画する",
         "業務フローは swimlane、構成・データの流れ・状態遷移・やり取りは図解4タイプ",
         "工程表は schedule、自由作図・グラフは image で拡張する",
         "微修正は deck.json の style（差分）だけで完結する"

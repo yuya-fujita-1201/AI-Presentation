@@ -25,6 +25,16 @@ SLIDES = {
     "row_matrix": {"type": "row_matrix", "title": "整理", "header_style": "arrow", "emph_col": 1,
                    "columns": ["A", "B"], "rows": [{"label": "行1", "cells": [["x", "y"], {"text": "t", "items": ["i"]}]},
                                                    {"label": "行2", "cells": ["s", "u"]}]},
+    "house": {"type": "house", "title": "全体像", "roof": {"title": "目指す姿", "text": "補足"},
+              "pillars": [{"title": "柱1", "items": ["a", "b"]}, {"title": "柱2", "text": "本文"}, "柱3"],
+              "foundations": [{"title": "土台", "text": "基盤"}, "土台2"], "source": "出典"},
+    "cycle": {"type": "cycle", "title": "循環", "center": "毎月",
+              "stages": [{"title": "計測", "items": ["x"]}, {"title": "改善"}, {"title": "審査"}, {"title": "配布"}, "評価"]},
+    "kpi_tree": {"type": "kpi_tree", "title": "KPI", "root": "価値", "headers": ["目標", "方向性", "KPI", "", "測り方"],
+                 "branches": [{"title": "止める", "kpis": [{"title": "稼働0", "value": "0台", "note": "棚卸し"},
+                                                           {"title": "無確認0", "value": "0件", "items": ["計測"]}]},
+                              {"title": "見える", "kpis": [{"title": "可視化", "value": "100%"}]}],
+                 "conclusion": "見直す"},
     "org": {"type": "org", "title": "体制",
             "left": {"title": "貴社", "nodes": [{"id": "a", "title": "A"}, {"id": "b", "parent": "a", "title": "B"}]},
             "right": {"title": "自社", "scope": True, "nodes": [{"id": "c", "title": "C", "name": "1名"}]},
@@ -105,6 +115,59 @@ class LayoutTests(unittest.TestCase):
         self.assertGreater(bb["y"], a["y"])   # 子は親より下の段
 
 
+    def test_house_cycle_kpi_parts(self):
+        names = {e.get("name") for e in elements(SLIDES["house"])}
+        self.assertTrue({"屋根", "柱1", "柱3", "土台1", "土台2", "出典"} <= names)
+        cyc = elements(SLIDES["cycle"])
+        self.assertEqual(sum(1 for e in cyc if str(e.get("name", "")).startswith("矢じり")), 5)
+        self.assertEqual(sum(1 for e in cyc if str(e.get("name", "")).startswith("段番号")), 5)
+        # 右列が前半（1〜3）、左列が後半（4・5）
+        x1 = next(e for e in cyc if e.get("name") == "段1")["x"]
+        x5 = next(e for e in cyc if e.get("name") == "段5")["x"]
+        self.assertGreater(x1, x5)
+        kpi = {e.get("name"): e for e in elements(SLIDES["kpi_tree"])}
+        self.assertIn("目標値1-2", kpi)
+        self.assertEqual(kpi["目標値1-1"]["text"]["paragraphs"][0]["runs"][0]["text"], "0台")
+        self.assertIn("結論", kpi)
+
+
+class ExtrasTests(unittest.TestCase):
+    def _extras(self, slide):
+        st = b.resolve_style(LAYOUT, {"meta": {}}, slide)
+        return st, pe.extras(slide, st, THEME)
+
+    def test_bottom_parts_shrink_existing_regions(self):
+        slide = {"type": "bullets", "title": "t", "bullets": ["x"], "conclusion": "結論", "source": "出典"}
+        st, ex = self._extras(slide)
+        band = next(e for e in ex if e.get("name") == "結論")
+        self.assertLessEqual(st["body"]["y"] + st["body"]["h"], band["y"])
+        self.assertIn("出典", {e.get("name") for e in ex})
+        # 結論帯を付けられないタイプには何も足さない
+        _, ex2 = self._extras({"type": "closing", "title": "t", "conclusion": "x"})
+        self.assertEqual(ex2, [])
+
+    def test_table_rows_shrink_for_conclusion(self):
+        rows = [["a", "b"]] * 8
+        st0 = b.resolve_style(LAYOUT, {"meta": {}}, {"type": "table", "columns": ["A", "B"], "rows": rows})
+        st1 = b.resolve_style(LAYOUT, {"meta": {}}, {"type": "table", "columns": ["A", "B"], "rows": rows, "conclusion": "c"})
+        self.assertLess(st1["table"]["row_h"], st0["table"]["row_h"])
+
+    def test_two_column_matrix_code_overlays(self):
+        _, ex = self._extras({"type": "two_column", "title": "t", "connector": "arrow", "left": {}, "right": {}})
+        self.assertEqual([e["name"] for e in ex], ["流れ"])
+        _, ex = self._extras({"type": "matrix", "title": "t", "quadrants": [{}] * 4,
+                              "points": [{"label": "A", "x": 0.9, "y": 0.9}, {"x": 0.1, "y": 0.1}]})
+        self.assertEqual(sum(1 for e in ex if str(e.get("name", "")).startswith("点")), 3)   # 点2つ＋名前1つ
+        st, ex = self._extras({"type": "code", "title": "t", "code": "a\nb\nc",
+                               "annotations": [{"line": 2, "title": "x", "text": "y"}]})
+        self.assertLess(st["code"]["w"], 1136)
+        self.assertTrue({"注釈番号1", "注釈1", "注釈の行1", "注釈の印1"} <= {e.get("name") for e in ex})
+
+    def test_agenda_desc_grows_rows(self):
+        st = b.resolve_style(LAYOUT, {"meta": {}}, {"type": "agenda", "items": [{"text": "a", "desc": "d"}]})
+        self.assertGreaterEqual(st["body"]["row_h"], 64)
+
+
 class ValidateTests(unittest.TestCase):
     def _errors(self, slide):
         errs, warns = [], []
@@ -147,7 +210,7 @@ class BuildTests(unittest.TestCase):
             self.assertIn("cv-s", html)
             self.assertIn("大きな一文", html)
             prs = Presentation(str(dd / "o.pptx"))
-            self.assertEqual(len(prs.slides), 5)
+            self.assertEqual(len(prs.slides), len(SLIDES))
             for s in prs.slides:
                 self.assertFalse(s.has_notes_slide)
                 ids = [sh.shape_id for sh in s.shapes]
@@ -155,6 +218,42 @@ class BuildTests(unittest.TestCase):
             texts = " ".join(sh.text_frame.text for sh in prs.slides[0].shapes if sh.has_text_frame)
             self.assertIn("背景｜A", texts)
             self.assertIn("結論", texts)
+
+    def test_extended_existing_types_build(self):
+        from pptx import Presentation
+        slides = [
+            {"type": "agenda", "title": "目次", "items": [{"text": "背景", "desc": "説明"}, "提案"]},
+            {"type": "table", "title": "見積", "row_header": True, "total_row": True, "columns": ["区分", "金額"],
+             "rows": [["A", "1"], ["合計", "1"]], "conclusion": "結論", "source": "出典"},
+            {"type": "two_column", "title": "骨子", "connector": "arrow", "left": {"heading": "L", "bullets": ["a"]},
+             "right": {"heading": "R", "bullets": ["b"]}},
+            {"type": "steps", "title": "工程", "header_style": "arrow",
+             "steps": [{"label": "A", "items": ["x"]}, {"label": "B", "items": ["y"]}]},
+            {"type": "matrix", "title": "2軸", "quadrants": [{"heading": "q"}] * 4, "points": [{"label": "P", "x": 0.5, "y": 0.5}]},
+            {"type": "code", "title": "コード", "code": "x = 1\ny = 2", "annotations": [{"line": 1, "title": "代入"}]},
+        ]
+        with tempfile.TemporaryDirectory() as d:
+            dd = Path(d)
+            (dd / "deck.json").write_text(json.dumps({"meta": {"title": "t"}, "slides": slides}, ensure_ascii=False),
+                                          encoding="utf-8")
+            deck_, theme, layout = b.load_deck(dd)
+            b.validate_deck(deck_, layout, theme, dd)
+            ex = b.expand_slides(deck_, layout)
+            b.build_html(ex, theme, layout, dd, dd / "o.html")
+            b.build_pptx(ex, theme, layout, dd, dd / "o.pptx")
+            html = (dd / "o.html").read_text(encoding="utf-8")
+            for name in ("結論", "流れ", "工程1", "点1", "注釈1"):
+                self.assertIn(f'data-n="{name}"', html)
+            prs = Presentation(str(dd / "o.pptx"))
+            for s in prs.slides:
+                ids = [sh.shape_id for sh in s.shapes]
+                self.assertEqual(len(ids), len(set(ids)))
+                self.assertFalse(s.has_notes_slide)
+            table = next(sh for sh in prs.slides[1].shapes if sh.has_table).table
+            self.assertTrue(table.cell(2, 1).text_frame.paragraphs[0].runs[0].font.bold)   # 合計行は太字
+            self.assertTrue(table.cell(1, 0).text_frame.paragraphs[0].runs[0].font.bold)   # 行見出しは太字
+            agenda_texts = [sh.text_frame.text for sh in prs.slides[0].shapes if sh.has_text_frame]
+            self.assertTrue(any("背景" in t and "説明" in t for t in agenda_texts))
 
 
 if __name__ == "__main__":
