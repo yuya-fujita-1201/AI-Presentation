@@ -68,7 +68,7 @@ AI_PHRASES_SOFT = ["最適化", "において"]
 DISPLAY_KEYS = ("title", "punch", "lead", "caption", "message", "subtitle", "eyebrow", "heading", "quote", "attribution", "label")
 
 # --- 主張（タイトル・リード・パンチライン・メッセージ）の書き方 ---------------------------
-CLAIM_KEYS = ("title", "lead", "punch", "message")
+CLAIM_KEYS = ("title", "lead", "punch", "message", "conclusion")
 # 言い切りを弱める曖昧語
 VAGUE_WORDS = ["など", "様々", "さまざま", "適切に", "適切な", "効果的", "各種", "柔軟に", "一定の", "幅広く", "多角的"]
 # 構成の説明（主張ではなく「何がどこにあるか」を書いている）
@@ -89,18 +89,19 @@ BIG_NUMBER = re.compile(r"(?<![A-Za-z0-9_.,/:#\-×*])(\d{4,})(?![A-Za-z0-9_.,/:\
 
 # --- relation（内容の関係）とスライドタイプの対応 -------------------------------------
 RELATION_TYPES = {
-    "parallel": ["cards", "bullets", "two_column", "table", "matrix", "image_text", "status_table"],
-    "sequence": ["steps", "swimlane", "schedule", "sequence", "dataflow", "agenda"],
+    "parallel": ["cards", "bullets", "two_column", "table", "matrix", "image_text", "status_table", "summary",
+                 "row_matrix"],
+    "sequence": ["steps", "swimlane", "schedule", "sequence", "dataflow", "agenda", "row_matrix"],
     "flow": ["dataflow", "swimlane", "steps", "sequence", "architecture"],
-    "hierarchy": ["architecture", "bullets", "table"],
-    "cause": ["steps", "dataflow", "two_column", "bullets"],
-    "contrast": ["two_column", "table", "matrix", "status_table"],
+    "hierarchy": ["architecture", "bullets", "table", "org"],
+    "cause": ["steps", "dataflow", "two_column", "bullets", "reasons"],
+    "contrast": ["two_column", "table", "matrix", "status_table", "reasons", "row_matrix"],
     "cycle": ["lifecycle"],
 }
 # 順序を表す見出し（cards の見出しがこれで始まるなら steps の方が合う）
 ORDERED_HEADING = re.compile(r"^\s*(STEP|Step|step|PHASE|Phase|phase|フェーズ|ステップ|第\s*\d|\d+\s*[.．)）:：]|[①-⑳])")
 # 同じタイプが続いても単調にならないタイプ
-RHYTHM_EXEMPT = {"section", "agenda", "title", "closing", "swimlane_legend", "diagram_legend", "canvas"}
+RHYTHM_EXEMPT = {"section", "agenda", "title", "closing", "swimlane_legend", "diagram_legend", "canvas", "statement"}
 RHYTHM_RUN = 3
 
 # --- 日付の整合 ---------------------------------------------------------------------

@@ -74,6 +74,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/check_layout.py" <deck_dir> --no-build
 - `cards` は 3〜6 枚（列数 `columns` は 3 前後）
 - `architecture` / `dataflow` / `lifecycle` はノード 12 個以下・列（`col`）6 以下、`sequence` は参加者 7 人以下・メッセージ 12 本以下を目安にする（超えると `check_diagram.py` が `too-dense` 等で警告する）
 - `schedule` は行 14 行以下を目安にする。座標は書かず、期間を日付（"YYYY-MM-DD" / "YYYY-MM"）か列見出しで書く（矢羽根の位置はエンジンが時間軸から計算する）
+- 提案書・報告書は、要旨（`summary`）→ 選ばれる理由（`reasons`）→ 背景・課題 → 打ち手 → スケジュール（`schedule`）→ 体制（`org`）→ 見積（`table`）→ 前提（`row_matrix`）の順が人の提案書の定型。定型ページは型どおりに作り、工夫は中身のページ（全体像・打ち手・仕組み）でする。結論の帯 `conclusion` と出典の行 `source` は提案書向けタイプで使える
 - 1スライドに情報を詰め込みすぎない。伝えたいメッセージが2つ以上あるなら、スライドを分ける
 
 #### スライドタイプの選び方
@@ -89,7 +90,11 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/check_layout.py" <deck_dir> --no-build
 | データの流れ | `dataflow` |
 | 状態遷移 | `lifecycle` |
 | 呼び出し順序 | `sequence` |
-| 主張・キーメッセージ | `quote` |
+| 主張・キーメッセージ | `quote` / `statement`（物語の転換点の言い切り。濃色の全面） |
+| 要旨・エグゼクティブサマリー | `summary`（番号の箱＋要点＋説明の行） |
+| 選ばれる理由（課題×強み） | `reasons` |
+| 観点×対象の整理（機会とリスク・工程×領域・前提・参考資料） | `row_matrix`（工程なら `header_style: "arrow"`） |
+| 体制（貴社｜自社・提案範囲） | `org` |
 | 図版（下記「図解が欲しいとき」参照） | `image_text` / `image` |
 
 `swimlane` は既定で `legend: true` のため、そのスイムレーンの直前に凡例ページが自動で1枚追加される（合計ページ数を指定されている場合は +1 になる点に注意。厳密に枚数を守りたいときは `legend: false` にするか、その分をあらかじめ見込む）。

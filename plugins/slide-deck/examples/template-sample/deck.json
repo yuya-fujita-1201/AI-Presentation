@@ -2,7 +2,7 @@
   "meta": {
     "id": "template-sample",
     "title": "テンプレート タイプ ギャラリー",
-    "subtitle": "21スライドタイプの見た目サンプル（accenture-purple テーマ）",
+    "subtitle": "26スライドタイプの見た目サンプル（accenture-purple テーマ）",
     "author": "yuya.fujita",
     "date": "2026-10-26",
     "theme": "accenture-purple",
@@ -26,7 +26,7 @@
     {
       "type": "title",
       "title": "テンプレート タイプ ギャラリー",
-      "subtitle": "21スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
+      "subtitle": "26スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
       "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / accenture-purple テーマ",
       "notes": "表紙（title）— 左帯(bar)＋タイトル＋サブタイトル＋meta。"
     },
@@ -34,7 +34,7 @@
       "type": "agenda",
       "eyebrow": "TYPE 02 / agenda",
       "title": "アジェンダ ─ 利用できるテンプレート",
-      "lead": "全21タイプを掲載順に並べた目次。番号は各ページの TYPE 番号と一致する（行の高さを詰めて1枚に収めている）。",
+      "lead": "全26タイプを掲載順に並べた目次。番号は各ページの TYPE 番号と一致する（行の高さを詰めて1枚に収めている）。",
       "items": [
         "title（表紙）",
         {
@@ -59,15 +59,23 @@
         "sequence（シーケンス図）",
         "schedule（矢羽根スケジュール）",
         "status_table（進捗ステータス表）",
+        "summary（要旨）",
+        "reasons（選ばれる理由）",
+        "statement（言い切り）",
+        "row_matrix（行見出し×列の整理表）",
+        "org（体制図）",
         "closing（まとめ）"
       ],
-      "notes": "TYPE 02 / agenda — 全21タイプを掲載順に列挙。番号＝TYPE 番号。既定（row_h 44・gap 10）だと8行超で2段・16項目超で次ページになるため、style.body で行を詰めて2段×11行に収めている。",
+      "notes": "TYPE 02 / agenda — 全26タイプを掲載順に列挙。番号＝TYPE 番号。既定（row_h 44・gap 10）だと8行超で2段・16項目超で次ページになるため、style.body で行を詰めて3段×9行（max_cols: 3）に収めている。",
       "style": {
         "body": {
           "row_h": 34,
           "gap": 7,
-          "text_size": 18,
-          "num_size": 20
+          "text_size": 15,
+          "num_size": 17,
+          "num_w": 40,
+          "col_gap": 24,
+          "max_cols": 3
         }
       }
     },
@@ -217,7 +225,7 @@
       "punch": "deck.json を1つ書けば HTML と PPTX が同時にできる",
       "bullets": [
         "deck.json: 内容と見た目の差分（style）を書くソース",
-        "build_deck.py: 21タイプを描画し、2つの形式に書き出す",
+        "build_deck.py: 26タイプを描画し、2つの形式に書き出す",
         "HTML: ブラウザでその場で確認する",
         "PPTX: PowerPoint で開いてそのまま配布する"
       ],
@@ -1357,10 +1365,203 @@
       "notes": "TYPE 20 / status_table — 行ごとに label / status / cells を書く。PPTX はネイティブ表なので文字や信号の色を後から編集できる。"
     },
     {
+      "type": "summary",
+      "eyebrow": "TYPE 21 / summary",
+      "title": "要旨（summary）",
+      "lead": "番号の箱＋要点＋説明の行で、提案書の冒頭に結論と骨子をまとめる。行の高さはそろい、文字は枠に合わせて自動で縮む。",
+      "items": [
+        {
+          "lead": "背景｜新しい仕組みが標準で有効になった",
+          "text": "何が変わり、なぜ今判断が必要かを1行で書く"
+        },
+        {
+          "lead": "課題｜機会とリスクが同時に届く",
+          "text": "放置したときの損失を数字で書く（例: 対象620名の端末）"
+        },
+        {
+          "lead": "提案｜統制・構築・定着の3本柱",
+          "text": "打ち手を3つ以内にまとめる"
+        },
+        {
+          "lead": "ご判断｜範囲と体制のご承認",
+          "text": "いつまでに何を決めてほしいかを書く"
+        }
+      ],
+      "source": "出典: 出典や試算の前提は source に書くと本文の下に小さく出る",
+      "notes": "TYPE 21 / summary — items は {lead, text} の配列（3〜6行）。lead は要点（太字）、text は説明。"
+    },
+    {
+      "type": "reasons",
+      "eyebrow": "TYPE 22 / reasons",
+      "title": "選ばれる理由（reasons）",
+      "lead": "左に相手の課題（番号）、右に自社の強み（a/b/c）を同じ行に並べ、課題と強みの対応を一目で見せる。",
+      "issues": [
+        {
+          "title": "判断材料が少ない",
+          "text": "新機能で事例がない"
+        },
+        {
+          "title": "統制と使いやすさの両立",
+          "text": "止めすぎると使われない"
+        },
+        {
+          "title": "運用する人がいない",
+          "text": "CoE が未整備"
+        }
+      ],
+      "strengths": [
+        {
+          "title": "一次情報を読み解き、危険な操作を先に洗い出す",
+          "items": [
+            "公式ドキュメントとサンプルを精査"
+          ]
+        },
+        {
+          "title": "管理設定と方針の二段構えで、使える統制にする",
+          "items": [
+            "止める仕組みと確認の仕組みを分ける"
+          ]
+        },
+        {
+          "title": "CoE の立ち上げまで伴走して引き渡す",
+          "items": [
+            "審査・配布・計測の型を移管"
+          ]
+        }
+      ],
+      "conclusion": "conclusion を書くと、下端に結論の帯が付く（全タイプ共通のパーツ）",
+      "notes": "TYPE 22 / reasons — issues と strengths は同じ行に並ぶ。left_heading / right_heading で見出しを変えられる。"
+    },
+    {
+      "type": "statement",
+      "kicker": "TYPE 23 / statement",
+      "message": "言い切りページは、物語の転換点にだけ置く",
+      "support": "濃色の面に大きな一文（message）。kicker と support は任意。デッキに2〜3枚までが目安。",
+      "notes": "TYPE 23 / statement — タイトル・罫線・フッターの無い全面レイアウト。"
+    },
+    {
+      "type": "row_matrix",
+      "eyebrow": "TYPE 24 / row_matrix",
+      "title": "行見出し×列の整理表（row_matrix）",
+      "lead": "行見出しの帯と列見出しで、観点×対象を整理する。header_style: \"arrow\" で列見出しを工程の矢印にできる。",
+      "header_style": "arrow",
+      "columns": [
+        "Phase 0｜土台（11〜12月）",
+        "Phase 1｜パイロット（1〜2月）",
+        "Phase 2｜拡大（3〜4月）"
+      ],
+      "rows": [
+        {
+          "label": "統制",
+          "cells": [
+            [
+              "現状の棚卸し",
+              "管理設定の設計"
+            ],
+            [
+              "パイロット端末へ適用"
+            ],
+            [
+              "全社へ展開"
+            ]
+          ]
+        },
+        {
+          "label": "構築",
+          "cells": [
+            [
+              "要件定義"
+            ],
+            [
+              "2本を60名で利用"
+            ],
+            [
+              "残り3本を実装"
+            ]
+          ]
+        },
+        {
+          "label": "定着",
+          "cells": [
+            [
+              "CoE の設計"
+            ],
+            [
+              "ガイド・研修"
+            ],
+            [
+              "CoE へ移管"
+            ]
+          ]
+        }
+      ],
+      "notes": "TYPE 24 / row_matrix — セルは文字列か箇条書きの配列。emph_col で強調する列、corner で左上の見出し、col_ratios で列幅の比を指定できる。"
+    },
+    {
+      "type": "org",
+      "eyebrow": "TYPE 25 / org",
+      "title": "体制図（org）",
+      "lead": "左右に組織のツリーを描き、提案範囲を破線の枠で囲む。組織をまたぐ連携は links で点線にする。",
+      "left": {
+        "title": "貴社",
+        "nodes": [
+          {
+            "id": "po",
+            "title": "プロジェクトオーナー",
+            "name": "開発本部長"
+          },
+          {
+            "id": "pm",
+            "parent": "po",
+            "title": "貴社PM",
+            "name": "開発基盤部"
+          },
+          {
+            "id": "sec",
+            "parent": "po",
+            "title": "セキュリティ責任者",
+            "name": "情報セキュリティ部"
+          }
+        ]
+      },
+      "right": {
+        "title": "支援チーム",
+        "scope": "ご支援範囲",
+        "nodes": [
+          {
+            "id": "apm",
+            "title": "プロジェクトマネージャー",
+            "name": "1名 (F)"
+          },
+          {
+            "id": "lead",
+            "parent": "apm",
+            "title": "開発リード",
+            "name": "1名 (F)"
+          },
+          {
+            "id": "ops",
+            "parent": "apm",
+            "title": "定着・教育担当",
+            "name": "1名 (P)"
+          }
+        ]
+      },
+      "links": [
+        {
+          "from": "po",
+          "to": "apm",
+          "label": "ステアリング"
+        }
+      ],
+      "legend": "(F) フルタイム　(P) パートタイム",
+      "notes": "TYPE 25 / org — nodes は id と parent で親子を表す。scope に文字列を書くと枠の札になる。"
+    },
+    {
       "type": "closing",
-      "title": "21タイプで社内資料の大半を作れる",
+      "title": "26タイプで社内資料の大半を作れる",
       "bullets": [
-        "表・箇条書き・比較から図解まで、21タイプをネイティブに描画する",
+        "表・箇条書き・比較から図解まで、26タイプをネイティブに描画する",
         "業務フローは swimlane、構成・データの流れ・状態遷移・やり取りは図解4タイプ",
         "工程表は schedule、自由作図・グラフは image で拡張する",
         "微修正は deck.json の style（差分）だけで完結する"

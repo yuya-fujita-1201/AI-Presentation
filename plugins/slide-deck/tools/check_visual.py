@@ -37,8 +37,9 @@ INK_DIFF = 60                       # 背景色との RGB 差の合計がこれ�
 LOWER_EMPTY = 0.01                  # 下 1/3 のインク量がこれ未満なら「空」
 BODY_THIN = 0.10                    # かつ本文全体のインク量がこれ未満なら警告
 SIMILAR_DEFAULT = 6                 # dHash（64bit）のハミング距離がこれ以下なら「似ている」
-SPARSE_OK = {"title", "section", "quote", "closing", "agenda", "canvas", "swimlane_legend", "diagram_legend"}
-SIMILAR_SKIP = {"title", "section"}
+SPARSE_OK = {"title", "section", "quote", "closing", "agenda", "canvas", "swimlane_legend", "diagram_legend",
+             "statement"}
+SIMILAR_SKIP = {"title", "section", "statement"}
 
 
 def _pixels(im):

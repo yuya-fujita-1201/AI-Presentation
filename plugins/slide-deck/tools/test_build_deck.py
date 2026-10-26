@@ -113,7 +113,7 @@ class SampleDeckBuildTests(unittest.TestCase):
         deck, _theme, layout = build_deck.load_deck(SAMPLE_DECK)
         expanded = build_deck.expand_slides(deck, layout)
         self.assertEqual(len(expanded["slides"]), len(prs.slides))
-        self.assertEqual(len(expanded["slides"]), 26)
+        self.assertEqual(len(expanded["slides"]), 31)
 
 
 class ManualDeckBuildTests(unittest.TestCase):

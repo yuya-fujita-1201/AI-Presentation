@@ -50,6 +50,7 @@ import diagram_engine as de  # noqa: E402
 import canvas_engine as ce  # noqa: E402
 import schedule_engine as se  # noqa: E402
 import ja_text  # noqa: E402
+import proposal_engine as pe  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -2061,6 +2062,9 @@ def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
 
         st = resolve_style(layout, deck, slide)
 
+        if t in pe.PROPOSAL_TYPES:
+            pe.validate(slide, i, fail, warn)
+
         if t == "canvas":
             # canvas は色を hex / {color, alpha} / gradient / pattern で直接持つため、専用の検証のみ行う
             ce.validate_canvas(slide, i, fail, warn)
@@ -2500,6 +2504,12 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
     if t == "canvas":
         # 座標指定の自由配置。テーマのクロム（タイトル・罫線・フッター）は付けない
         parts.append(ce.canvas_html(slide))
+
+    elif t in pe.PROPOSAL_TYPES:
+        # 提案書向けタイプ: レイアウトは proposal_engine が canvas 要素として計算する（statement はクロムなし）
+        if t != "statement":
+            chrome()
+        parts.append(ce.canvas_html({"elements": pe.layout(slide, st, theme)}))
 
     elif t == "title":
         parts.append(rect(st["bar"], theme))
@@ -3233,7 +3243,8 @@ def build_html(deck, theme, layout, deck_dir: Path, out_path: Path):
         C_ACCENT=col(theme, "accent"),
         F_BODY=font_css(theme["fonts"]["body"]),
         TOTAL=str(total),
-        CANVAS_CSS=ce.CANVAS_CSS if any(s.get("type") == "canvas" for s in slides) else "",
+        CANVAS_CSS=ce.CANVAS_CSS if any(s.get("type") == "canvas" or s.get("type") in pe.PROPOSAL_TYPES
+                                        for s in slides) else "",
     )
     try:
         out_path.write_text(doc, encoding="utf-8")
@@ -4622,8 +4633,14 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         els = [{"kind": "shape", "x": 0, "y": 0, "w": CANVAS_W, "h": CANVAS_H, "fill": bg, "name": "背景"}]
         ce.add_canvas_to_pptx(slide, els + d.get("elements", []), _canvas_svg_png, _canvas_backdrop_png)
 
+    def s_proposal(slide, d, st, page, total):
+        if d["type"] != "statement":
+            chrome(slide, d, st, page, total)
+        ce.add_canvas_to_pptx(slide, pe.layout(d, st, theme))
+
     builders = {
         "canvas": s_canvas,
+        **{t: s_proposal for t in pe.PROPOSAL_TYPES},
         "title": s_title, "section": s_section, "bullets": s_bullets,
         "two_column": s_two_column, "table": s_table, "status_table": s_status_table, "code": s_code,
         "quote": s_quote, "image": s_image, "image_text": s_image_text,

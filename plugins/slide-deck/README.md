@@ -115,7 +115,7 @@ plugins/slide-deck/
 ├── agents/                      # deck-evaluator（プレビュー画像を第三者として採点する評価エージェント）
 ├── tools/                       # build_deck / preview_deck / check_layout / check_svg_fonts /
 │                                 #   lint_deck_text / check_visual / deck_metrics / contact_sheet / check_theme /
-│                                 #   ja_text / build_settings_widget /
+│                                 #   ja_text / build_settings_widget / proposal_engine /
 │                                 #   export_pdf / new_theme / theme_from_sample / setup_deps /
 │                                 #   diagram_engine / schedule_engine / check_diagram / archify_import /
 │                                 #   canvas_engine / pptx_import / pptx_import_excel /
@@ -154,6 +154,17 @@ acnpptx スキルの分析結果から、slide-deck の設計を崩さずに取�
 - **泣き別れ対策**: タイトル・リード・箇条書きの最終行が 1〜2 文字だけ残る文に、ビルド時に文節の切れ目で改行を入れる（HTML と PPTX の両方。`meta.line_balance: false` で無効）。あわせて PPTX では明示的な改行を段落内改行（`a:br`）として出力するようにした
 - **文言チェックの拡張**（`lint_deck_text.py`、すべて警告）: 曖昧語・構成の説明・体言止めのリード・タイトルの言い直し（文字 2-gram の重なり）、曖昧な列名・凡例の無い ◎○△・桁区切り、同じタイプの 3 枚連続、`relation` とタイプの不一致、日付の整合（`meta.as_of` より後の「実績」、基準日より前に始まる計画）
 - **見た目のチェック**（`check_visual.py`）: プレビュー PNG のインク量から「下 1/3 が空いたスライド」を、dHash から「直前と似たスライドの連続」を検出する
+
+## 提案書向けのスライドタイプ（v1.5.0）
+
+acnpptx の紹介ムービーに出てくる作例の提案書（28枚）を1枚ずつ slide-deck のタイプと突き合わせ、既存タイプで描けない定型ページを新しいタイプとして追加した。レイアウトは `tools/proposal_engine.py` が計算して canvas の要素列にし、HTML と PPTX の両方でネイティブ図形として描く（PowerPoint で四角・矢羽根・線を1つずつ編集できる）。
+
+- **`summary`**（要旨）: 番号の箱＋要点＋説明の行。行の高さをそろえ、文字は枠に合わせて自動で縮む
+- **`reasons`**（選ばれる理由）: 相手の課題（番号）と自社の強み（a/b/c）を同じ行に並べて対応を見せる
+- **`statement`**（言い切り）: 濃色の面に大きな一文。物語の転換点に置く
+- **`row_matrix`**（行見出し×列の整理表）: 機会とリスク、工程×領域、前提・参考資料など。列見出しを工程の矢羽根にもできる
+- **`org`**（体制図）: 左右の組織ツリー、カギ線、提案範囲の破線枠、組織をまたぐ連携線
+- **共通パーツ**: 結論の帯 `conclusion` と出典の行 `source`（提案書向けタイプで使える）
 
 ## 評価エージェントと修正ループ（v1.4.0）
 

@@ -56,9 +56,9 @@
 
 ## slides — スライドタイプ一覧
 
-全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）、`relation`、`line_balance`。
+全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）、`relation`、`line_balance`。提案書向けタイプでは結論の帯 `conclusion` と出典の行 `source` も使える（下記「提案書向けタイプ共通」）。
 
-- `relation`（任意）: そのスライドで見せる内容の関係。描画には使わず、`lint_deck_text.py` がタイプとの不一致を警告する。値と合うタイプ: `parallel`（並列）→ cards / bullets / two_column / table / matrix / image_text / status_table、`sequence`（順序）→ steps / swimlane / schedule / sequence / dataflow / agenda、`flow`（流れ）→ dataflow / swimlane / steps / sequence / architecture、`hierarchy`（階層）→ architecture / bullets / table、`cause`（因果）→ steps / dataflow / two_column / bullets、`contrast`（対比）→ two_column / table / matrix / status_table、`cycle`（循環）→ lifecycle
+- `relation`（任意）: そのスライドで見せる内容の関係。描画には使わず、`lint_deck_text.py` がタイプとの不一致を警告する。値と合うタイプ: `parallel`（並列）→ cards / bullets / two_column / table / matrix / image_text / status_table / summary / row_matrix、`sequence`（順序）→ steps / swimlane / schedule / sequence / dataflow / agenda / row_matrix、`flow`（流れ）→ dataflow / swimlane / steps / sequence / architecture、`hierarchy`（階層）→ architecture / bullets / table / org、`cause`（因果）→ steps / dataflow / two_column / bullets / reasons、`contrast`（対比）→ two_column / table / matrix / status_table / reasons / row_matrix、`cycle`（循環）→ lifecycle
 - `line_balance`（任意）: `false` でそのスライドの泣き別れ対策を止める。既定では `title` / `subtitle` / `lead` / `punch` / `message` と箇条書き（bullets / closing / image_text / two_column）の最終行が1〜2文字になるとき、ビルド時に文節の切れ目（助詞・読点の後など）で改行を入れる。改行（`\n`）を書いてある文字列は触らない
 
 `eyebrow`（タイトル上の小さなサブタイトル。15px・アクセント色・太字。章や系列の目印に使う）は、見出し（`chrome()`）を持つほぼ全タイプで指定できる: `bullets` / `two_column` / `table` / `code` / `image` / `image_text` に加え `agenda` / `steps` / `matrix` / `cards` / `swimlane` / `architecture` / `dataflow` / `lifecycle` / `sequence` でも使える（`title` / `section` / `quote` / `closing` のような固有レイアウトのタイプは対象外）。
@@ -455,6 +455,58 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 - **主な `style.chart` トークン**: `label_w`（行見出し欄の幅、既定 250）/ `group_w` / `period_h` / `col_h` / `min_row_h` / `max_row_h` / `bar_hr`（行高に対する矢羽根の高さ比）/ `bar_max_h` / `bar_head`（矢頭の深さ上限 px）/ `bar_gap` / `<variant>_fill` / `<variant>_border` / `<variant>_color` / `period_fill` / `col_fill` / `group_fill` / `row_alt_fill` / `grid_color` / `milestone_fill` / `today_color` / 各 `*_size`。
 
 診断は `check_diagram.py` で確認できる（スキーマ的な誤りはビルドエラー、文字あふれ・重なりは警告）。
+
+### 提案書向けタイプ共通（`summary` / `reasons` / `statement` / `row_matrix` / `org`）
+
+提案書・報告書の定型ページを、人が作った提案書と同じ型で描くタイプ。レイアウトは `tools/proposal_engine.py` が計算し、HTML と PPTX の両方でネイティブ図形（PowerPoint では四角・矢羽根・線を1つずつ編集できる）になる。文字の大きさはテーマのフォントの実測字幅で行数を見積もり、枠に収まる最大のサイズを自動で選ぶ。`statement` 以外はタイトル・罫線・リード・フッターを持ち、本文は `body` 領域（lead が無ければ `y_no_lead` まで上に詰める）に描く。色・寸法は `style.body.<トークン>` で上書きできる（トークン名は `templates/layouts/default.json` の各タイプの `body`）。
+
+**共通パーツ**（いまは提案書向けタイプで使える）:
+- `conclusion`: 本文の下に結論の帯（`primary` 塗り・白抜き太字・中央揃え）を付ける。帯の分だけ本文が上に詰まる。見た目は `style.conclusion`（`h` / `gap` / `size` / `fill` / `color`）
+- `source`: 本文の下に出典の行（12px・`muted`）を付ける。試算値は「試算の前提: …」と書く。見た目は `style.source`
+
+### `summary` — 要旨（番号の箱＋要点＋説明の行）
+```json
+{ "type": "summary", "title": "ご提案の背景と要旨", "lead": "（任意）",
+  "items": [ { "lead": "背景｜…", "text": "説明" }, { "lead": "課題｜…", "text": "…" } ],
+  "source": "（任意）出典", "conclusion": "（任意）結論の帯" }
+```
+提案書の冒頭で結論と骨子を示す。各行は左に番号の箱（`primary`）、右に要点（太字）と説明。行の高さはすべて同じ。目安: **3〜6行**（7行以上は警告）。`items` に文字列だけを並べると要点だけの行になる。
+
+### `reasons` — 選ばれる理由（課題 × 強みの対応）
+```json
+{ "type": "reasons", "title": "アクセンチュアが選ばれる理由",
+  "left_heading": "貴社の課題", "right_heading": "選ばれる理由",
+  "issues":    [ { "title": "判断材料が少ない", "text": "新機能で事例がない" } ],
+  "strengths": [ { "title": "一次情報を読み解き…", "text": "（任意）", "items": ["根拠1", "根拠2"], "label": "a" } ] }
+```
+左に相手の課題（番号付き）、右に自社の強み（`label` 省略時は a/b/c…）を同じ行に並べ、間を灰色の三角でつなぐ。`issues` と `strengths` は同じ順で対応させる。目安: **3行前後**（6行以上は警告）。
+
+### `statement` — 言い切り（濃色の面に大きな一文）
+```json
+{ "type": "statement", "kicker": "本提案の結論", "message": "Modsは、統制を先に固めた組織だけが、安全に増やせる",
+  "support": "（任意）補足の一文" }
+```
+物語の転換点に置く全面ページ（タイトル・罫線・フッターなし）。`message`（無ければ `title`）を大きく、`kicker` を上に小さく、`support` を下に置く。長い一文は自動で文字を縮める。デッキに2〜3枚までが目安。領域: `background`（`fill`）/ `kicker` / `message` / `support`。
+
+### `row_matrix` — 行見出し × 列の整理表
+```json
+{ "type": "row_matrix", "title": "フェーズ別の実施事項", "header_style": "arrow",
+  "corner": "（任意）左上の見出し", "columns": ["Phase 0", "Phase 1", "Phase 2"], "col_ratios": [1, 1, 1],
+  "emph_col": 0,
+  "rows": [ { "label": "統制", "cells": [ ["現状の棚卸し", "管理設定の設計"], "文字列も可", { "text": "本文", "items": ["箇条書き"] } ] } ] }
+```
+左の行見出しの帯と上の列見出しで、観点×対象（機会とリスク、工程×領域、前提・参考資料など）を整理する。セルは文字列・箇条書きの配列・`{text, items}` のいずれか。`header_style: "arrow"` で列見出しを工程の矢羽根（五方向）にする。`emph_col`（0 始まり）で主張する列を淡い色で塗る。`columns` を省略（または `[""]`）すると、行見出し＋1列の一覧（前提条件・参考資料など）になる。行の高さは中身に合わせて配分し、余りは均等に足す。目安: **6行以内**。
+
+### `org` — 体制図（左右の組織ツリー＋提案範囲）
+```json
+{ "type": "org", "title": "推進体制", "legend": "(F) フルタイム　(P) パートタイム",
+  "left":  { "title": "貴社", "nodes": [ { "id": "po", "title": "プロジェクトオーナー", "name": "開発本部長" },
+                                        { "id": "pm", "parent": "po", "title": "貴社PM", "name": "開発基盤部" } ] },
+  "right": { "title": "アクセンチュア", "scope": "ご支援範囲",
+             "nodes": [ { "id": "apm", "title": "プロジェクトマネージャー", "name": "1名 (F)", "members": "（任意）" } ] },
+  "links": [ { "from": "po", "to": "apm", "label": "ステアリング" } ] }
+```
+左右（片方だけでも可）に組織のツリーを描く。ノードは `id` と `parent`（同じ側の親の id）で親子を表し、見出し帯（左は `muted`、右は `primary`）＋本文（`name` / `members`）の箱になる。親子はカギ線で結ぶ。`scope` を書いた側は破線の枠で囲み、文字列なら札（既定「ご支援範囲」）を付ける。`links` は組織をまたぐ連携（点線＋ラベル）。id の重複・存在しない parent / links はビルドエラー。目安: 各側 **3階層・1段4ノード以内**。
 
 ### `diagram_legend` — 図解タイプの凡例ページ
 ```json
