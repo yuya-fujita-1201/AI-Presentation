@@ -4,7 +4,7 @@
     "title": "テンプレート タイプ ギャラリー",
     "subtitle": "21スライドタイプの見た目サンプル（accenture-purple テーマ）",
     "author": "yuya.fujita",
-    "date": "2026-09-11",
+    "date": "2026-10-26",
     "theme": "accenture-purple",
     "layout_overrides": {
       "bullets": {
@@ -110,23 +110,29 @@
     {
       "type": "two_column",
       "eyebrow": "TYPE 05 / two_column",
-      "title": "2カラム比較（two_column）",
+      "title": "修正は deck.json の差分だけで再現できる（two_column）",
       "lead": "左右の surface ボックスで対比を見せる。見出し＋箇条書きを2枚並べる。",
       "left": {
         "heading": "Before",
         "bullets": [
-          "生成物(build/)を直接手直し",
-          "再現できない",
-          "テーマ切替が効かない"
+          { "text": "修正場所：生成物(build/)を直接手直し", "children": ["PPTX を開いて手で位置を動かす"] },
+          { "text": "再現性：再ビルドで手直しが消える", "children": ["次のビルドで手直しが上書きされる"] },
+          { "text": "色：スライドごとに hex を直書き", "children": ["同じ色が何十か所にも散らばる"] },
+          { "text": "テーマ切替：全スライドを塗り直す", "children": ["ブランド変更のたびに全ページを直す"] }
         ]
       },
       "right": {
         "heading": "After",
         "bullets": [
-          "deck.json の style で調整",
-          "差分だけを書く",
-          "テーマトークンで色管理"
+          { "text": "修正場所：deck.json の style に差分だけ書く", "children": ["例：\"style\": { \"title\": { \"size\": 32 } }"] },
+          { "text": "再現性：何度ビルドしても同じ結果", "children": ["差分がレビュー・履歴に残る"] },
+          { "text": "色：テーマトークン（primary 等）で指定", "children": ["色の定義はテーマの1ファイルだけ"] },
+          { "text": "テーマ切替：meta.theme を1か所変えるだけ", "children": ["default / accenture-purple を切り替えられる"] }
         ]
+      },
+      "style": {
+        "left": { "valign": "middle" },
+        "right": { "valign": "middle" }
       },
       "notes": "TYPE 05 / two_column — Before/After や対比に。"
     },
@@ -207,18 +213,22 @@
     {
       "type": "image_text",
       "eyebrow": "TYPE 10 / image_text",
-      "title": "画像＋本文（image_text）",
-      "punch": "図と説明を1枚に統合できる（分離しない）",
+      "title": "図と説明を1枚に並べて流れと要点を同時に伝える（image_text）",
+      "punch": "deck.json を1つ書けば HTML と PPTX が同時にできる",
       "bullets": [
-        "左に本文、右に図。image_side で左右を入れ替え可能",
-        {
-          "text": "図は 4:3 前後（例 1024×768）が最も収まりが良い"
-        },
-        "メッセージと図解を同時に見せたいときの主力タイプ"
+        "deck.json: 内容と見た目の差分（style）を書くソース",
+        "build_deck.py: 21タイプを描画し、2つの形式に書き出す",
+        "HTML: ブラウザでその場で確認する",
+        "PPTX: PowerPoint で開いてそのまま配布する"
       ],
       "path": "assets/flow-sample.svg",
       "caption": "図を本文の隣に配置した例（image_side で左右反転）。",
       "image_side": "right",
+      "style": {
+        "img": { "y": 214, "h": 400 },
+        "caption": { "y": 524 },
+        "body": { "y": 290, "h": 280 }
+      },
       "notes": "TYPE 10 / image_text — 図＋パンチライン＋本文の統合レイアウト。"
     },
     {
@@ -231,28 +241,32 @@
           "label": "研究開発",
           "items": [
             "基礎研究",
-            "実験・検証"
+            "実験・検証",
+            "試作と評価"
           ]
         },
         {
           "label": "社会実装",
           "items": [
             "インフラ整備",
-            "法規制対応"
+            "法規制対応",
+            "実証実験"
           ]
         },
         {
           "label": "市場展開",
           "items": [
             "製品開発",
-            "販売戦略"
+            "販売戦略",
+            "販路の開拓"
           ]
         },
         {
           "label": "普及拡大",
           "items": [
             "価格最適化",
-            "エコシステム"
+            "エコシステム",
+            "保守・サポート"
           ]
         }
       ],
@@ -385,14 +399,6 @@
           "name": "開発T(Member)"
         },
         {
-          "group": "ATC",
-          "name": "Dev(Lead)"
-        },
-        {
-          "group": "ATC",
-          "name": "Dev(Member)"
-        },
-        {
           "name": "AI（Claude Code等）"
         }
       ],
@@ -411,12 +417,12 @@
           "col": 1,
           "shape": "task",
           "variant": "onpf",
-          "text": "論点検討ドラフト作成",
+          "text": "論点ドラフト作成",
           "loop": true
         },
         {
           "id": "sys",
-          "lane": 5,
+          "lane": 3,
           "col": 1,
           "shape": "system",
           "text": "Claude Code"
@@ -442,7 +448,7 @@
           "lane": 2,
           "col": 4,
           "shape": "decision",
-          "text": "指摘あり"
+          "text": "指摘有無"
         },
         {
           "id": "t4",
@@ -474,7 +480,7 @@
         },
         {
           "id": "io1",
-          "lane": 5,
+          "lane": 3,
           "col": 3,
           "shape": "io",
           "input": [
@@ -1352,10 +1358,11 @@
     },
     {
       "type": "closing",
-      "title": "まとめ（TYPE 21 / closing）",
+      "title": "21タイプで社内資料の大半を作れる",
       "bullets": [
-        "21タイプで社内資料の大半の表現をネイティブにカバーできる",
-        "業務フローは swimlane、構成図・データフロー・状態遷移・シーケンスは図解4タイプ、工程表は schedule、自由作図・グラフは image で拡張する",
+        "表・箇条書き・比較から図解まで、21タイプをネイティブに描画する",
+        "業務フローは swimlane、構成・データの流れ・状態遷移・やり取りは図解4タイプ",
+        "工程表は schedule、自由作図・グラフは image で拡張する",
         "微修正は deck.json の style（差分）だけで完結する"
       ],
       "message": "テンプレートはテーマ・レイアウト・オーバーライドの3層で管理する",

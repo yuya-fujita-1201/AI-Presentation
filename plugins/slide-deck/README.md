@@ -44,7 +44,7 @@ claude --plugin-dir <展開先>/slide-deck
 |---|---|
 | `/slide-deck:create-deck` | deck.json からスライドを新規作成・編集・ビルド |
 | `/slide-deck:add-theme` | 新しいテーマ（配色・フォント）を追加・切替 |
-| `/slide-deck:review-deck` | 既存デッキを機械的に一括レビュー |
+| `/slide-deck:review-deck` | 既存デッキを一括レビュー（機械チェック＋評価エージェント `deck-evaluator` の採点と fail スライドの修正ループ） |
 | `/slide-deck:export-pdf` | ビルド済み PPTX を PDF に書き出す |
 | `/slide-deck:setup` | 依存関係の初回セットアップ |
 
@@ -112,6 +112,7 @@ plugins/slide-deck/
 ├── .claude-plugin/plugin.json   # プラグイン定義
 ├── requirements.txt             # Python 依存関係（pip install -r で導入可）
 ├── skills/                      # create-deck / add-theme / review-deck / export-pdf / setup
+├── agents/                      # deck-evaluator（プレビュー画像を第三者として採点する評価エージェント）
 ├── tools/                       # build_deck / preview_deck / check_layout / check_svg_fonts /
 │                                 #   lint_deck_text / check_visual / deck_metrics / contact_sheet / check_theme /
 │                                 #   ja_text / build_settings_widget /
@@ -148,11 +149,16 @@ plugins/slide-deck/
 
 acnpptx スキルの分析結果から、slide-deck の設計を崩さずに取り込めるものを実装した。
 
-- **設定フォーム**: 新規作成の最初に、テーマ（色トークンから描いたミニプレビュー付き）・聞き手・目的・構成の型・枚数・トーン・図解の方針・出力形式・参考資料を 1 画面で選べるフォームを出す（`tools/build_settings_widget.py`）。送信後は確認を挟まず完成まで進める。visualize ツールが無い環境では AskUserQuestion の 4 問で代替
+- **設定フォーム**: 新規作成の最初に、テーマ（色トークンから描いたミニプレビュー付き）・聞き手・目的・構成の型・枚数・トーン・図解の方針・出力形式・参考資料を 1 画面で選べるフォームを出す（`tools/build_settings_widget.py`）。送信後は確認を挟まず完成まで進める。visualize ツールが無い環境では AskUserQuestion の 4 問で代替。v1.4.0 で仕上げの度合い（ドラフト＝機械チェックだけ・既定／仕上げ＝評価ループあり）を選ぶ項目を追加
 - **字幅の実測**: 文字あふれの見積もりを、テーマのフォントファイルを Pillow で実測した字幅で行う（`tools/ja_text.py`）。英単語は途中で切らず、行頭禁則は前の行に残す。Pillow かフォントが無い環境では従来の近似（全角 1.0 / 半角 0.55）
 - **泣き別れ対策**: タイトル・リード・箇条書きの最終行が 1〜2 文字だけ残る文に、ビルド時に文節の切れ目で改行を入れる（HTML と PPTX の両方。`meta.line_balance: false` で無効）。あわせて PPTX では明示的な改行を段落内改行（`a:br`）として出力するようにした
 - **文言チェックの拡張**（`lint_deck_text.py`、すべて警告）: 曖昧語・構成の説明・体言止めのリード・タイトルの言い直し（文字 2-gram の重なり）、曖昧な列名・凡例の無い ◎○△・桁区切り、同じタイプの 3 枚連続、`relation` とタイプの不一致、日付の整合（`meta.as_of` より後の「実績」、基準日より前に始まる計画）
 - **見た目のチェック**（`check_visual.py`）: プレビュー PNG のインク量から「下 1/3 が空いたスライド」を、dHash から「直前と似たスライドの連続」を検出する
+
+## 評価エージェントと修正ループ（v1.4.0）
+
+- **`agents/deck-evaluator.md`**: 生成の経緯を知らない第三者としてプレビュー PNG を採点する評価エージェント。10 観点×10 点（5 秒で結論が分かるか・視線の順・密度・タイプの適合・色の意味・均等割りへの逃げ・文字の品質・重心・前後との重複・図と線の仕上げ）で、70 点未満は fail。根拠は画像で確認できる事実に限る
+- **修正ループ**: `review-deck` の手順8、または新規作成で「仕上げ」を選んだときの `create-deck` 手順4.6。fail のスライドだけを deck.json（文言・`style` 差分）で直して再採点し、修正は最大 3 周で打ち切って残りを「未解決」として報告する
 
 ## 既存 PPTX の取り込み（`canvas` 型）
 

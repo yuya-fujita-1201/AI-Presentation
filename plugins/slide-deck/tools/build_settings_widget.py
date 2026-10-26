@@ -13,7 +13,9 @@ create-deck スキルが新規作成の最初に 1 回だけ表示する。ユ�
 使い方:
   python tools/build_settings_widget.py --out deck_widget.html \\
       [--deck-dir <deck_dir>] [--defaults-file defaults.json] [--from-request count audience]
-defaults.json のキー: theme / audience / purpose / story / count / tone / visuals / output / notes
+defaults.json のキー: theme / audience / purpose / story / count / tone / visuals / output / quality / notes
+quality は仕上げの度合い。既定は「ドラフト」（機械チェックだけで完成）。「仕上げ」を選ぶと
+create-deck が手順4の後に評価エージェントの採点と修正ループ（最大3周）を回す（時間がかかる）。
 """
 from __future__ import annotations
 
@@ -28,7 +30,7 @@ sys.path.insert(0, str(TOOLS_DIR))
 import build_deck  # noqa: E402
 
 AUTO = "おまかせ"
-FIELDS = ("theme", "audience", "purpose", "story", "count", "tone", "visuals", "output", "notes")
+FIELDS = ("theme", "audience", "purpose", "story", "count", "tone", "visuals", "output", "quality", "notes")
 
 # (値, Tabler アイコン, 補足)
 AUDIENCE = [
@@ -58,6 +60,11 @@ VISUALS = [
     ("図解を多めに", "ti-sitemap", "構成図・フロー・表で見せる"),
     ("文字中心で簡潔に", "ti-align-left", "箇条書きと表が中心"),
     ("画像・スクショを使う", "ti-photo", "手元の画像を配置する"),
+]
+DRAFT, FINISH = "ドラフト", "仕上げ"
+QUALITY = [
+    (DRAFT, "ti-bolt", "評価ループなし・速い。機械チェックだけで完成"),
+    (FINISH, "ti-checklist", "評価ループで品質を上げる・時間がかかる"),
 ]
 COUNT = [AUTO, "5枚前後", "8〜12枚", "15枚前後", "20枚以上"]
 TONE = [AUTO, "フォーマル", "カジュアル"]
@@ -202,6 +209,8 @@ def build(themes, defaults: dict, from_request) -> str:
         pills("tone", "トーンはどちらに寄せますか？", TONE, sel("tone"), from_request),
         cards("visuals", "図解や画像はどのくらい使いますか？", VISUALS, sel("visuals"), from_request),
         output_tiles(sel("output", "HTML＋PPTX"), from_request),
+        cards("quality", "どこまで仕上げますか？", QUALITY,
+              d["quality"] if d["quality"] in (DRAFT, FINISH) else DRAFT, from_request),
         ('<div class="elicit-group">'
          f'{_question("参考資料や、必ず入れたい内容はありますか？", "notes", from_request)}'
          f'<div class="elicit-files" data-name="materials"><label class="elicit-dropzone">{UPLOAD_SVG}'

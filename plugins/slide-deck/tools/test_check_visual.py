@@ -54,6 +54,25 @@ class CheckVisualTests(unittest.TestCase):
         self.assertNotIn("3枚目", joined)
         self.assertNotIn("4枚目", joined)
 
+    def test_rows_map_back_to_deck_json(self):
+        # swimlane の直前には凡例ページが自動挿入されるので、PNG の番号と deck.json の並びがずれる
+        deck = {"meta": {"title": "t"}, "slides": [
+            {"type": "bullets", "title": "a", "bullets": ["x"]},
+            {"type": "swimlane", "title": "b", "lanes": [], "steps": []},
+            {"type": "closing", "title": "c"},
+        ]}
+        with tempfile.TemporaryDirectory() as d:
+            dd = Path(d)
+            (dd / "deck.json").write_text(json.dumps(deck, ensure_ascii=False), encoding="utf-8")
+            prev = dd / "build" / "preview"
+            prev.mkdir(parents=True)
+            for i in range(1, 5):
+                _png(prev / f"slide-{i:02d}.png", 640, stripes=i % 2 == 0)
+            rows, _ = check_visual.analyze(dd)
+        self.assertEqual([(r["slide"], r["type"], r["src"]) for r in rows],
+                         [(1, "bullets", 1), (2, "swimlane_legend", None), (3, "swimlane", 2), (4, "closing", 3)])
+        self.assertEqual(rows[2]["title"], "b")
+
 
 if __name__ == "__main__":
     unittest.main()

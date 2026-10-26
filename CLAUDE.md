@@ -8,7 +8,7 @@
 
 - マーケットプレイス定義: `.claude-plugin/marketplace.json`
 - プラグイン本体（自己完結）: `plugins/slide-deck/`
-  - `skills/`（create-deck / add-theme / review-deck / export-pdf / setup）、`tools/`、`templates/`、`references/`、`examples/`、`manual/`
+  - `skills/`（create-deck / add-theme / review-deck / export-pdf / setup）、`agents/`（deck-evaluator: review-deck が呼ぶ評価エージェント）、`tools/`、`templates/`、`references/`、`examples/`、`manual/`
 - スクリプトは `plugins/slide-deck/tools/` にあり、テンプレートを `plugins/slide-deck/templates/` から解決する（`ROOT = tools の親 = plugins/slide-deck/`）
 
 ## デッキ作成のルール
@@ -20,8 +20,8 @@
 - 画像は `<deck_dir>/assets/` に置き、`image` / `image_text` タイプの `path` で相対参照する（PNG / JPG / SVG 対応）
 - **微修正の依頼（位置・サイズ・フォント・色の変更）が来たら、スライドを作り直さず該当スライドの `style` に差分だけ書く**。デッキ全体なら `meta.layout_overrides`、全デッキ共通なら `plugins/slide-deck/templates/layouts/default.json`
 - 微修正後は `build_deck.py <deck_dir> --html` → `preview_deck.py <deck_dir> <番号>` で該当スライドだけ目視確認してから PPTX を再生成する
-- ビルド前後の機械チェックとして `check_layout.py <deck_dir>`（はみ出し・重なり・文字あふれ）と `lint_deck_text.py <deck_dir>`（文字量・AI定型句）を通す（`create-deck` スキルの手順4、または `review-deck` スキルでまとめて実行できる）。図解タイプ（`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane` / `schedule`）を使ったら `check_diagram.py <deck_dir>`（配線・ラベルの座標診断）も通す。プレビュー PNG を全枚作ったら `check_visual.py <deck_dir>`（下1/3の空白・似たスライドの連続。警告のみ）も確認する
-- 新規デッキ作成では最初に設定フォーム（`build_settings_widget.py` → show_widget）を1回だけ出し、送信後は確認なしで完成まで進める（`create-deck` 手順0.5）
+- ビルド前後の機械チェックとして `check_layout.py <deck_dir>`（はみ出し・重なり・文字あふれ）と `lint_deck_text.py <deck_dir>`（文字量・AI定型句）を通す（`create-deck` スキルの手順4、または `review-deck` スキルでまとめて実行できる）。図解タイプ（`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane` / `schedule`）を使ったら `check_diagram.py <deck_dir>`（配線・ラベルの座標診断）も通す。プレビュー PNG を全枚作ったら `check_visual.py <deck_dir>`（下1/3の空白・似たスライドの連続。警告のみ）も確認する。仕上げの品質確認は `review-deck` スキルの手順8（評価エージェント `deck-evaluator` の採点 → fail のスライドだけ deck.json で直す → 再採点、修正は最大3周）で行う
+- 新規デッキ作成では最初に設定フォーム（`build_settings_widget.py` → show_widget）を1回だけ出し、送信後は確認なしで完成まで進める（`create-deck` 手順0.5）。フォームの「仕上げの度合い」は既定がドラフト（機械チェックだけ）で、「仕上げ」を選んだとき・ユーザーが「仕上げて」と言ったときだけ評価ループ（手順4.6、修正は最大3周）を回す
 - 色は hex 直書きせずテーマトークン（`primary` / `accent` 等）で指定。テーマ変更は `meta.theme` の切替のみ（同梱: `default` / `accenture-purple`）。例外は既存 PPTX の取り込み専用 `canvas` 型（`pptx_import.py` が生成し元資料の hex を持つ。新規スライドを canvas で手書きしない）
 - **PPTX にスピーカーノートを絶対に入れない**（python-pptx の notes_slide は Keynote 互換性を破壊する）。`notes` フィールドは HTML でのみ表示される
 - PPTX 生成後の検証: zip 整合（`unzip -t` 等）と `Presentation()` 再パースの 2 点を必ず実施し、全スライドで `has_notes_slide` が False であることを確認する

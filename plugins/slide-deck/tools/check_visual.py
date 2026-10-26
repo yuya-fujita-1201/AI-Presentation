@@ -14,6 +14,8 @@
   python tools/build_deck.py <deck_dir> --html
   python tools/preview_deck.py <deck_dir>
   python tools/check_visual.py <deck_dir> [--json out.json] [--similar 6] [--strict]
+--json の各行は PNG の番号（slide）・type・src（deck.json の slides の何枚目か。自動挿入の凡例ページは null）・
+title・インク量を持つ（deck-evaluator エージェントと review-deck の修正ループが番号の対応に使う）。
 要: pillow（setup_deps.py --pillow）
 """
 from __future__ import annotations
@@ -76,7 +78,9 @@ def analyze(deck_dir: Path, similar: int = SIMILAR_DEFAULT):
     """(スライドごとの指標, 警告) を返す。"""
     from PIL import Image
     deck, theme, layout = build_deck.load_deck(deck_dir)
-    slides = build_deck.expand_slides(deck, layout)["slides"]
+    # 展開（凡例ページの自動挿入・agenda の改ページ）後も deck.json の何枚目かを辿れるよう印を付ける
+    src_deck = dict(deck, slides=[dict(s, _src=i) for i, s in enumerate(deck.get("slides", []), 1)])
+    slides = build_deck.expand_slides(src_deck, layout)["slides"]
     prev_dir = deck_dir / "build" / "preview"
     pngs = sorted(prev_dir.glob("slide-*.png"))
     if not pngs:
@@ -96,7 +100,7 @@ def analyze(deck_dir: Path, similar: int = SIMILAR_DEFAULT):
         body, lower = ink(im, BODY_BOX, bg), ink(im, LOWER_BOX, bg)
         h = dhash(im)
         dist = bin(h ^ prev[0]).count("1") if prev else None
-        rows.append({"slide": i, "type": t, "ink": round(body, 3), "ink_lower": round(lower, 3), "similar_prev": dist})
+        rows.append({"slide": i, "type": t, "src": s.get("_src"), "title": s.get("title", ""), "ink": round(body, 3), "ink_lower": round(lower, 3), "similar_prev": dist})
         label = f"{i}枚目（type={t}）"
         if t not in SPARSE_OK and lower < LOWER_EMPTY and body < BODY_THIN:
             warns.append(f"{label}: [empty-bottom] 本文の下1/3がほぼ空（インク量 全体{body:.0%}・下{lower:.0%}）。"
