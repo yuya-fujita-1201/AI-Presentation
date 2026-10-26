@@ -13,7 +13,8 @@
 
 依存の役割:
     python-pptx  必須。PPTX 生成に使用
-    pillow       任意。contact_sheet.py の一覧シート生成／画像からのテーマ抽出に使用
+    pillow       任意。contact_sheet.py の一覧シート生成／画像からのテーマ抽出／check_visual.py／
+                 文字あふれ見積もりの字幅実測（無ければ近似）に使用
     playwright   任意。preview_deck.py のプレビューPNG生成・check_layout.py の機械ゲートに使用（chromium も要install）
     pymupdf      任意。theme_from_sample.py で PDF からテーマを抽出する場合に使用
 

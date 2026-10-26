@@ -20,7 +20,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/build_deck.py" <deck_dir> --html
 python "${CLAUDE_PLUGIN_ROOT}/tools/check_layout.py" <deck_dir>
 ```
 
-### 3. 文言チェック（文字量・AI定型句など）
+### 3. 文言チェック（文字量・AI定型句・主張の書き方・日付の整合など）
 ```bash
 python "${CLAUDE_PLUGIN_ROOT}/tools/lint_deck_text.py" <deck_dir>
 ```
@@ -41,6 +41,12 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/check_diagram.py" <deck_dir>
 python "${CLAUDE_PLUGIN_ROOT}/tools/contact_sheet.py" <deck_dir>
 ```
 pillow が無い、または playwright が使えない環境では失敗しても致命的ではない（一覧確認を省略し、個別の `preview_deck.py` に切り替える）。
+
+続けて、プレビュー PNG から見た目の偏りを機械で確かめる（`build/preview/` に全スライドの PNG が無ければ先に `preview_deck.py <deck_dir>` を番号なしで実行する）:
+```bash
+python "${CLAUDE_PLUGIN_ROOT}/tools/check_visual.py" <deck_dir>
+```
+`[empty-bottom]`（下1/3がほぼ空＝大きな箱に少ない文字）と `[similar]`（直前と見た目が似ている＝同じ構図の連続）を警告する。いずれもビルドは止めない。
 
 新しいテーマを使っているデッキなら、あわせてコントラストも確認する:
 ```bash

@@ -49,6 +49,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import diagram_engine as de  # noqa: E402
 import canvas_engine as ce  # noqa: E402
 import schedule_engine as se  # noqa: E402
+import ja_text  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -256,6 +257,8 @@ def load_deck(deck_dir: Path):
         fail("deck.json の形式が不正です（meta はオブジェクトである必要があります）")
     theme = load_theme(meta.get("theme", "default"), theme_dirs(deck_dir))
     layout = load_json(ROOT / "templates" / "layouts" / f"{meta.get('layout', 'default')}.json")
+    # 文字あふれの見積もり・改行位置の調整はテーマのフォントの実測字幅で行う（Pillow が無ければ近似）
+    ja_text.set_fonts(theme.get("fonts", {}))
     return deck, theme, layout
 
 
@@ -1412,32 +1415,89 @@ def expand_slides(deck, layout):
 # ---------------------------------------------------------------------------
 
 def _char_width_ratio(ch: str) -> float:
-    """全角=1.0、半角=0.55（東アジアの幅プロパティ W/F を全角とみなす）。"""
-    return 1.0 if unicodedata.east_asian_width(ch) in ("W", "F") else 0.55
+    """全角=1.0、半角=0.55（フォントを実測できないときの近似。ja_text.fallback_ratio と同じ）。"""
+    return ja_text.fallback_ratio(ch)
 
 
-def estimate_lines(text, size_px: float, width_px: float) -> int:
-    """テキストが width_px の枠に折り返して何行になるかを概算する。
-    全角=size×1.0、半角=size×0.55 として1文字ずつ幅を積算する簡易実装。"""
-    text = str(text or "")
-    if not text:
-        return 1
-    width_px = max(1.0, width_px)
-    total_lines = 0
-    for raw_line in text.split("\n"):
-        if raw_line == "":
-            total_lines += 1
+def estimate_lines(text, size_px: float, width_px: float, font=None, bold: bool = False) -> int:
+    """テキストが width_px の枠に折り返して何行になるかを見積もる。
+    字幅はテーマのフォントファイルから実測し（ja_text）、英単語は途中で切らない・行頭禁則は
+    前の行に残すという描画側の挙動に寄せて折り返す。Pillow かフォントが無い環境では
+    全角=1.0 / 半角=0.55 の近似になる。font 未指定なら fonts.body で測る。"""
+    return ja_text.estimate_lines(text, size_px, width_px, font, bold)
+
+
+# ---------------------------------------------------------------------------
+# 泣き別れ対策: 折り返した最終行が 1〜2 文字だけになる和文に、文節の切れ目で改行を入れる
+# ---------------------------------------------------------------------------
+
+# 1 段落のテキスト領域（領域名, 見出しフォントで測るか）
+_BALANCE_TEXT_REGIONS = (("title", True), ("subtitle", False), ("lead", False),
+                         ("punch", True), ("message", True))
+# 箇条書きを持つタイプ（bullets を body 領域に描くもの）
+_BALANCE_BULLET_TYPES = ("bullets", "closing", "image_text")
+
+
+def _balance_items(items, region: dict):
+    """bullets（文字列 or {text, children}）の各項目に balance を掛けた新しいリストを返す。"""
+    if not isinstance(items, list) or not region:
+        return items
+    size = region.get("size", 16)
+    width = max(10.0, region.get("w", 400) - region.get("indent", 30))
+    child_size = region.get("child_size", max(10, size - 3))
+    out = []
+    for it in items:
+        if isinstance(it, str):
+            out.append(ja_text.balance(it, size, width))
+        elif isinstance(it, dict):
+            nit = dict(it)
+            if isinstance(nit.get("text"), str):
+                nit["text"] = ja_text.balance(nit["text"], nit.get("size", size), width, bold=bool(nit.get("bold")))
+            if isinstance(nit.get("children"), list):
+                nit["children"] = [
+                    ja_text.balance(c, child_size, width - 20) if isinstance(c, str)
+                    else ({**c, "text": ja_text.balance(c["text"], c.get("size", child_size), width - 20)}
+                          if isinstance(c, dict) and isinstance(c.get("text"), str) else c)
+                    for c in nit["children"]]
+            out.append(nit)
+        else:
+            out.append(it)
+    return out
+
+
+def apply_line_balance(deck: dict, layout: dict) -> dict:
+    """タイトル・リード・箇条書きなどの泣き別れを、改行（\\n）を入れて防いだデッキを返す。
+    HTML と PPTX の両方に同じ改行が入る。すでに改行を書いてある文字列は触らない。
+    デッキ全体で止めるなら meta.line_balance: false、スライド単位なら line_balance: false。"""
+    if deck.get("meta", {}).get("line_balance") is False:
+        return deck
+    slides = []
+    for slide in deck.get("slides", []):
+        t = slide.get("type")
+        if slide.get("line_balance") is False or t not in layout.get("types", {}) or t == "canvas":
+            slides.append(slide)
             continue
-        w = 0.0
-        cur = 1
-        for ch in raw_line:
-            cw = size_px * _char_width_ratio(ch)
-            if w > 0 and w + cw > width_px:
-                cur += 1
-                w = 0.0
-            w += cw
-        total_lines += cur
-    return max(1, total_lines)
+        st = resolve_style(layout, deck, slide)
+        ns = dict(slide)
+        for key, heading in _BALANCE_TEXT_REGIONS:
+            r = st.get(key)
+            if isinstance(ns.get(key), str) and isinstance(r, dict) and r.get("w") and r.get("size"):
+                ns[key] = ja_text.balance(ns[key], r["size"], r["w"],
+                                          font=ja_text.heading_fonts() if heading else None,
+                                          bold=bool(r.get("bold")))
+        if t in _BALANCE_BULLET_TYPES and isinstance(ns.get("bullets"), list):
+            ns["bullets"] = _balance_items(ns["bullets"], st.get("body"))
+        elif t == "two_column":
+            for side in ("left", "right"):
+                box, colc = st.get(side), ns.get(side)
+                if isinstance(box, dict) and isinstance(colc, dict) and isinstance(colc.get("bullets"), list):
+                    inner = dict(st.get("col_body", {}))
+                    inner["w"] = box.get("w", 400) - 2 * box.get("pad", 0)
+                    ns[side] = {**colc, "bullets": _balance_items(colc["bullets"], inner)}
+        slides.append(ns)
+    d = dict(deck)
+    d["slides"] = slides
+    return d
 
 
 def estimate_bullets_height(items, r: dict) -> float:
@@ -1666,11 +1726,13 @@ def _check_overflow(slide: dict, st: dict, i: int, t: str):
             return region["h"]
         return max(0.0, bottom - region.get("y", 0))
 
-    def warn_text(label: str, region: dict, text) -> None:
+    def warn_text(label: str, region: dict, text, heading: bool = False) -> None:
         if not region or not text:
             return
         h = region_h(region)
-        lines = estimate_lines(text, region.get("size", 16), region.get("w", 400))
+        font = ja_text.heading_fonts() if heading else None
+        lines = estimate_lines(text, region.get("size", 16), region.get("w", 400),
+                               font=font, bold=bool(region.get("bold")))
         est = lines * region.get("size", 16) * region.get("line_height", 1.2)
         over = est - h
         if over > threshold:
@@ -1687,7 +1749,7 @@ def _check_overflow(slide: dict, st: dict, i: int, t: str):
             warn(f"{i + 1}枚目（type={t}）: {label} が枠の高さを約{int(over)}px超える見込みです。"
                  f"項目を減らすか style.{label}.size を下げてください")
 
-    warn_text("title", st.get("title"), slide.get("title"))
+    warn_text("title", st.get("title"), slide.get("title"), heading=True)
     warn_text("lead", st.get("lead"), slide.get("lead"))
 
     if t == "bullets":
@@ -2391,7 +2453,7 @@ def bullets_html(items, r, theme):
         li = f'font-size:{it["size"]}px;' if it.get("size") else ""
         li += f'color:{col(theme, it["color"])};' if it.get("color") else ""
         li += "font-weight:700;" if it.get("bold") else ""
-        parts.append(f'<li style="margin-bottom:{r["gap"]}px;{li}">{esc(it["text"])}')
+        parts.append(f'<li style="margin-bottom:{r["gap"]}px;{li}">{esc(it["text"]).replace(chr(10), "<br>")}')
         if it["children"]:
             parts.append(
                 f'<ul style="margin:{r["child_gap"]}px 0 0;padding-left:{r["indent"] - 6}px;'
@@ -2401,7 +2463,7 @@ def bullets_html(items, r, theme):
             for c in it["children"]:
                 cs = f'font-size:{c["size"]}px;' if c.get("size") else ""
                 cs += f'color:{col(theme, c["color"])};' if c.get("color") else ""
-                parts.append(f'<li style="margin-bottom:{r["child_gap"]}px;{cs}">{esc(c["text"])}</li>')
+                parts.append(f'<li style="margin-bottom:{r["child_gap"]}px;{cs}">{esc(c["text"]).replace(chr(10), "<br>")}</li>')
             parts.append("</ul>")
         parts.append("</li>")
     parts.append("</ul>")
@@ -3273,6 +3335,11 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
     blank = prs.slide_layouts[6]
 
     def set_run(run, text, size_px, color, bold=False, name=None):
+        text = str(text)
+        rest = []
+        if "\n" in text:
+            # 明示的な改行は段落内の改行（a:br）にする（生の改行文字を a:t に入れても改行にならない）
+            text, *rest = text.split("\n")
         run.text = text
         resolved_name = font_pptx(name) if name is not None else font_pptx(fonts["body"])
         f = run.font
@@ -3287,6 +3354,15 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 el = rPr.makeelement(qn(tag), {})
                 rPr.append(el)
             el.set("typeface", resolved_name)
+        prev = run._r
+        for part in rest:
+            br = prev.makeelement(qn("a:br"), {})
+            br.append(copy.deepcopy(rPr))
+            prev.addnext(br)
+            nr = copy.deepcopy(run._r)
+            nr.find(qn("a:t")).text = part
+            br.addnext(nr)
+            prev = nr
 
     def add_box(slide, r):
         box = slide.shapes.add_textbox(IN(r["x"]), IN(r["y"]), IN(r["w"]), IN(r.get("h", 40)))
@@ -4618,6 +4694,7 @@ def main():
     deck, theme, layout = load_deck(deck_dir)
     validate_deck(deck, layout, theme, deck_dir)
     deck = expand_slides(deck, layout)
+    deck = apply_line_balance(deck, layout)
     deck_id = deck.get("meta", {}).get("id") or deck_dir.name
 
     out_dir = deck_dir / "build"

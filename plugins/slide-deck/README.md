@@ -67,8 +67,12 @@ python tools/check_layout.py <deck_dir>
 python tools/check_diagram.py <deck_dir>
 # SVG図版のフォント機械チェック（明朝体等へのフォールバックを検出）
 python tools/check_svg_fonts.py <deck_dir>
-# 文言チェック（文字量・AI定型句など）
+# 文言チェック（文字量・AI定型句・主張の書き方・日付の整合など）
 python tools/lint_deck_text.py <deck_dir>
+# 見た目の偏り（下1/3の空白・直前と似たスライドの連続。要 pillow・preview_deck の PNG）
+python tools/check_visual.py <deck_dir>
+# 新規作成の設定フォーム（Claude の show_widget 用 HTML）
+python tools/build_settings_widget.py --out deck_widget.html
 # スライドタイプ別の統計
 python tools/deck_metrics.py <deck_dir>
 # 一覧サムネイル（要 pillow）
@@ -109,7 +113,8 @@ plugins/slide-deck/
 ├── requirements.txt             # Python 依存関係（pip install -r で導入可）
 ├── skills/                      # create-deck / add-theme / review-deck / export-pdf / setup
 ├── tools/                       # build_deck / preview_deck / check_layout / check_svg_fonts /
-│                                 #   lint_deck_text / deck_metrics / contact_sheet / check_theme /
+│                                 #   lint_deck_text / check_visual / deck_metrics / contact_sheet / check_theme /
+│                                 #   ja_text / build_settings_widget /
 │                                 #   export_pdf / new_theme / theme_from_sample / setup_deps /
 │                                 #   diagram_engine / schedule_engine / check_diagram / archify_import /
 │                                 #   canvas_engine / pptx_import / pptx_import_excel /
@@ -138,6 +143,16 @@ plugins/slide-deck/
 作図の描き方・座標診断の直し方は [`references/diagram-guide.md`](references/diagram-guide.md) を参照（`create-deck` / `review-deck` スキルの手順にも組み込み済み）。
 
 参考: 「ArchifyでAIに図を描かせる新しいやり方」（クロノITチャンネル, https://www.youtube.com/watch?v=L2KPenldwdo ）
+
+## 設定フォームと品質チェックの強化（v1.3.0）
+
+acnpptx スキルの分析結果から、slide-deck の設計を崩さずに取り込めるものを実装した。
+
+- **設定フォーム**: 新規作成の最初に、テーマ（色トークンから描いたミニプレビュー付き）・聞き手・目的・構成の型・枚数・トーン・図解の方針・出力形式・参考資料を 1 画面で選べるフォームを出す（`tools/build_settings_widget.py`）。送信後は確認を挟まず完成まで進める。visualize ツールが無い環境では AskUserQuestion の 4 問で代替
+- **字幅の実測**: 文字あふれの見積もりを、テーマのフォントファイルを Pillow で実測した字幅で行う（`tools/ja_text.py`）。英単語は途中で切らず、行頭禁則は前の行に残す。Pillow かフォントが無い環境では従来の近似（全角 1.0 / 半角 0.55）
+- **泣き別れ対策**: タイトル・リード・箇条書きの最終行が 1〜2 文字だけ残る文に、ビルド時に文節の切れ目で改行を入れる（HTML と PPTX の両方。`meta.line_balance: false` で無効）。あわせて PPTX では明示的な改行を段落内改行（`a:br`）として出力するようにした
+- **文言チェックの拡張**（`lint_deck_text.py`、すべて警告）: 曖昧語・構成の説明・体言止めのリード・タイトルの言い直し（文字 2-gram の重なり）、曖昧な列名・凡例の無い ◎○△・桁区切り、同じタイプの 3 枚連続、`relation` とタイプの不一致、日付の整合（`meta.as_of` より後の「実績」、基準日より前に始まる計画）
+- **見た目のチェック**（`check_visual.py`）: プレビュー PNG のインク量から「下 1/3 が空いたスライド」を、dHash から「直前と似たスライドの連続」を検出する
 
 ## 既存 PPTX の取り込み（`canvas` 型）
 

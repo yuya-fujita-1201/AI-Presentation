@@ -51,10 +51,15 @@
 | `layout` | | レイアウト名（省略時 `default`） |
 | `layout_overrides` | | デッキ全体のレイアウト調整（タイプ名 → 領域 → プロパティ）。`common.brand` も指定可 |
 | `brand` | | 全スライド右上に表示する短いブランド表記（例: `ACME`）。アクセント色・太字・右寄せ。位置は `layout_overrides.common.brand` で調整 |
+| `as_of` | | 資料の基準日（`"YYYY-MM"` か `"YYYY-MM-DD"`）。`lint_deck_text.py` の日付チェック（基準日より後の「実績」・基準日より前に始まる計画）に使う。省略時は `date`、それも無ければ今日の日付 |
+| `line_balance` | | `false` で泣き別れ対策（最終行が1〜2文字になる文への自動改行）をデッキ全体で止める。既定は有効 |
 
 ## slides — スライドタイプ一覧
 
-全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）。
+全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）、`relation`、`line_balance`。
+
+- `relation`（任意）: そのスライドで見せる内容の関係。描画には使わず、`lint_deck_text.py` がタイプとの不一致を警告する。値と合うタイプ: `parallel`（並列）→ cards / bullets / two_column / table / matrix / image_text / status_table、`sequence`（順序）→ steps / swimlane / schedule / sequence / dataflow / agenda、`flow`（流れ）→ dataflow / swimlane / steps / sequence / architecture、`hierarchy`（階層）→ architecture / bullets / table、`cause`（因果）→ steps / dataflow / two_column / bullets、`contrast`（対比）→ two_column / table / matrix / status_table、`cycle`（循環）→ lifecycle
+- `line_balance`（任意）: `false` でそのスライドの泣き別れ対策を止める。既定では `title` / `subtitle` / `lead` / `punch` / `message` と箇条書き（bullets / closing / image_text / two_column）の最終行が1〜2文字になるとき、ビルド時に文節の切れ目（助詞・読点の後など）で改行を入れる。改行（`\n`）を書いてある文字列は触らない
 
 `eyebrow`（タイトル上の小さなサブタイトル。15px・アクセント色・太字。章や系列の目印に使う）は、見出し（`chrome()`）を持つほぼ全タイプで指定できる: `bullets` / `two_column` / `table` / `code` / `image` / `image_text` に加え `agenda` / `steps` / `matrix` / `cards` / `swimlane` / `architecture` / `dataflow` / `lifecycle` / `sequence` でも使える（`title` / `section` / `quote` / `closing` のような固有レイアウトのタイプは対象外）。
 
@@ -551,6 +556,10 @@ python tools/check_layout.py <deck_dir>                                       # 
 - `architecture` / `dataflow` / `lifecycle` / `sequence` の**配線・ラベル・文字量などの幾何診断**（`too-dense` / `label-collision` / `edge-through-node` / `group-leak` / `out-of-grid` / `node-text-overflow` など）はビルドを止めず警告として報告される。詳しくは次項「図解タイプの診断」を参照
 - タイトル・リード文・箇条書き本文・表などが**枠の高さを超える見込み**（文字あふれの推定）。「N枚目（type）: body が枠の高さを約 X px 超える見込み。項目を減らすか style.body.size を下げてください」のように表示される
 - `meta.id` がフォルダ名と異なる（省略時はこの警告は出ない）
+
+文字あふれの推定は、テーマのフォント（`fonts.body` / 見出しは `fonts.heading`）のフォントファイルを Pillow で実測した字幅で行う（英単語は途中で切らない・行頭禁則文字は前の行に残す、という描画側の挙動に寄せて折り返す）。Pillow かフォントファイルが見つからない環境では、全角 1.0 / 半角 0.55 の近似になる。
+
+ビルドとは別に、`lint_deck_text.py`（文言・構成・日付の整合）と `check_visual.py`（プレビュー画像の下1/3の空白・似たスライドの連続）も警告を出す。
 
 警告が出たら無視せず、内容に沿って `style` を調整するか項目数を減らして再ビルドする（`create-deck` スキルの手順4、または `review-deck` スキルでまとめて確認できる）。
 
