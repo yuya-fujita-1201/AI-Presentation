@@ -11,6 +11,7 @@ summary / reasons / statement / row_matrix / org と、どのタイプにも付�
 """
 from __future__ import annotations
 
+import icon_engine as ie
 import ja_text
 
 PROPOSAL_TYPES = ("summary", "reasons", "statement", "row_matrix", "org", "house", "cycle", "kpi_tree")
@@ -68,6 +69,10 @@ class Ctx:
         if name:
             el["name"] = name
         return el
+
+    def icon(self, spec, x, y, size, color="primary", name=None):
+        """同梱アイコン（名前か概念語）を線の図形にする。見つからなければ None。"""
+        return ie.element(spec, x, y, size, self.c(color), name)
 
     def tri_right(self, x, y, w, h, fill, name=None):
         """右向きの三角（ゾーンの間の流れ・因果を示す灰色の三角）"""
@@ -223,6 +228,8 @@ def extras(slide: dict, st: dict, theme: dict) -> list:
         cy = lb.get("y", 192) + lb.get("h", 452) / 2
         tw = max(min(gw - 10, 26), 10)
         out.append(ctx.tri_right(gx + (gw - tw) / 2, cy - 22, tw, 44, "border", name="流れ"))
+    if t == "cards" and any(isinstance(c, dict) and c.get("icon") for c in slide.get("cards", []) or []):
+        out += card_icons(slide, st, ctx)
     if t == "matrix" and slide.get("points"):
         out += matrix_points(slide, st, ctx)
     if t == "code" and slide.get("annotations"):
@@ -231,6 +238,39 @@ def extras(slide: dict, st: dict, theme: dict) -> list:
         r = reserve(slide, st)
         body = {"x": 72, "y": CONTENT_BOTTOM - r, "w": 1136, "h": 0}
         out += common_parts(slide, st, ctx, body)
+    return out
+
+
+def card_icons(slide: dict, st: dict, ctx: Ctx) -> list:
+    """cards の各カードの右上にアイコンを置く（カードの位置は build_deck の cards と同じ計算）。"""
+    g = st.get("grid", {})
+    cards = slide.get("cards", []) or []
+    cols = max(1, slide.get("columns", g.get("cols", 3)))
+    rows = max(1, (len(cards) + cols - 1) // cols)
+    gap = g.get("gap", 16)
+    cw = (g["w"] - (cols - 1) * gap) / cols
+    chh = (g["h"] - (rows - 1) * gap) / rows
+    size = g.get("icon_size", 28)
+    out = []
+    for idx, card in enumerate(cards):
+        if not isinstance(card, dict) or not card.get("icon"):
+            continue
+        x = g["x"] + (idx % cols) * (cw + gap)
+        y = g["y"] + (idx // cols) * (chh + gap)
+        ic = ctx.icon(card["icon"], x + cw - size - 12, y + 12, size, g.get("icon_color", "primary"),
+                      name=f"カード{idx + 1}のアイコン")
+        if ic:
+            out.append(ic)
+    return out
+
+
+def icon_specs(slide: dict) -> list:
+    """スライドに書かれた icon 指定を (場所, 指定) で列挙する（検証用）。"""
+    out = []
+    for key in ("items", "strengths", "pillars", "stages", "cards"):
+        for k, it in enumerate(slide.get(key, []) or []):
+            if isinstance(it, dict) and it.get("icon"):
+                out.append((f"{key}[{k}].icon", it["icon"]))
     return out
 
 
@@ -332,8 +372,12 @@ def layout_summary(slide, st, ctx, body):
                           after=4 if it.get("text") else 0)]
         if it.get("text"):
             paras.append(ctx.para(it["text"], ts, g.get("text_color", "text")))
+        ic = ctx.icon(it.get("icon"), body["x"] + num_w + pad, y + row_h / 2 - 14, 28, g.get("icon_color", "primary"),
+                      name=f"要点{i + 1}のアイコン") if it.get("icon") else None
         out.append(ctx.box(body["x"] + num_w, y, body["w"] - num_w, row_h, fill=g.get("band_fill", "surface"),
-                           paras=paras, anchor="ctr", insets=(pad, 4, pad, 4), name=f"要点{i + 1}"))
+                           paras=paras, anchor="ctr", insets=(pad + (42 if ic else 0), 4, pad, 4), name=f"要点{i + 1}"))
+        if ic:
+            out.append(ic)
     return out
 
 
@@ -420,8 +464,12 @@ def layout_reasons(slide, st, ctx, body):
             if s.get("text"):
                 paras.append(ctx.para(s["text"], bs, g.get("text_color", "text"), after=2 if its else 0))
             paras += [ctx.para(t, bs, g.get("item_color", "muted"), bullet="•", after=1) for t in its]
+            ic = ctx.icon(s.get("icon"), rx + badge + pad, y + row_h / 2 - 13, 26, g.get("icon_color", "primary"),
+                          name=f"強み{k + 1}のアイコン") if s.get("icon") else None
             out.append(ctx.box(rx + badge, y, rw - badge, row_h, paras=paras, anchor="ctr",
-                               insets=(pad, pad / 2, pad, pad / 2), name=f"強み本文{k + 1}"))
+                               insets=(pad + (38 if ic else 0), pad / 2, pad, pad / 2), name=f"強み本文{k + 1}"))
+            if ic:
+                out.append(ic)
     return out
 
 
@@ -711,10 +759,15 @@ def layout_house(slide, st, ctx, body):
     for k, p in enumerate(pillars):
         p = p if isinstance(p, dict) else {"title": str(p)}
         x = x0 + k * (pw + pgap)
+        ic = ctx.icon(p.get("icon"), x + 10, top + head_h / 2 - 11, 22, g.get("pillar_head_color", "heading_text"),
+                      name=f"柱{k + 1}のアイコン") if p.get("icon") else None
         out.append(ctx.box(x, top, pw, head_h, fill=g.get("pillar_head_fill", "highlight_fill"),
                            paras=[ctx.para(p.get("title", ""), g.get("pillar_head_size", 16),
                                            g.get("pillar_head_color", "heading_text"), bold=True, head=True,
-                                           align="ctr", lh=1.05)], anchor="ctr", insets=(8, 2, 8, 2), name=f"柱{k + 1}"))
+                                           align="ctr", lh=1.05)], anchor="ctr",
+                           insets=(8 + (28 if ic else 0), 2, 8 + (28 if ic else 0), 2), name=f"柱{k + 1}"))
+        if ic:
+            out.append(ic)
         text, its = as_items(p.get("items") if p.get("items") is not None else p.get("text"))
         paras = ([ctx.para(text, size, g.get("text_color", "text"), after=3 if its else 0)] if text else [])
         paras += [ctx.para(t, size, g.get("text_color", "text"), bullet="•", after=3) for t in its]
@@ -836,7 +889,11 @@ def layout_cycle(slide, st, ctx, body):
             paras.append(ctx.para(text, size, g.get("text_color", "text"), after=2))
         paras += [ctx.para(t, size, g.get("text_color", "text"), bullet="•", after=2) for t in its]
         out.append(ctx.box(x + badge + pad, y, pw - badge - pad, ph, paras=paras, anchor="t",
-                           insets=(0, off, pad, 0), name=f"段{k + 1}の内容"))
+                           insets=(0, off, pad + (34 if s.get("icon") else 0), 0), name=f"段{k + 1}の内容"))
+        if s.get("icon"):
+            ic = ctx.icon(s["icon"], x + pw - pad - 26, y + off, 26, g.get("icon_color", "primary"), name=f"段{k + 1}のアイコン")
+            if ic:
+                out.append(ic)
     return out
 
 
@@ -956,6 +1013,9 @@ def validate(slide: dict, i: int, fail, warn) -> None:
     """スキーマ的な誤りは fail、詰め込みすぎは warn。"""
     t = slide.get("type")
     where = f"{i + 1}枚目（type={t}）"
+    for path, spec in icon_specs(slide):
+        if not ie.resolve(spec):
+            warn(f"{where}: {path} '{spec}' に合うアイコンがありません（tools/icon_engine.py --list で一覧を確認）")
     if t == "summary":
         items = slide.get("items")
         if not isinstance(items, list) or not items:

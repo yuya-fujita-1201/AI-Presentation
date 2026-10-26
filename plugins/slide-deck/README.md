@@ -115,12 +115,12 @@ plugins/slide-deck/
 ├── agents/                      # deck-evaluator（プレビュー画像を第三者として採点する評価エージェント）
 ├── tools/                       # build_deck / preview_deck / check_layout / check_svg_fonts /
 │                                 #   lint_deck_text / check_visual / deck_metrics / contact_sheet / check_theme /
-│                                 #   ja_text / build_settings_widget / proposal_engine /
+│                                 #   ja_text / build_settings_widget / proposal_engine / icon_engine / build_icon_set /
 │                                 #   export_pdf / new_theme / theme_from_sample / setup_deps /
 │                                 #   diagram_engine / schedule_engine / check_diagram / archify_import /
 │                                 #   canvas_engine / pptx_import / pptx_import_excel /
 │                                 #   compare_ref / export_pptx_png.ps1
-├── templates/                   # themes/（default, accenture-purple） layouts/（default）
+├── templates/                   # themes/（default, accenture-purple） layouts/（default） icons/（Tabler の定番アイコン）
 ├── references/                  # deck-schema.md（スキーマ） themes.md（テーマ）
 │                                 #   content-guide.md（コンテンツ） diagram-guide.md（図解の描き方）
 ├── examples/template-sample/    # 全スライドタイプの見本 deck.json
@@ -154,6 +154,14 @@ acnpptx スキルの分析結果から、slide-deck の設計を崩さずに取�
 - **泣き別れ対策**: タイトル・リード・箇条書きの最終行が 1〜2 文字だけ残る文に、ビルド時に文節の切れ目で改行を入れる（HTML と PPTX の両方。`meta.line_balance: false` で無効）。あわせて PPTX では明示的な改行を段落内改行（`a:br`）として出力するようにした
 - **文言チェックの拡張**（`lint_deck_text.py`、すべて警告）: 曖昧語・構成の説明・体言止めのリード・タイトルの言い直し（文字 2-gram の重なり）、曖昧な列名・凡例の無い ◎○△・桁区切り、同じタイプの 3 枚連続、`relation` とタイプの不一致、日付の整合（`meta.as_of` より後の「実績」、基準日より前に始まる計画）
 - **見た目のチェック**（`check_visual.py`）: プレビュー PNG のインク量から「下 1/3 が空いたスライド」を、dHash から「直前と似たスライドの連続」を検出する
+
+## 定番アイコンと意味検索（v1.7.0）
+
+- **同梱アイコン**: Tabler Icons（MIT License）の outline から、提案書でよく使う概念の定番だけを74点同梱した（`templates/icons/icons.json`、約40KB）。SVG の円弧などを曲線に変換して持ち、HTML でも PPTX でも線だけのネイティブ図形として描く（画像にしないので PowerPoint で色・太さを変えられる）
+- **意味検索**: 各アイコンに日本語・英語の概念語を付け、`icon` に概念語（例「コスト削減」「q:統制 安全」）を書くと最も近いアイコンを選ぶ。似た概念は同じ絵を使い回し、素材を増やさない方針
+- **置ける場所**: `summary` / `reasons` / `house` / `cycle` / `cards` の項目の `icon`
+- **ツール**: `tools/icon_engine.py`（検索・一覧・一覧画像）、`tools/build_icon_set.py`（保守用。アイコン集を作り直す）
+- Accenture のブランド資産（アイコン・イラスト・マスター）は使っていない
 
 ## 全体像・循環・KPI と既存タイプの拡張（v1.6.0）
 

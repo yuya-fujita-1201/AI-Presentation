@@ -2077,8 +2077,8 @@ def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
 
         st = resolve_style(layout, deck, slide)
 
-        if t in pe.PROPOSAL_TYPES:
-            pe.validate(slide, i, fail, warn)
+        if t in pe.PROPOSAL_TYPES or t == "cards":
+            pe.validate(slide, i, fail, warn)   # cards はアイコン指定の確認だけ
 
         if t == "canvas":
             # canvas は色を hex / {color, alpha} / gradient / pattern で直接持つため、専用の検証のみ行う

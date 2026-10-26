@@ -100,6 +100,8 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/check_layout.py" <deck_dir> --no-build
 | 効果と KPI（目標 → 方向性 → 目標値） | `kpi_tree` |
 | 優先度の散布（2軸に項目を置く） | `matrix` ＋ `points` |
 | コードの要所の解説 | `code` ＋ `annotations` |
+
+項目に `icon`（同梱アイコンの名前か概念語。例 `"セキュリティ"`）を付けると、`summary` / `reasons` / `house` / `cycle` / `cards` に小さなアイコンが入る。候補は `python "${CLAUDE_PLUGIN_ROOT}/tools/icon_engine.py" "<概念語>"` で確かめ、内容に合わないときは名前で指定し直す。アイコンは並列・工程・循環・全体像のページに絞り、表・見積・スケジュールには入れない。
 | 図版（下記「図解が欲しいとき」参照） | `image_text` / `image` |
 
 `swimlane` は既定で `legend: true` のため、そのスイムレーンの直前に凡例ページが自動で1枚追加される（合計ページ数を指定されている場合は +1 になる点に注意。厳密に枚数を守りたいときは `legend: false` にするか、その分をあらかじめ見込む）。

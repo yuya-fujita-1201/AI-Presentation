@@ -516,6 +516,12 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 ```
 左右（片方だけでも可）に組織のツリーを描く。ノードは `id` と `parent`（同じ側の親の id）で親子を表し、見出し帯（左は `muted`、右は `primary`）＋本文（`name` / `members`）の箱になる。親子はカギ線で結ぶ。`scope` を書いた側は破線の枠で囲み、文字列なら札（既定「ご支援範囲」）を付ける。`links` は組織をまたぐ連携（点線＋ラベル）。id の重複・存在しない parent / links はビルドエラー。目安: 各側 **3階層・1段4ノード以内**。
 
+### アイコン（`icon`）
+提案書向けタイプと `cards` の項目には `icon` を書ける。値は同梱アイコンの名前（例 `"shield-check"`）か概念語（例 `"セキュリティ"` / `"q:統制 安全"`）で、概念語なら最も近いアイコンが選ばれる（似た概念は同じ絵を使い回す）。アイコンは Tabler Icons（MIT License、`templates/icons/LICENSE-tabler.txt`）から定番の約70点だけを同梱しており、HTML でも PPTX でも線だけのネイティブ図形になる（PowerPoint で色・太さを変えられる）。合うアイコンが無い指定はビルド時に警告する。
+- 置ける場所: `summary` の `items[].icon`（帯の左）/ `reasons` の `strengths[].icon`（強みの記号の右）/ `house` の `pillars[].icon`（柱の見出しの左）/ `cycle` の `stages[].icon`（パネルの右上）/ `cards` の `cards[].icon`（カードの右上）
+- 一覧と検索: `python tools/icon_engine.py --list`、`python tools/icon_engine.py "コスト削減"`、一覧画像は `--sheet icons.png`
+- アイコンは脇役として小さく（22〜28px）置く。アイコンだけで中身を語らせない
+
 ### `house` — 全体像（屋根・柱・土台）
 ```json
 { "type": "house", "title": "ご提案の全体像",
