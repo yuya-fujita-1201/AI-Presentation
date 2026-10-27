@@ -1,11 +1,17 @@
-"""icon_engine（同梱アイコンの意味検索・canvas 要素化）と build_icon_set のパス変換のテスト。"""
+"""icon_engine（同梱アイコンの意味検索・canvas 要素化）と scripts/build_icon_set.py のパス変換のテスト。"""
 import sys
 import unittest
 from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
-import build_icon_set as bis  # noqa: E402
+# アイコン集を作り直す保守用スクリプトは配布物の外（リポジトリ直下の scripts/）にある
+SCRIPTS = TOOLS.parents[2] / "scripts"
+sys.path.insert(0, str(SCRIPTS))
+try:
+    import build_icon_set as bis  # noqa: E402
+except ImportError:  # 配布 zip には scripts/ が無い
+    bis = None
 import canvas_engine as ce  # noqa: E402
 import icon_engine as ie  # noqa: E402
 
@@ -49,6 +55,7 @@ class SearchTests(unittest.TestCase):
         self.assertTrue(all(-1 <= v <= 49 for v in pts))
 
 
+@unittest.skipIf(bis is None, "scripts/build_icon_set.py が無い（配布 zip では省略）")
 class PathConversionTests(unittest.TestCase):
     def test_relative_and_shorthand_commands(self):
         cmds = bis.path_to_cmds("M2 3h4v5H1zm1 1l2 2")

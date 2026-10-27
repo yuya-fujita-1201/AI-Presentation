@@ -47,7 +47,7 @@
 | `id` | 省略可 | デッキ ID（出力ファイル名になる）。省略時はフォルダ名を使う。指定する場合は `\ / : * ? " < > \|` と制御文字を含められない（ファイル名として不正なため） |
 | `title` | ✅ | デッキタイトル（フッターにも表示） |
 | `subtitle` / `author` / `date` | | 補足情報 |
-| `theme` | | テーマ名（省略時 `default`）。`templates/themes/` から選択（同梱: `default` / `accenture-purple`） |
+| `theme` | | テーマ名（省略時 `default`）。`templates/themes/` から選択（同梱: `default` / `accenture` / `acn-slide-master` / `acn-technology-graphik`。旧名 `accenture-purple` は `acn-slide-master` の別名） |
 | `layout` | | レイアウト名（省略時 `default`） |
 | `layout_overrides` | | デッキ全体のレイアウト調整（タイプ名 → 領域 → プロパティ）。`common.brand` も指定可 |
 | `brand` | | 全スライド右上に表示する短いブランド表記（例: `ACME`）。アクセント色・太字・右寄せ。位置は `layout_overrides.common.brand` で調整 |

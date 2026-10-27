@@ -91,8 +91,8 @@ class CanvasSanitizeTest(unittest.TestCase):
         s = ce.sanitize_svg(
             '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onload="x()">'
             '<script>alert(1)</script><foreignObject><div/></foreignObject>'
-            '<a href="javascript:alert(1)"><rect/></a><image href="http://evil/x.png"/>'
-            '<use xlink:href="#p"/><path id="p" d="M0 0" fill="url(#g)" style="fill:url(http://evil)"/></svg>')
+            '<a href="javascript:alert(1)"><rect/></a><image href="https://evil.example/x.png"/>'
+            '<use xlink:href="#p"/><path id="p" d="M0 0" fill="url(#g)" style="fill:url(https://evil.example)"/></svg>')
         for bad in ("onload", "script", "foreignObject", "javascript", "evil", "<a ", "<image"):
             self.assertNotIn(bad, s)
         self.assertIn('<use href="#p"', s)

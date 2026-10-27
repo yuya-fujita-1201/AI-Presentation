@@ -5,7 +5,7 @@
     "subtitle": "Zip を受け取った人向けの使い方マニュアル",
     "author": "slide-deck plugin",
     "date": "2026-10-26",
-    "theme": "accenture-purple",
+    "theme": "acn-slide-master",
     "layout_overrides": {
       "image_text": {
         "body": {
@@ -307,7 +307,7 @@
       "eyebrow": "2章 / 一覧",
       "title": "29種類のテンプレートから選べる",
       "path": "assets/gallery.png",
-      "caption": "全29種（画像は v1.4 までの21種）。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される",
+      "caption": "全29種（画像は v1.1 までの21種）。swimlane と図解タイプ（architecture等）では凡例ページが自動挿入される",
       "notes": "各タイプのレンダリング済み見本は、このガイドの次ページ以降に掲載している。deck.json の書き方の参考として examples/template-sample/deck.json（配布物にはソースのみ同梱。ビルド後HTMLは非同梱で、見本はこのUSER-GUIDE自体が該当）を利用できる。図解タイプは legend_page で凡例が自動挿入される。"
     },
     {
@@ -475,7 +475,7 @@
       "lead": "色はトークン管理なので、切替も追加も安全にできます。",
       "bullets": [
         {
-          "text": "「テーマをaccenture-purpleにして」で即切替",
+          "text": "「テーマをacn-technology-graphikにして」で即切替",
           "bold": true,
           "color": "primary"
         },

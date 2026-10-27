@@ -1,6 +1,6 @@
 manual/assets/ の画像一覧（すべて PNG。生成手順は下記コマンドをこの順に実行すれば再現できる）
 
-type-01-title.png ... スライドタイプ title のサムネイル（640x360）。examples/template-sample を accenture-purple テーマでビルドし、preview_deck.py の1枚目PNGを縮小したもの。
+type-01-title.png ... スライドタイプ title のサムネイル（640x360）。examples/template-sample を acn-slide-master テーマでビルドし、preview_deck.py の1枚目PNGを縮小したもの。
 type-02-agenda.png ... スライドタイプ agenda のサムネイル（640x360）。同上、2枚目。
 type-03-section.png ... スライドタイプ section のサムネイル（640x360）。同上、3枚目。
 type-04-bullets.png ... スライドタイプ bullets のサムネイル（640x360）。同上、4枚目。
@@ -24,7 +24,7 @@ type-21-status_table.png ... スライドタイプ status_table のサムネイ�
 type-22-closing.png ... スライドタイプ closing のサムネイル（640x360）。同上、26枚目。
 
 生成コマンド（type-*.png の元データ。scratchpad 上で実施。2026-10-08 に schedule / status_table 追加に合わせて全数を再生成）:
-  1) examples/template-sample をビルドする（meta.theme は既に accenture-purple）
+  1) examples/template-sample をビルドする（meta.theme は既に acn-slide-master）
   2) python tools/build_deck.py examples/template-sample
   3) python tools/preview_deck.py examples/template-sample   （全26枚PNG化。deck.json 21枚＋swimlane 凡例1枚＋図解4タイプの凡例ページ4枚）
   4) 図解の凡例ページ（diagram_legend）4枚を除いた22枚を掲載順に Pillow で 640x360 にリサイズし type-NN-<type>.png として保存

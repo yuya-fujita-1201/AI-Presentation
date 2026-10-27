@@ -106,7 +106,7 @@ def theme_dirs(deck_dir: Path):
     """テーマの探索ディレクトリを優先順に返す。
     1. 環境変数 SLIDE_DECK_THEMES（複数可・OS区切り）… ユーザー追加テーマ置き場
     2. <deck_dir>/themes/                           … デッキ／プロジェクト同梱テーマ
-    3. 同梱テーマ（templates/themes/）              … default・accenture-purple 等
+    3. 同梱テーマ（templates/themes/）              … default・accenture・acn-slide-master・acn-technology-graphik
     先に見つかったものが勝つ。プラグイン更新で消したくないテーマは 1 か 2 に置く。"""
     dirs = []
     env = os.environ.get("SLIDE_DECK_THEMES")
@@ -217,7 +217,7 @@ def _load_theme_chain(name: str, dirs, _seen):
     """テーマ JSON を extends チェーンに沿って読み込み、マージ済み dict を返す。
     default 以外の各階層は、親（既にこの関数で解決済み＝派生も適用済み）を deep_merge した直後、
     自分の JSON ファイルが明示していない colors キーだけをその階層自身の基本色から再導出する。
-    階層ごとに導出をやり直すことで、`extends` 先が default 以外のテーマ（例: accenture-purple）
+    階層ごとに導出をやり直すことで、`extends` 先が default 以外のテーマ（例: acn-slide-master）
     であっても、子テーマが primary/accent だけを上書きすれば派生トークン（table_header_bg 等）
     が親の固定値のままにならず新しい基本色に追随する。"""
     if name in _seen:
@@ -227,6 +227,10 @@ def _load_theme_chain(name: str, dirs, _seen):
         searched = ", ".join(str(d) for d in dirs)
         fail(f"テーマ '{name}' が見つかりません（探索: {searched}）")
     own = load_json(path)
+    if own.get("alias_of"):
+        # 旧名（別名）テーマ: 本体をそのまま使う（派生トークンを再計算すると色が少しずれるため）
+        target = _load_theme_chain(own["alias_of"], dirs, _seen + [name])
+        return target
     own_color_keys = set(own.get("colors", {}).keys())
     parent = own.get("extends") or (None if name == "default" else "default")
     if parent:

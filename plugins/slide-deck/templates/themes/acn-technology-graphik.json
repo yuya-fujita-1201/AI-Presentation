@@ -1,0 +1,30 @@
+{
+  "name": "acn-technology-graphik",
+  "label": "ACN Technology Graphik",
+  "description": "Accenture Technology テンプレートの配色（黒の章扉・見出し帯、紫の強調、温かみのある灰の面）",
+  "colors": {
+    "background": "#FFFFFF",
+    "surface": "#E6E6DC",
+    "text": "#333333",
+    "muted": "#66665E",
+    "primary": "#000000",
+    "accent": "#A100FF",
+    "on_primary": "#FFFFFF",
+    "on_primary_soft": "#E6E6DC",
+    "on_primary_muted": "#DCAFFF",
+    "code_bg": "#1A1A1A",
+    "code_text": "#E6E6DC",
+    "table_header_bg": "#000000",
+    "table_header_text": "#FFFFFF",
+    "table_row_alt": "#F4F4EF",
+    "highlight_fill": "#DCAFFF",
+    "border": "#C3C3B8",
+    "heading_text": "#000000",
+    "accent_on_primary": "#BE82FF"
+  },
+  "fonts": {
+    "heading": "Meiryo UI",
+    "body": "Meiryo UI",
+    "code": "Consolas"
+  }
+}

@@ -34,7 +34,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/theme_from_sample.py" <sample-file> --name <
 python "${CLAUDE_PLUGIN_ROOT}/tools/new_theme.py" <name>
 
 # 既存テーマを継承し、差分だけ書く最小テーマ
-python "${CLAUDE_PLUGIN_ROOT}/tools/new_theme.py" <name> --extends accenture-purple
+python "${CLAUDE_PLUGIN_ROOT}/tools/new_theme.py" <name> --extends acn-slide-master
 ```
 `<name>` は kebab-case（例 `brand-navy`）。
 

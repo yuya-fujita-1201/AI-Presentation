@@ -48,7 +48,7 @@
 | `surface` | カード・淡い面・補助ブロックの背景 |
 | `text` | 本文の基本文字色 |
 | `muted` | キャプション等の弱い補助文字色（`architecture` 系タイプのノード sublabel・凡例文字にも使う） |
-| `primary` | 主要色（見出し帯・章扉・表ヘッダ地などの構造色）。**既定レイアウトでは、`section`/`closing`（`primary` を背景に敷き `on_primary` で文字を載せる）を除くほぼ全タイプの `title` 文字色、および `quote.text` / `two_column.col_heading` / `matrix`・`cards` の `heading_color` / `agenda.body.active_color` にも直接使われる**（ブランドカラーを見出しに出すための意図的な設計。`default` / `accenture-purple` は `primary` が十分に濃く `background`（白）に対して高コントラストなので問題ない）。**新しいテーマを作るとき（特に背景が暗色のテーマ）は、`primary` 単体が `background` に対して十分なコントラスト（目安 3:1 以上、可能なら 4.5:1）を持つ色にすること**。`primary` が `background` に近い明度だと、上記の見出しがすべて背景に溶けて読めなくなる。`check_theme.py` は現状この組み合わせ（`primary`/`background`）を検査対象に含まないため、暗色系テーマを作った際は `preview_deck.py` で `title` / `table` / `matrix` / `cards` を目視確認すること（対処法は次項「`primary` が読みにくいときの対処」参照） |
+| `primary` | 主要色（見出し帯・章扉・表ヘッダ地などの構造色）。**既定レイアウトでは、`section`/`closing`（`primary` を背景に敷き `on_primary` で文字を載せる）を除くほぼ全タイプの `title` 文字色、および `quote.text` / `two_column.col_heading` / `matrix`・`cards` の `heading_color` / `agenda.body.active_color` にも直接使われる**（ブランドカラーを見出しに出すための意図的な設計。同梱の `default` / `acn-slide-master` / `acn-technology-graphik` は `primary` が十分に濃く（`accenture` は鮮やかな紫だが白地で 4.5:1 以上） `background`（白）に対して高コントラストなので問題ない）。**新しいテーマを作るとき（特に背景が暗色のテーマ）は、`primary` 単体が `background` に対して十分なコントラスト（目安 3:1 以上、可能なら 4.5:1）を持つ色にすること**。`primary` が `background` に近い明度だと、上記の見出しがすべて背景に溶けて読めなくなる。`check_theme.py` は現状この組み合わせ（`primary`/`background`）を検査対象に含まないため、暗色系テーマを作った際は `preview_deck.py` で `title` / `table` / `matrix` / `cards` を目視確認すること（対処法は次項「`primary` が読みにくいときの対処」参照） |
 | `accent` | 強調色（eyebrow・ブランド表記・差し色。**本文サイズの文字色にも使われるため、背景に対して WCAG AA（4.5:1 以上）を確保すること**） |
 | `on_primary` | `primary` 地の上に載せる文字色（通常は白） |
 | `on_primary_soft` | `primary` 地の上のやや弱い文字・線 |
@@ -97,7 +97,7 @@
 
 1. 雛形を作る:
    - `python tools/new_theme.py <name>` … `default` の全トークンを写した自己完結テーマ
-   - `python tools/new_theme.py <name> --extends accenture-purple` … 継承して差分だけ書く最小テーマ
+   - `python tools/new_theme.py <name> --extends acn-slide-master` … 継承して差分だけ書く最小テーマ
 2. `colors` / `fonts` を編集（最低限 `primary` / `accent` だけでも派生トークンが追随する）
 3. **コントラストを確認する**: `python tools/check_theme.py <name>`（下記「コントラストの確認」参照）
 4. `deck.json` の `meta.theme` に `<name>` を指定して再ビルドし、代表スライド（`title` / `bullets` / `table` / `matrix` など primary 地・強調色を使うタイプ）を `preview_deck.py` で目視確認する
@@ -168,7 +168,7 @@ exit 1 になるのは `text`/背景 のコントラストが 4.5 未満のと�
 }
 ```
 
-この JSON をそのままそのテーマを使うデッキの `meta.layout_overrides` に追記すればよい（`layout_overrides` は既定値に深いマージされるので、他の項目には影響しない）。同梱テーマ（`default` / `accenture-purple`）では `primary` が濃色でこの対処は不要だが、独自の暗色テーマを使うデッキではこの差分を丸ごとコピーして使うことを想定している。`swimlane` の `group_fill`（レーン帯の背景。文字は `on_primary` で受けるため対象外）のように、この一覧に **含まれない `primary` 参照は塗り色（背景）であり文字色ではない**ため、そのままで問題ない。
+この JSON をそのままそのテーマを使うデッキの `meta.layout_overrides` に追記すればよい（`layout_overrides` は既定値に深いマージされるので、他の項目には影響しない）。同梱テーマでは `primary` が `background` に対して十分なコントラストを持つためこの対処は不要だが、独自の暗色テーマを使うデッキではこの差分を丸ごとコピーして使うことを想定している。`swimlane` の `group_fill`（レーン帯の背景。文字は `on_primary` で受けるため対象外）のように、この一覧に **含まれない `primary` 参照は塗り色（背景）であり文字色ではない**ため、そのままで問題ない。
 
 ## 更新で消えないようにする（配布時）
 
@@ -193,4 +193,7 @@ PPTX 生成時、OOXML テーマ（`theme1.xml`）の配色・フォントスキ
 | 名前 | 概要 |
 |---|---|
 | `default` | すべてのベース（青系） |
-| `accenture-purple` | 紫系（`primary #460073` / `accent #A100FF`） |
+| `accenture` | Accenture MasterBrand に寄せた配色（白地・黒の文字、鮮やかな紫 `primary #A100FF` の章扉、黒の表見出し） |
+| `acn-slide-master` | Accenture 2026 年版スライドマスターに寄せた配色（濃い紫 `primary #460073` / `accent #A100FF`、淡い紫の面）。旧 `accenture-purple` |
+| `acn-technology-graphik` | Accenture Technology テンプレートに寄せた配色（黒 `primary #000000` の章扉・見出し帯、紫の強調、温かみのある灰の面） |
+| `accenture-purple` | 旧名。`acn-slide-master` の別名（`alias_of`）として読める。設定フォームの選択肢には出ない |

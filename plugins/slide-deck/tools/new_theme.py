@@ -4,8 +4,8 @@
 
 使い方:
     python tools/new_theme.py <name>                  # default 全トークンを写した雛形を作成
-    python tools/new_theme.py <name> --from accenture-purple   # 別テーマを写して作成
-    python tools/new_theme.py <name> --extends accenture-purple # 差分だけ書く最小テーマを作成
+    python tools/new_theme.py <name> --from acn-slide-master   # 別テーマを写して作成
+    python tools/new_theme.py <name> --extends acn-slide-master # 差分だけ書く最小テーマを作成
     python tools/new_theme.py <name> --dir ./themes    # 出力先を明示
 
 出力先の優先順:

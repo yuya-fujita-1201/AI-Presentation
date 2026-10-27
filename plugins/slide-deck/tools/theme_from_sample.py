@@ -179,7 +179,7 @@ def classify_palette(colors, default_accent):
         # primary/accent は単純な出現量ランキングでは入れ替わりやすい
         # （accentは装飾・小さい強調文字など「あちこちに少しずつ」使われがちで、
         #  出現量だけで比べると primary より優勢に見えることがある）。
-        # 同梱2テーマ(default/accenture-purple)はいずれも primary が accent より
+        # 同梱テーマ(default/acn-slide-master 等)はいずれも primary が accent より
         # 暗い（輝度が低い）ため、出現量の多い上位候補プールの中では
         # 「最も暗い色」を primary、残りの中で最も彩度が高い色を accent とする。
         pool_n = min(4, len(colored))

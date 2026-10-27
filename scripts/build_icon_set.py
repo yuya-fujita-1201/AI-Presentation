@@ -6,9 +6,10 @@ Tabler Icons（MIT License, https://tabler.io/icons）の outline アイコン�
 M / L / C / Q / Z の絶対座標に変換して保存する。PowerPoint では線だけのネイティブ図形になり、
 色・太さを後から変えられる（画像にしない）。
 
-利用者が実行する必要はない（ネットワークが要る）。アイコンを足すときは ICONS に
-「Tabler の名前: (日本語の概念語, 英語の概念語)」を追加して実行する:
-  python tools/build_icon_set.py [--version 3.19.0]
+利用者が実行する必要はない（ネットワークが要る）。配布物（plugins/slide-deck）には含めず、
+リポジトリ直下の scripts/ に置いている（外部 URL を取得するため）。アイコンを足すときは ICONS に
+「Tabler の名前: (日本語の概念語, 英語の概念語)」を追加して、リポジトリ直下で実行する:
+  python scripts/build_icon_set.py [--version 3.19.0]
 """
 from __future__ import annotations
 
@@ -21,7 +22,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent / "plugins" / "slide-deck"
 OUT = ROOT / "templates" / "icons" / "icons.json"
 
 # Tabler の名前: (日本語の概念語, 英語の概念語)

@@ -25,7 +25,7 @@ cards/two_column などの淡い箱（surface）がディスプレイによっ�
 
 使い方:
     python tools/check_theme.py default
-    python tools/check_theme.py accenture-purple
+    python tools/check_theme.py acn-slide-master
     python tools/check_theme.py ./my-theme.json         # 未保存のテーマ案を確認
     python tools/check_theme.py brand-navy --json out.json
 """
@@ -186,7 +186,7 @@ def _load_bundled_or_named(name):
 def main() -> int:
     setup_console()
     ap = argparse.ArgumentParser(description="テーマ配色のWCAGコントラスト比を確認")
-    ap.add_argument("theme", help="テーマ名（例: default, accenture-purple）または未保存のテーマJSONのパス")
+    ap.add_argument("theme", help="テーマ名（例: default, acn-slide-master）または未保存のテーマJSONのパス")
     ap.add_argument("--json", help="結果JSONの出力先")
     args = ap.parse_args()
 

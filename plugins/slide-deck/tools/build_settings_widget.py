@@ -84,6 +84,10 @@ BADGE = ("margin-left:8px; font-size:11px; font-weight:400; background:var(--bg-
          "padding:1px 8px; border-radius:var(--radius)")
 
 
+# 同梱テーマの並び（default のあとに acnpptx の3テンプレートに寄せた配色）。ほかのテーマはその後ろに名前順
+BUNDLED_ORDER = ("default", "accenture", "acn-slide-master", "acn-technology-graphik")
+
+
 def list_themes(deck_dir):
     """探索順で見つかったテーマ（name, colors, fonts）を、先に見つかったものを優先して返す。"""
     seen, out = set(), []
@@ -96,11 +100,16 @@ def list_themes(deck_dir):
                 continue
             seen.add(name)
             try:
+                own = build_deck.load_json(p)
+                if isinstance(own, dict) and own.get("alias_of"):
+                    continue   # 旧名（別名）は選択肢に出さない（例: accenture-purple → acn-slide-master）
                 theme = build_deck.load_theme(name, build_deck.theme_dirs(deck_dir))
             except SystemExit:
                 continue   # 壊れたテーマは選択肢に出さない
-            out.append({"name": name, "colors": theme.get("colors", {}), "fonts": theme.get("fonts", {})})
-    out.sort(key=lambda t: (t["name"] != "default", t["name"]))
+            out.append({"name": name, "label": str(own.get("label") or name), "colors": theme.get("colors", {}),
+                        "fonts": theme.get("fonts", {})})
+    order = {n: k for k, n in enumerate(BUNDLED_ORDER)}
+    out.sort(key=lambda t: (order.get(t["name"], len(order)), t["name"]))
     return out
 
 
@@ -174,7 +183,7 @@ def theme_tiles(themes, selected, from_request) -> str:
         tiles.append(
             f'<button type="button" class="elicit-pill" data-value="{E(t["name"])}"{_pressed(t["name"], selected)} '
             f'style="{TILE}">{theme_preview(t["colors"])}'
-            f'<span style="font-size:13px; font-weight:500">{E(t["name"])}</span>'
+            f'<span style="font-size:13px; font-weight:500">{E(t.get("label", t["name"]))}</span>'
             f'<span style="font-size:11px; color:var(--text-muted)">{E(str(font or ""))}</span></button>')
     return (f'<div class="elicit-group">{_question("どのテーマ（配色・フォント）で作りますか？", "theme", from_request)}'
             f'<div class="elicit-pills" data-name="theme" data-multi="false">{auto}{"".join(tiles)}</div></div>')

@@ -7,7 +7,8 @@
 
 python-pptx>=1.0,<2.0
 
-# 任意: 画像からのテーマ抽出（theme_from_sample.py）、一覧サムネイル（contact_sheet.py）
+# 任意: 画像からのテーマ抽出（theme_from_sample.py）、一覧サムネイル（contact_sheet.py）、
+#       文字あふれ見積もりの字幅実測（ja_text.py）、見た目のチェック（check_visual.py）
 # python-pptx が同梱依存として通常インストールするが、明示したい場合は以下を有効化
 Pillow>=10
 

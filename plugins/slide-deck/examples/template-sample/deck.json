@@ -2,10 +2,10 @@
   "meta": {
     "id": "template-sample",
     "title": "テンプレート タイプ ギャラリー",
-    "subtitle": "29スライドタイプの見た目サンプル（accenture-purple テーマ）",
+    "subtitle": "29スライドタイプの見た目サンプル（acn-slide-master テーマ）",
     "author": "yuya.fujita",
     "date": "2026-10-26",
-    "theme": "accenture-purple",
+    "theme": "acn-slide-master",
     "layout_overrides": {
       "bullets": {
         "lead": {
@@ -27,7 +27,7 @@
       "type": "title",
       "title": "テンプレート タイプ ギャラリー",
       "subtitle": "29スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
-      "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / accenture-purple テーマ",
+      "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / acn-slide-master テーマ",
       "notes": "表紙（title）— 左帯(bar)＋タイトル＋サブタイトル＋meta。"
     },
     {
@@ -138,7 +138,7 @@
           { "text": "修正場所：deck.json の style に差分だけ書く", "children": ["例：\"style\": { \"title\": { \"size\": 32 } }"] },
           { "text": "再現性：何度ビルドしても同じ結果", "children": ["差分がレビュー・履歴に残る"] },
           { "text": "色：テーマトークン（primary 等）で指定", "children": ["色の定義はテーマの1ファイルだけ"] },
-          { "text": "テーマ切替：meta.theme を1か所変えるだけ", "children": ["default / accenture-purple を切り替えられる"] }
+          { "text": "テーマ切替：meta.theme を1か所変えるだけ", "children": ["default / accenture / acn-slide-master / acn-technology-graphik を切り替えられる"] }
         ]
       },
       "style": {

@@ -276,35 +276,46 @@ class ThemeExtendsAndDerivationTests(unittest.TestCase):
         for key, val in raw["colors"].items():
             self.assertEqual(theme["colors"][key], val, msg=f"default.colors.{key} が変化しています")
 
-    def test_extends_non_default_theme_still_derives_unspecified_tokens(self):
-        """extends 先が default 以外（accenture-purple）でも、そのテーマが全トークンを明示して
-        いる場合に子テーマの primary/accent 変更だけで派生トークンが追随すること（P0 回帰）。
-        accenture-purple.json は18トークン全てを明示しているため、旧実装では子テーマの
-        table_header_bg 等が accenture-purple の固定値（#460073 系）のまま変化しなかった。"""
-        purple = build_deck.load_theme("accenture-purple", build_deck.theme_dirs(None))
-        new_primary = "#123456"
-        new_accent = "#00AACC"
-        theme = self._load_child_extending("accenture-purple", "child-of-purple",
-                                            {"primary": new_primary, "accent": new_accent})
-        self.assertEqual(theme["colors"]["primary"], new_primary)
-        # table_header_bg は primary の固定値。親(accenture-purple)の値のまま固まってはいけない。
-        self.assertNotEqual(theme["colors"]["table_header_bg"], purple["colors"]["table_header_bg"])
-        self.assertEqual(theme["colors"]["table_header_bg"], new_primary)
-        # surface / muted / highlight_fill / border / code_bg / accent_on_primary も同様に
-        # 親の固定値からではなく、新しい基本色から再導出されること。
-        bg = theme["colors"]["background"]
-        text = theme["colors"]["text"]
-        self.assertNotEqual(theme["colors"]["surface"], purple["colors"]["surface"])
-        _assert_close_rgb(self, theme["colors"]["surface"], _mix_hex(new_primary, bg, 0.88),
-                           "surface(未指定) = mix(新primary, background, 0.88)")
-        self.assertNotEqual(theme["colors"]["highlight_fill"], purple["colors"]["highlight_fill"])
-        _assert_close_rgb(self, theme["colors"]["highlight_fill"], _mix_hex(new_accent, bg, 0.75),
-                           "highlight_fill(未指定) = mix(新accent, background, 0.75)")
-        self.assertNotEqual(theme["colors"]["code_bg"], purple["colors"]["code_bg"])
-        _assert_close_rgb(self, theme["colors"]["code_bg"], _mix_hex(new_primary, "#000000", 0.55),
-                           "code_bg(未指定) = mix(新primary, black, 0.55)")
-        # 親テーマ(accenture-purple)自身の値は変化しない。
-        self.assertEqual(purple["colors"]["table_header_bg"], "#460073")
+    def test_extends_non_default_theme_still_derives_unspecified_tokens(self):
+        """extends 先が default 以外（acn-slide-master）でも、そのテーマが全トークンを明示して
+        いる場合に子テーマの primary/accent 変更だけで派生トークンが追随すること（P0 回帰）。
+        acn-slide-master.json は18トークン全てを明示しているため、旧実装では子テーマの
+        table_header_bg 等が acn-slide-master の固定値（#460073 系）のまま変化しなかった。"""
+        purple = build_deck.load_theme("acn-slide-master", build_deck.theme_dirs(None))
+        new_primary = "#123456"
+        new_accent = "#00AACC"
+        theme = self._load_child_extending("acn-slide-master", "child-of-purple",
+                                            {"primary": new_primary, "accent": new_accent})
+        self.assertEqual(theme["colors"]["primary"], new_primary)
+        # table_header_bg は primary の固定値。親(acn-slide-master)の値のまま固まってはいけない。
+        self.assertNotEqual(theme["colors"]["table_header_bg"], purple["colors"]["table_header_bg"])
+        self.assertEqual(theme["colors"]["table_header_bg"], new_primary)
+        # surface / muted / highlight_fill / border / code_bg / accent_on_primary も同様に
+        # 親の固定値からではなく、新しい基本色から再導出されること。
+        bg = theme["colors"]["background"]
+        text = theme["colors"]["text"]
+        self.assertNotEqual(theme["colors"]["surface"], purple["colors"]["surface"])
+        _assert_close_rgb(self, theme["colors"]["surface"], _mix_hex(new_primary, bg, 0.88),
+                           "surface(未指定) = mix(新primary, background, 0.88)")
+        self.assertNotEqual(theme["colors"]["highlight_fill"], purple["colors"]["highlight_fill"])
+        _assert_close_rgb(self, theme["colors"]["highlight_fill"], _mix_hex(new_accent, bg, 0.75),
+                           "highlight_fill(未指定) = mix(新accent, background, 0.75)")
+        self.assertNotEqual(theme["colors"]["code_bg"], purple["colors"]["code_bg"])
+        _assert_close_rgb(self, theme["colors"]["code_bg"], _mix_hex(new_primary, "#000000", 0.55),
+                           "code_bg(未指定) = mix(新primary, black, 0.55)")
+        # 親テーマ(acn-slide-master)自身の値は変化しない。
+        self.assertEqual(purple["colors"]["table_header_bg"], "#460073")
+
+    def test_bundled_themes_and_alias(self):
+        """同梱テーマは default と acnpptx の3テンプレートに寄せた3種。旧名 accenture-purple は
+        acn-slide-master の別名（alias_of）で、派生トークンを再計算せず本体と同じ配色になる。"""
+        dirs = [build_deck.ROOT / "templates" / "themes"]
+        names = sorted(q.stem for q in dirs[0].glob("*.json"))
+        self.assertEqual(names, ["accenture", "accenture-purple", "acn-slide-master", "acn-technology-graphik", "default"])
+        alias = build_deck.load_theme("accenture-purple", dirs)
+        target = build_deck.load_theme("acn-slide-master", dirs)
+        self.assertEqual(alias["colors"], target["colors"])
+        self.assertEqual(alias["fonts"], target["fonts"])
 
     def test_extends_circular_reference_fails(self):
         (self.themes_dir / "a.json").write_text(

@@ -1,6 +1,6 @@
 [project]
 name = "slide-deck"
-version = "1.2.0"
+version = "1.2.1"
 description = "JSON(deck.json)をソースにスライドを HTML / PowerPoint(16:9) にビルドする Claude Code プラグイン。"
 requires-python = ">=3.14"
 dependencies = [
@@ -8,7 +8,7 @@ dependencies = [
 ]
 
 # 任意機能の依存（用途別 extras）。既定では入らない。
-#   images  … 画像からのテーマ抽出 / 一覧サムネイル（theme_from_sample.py, contact_sheet.py）
+#   images  … 画像からのテーマ抽出 / 一覧サムネイル / 字幅の実測 / 見た目のチェック（theme_from_sample.py, contact_sheet.py, ja_text.py, check_visual.py）
 #   preview … プレビューPNG生成（preview_deck.py, check_layout.py）。別途 `playwright install chromium` が必要
 #   pdf     … PDF からのテーマ抽出（theme_from_sample.py --pdf）
 [project.optional-dependencies]

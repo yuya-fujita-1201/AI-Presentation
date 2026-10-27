@@ -1,0 +1,30 @@
+{
+  "name": "accenture",
+  "label": "Accenture",
+  "description": "Accenture MasterBrand テンプレートの配色（白地に黒の文字、鮮やかな紫の章扉・強調、黒の表見出し）",
+  "colors": {
+    "background": "#FFFFFF",
+    "surface": "#EAEAE6",
+    "text": "#333333",
+    "muted": "#6B6B6A",
+    "primary": "#A100FF",
+    "accent": "#7500C0",
+    "on_primary": "#FFFFFF",
+    "on_primary_soft": "#F3E6FF",
+    "on_primary_muted": "#E6DCFF",
+    "code_bg": "#1B1B1B",
+    "code_text": "#F1F1EF",
+    "table_header_bg": "#000000",
+    "table_header_text": "#FFFFFF",
+    "table_row_alt": "#F8F8F6",
+    "highlight_fill": "#E6DCFF",
+    "border": "#CFCFCF",
+    "heading_text": "#000000",
+    "accent_on_primary": "#FFFFFF"
+  },
+  "fonts": {
+    "heading": "Meiryo UI",
+    "body": "Meiryo UI",
+    "code": "Consolas"
+  }
+}

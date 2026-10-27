@@ -30,7 +30,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/setup_deps.py" --check
 4. フォームの後に「選んで『この設定で作成』を押してください。以降は確認なしで最後まで作成します」と 1 行だけ書いて**ターンを終える**
 5. visualize ツールが無い環境（CLI など）では、AskUserQuestion を 1 回だけ使い「テーマ / 聞き手 / 枚数・図解の方針 / 仕上げの度合い」の 4 問で代替する（AskUserQuestion は 1 回 4 問まで。枚数と図解の方針は 1 問にまとめる。仕上げの度合いの選択肢は「ドラフト（評価ループなし・速い）」を先頭に、「仕上げ（評価ループで品質を上げる・時間がかかる）」）
 
-回答は `スライドの設定 — Theme: … · Audience: … · Purpose: … · Story: … · Count: … · Tone: … · Visuals: … · Output: … · Quality: … · Notes: …` の 1 行で届く（`Count (other)` は自由記述の枚数、添付ファイルは `Materials: <名前> (attached)`）。「おまかせ」と未選択の項目は依頼内容から決める（テーマ＝おまかせなら社外向けは `accenture-purple` などブランドに近いもの、それ以外は `default`）。`Skipped the form` が届いたら全項目おまかせで進める。値の使い道:
+回答は `スライドの設定 — Theme: … · Audience: … · Purpose: … · Story: … · Count: … · Tone: … · Visuals: … · Output: … · Quality: … · Notes: …` の 1 行で届く（`Count (other)` は自由記述の枚数、添付ファイルは `Materials: <名前> (attached)`）。「おまかせ」と未選択の項目は依頼内容から決める（テーマ＝おまかせなら、アクセンチュアの提案・社外向けは `acn-slide-master`、技術系は `acn-technology-graphik`、簡素な社内資料は `accenture`、それ以外は `default`）。`Skipped the form` が届いたら全項目おまかせで進める。値の使い道:
 - Theme → `meta.theme` / Audience・Purpose・Tone → 手順1.5の聞き手・目的・トーン / Story → 手順1.5のストーリー構成の型 / Count → 骨子の枚数
 - Visuals → 「図解を多めに」はネイティブ図解タイプを優先、「文字中心」は bullets・table 中心、「画像・スクショ」は image / image_text を使う
 - Output → 「HTMLのみ」は `--html` でビルド、「＋PDF」は最後に `/slide-deck:export-pdf` の手順も行う
@@ -65,7 +65,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/check_layout.py" <deck_dir> --no-build
 ### 2. deck.json を作る（ユーザーのプロジェクト内）
 - `decks/<デッキ名>/deck.json` を作成（場所はユーザーのプロジェクトに合わせる）。フォルダ名がそのままデッキ ID になる
 - `meta`（`title` と、任意で `id` / `theme`）と `slides` を記述。`meta.id` は**省略可**（省略時はフォルダ名を使う。出力ファイル名にもなる）
-- 色は hex 直書きせず**テーマトークン**（`primary` / `accent` 等）で指定。テーマは `meta.theme` で切替（同梱: `default` / `accenture-purple`）。新テーマ追加は `/slide-deck:add-theme`
+- 色は hex 直書きせず**テーマトークン**（`primary` / `accent` 等）で指定。テーマは `meta.theme` で切替（同梱: `default` / `accenture` / `acn-slide-master` / `acn-technology-graphik`）。新テーマ追加は `/slide-deck:add-theme`
 
 #### 内容の目安（1枚1メッセージ）
 - タイトル `title` は 25 字以内、リード文 `lead` は 60 字以内を目安にする

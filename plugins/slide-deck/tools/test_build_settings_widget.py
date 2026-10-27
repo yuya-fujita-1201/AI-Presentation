@@ -31,5 +31,20 @@ class QualityFieldTests(unittest.TestCase):
         self.assertIn("quality", w.FIELDS)
 
 
+class ThemeChoiceTests(unittest.TestCase):
+    def test_bundled_choices_are_default_and_three_acn_themes(self):
+        """配布版で選べるのは default と acnpptx の3テンプレートに寄せた配色。旧名の別名は出さない。"""
+        import os
+        from unittest import mock
+        with mock.patch.dict(os.environ, {"SLIDE_DECK_THEMES": ""}):
+            themes = w.list_themes(None)
+        self.assertEqual([t["name"] for t in themes],
+                         ["default", "accenture", "acn-slide-master", "acn-technology-graphik"])
+        self.assertEqual([t["label"] for t in themes][1:], ["Accenture", "ACN Slide Master", "ACN Technology Graphik"])
+        html = w.build(themes, {"theme": "acn-technology-graphik"}, set())
+        self.assertEqual(_pressed(html, "theme"), ["acn-technology-graphik"])
+        self.assertNotIn("accenture-purple", html)
+
+
 if __name__ == "__main__":
     unittest.main()

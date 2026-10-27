@@ -1,28 +1,6 @@
 {
   "name": "accenture-purple",
-  "colors": {
-    "background": "#FFFFFF",
-    "surface": "#EBE0F5",
-    "text": "#1B1B24",
-    "muted": "#565663",
-    "primary": "#460073",
-    "accent": "#A100FF",
-    "on_primary": "#FFFFFF",
-    "on_primary_soft": "#F1E5FB",
-    "on_primary_muted": "#D9BBF2",
-    "code_bg": "#1B0A2A",
-    "code_text": "#EDE3F7",
-    "table_header_bg": "#460073",
-    "table_header_text": "#FFFFFF",
-    "table_row_alt": "#F5EEFA",
-    "highlight_fill": "#DCC0FA",
-    "border": "#C4B0D8",
-    "heading_text": "#460073",
-    "accent_on_primary": "#C266FF"
-  },
-  "fonts": {
-    "heading": "Meiryo UI",
-    "body": "Meiryo UI",
-    "code": "Consolas"
-  }
+  "alias_of": "acn-slide-master",
+  "description": "旧名。acn-slide-master に統合した（同じ配色）。新しいデッキでは acn-slide-master を使う",
+  "extends": "acn-slide-master"
 }
