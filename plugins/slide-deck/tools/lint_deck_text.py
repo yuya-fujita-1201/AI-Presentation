@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
 """デッキ文言の機械リント（AI定型句・文字量・記法崩れの回帰チェック）。
 
-不合格（exit 1）:
+不合格（exit 1。どの行にも直し方を添える）:
   - closing.title が 22 字超（固定 72px 枠で 2 行化→罫線貫通の事故）
   - Markdown 記法の残留（**強調** / `code` / 行頭 # ）が表示フィールドにある
-  - 「N枚目」「Nページ目」直書きが総枚数を超える、または存在しないスライドを指す
+  - 「N枚目」「Nページ目」「N ページを参照」直書きが総枚数を超える（「全200ページのPDF」「3ページ構成」は対象外）
   - AI 定型句（単独では使われない特徴的な言い回し）が表示フィールドに 1 件でもある
+  - --fail-on-todo のとき、【要確認】マーカーが 1 つでも残っている
 警告（件数と箇所を表示。exit に影響しない。rubric の減点材料）:
+  - 【要確認】/【要確認: 何を確かめるか】マーカー（根拠が無い箇所の目印）。スライド番号・項目つきで一覧にする
   - 「最適化」「において」等、それ単独では一般的なビジネス語彙でもあるため警告止まりの語
-  - punch が --punch-max 字超（既定80）
+  - punch が --punch-max 字超（既定は密度で変わる: talk 50 / standard 80 / read 120）
+  - 文字量の目安超え（密度で変わる。bullets の 1 項目の字数・項目数、1 枚の表示文字数）
   - 「AではなくB」型（「ではなく」）、全角ダッシュ「——」、丸数字①②③ の出現回数
-  - 半角コロン「:」と全角コロン「：」の混在（日本語文中の半角コロン）
-  - 表示テキスト中の英字のみラベル（図の英語ラベルの検出は SVG 側を別途）
+  - 半角コロン「:」と全角コロン「：」の混在（日本語文中の半角コロン。出典 source は除く）
 
-使い方: python tools/lint_deck_text.py <deck_dir> [--json out.json] [--punch-max 35]
-対象フィールド: title / punch / lead / caption / message / bullets / rows / columns の文字列（notes・code は対象外）
+meta.density（"talk" / "standard" / "read"。未指定は standard）で文字量の目安を切り替える。
+talk は話す用で厳しめ、read は読ませる用で緩め。--punch-max を明示したときはそれを優先する。
+
+使い方: python tools/lint_deck_text.py <deck_dir> [--json out.json] [--punch-max 35] [--fail-on-todo]
+対象フィールド: 表示される文字列（title / punch / lead / caption / message / bullets / rows / columns …）。
+notes・code・アイコン名や形の指定（icon / variant / shape など）は対象外。【要確認】の数え上げだけは notes も見る。
 """
 from __future__ import annotations
 
@@ -65,14 +71,29 @@ AI_PHRASES = ["することができます", "と言えるでしょう", "重要
 # それ単独では一般的なビジネス語彙でもある語（「価格最適化」「〜においては」等の正当な用法がある）。
 # AI定型句リストに含めたい気持ちは分かるが、hard errorにすると誤検知するため警告止まりにする。
 AI_PHRASES_SOFT = ["最適化", "において"]
-DISPLAY_KEYS = ("title", "punch", "lead", "caption", "message", "subtitle", "eyebrow", "heading", "quote", "attribution", "label")
+# 表示されない文字列（アイコン名・図形の種類・配置・色・ノード ID の参照など）を持つキー。本文として検査しない
+NON_DISPLAY_KEYS = ("icon", "variant", "shape", "kind", "align", "valign", "relation", "tone", "mode", "direction",
+                    "orientation", "position", "lane", "from", "to", "color", "fill", "bg", "pattern",
+                    "background", "overlay", "side", "fit", "caption_position", "emphasis")
+# 密度（meta.density）ごとの文字量の目安。talk=話す用（大きく少なく）/ standard=既定 / read=読ませる用（小さめ・密）
+DENSITY_LIMITS = {
+    "talk": {"punch": 50, "bullet_chars": 30, "bullets": 5, "slide_chars": 250},
+    "standard": {"punch": 80, "bullet_chars": 40, "bullets": 6, "slide_chars": 500},
+    "read": {"punch": 120, "bullet_chars": 60, "bullets": 8, "slide_chars": 800},
+}
+DEFAULT_DENSITY = "standard"
+# 文字量（1 枚の表示文字数）を数えないタイプ（表紙・章扉・目次などは内容量の指標にならない）
+VOLUME_EXEMPT = {"title", "section", "agenda", "closing", "swimlane_legend", "diagram_legend", "canvas", "statement", "quote", "schedule"}   # schedule: 行・凡例・月の目盛りが表の形で並ぶので 1 枚の字数では測らない（S5b）
+# 【要確認】/【要確認: 何を確かめるか】（根拠が無い箇所の目印。全角・半角コロンどちらも可）
+TODO_MARK = re.compile(r"【要確認(?:\s*[:：]\s*([^】]*))?】")
 
 # --- 主張（タイトル・リード・パンチライン・メッセージ）の書き方 ---------------------------
 CLAIM_KEYS = ("title", "lead", "punch", "message", "conclusion")
 # 言い切りを弱める曖昧語
 VAGUE_WORDS = ["など", "様々", "さまざま", "適切に", "適切な", "効果的", "各種", "柔軟に", "一定の", "幅広く", "多角的"]
 # 構成の説明（主張ではなく「何がどこにあるか」を書いている）
-LAYOUT_DESC = re.compile(r"左側?に|右側?に|上側?に|下側?に|[左右上下]図|[上下]表|以下の通り|次の通り|下記の通り|本スライド|このスライド")
+# 「下に」は位置の説明のとき（「図の下に」）だけ。数量・比較のあと（「半分以下にしたい」「3 割未満に」「2 倍以下に」）は除く
+LAYOUT_DESC = re.compile(r"左側?に|右側?に|上側?に|(?<![以未割分倍％%度])下側?に|[左右上下]図|[上下]表|以下の通り|次の通り|下記の通り|本スライド|このスライド")
 # 文の終わりとみなす文字（これ以外の漢字・カタカナ・英数字で終わるリードは体言止め）
 SENTENCE_END = set("。！？!?」』）)…")
 # 曖昧な表の列名
@@ -80,9 +101,12 @@ VAGUE_COLUMNS = {"概要", "備考", "その他", "詳細", "内容"}
 # 評価記号（凡例が無いと読み手が意味を取れない。× は掛け算・組み合わせにも使うので対象外）
 RATING_MARKS = re.compile(r"[◎○△]")
 RATING_LEGEND = re.compile(r"凡例|[◎○△]\s*[:：=＝]")
-# 和文と英数字の間の半角空白（コード・URL らしいものは除く）
+# 和文と英数字の間の半角空白（コード・URL らしいものは除く）。
+# 警告にするのは「同じ文字列の中で、空白のある所と無い所が混ざっている」ときだけ（「AI 活用の3か月」）。
+# 空白をそろえて入れている / 全部詰めている文書は、どちらも正しい書き方なので警告しない（確認用デッキ・見本は空白入りで統一している）
 JA = "぀-ヿ一-鿿々"
 JA_SPACE = re.compile(rf"[{JA}] +[A-Za-z0-9]|[A-Za-z0-9%] +[{JA}]")
+JA_TIGHT = re.compile(rf"[{JA}][A-Za-z0-9]|[A-Za-z0-9%][{JA}]")
 CODE_LIKE = re.compile(r"[{}();=<>$`\\]|://")
 # 桁区切りの無い 4 桁以上の数（西暦 1900〜2100・型番・バージョン・時刻・ファイル名は除く）
 BIG_NUMBER = re.compile(r"(?<![A-Za-z0-9_.,/:#\-×*])(\d{4,})(?![A-Za-z0-9_.,/:\-×*])")
@@ -111,8 +135,33 @@ TEXT_YEAR = re.compile(r"(20\d\d)\s*年(?!\s*\d{1,2}\s*月)(?!度)")
 ACHIEVED = re.compile(r"実績|達成|完了|導入済|導入した|稼働した|削減した|改善した|獲得した|事例")
 
 
+def _spec(t):
+    """登録表（engine_registry）のタイプ定義。kpi / chart など A 型タイプの検査用の性質（text_skip_keys など）を引く。"""
+    try:
+        import engine_registry
+        return engine_registry.get(t)
+    except Exception:       # pragma: no cover
+        return None
+
+
+def relation_table() -> dict:
+    """relation → タイプの表。固定の RELATION_TYPES に、登録表で relation を宣言したタイプを足したもの。"""
+    out = {k: list(v) for k, v in RELATION_TYPES.items()}
+    try:
+        import engine_registry
+        for rel, types in engine_registry.relation_types().items():
+            for t in types:
+                if t not in out.setdefault(rel, []):
+                    out[rel].append(t)
+    except Exception:       # pragma: no cover
+        pass
+    return out
+
+
 def iter_texts(slide):
     """表示テキストを (field_path, text) で列挙する（notes は除外）"""
+    spec = _spec(slide.get("type")) if isinstance(slide, dict) else None
+    extra_skip = tuple(spec.text_skip_keys) if spec else ()
     def walk(obj, path):
         if isinstance(obj, str):
             yield path, obj
@@ -121,7 +170,7 @@ def iter_texts(slide):
                 yield from walk(v, f"{path}[{i}]")
         elif isinstance(obj, dict):
             for k, v in obj.items():
-                if k in ("notes", "style", "figure", "path", "src", "image", "type", "id", "layout", "theme", "code"):
+                if k in ("notes", "style", "figure", "path", "src", "image", "type", "id", "layout", "theme", "code") + NON_DISPLAY_KEYS + extra_skip:
                     continue
                 yield from walk(v, f"{path}.{k}" if path else k)
     yield from walk(slide, "")
@@ -165,7 +214,8 @@ def _months(ymd) -> int:
 def check_claims(sid: str, s: dict) -> list:
     """タイトル・リードなど主張の書き方（曖昧語・構成の説明・体言止め・言い直し）。"""
     out = []
-    for key in CLAIM_KEYS:
+    spec = _spec(s.get("type"))
+    for key in CLAIM_KEYS + (tuple(spec.claim_keys) if spec else ()):
         text = s.get(key)
         if not isinstance(text, str) or not text.strip():
             continue
@@ -224,10 +274,11 @@ def check_relation(sid: str, s: dict) -> list:
     rel = s.get("relation")
     out = []
     if rel is not None:
-        if rel not in RELATION_TYPES:
-            out.append(f"{sid} relation「{rel}」は未知の値（{' / '.join(RELATION_TYPES)}）")
-        elif t not in RELATION_TYPES[rel]:
-            out.append(f"{sid} relation={rel} に type={t} は合わない（候補: {' / '.join(RELATION_TYPES[rel])}）")
+        table = relation_table()
+        if rel not in table:
+            out.append(f"{sid} relation「{rel}」は未知の値（{' / '.join(table)}）")
+        elif t not in table[rel] and not (t in ("composite", "split") and any(b.get("type") in table[rel] for b in composite_blocks(s))):
+            out.append(f"{sid} relation={rel} に type={t} は合わない（候補: {' / '.join(table[rel])}）")
     elif t == "cards":
         heads = [c.get("heading", "") for c in s.get("cards") or [] if isinstance(c, dict)]
         if sum(1 for h in heads if ORDERED_HEADING.match(str(h))) >= 2:
@@ -238,10 +289,15 @@ def check_relation(sid: str, s: dict) -> list:
 def check_rhythm(slides: list) -> list:
     """同じタイプが RHYTHM_RUN 枚以上続く箇所（単調に見える）。"""
     out, k = [], 0
+
+    def key(s):
+        # 合成スライドは、ブロックのタイプの組み合わせが同じときだけ「同じ構図」とみなす
+        bl = composite_blocks(s)
+        return (s.get("type"), tuple(b.get("type") for b in bl)) if bl else s.get("type")
     while k < len(slides):
         t = slides[k].get("type")
         j = k
-        while j + 1 < len(slides) and slides[j + 1].get("type") == t:
+        while j + 1 < len(slides) and key(slides[j + 1]) == key(slides[k]):
             j += 1
         if t not in RHYTHM_EXEMPT and j - k + 1 >= RHYTHM_RUN:
             out.append(f"slide-{k + 1:02d}〜slide-{j + 1:02d} type={t} が{j - k + 1}枚続く（構図が単調。"
@@ -294,58 +350,188 @@ def check_dates(slides: list, meta: dict, today=None) -> list:
     return out
 
 
-def main():
-    setup_console()
-    ap = argparse.ArgumentParser(description="デッキ文言の機械リント")
-    ap.add_argument("deck_dir")
-    ap.add_argument("--json")
-    ap.add_argument("--punch-max", type=int, default=80, help="punch文字数の警告しきい値（既定80）")
-    ap.add_argument("--closing-max", type=int, default=22)
-    args = ap.parse_args()
-    deck_json = Path(args.deck_dir) / "deck.json"
-    if not deck_json.exists():
-        fail(f"{deck_json} が見つかりません")
-    deck = json.loads(deck_json.read_text(encoding="utf-8-sig"))
+def find_todos(slides: list, meta: dict | None = None) -> list:
+    """【要確認】マーカーを {slide, path, note, text} で列挙する。notes も含めて全ての文字列を見る
+    （骨子段階では根拠メモを notes に書くため）。slide は 'slide-NN'、デッキ共通の meta は 'meta'。"""
+    found = []
+
+    def walk(obj, path, sid):
+        if isinstance(obj, str):
+            for m in TODO_MARK.finditer(obj):
+                found.append({"slide": sid, "path": path or "(slide)", "note": (m.group(1) or "").strip(), "text": obj[:40]})
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                walk(v, f"{path}[{i}]", sid)
+        elif isinstance(obj, dict):
+            for k, v in obj.items():
+                if k in ("style", "path", "src", "image", "id", "type", "layout", "theme"):
+                    continue
+                walk(v, f"{path}.{k}" if path else k, sid)
+
+    if meta:
+        walk(meta, "", "meta")
+    for i, s in enumerate(slides, 1):
+        walk(s, "", f"slide-{i:02d}")
+    return found
+
+
+def resolve_density(meta: dict) -> tuple[str, str | None]:
+    """(密度, 警告)。未指定は standard。未知の値は standard 扱いにして警告を返す。"""
+    d = (meta or {}).get("density")
+    if d is None:
+        return DEFAULT_DENSITY, None
+    if isinstance(d, str) and d in DENSITY_LIMITS:
+        return d, None
+    return DEFAULT_DENSITY, (f"meta.density「{d}」は未知の値（{' / '.join(DENSITY_LIMITS)}）。"
+                             f"standard の目安で検査した。値を直す")
+
+
+def _visible_chars(s: dict) -> int:
+    return sum(len(re.sub(r"\s", "", t)) for _, t in iter_texts(s))
+
+
+COMPOSITE_VOLUME_FACTOR = 1.5       # 合成スライド（composite）は複数ブロックを置くので、1 枚の文字数の目安を 1.5 倍にする
+
+
+def composite_blocks(s: dict) -> list:
+    """合成スライドのブロック（辞書だけ）。合成スライドでなければ []。"""
+    if isinstance(s, dict) and s.get("type") in ("composite", "split") and isinstance(s.get("blocks"), list):
+        return [b for b in s["blocks"] if isinstance(b, dict)]
+    return []
+
+
+def check_volume(sid: str, s: dict, density: str) -> list:
+    """文字量の目安（密度で変わる）: bullets の 1 項目の字数・項目数・1 枚の表示文字数。合成スライドはブロックごとに bullets を見る。"""
+    lim = DENSITY_LIMITS[density]
+    out = []
+    owners = [(sid, s)] + [(f"{sid} blocks[{k}]", b) for k, b in enumerate(composite_blocks(s))]
+    for where, o in owners:
+        items = [t for t in _item_texts(o.get("bullets"))]
+        top = o.get("bullets") if isinstance(o.get("bullets"), list) else []
+        if len(top) > lim["bullets"]:
+            out.append(f"{where} bullets {len(top)}項目 > {lim['bullets']}（density={density}）"
+                       f" → 絞るか two_column / cards に分ける（話す資料は少なく、読ませる資料は meta.density を read に）")
+        long_items = [t for t in items if len(t) > lim["bullet_chars"]]
+        if long_items:
+            out.append(f"{where} bullets の項目が{lim['bullet_chars']}字超（density={density}）: {len(long_items)}件、"
+                       f"例「{long_items[0][:24]}…」{len(long_items[0])}字 → 1 項目 1 メッセージに削る。詳細は本文に回す")
+    if s.get("type") not in VOLUME_EXEMPT:
+        n = _visible_chars(s)
+        limit = int(lim["slide_chars"] * (COMPOSITE_VOLUME_FACTOR if s.get("type") in ("composite", "split") else 1))
+        if n > limit:
+            out.append(f"{sid} 表示文字数 {n}字 > {limit}（density={density}）"
+                       f" → 項目を減らす・2 枚に分ける。読ませる資料なら meta.density を read にする")
+    return out
+
+
+# 「Nページを参照」のような、ほかのページを指す書き方（「全200ページのPDF」「3ページ構成」「5ページの見積もり」は指していない）。
+# 「見」は「見る/見て/見よ…」の活用形に限る（見積もり・見込み・見直しを拾わない）。「3枚目標」「5枚目安」も除く。
+# 「p.12」「12p.」の両方を受ける（数字は group(1) か group(2)）。
+PAGE_REF = re.compile(
+    r"(\d+)\s*(?:枚目(?![標安的])|ページ目(?![標安的])"
+    r"|ページ(?=\s*(?:を|に|で|は|の)?\s*(?:参照|参考|記載|説明|見(?:る|て|よ|れ|ら|え|ま)|示|ご覧|戻))"
+    r"|p\.)"
+    r"|(?<![A-Za-z])[pP]\.\s*(\d+)")
+
+
+def relabel_slides(text: str, png_numbers: list) -> str:
+    """文中の 'slide-NN'（deck.json の NN 枚目）を、プレビュー PNG の番号に直して
+    'slide-MM（deck.json NN枚目）' にする。凡例ページの自動挿入などで番号がずれたスライドだけ。"""
+    def rep(m):
+        n = int(m.group(1))
+        if 1 <= n <= len(png_numbers) and png_numbers[n - 1] != n:
+            return f"slide-{png_numbers[n - 1]:02d}（deck.json {n}枚目）"
+        return m.group(0)
+    return re.sub(r"slide-(\d{2})(?!\d)", rep, text)
+
+
+def png_numbers_for(deck: dict, layout: dict) -> list:
+    """deck.json の各スライドが、expand_slides 後（= check_layout / check_diagram / プレビュー PNG）で
+    何枚目になるかの列。build_deck が使えない・展開に失敗したときは空リスト（番号はそのまま）。"""
+    if build_deck is None:
+        return []
+    try:
+        nums, pos = [], 1
+        for s in deck.get("slides", []):
+            part = build_deck.expand_slides({**deck, "slides": [s]}, layout)["slides"]
+            # 凡例ページが前に挿入されるタイプは、スライド本体（同一オブジェクト）の位置を指す。agenda の分割は先頭
+            own = next((k for k, x in enumerate(part) if x is s), 0)
+            nums.append(pos + own)
+            pos += len(part)
+        return nums
+    except BaseException:
+        return []
+
+
+def lint(deck: dict, punch_max: int | None = None, closing_max: int = 22,
+         png_numbers: list | None = None) -> dict:
+    """デッキ全体を検査して {errors, warnings, stats, todos, density} を返す（ファイルは読まない）。
+    png_numbers を渡すと、出力の slide-NN を expand_slides 後（プレビュー PNG）の番号にして
+    deck.json の番号を併記する（check_layout / check_diagram と同じ体系）。省略時は deck.json の番号。"""
+    res = _lint(deck, punch_max, closing_max)
+    if png_numbers and any(n != i for i, n in enumerate(png_numbers, 1)):
+        res["errors"] = [relabel_slides(e, png_numbers) for e in res["errors"]]
+        res["warnings"] = [relabel_slides(w, png_numbers) for w in res["warnings"]]
+        res["summary"] = relabel_slides(res["summary"], png_numbers)
+        for td in res["todos"]:
+            td["slide"] = relabel_slides(td["slide"], png_numbers)
+    return res
+
+
+def _lint(deck: dict, punch_max: int | None = None, closing_max: int = 22) -> dict:
     slides = deck.get("slides", [])
+    meta = deck.get("meta", {}) or {}
     total = len(slides)
+    density, density_warn = resolve_density(meta)
+    if punch_max is None:
+        punch_max = DENSITY_LIMITS[density]["punch"]
     errors, warns = [], []
+    if density_warn:
+        warns.append(density_warn)
     stats = {"punch_total": 0, "punch_over": 0, "dewanaku": 0, "dash": 0, "circled": 0, "ai_phrase": 0,
-             "ai_phrase_soft": 0, "half_colon": 0, "full_colon": 0, "ja_space": 0}
+             "ai_phrase_soft": 0, "half_colon": 0, "full_colon": 0, "ja_space": 0, "todo": 0}
     ja_space_examples = []
     for i, s in enumerate(slides, 1):
         sid = f"slide-{i:02d}"
         t = s.get("type")
-        if t == "closing" and len(str(s.get("title", ""))) > args.closing_max:
-            errors.append(f"{sid} closing.title {len(s['title'])}字 > {args.closing_max}字: 「{s['title']}」")
+        if t == "closing" and len(str(s.get("title", ""))) > closing_max:
+            errors.append(f"{sid} closing.title {len(s['title'])}字 > {closing_max}字: 「{s['title']}」"
+                          f" → {closing_max}字以内に縮める（長い主張は lead か本文へ回す。固定枠で 2 行になると罫線を貫通する）")
         if s.get("punch"):
             stats["punch_total"] += 1
-            if len(s["punch"]) > args.punch_max:
+            if len(s["punch"]) > punch_max:
                 stats["punch_over"] += 1
-                warns.append(f"{sid} punch {len(s['punch'])}字 > {args.punch_max}: 「{s['punch'][:30]}…」")
+                warns.append(f"{sid} punch {len(s['punch'])}字 > {punch_max}（density={density}）: 「{s['punch'][:30]}…」"
+                             f" → 結論を 1 文に削り、根拠は本文へ")
         texts = list(iter_texts(s))
         warns.extend(check_claims(sid, s))
         warns.extend(check_tables(sid, s, texts))
         warns.extend(check_relation(sid, s))
+        warns.extend(check_volume(sid, s, s.get("density") if isinstance(s.get("density"), str) and s.get("density") in DENSITY_LIMITS else density))     # スライドの density を優先（S5b）
         for path, text in texts:
             warns.extend(check_numbers(sid, path, text))
-            if JA_SPACE.search(text) and not CODE_LIKE.search(text):
+            if JA_SPACE.search(text) and JA_TIGHT.search(TODO_MARK.sub("", text)) and not CODE_LIKE.search(text):
                 stats["ja_space"] += 1
                 if len(ja_space_examples) < 3:
                     ja_space_examples.append(f"{sid} {path}「{text[:30]}」")
         for path, text in texts:
             if re.search(r"\*\*[^*]+\*\*|(?<!`)`[^`]+`|^#{1,6}\s", text):
-                errors.append(f"{sid} {path} Markdown記法残留: 「{text[:40]}」")
-            for m in re.finditer(r"(\d+)\s*(枚目|ページ目|ページ)", text):
-                n = int(m.group(1))
+                errors.append(f"{sid} {path} Markdown記法残留: 「{text[:40]}」"
+                              f" → ** ` # の記号を外す（強調は bullets の強調項目・太字指定で表す。画面にそのまま記号が出る）")
+            for m in PAGE_REF.finditer(text):
+                n = int(m.group(1) or m.group(2))
                 if n > total:
-                    errors.append(f"{sid} {path} 「{m.group(0)}」が総枚数{total}を超過")
-                else:
-                    warns.append(f"{sid} {path} ページ番号直書き「{m.group(0)}」（付録追加でずれる。実体: {slides[n-1].get('title','')[:20]}）")
+                    errors.append(f"{sid} {path} 「{m.group(0)}」が総枚数{total}を超過"
+                                  f" → ページ番号は書かず、タイトルの言葉で指す（実在しない番号になっている）")
+                elif 1 <= n <= total:
+                    warns.append(f"{sid} {path} ページ番号直書き「{m.group(0)}」（付録追加でずれる。実体: {slides[n-1].get('title','')[:20]}）"
+                                 f" → 番号の代わりにそのスライドのタイトルで指す")
             for ph in AI_PHRASES:
                 c = text.count(ph)
                 if c:
                     stats["ai_phrase"] += c
-                    errors.append(f"{sid} {path} AI定型句「{ph}」×{c}: 「{text[:40]}」")
+                    errors.append(f"{sid} {path} AI定型句「{ph}」×{c}: 「{text[:40]}」"
+                                  f" → 具体的な主語・動詞・数字で書き換える（例: 「〜を実現」→「〜を月 20 時間減らす」）")
             for ph in AI_PHRASES_SOFT:
                 c = text.count(ph)
                 if c:
@@ -354,29 +540,73 @@ def main():
             stats["dewanaku"] += text.count("ではなく")
             stats["dash"] += text.count("——") + text.count("—")
             stats["circled"] += len(re.findall(r"[①-⑳]", text))
-            # 日本語文中の半角コロン（URL・時刻を除く）
-            if re.search(r"[぀-ヿ一-鿿]\s*:\s*[぀-ヿ一-鿿]", text) and not re.search(r"https?:", text):
+            # 日本語文中の半角コロン（URL・時刻・出典 source を除く）
+            # 【要確認: …】のコロンは仕様上どちらも可なので、マーカー部分は除いて判定する
+            plain = TODO_MARK.sub("", text)
+            if (not path.split(".")[-1].startswith("source")
+                    and re.search(r"[぀-ヿ一-鿿]\s*:\s*[぀-ヿ一-鿿]", plain) and not re.search(r"https?:", plain)):
                 stats["half_colon"] += 1
-                warns.append(f"{sid} {path} 日本語文中の半角コロン: 「{text[:40]}」")
+                warns.append(f"{sid} {path} 日本語文中の半角コロン: 「{text[:40]}」 → 全角「：」にする")
             stats["full_colon"] += text.count("：")
+    todos = find_todos(slides, meta)
+    stats["todo"] = len(todos)
+    for td in todos:
+        what = td["note"] or "何を確かめるか未記入"
+        warns.append(f"{td['slide']} {td['path']} 要確認マーカー【{what}】: 「{td['text']}」"
+                     f" → 確かめる点を【要確認: …】で明示するか、根拠を確かめて本文を確定しマーカーを消す")
     warns.extend(check_rhythm(slides))
-    warns.extend(check_dates(slides, deck.get("meta", {})))
+    warns.extend(check_dates(slides, meta))
     if stats["ja_space"]:
-        warns.append(f"和文と英数字の間に半角空白 {stats['ja_space']}箇所（表記を統一するなら詰める。例: "
-                     f"{' / '.join(ja_space_examples)}）")
+        warns.append(f"和文と英数字の間の空白がそろっていない文字列 {stats['ja_space']}箇所（空白のある所と無い所が混ざっている。"
+                     f"空白を入れるなら全部に、詰めるなら全部に統一する。例: {' / '.join(ja_space_examples)}）")
     # 「ではなく」等は件数を1行で
-    warns.append(f"[集計] 「ではなく」{stats['dewanaku']}回 / ダッシュ{stats['dash']}回 / 丸数字{stats['circled']}個 / "
-                 f"AI定型句{stats['ai_phrase']}箇所 / 一般語(要確認){stats['ai_phrase_soft']}箇所 / "
-                 f"punch {stats['punch_over']}/{stats['punch_total']}枚が{args.punch_max}字超 / "
-                 f"半角コロン混在{stats['half_colon']}箇所（全角：{stats['full_colon']}回）")
-    out = {"deck": args.deck_dir, "slides": total, "errors": errors, "warnings": warns, "stats": stats}
+    todo_slides = sorted({td["slide"] for td in todos})
+    summary = (f"[集計] 「ではなく」{stats['dewanaku']}回 / ダッシュ{stats['dash']}回 / 丸数字{stats['circled']}個 / "
+               f"AI定型句{stats['ai_phrase']}箇所 / 一般語{stats['ai_phrase_soft']}箇所 / "
+               f"punch {stats['punch_over']}/{stats['punch_total']}枚が{punch_max}字超 / "
+               f"半角コロン混在{stats['half_colon']}箇所（全角：{stats['full_colon']}回） / "
+               f"要確認マーカー{stats['todo']}箇所" + (f"（{', '.join(todo_slides[:8])}{'…' if len(todo_slides) > 8 else ''}）" if todos else "")
+               + f" / density={density}")
+    return {"errors": errors, "warnings": warns, "summary": summary, "stats": stats, "todos": todos,
+            "density": density, "slides": total}
+
+
+def main():
+    setup_console()
+    ap = argparse.ArgumentParser(description="デッキ文言の機械リント")
+    ap.add_argument("deck_dir")
+    ap.add_argument("--json")
+    ap.add_argument("--punch-max", type=int, default=None,
+                    help="punch文字数の警告しきい値（既定は meta.density で変わる: talk 50 / standard 80 / read 120）")
+    ap.add_argument("--closing-max", type=int, default=22)
+    ap.add_argument("--fail-on-todo", action="store_true", help="【要確認】マーカーが 1 つでも残っていれば exit 1（仕上げの最終確認用）")
+    args = ap.parse_args()
+    deck_json = Path(args.deck_dir) / "deck.json"
+    if not deck_json.exists():
+        fail(f"{deck_json} が見つかりません")
+    deck = json.loads(deck_json.read_text(encoding="utf-8-sig"))
+    png_numbers = []
+    if build_deck is not None:
+        try:
+            _, _, layout = build_deck.load_deck(Path(args.deck_dir))
+            png_numbers = png_numbers_for(deck, layout)
+        except BaseException:
+            png_numbers = []
+    res = lint(deck, args.punch_max, args.closing_max, png_numbers)
+    errors, warns = res["errors"], res["warnings"]
+    if args.fail_on_todo and res["todos"]:
+        errors = errors + [f"【要確認】マーカーが{len(res['todos'])}箇所残っています（--fail-on-todo）"
+                           f" → 上の警告の箇所を確かめて確定し、マーカーを消してから再実行する"]
+    out = {"deck": args.deck_dir, "slides": res["slides"], "errors": errors, "warnings": warns + [res["summary"]],
+           "stats": res["stats"], "todos": res["todos"], "density": res["density"]}
     if args.json:
         Path(args.json).write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     for e in errors:
         print("NG:", e)
     for w in warns:
         print("warn:", w)
-    print(f"lint_deck_text: {total}枚 不合格{len(errors)}件 / 警告{len(warns) - 1}件")
+    print("warn:", res["summary"])
+    print(f"lint_deck_text: {res['slides']}枚 不合格{len(errors)}件 / 警告{len(warns)}件")
     sys.exit(1 if errors else 0)
 
 

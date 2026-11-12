@@ -1,0 +1,8095 @@
+{
+ "name": "checklist",
+ "label": "チェックリスト（完了・進行中・未着手）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "作業・確認項目の進み具合（完了・進行中・未着手）をチェック付きの一覧で見せる",
+ "description": "3〜7 項目の一覧に、完了（チェック入り）・進行中（色つきの枠）・未着手（空の枠）の印を付けて、いまの進み具合を見せる。公開前の確認・導入準備・手続きの進捗など「どこまで終わったか」を言いたい本文向け。右に担当や期限を添えられる（見出し・リード・フッターはスライド側の title / lead が描く）。状態は state に done / wip / todo（済・中・空 などの別名可）で書く。全項目が同じ文字の大きさにそろい、項目の数と文の長さで大きさが決まる（項目は 1 行で書く）。幅 700px 未満の矩形（合成スライドの半幅など）では担当・期限を内容の下に置く狭い構図、700〜1000px 未満では担当・期限を右に残した小さめの構図に切り替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。高さ 340px 未満の矩形（上下 2 段のブロックなど）では、行や列の詰め方を変えた短い構図に切り替わる。（本文の領域の縦中央に置く）",
+ "block_alt": "代わりに箇条書きか表を使う",
+ "background": "background",
+ "slots": {
+  "items": {
+   "kind": "records",
+   "label": "項目",
+   "min": 3,
+   "max": 7,
+   "fields": {
+    "text": {
+     "kind": "text",
+     "label": "項目の内容（1 行に収まる長さ）",
+     "max_chars": 24
+    },
+    "note": {
+     "kind": "text",
+     "label": "右に添える担当・期限",
+     "max_chars": 14
+    },
+    "state": {
+     "kind": "text",
+     "label": "状態",
+     "values": {
+      "done": [
+       "済",
+       "完了",
+       "済み",
+       "完了済み",
+       "対応済",
+       "対応済み",
+       "実施済",
+       "実施済み",
+       "終了",
+       "終わり",
+       "done",
+       "complete",
+       "completed",
+       "true",
+       "yes",
+       "○",
+       "◯",
+       "✓",
+       "✔"
+      ],
+      "wip": [
+       "中",
+       "進行中",
+       "対応中",
+       "作業中",
+       "実施中",
+       "着手",
+       "着手中",
+       "途中",
+       "wip",
+       "doing",
+       "in progress"
+      ],
+      "todo": [
+       "",
+       "未",
+       "未着手",
+       "未対応",
+       "未実施",
+       "待ち",
+       "これから",
+       "todo",
+       "false",
+       "no",
+       "×"
+      ]
+     },
+     "unknown_as": "todo",
+     "description": "done（済・完了・対応済）/ wip（中・進行中・対応中・着手）/ todo（未・未着手・空）。完了は文字が薄くなりチェックが入り、進行中は太字で色つきの枠、未着手は空の枠。候補にない言葉は未着手として描き、警告が出る"
+    }
+   },
+   "example": [
+    {
+     "text": "消防検査に合格する",
+     "note": "施設課",
+     "state": "done"
+    },
+    {
+     "text": "医療機器の校正を終える",
+     "note": "臨床工学",
+     "state": "完了"
+    },
+    {
+     "text": "スタッフ研修を実施する",
+     "note": "看護部",
+     "state": "wip"
+    },
+    {
+     "text": "院内の案内表示を設置する",
+     "note": "11 月 20 日",
+     "state": "todo"
+    },
+    {
+     "text": "開院日を地域へお知らせする",
+     "note": "11 月 28 日",
+     "state": ""
+    }
+   ],
+   "required": true,
+   "description": "上から順に。状態 state に done（または 済・完了）/ wip（中・進行中・対応中）/ todo（未・空）のどれかを書く。別名は自動でそろえ、候補にない値は未着手として描き、警告が出る。項目は 1 行で書く"
+  }
+ },
+ "elements": [],
+ "variants_by": "items",
+ "variants": {
+  "3": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 44.0,
+      "w": 1136,
+      "h": 312,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の区切り線",
+       "x": 0,
+       "y": 0,
+       "w": 1136,
+       "h": 1,
+       "fill": "border"
+      },
+      {
+       "name": "項目{{index}}の枠（未着手）",
+       "x": 0,
+       "y": 32.0,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 40,
+       "h": 40,
+       "radius": "$radius.small",
+       "line": {
+        "color": "muted",
+        "width": "$line.normal"
+       }
+      },
+      {
+       "name": "項目{{index}}の枠（進行中）",
+       "x": 0,
+       "y": 32.0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 40,
+       "h": 40,
+       "radius": "$radius.small",
+       "line": {
+        "color": "accent",
+        "width": "$line.edge_strong"
+       }
+      },
+      {
+       "name": "項目{{index}}の進行中の印",
+       "x": 12.0,
+       "y": 44.0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 16.0,
+       "h": 16.0,
+       "fill": "accent",
+       "radius": "$radius.tiny"
+      },
+      {
+       "name": "項目{{index}}のチェック枠",
+       "x": 0,
+       "y": 32.0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 40,
+       "h": 40,
+       "fill": "primary",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "項目{{index}}のチェック",
+       "x": 0,
+       "y": 32.0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 40,
+       "h": 40,
+       "line": {
+        "color": "on_primary",
+        "width": "$line.edge_strong"
+       },
+       "geom": "custom",
+       "path": [
+        {
+         "cmds": [
+          [
+           "M",
+           9.6,
+           20.8
+          ],
+          [
+           "L",
+           17.2,
+           28.0
+          ],
+          [
+           "L",
+           30.8,
+           12.4
+          ]
+         ],
+         "fill": false,
+         "stroke": true
+        }
+       ]
+      },
+      {
+       "name": "項目{{index}}の内容（完了）",
+       "x": 62,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 754,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "muted"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（進行中）",
+       "x": 62,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 754,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（未着手）",
+       "x": 62,
+       "y": 0,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 754,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の担当・期限",
+       "x": 836,
+       "y": 0,
+       "if": "note",
+       "r": 0,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{note}}",
+            "size": 24,
+            "color": "muted"
+           }
+          ],
+          "align": "r"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         20,
+         18,
+         16
+        ],
+        "group": "note"
+       }
+      }
+     ]
+    },
+    {
+     "name": "最後の区切り線",
+     "x": 0,
+     "y": 355.0,
+     "w": 1136,
+     "h": 1,
+     "fill": "border"
+    }
+   ]
+  },
+  "4": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0.0,
+      "w": 1136,
+      "h": 400.0,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の区切り線",
+       "x": 0,
+       "y": 0,
+       "w": 1136,
+       "h": 1,
+       "fill": "border"
+      },
+      {
+       "name": "項目{{index}}の枠（未着手）",
+       "x": 0,
+       "y": 30.0,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 40,
+       "h": 40,
+       "radius": "$radius.small",
+       "line": {
+        "color": "muted",
+        "width": "$line.normal"
+       }
+      },
+      {
+       "name": "項目{{index}}の枠（進行中）",
+       "x": 0,
+       "y": 30.0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 40,
+       "h": 40,
+       "radius": "$radius.small",
+       "line": {
+        "color": "accent",
+        "width": "$line.edge_strong"
+       }
+      },
+      {
+       "name": "項目{{index}}の進行中の印",
+       "x": 12.0,
+       "y": 42.0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 16.0,
+       "h": 16.0,
+       "fill": "accent",
+       "radius": "$radius.tiny"
+      },
+      {
+       "name": "項目{{index}}のチェック枠",
+       "x": 0,
+       "y": 30.0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 40,
+       "h": 40,
+       "fill": "primary",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "項目{{index}}のチェック",
+       "x": 0,
+       "y": 30.0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 40,
+       "h": 40,
+       "line": {
+        "color": "on_primary",
+        "width": "$line.edge_strong"
+       },
+       "geom": "custom",
+       "path": [
+        {
+         "cmds": [
+          [
+           "M",
+           9.6,
+           20.8
+          ],
+          [
+           "L",
+           17.2,
+           28.0
+          ],
+          [
+           "L",
+           30.8,
+           12.4
+          ]
+         ],
+         "fill": false,
+         "stroke": true
+        }
+       ]
+      },
+      {
+       "name": "項目{{index}}の内容（完了）",
+       "x": 62,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 754,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "muted"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（進行中）",
+       "x": 62,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 754,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（未着手）",
+       "x": 62,
+       "y": 0,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 754,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の担当・期限",
+       "x": 836,
+       "y": 0,
+       "if": "note",
+       "r": 0,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{note}}",
+            "size": 24,
+            "color": "muted"
+           }
+          ],
+          "align": "r"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         20,
+         18,
+         16
+        ],
+        "group": "note"
+       }
+      }
+     ]
+    },
+    {
+     "name": "最後の区切り線",
+     "x": 0,
+     "y": 399.0,
+     "w": 1136,
+     "h": 1,
+     "fill": "border"
+    }
+   ]
+  },
+  "5": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0.0,
+      "w": 1136,
+      "h": 400.0,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の区切り線",
+       "x": 0,
+       "y": 0,
+       "w": 1136,
+       "h": 1,
+       "fill": "border"
+      },
+      {
+       "name": "項目{{index}}の枠（未着手）",
+       "x": 0,
+       "y": 23.0,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 34,
+       "h": 34,
+       "radius": "$radius.small",
+       "line": {
+        "color": "muted",
+        "width": "$line.normal"
+       }
+      },
+      {
+       "name": "項目{{index}}の枠（進行中）",
+       "x": 0,
+       "y": 23.0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 34,
+       "h": 34,
+       "radius": "$radius.small",
+       "line": {
+        "color": "accent",
+        "width": "$line.edge_strong"
+       }
+      },
+      {
+       "name": "項目{{index}}の進行中の印",
+       "x": 10.2,
+       "y": 33.2,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 13.600000000000001,
+       "h": 13.600000000000001,
+       "fill": "accent",
+       "radius": "$radius.tiny"
+      },
+      {
+       "name": "項目{{index}}のチェック枠",
+       "x": 0,
+       "y": 23.0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 34,
+       "h": 34,
+       "fill": "primary",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "項目{{index}}のチェック",
+       "x": 0,
+       "y": 23.0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 34,
+       "h": 34,
+       "line": {
+        "color": "on_primary",
+        "width": "$line.edge_strong"
+       },
+       "geom": "custom",
+       "path": [
+        {
+         "cmds": [
+          [
+           "M",
+           8.16,
+           17.68
+          ],
+          [
+           "L",
+           14.62,
+           23.8
+          ],
+          [
+           "L",
+           26.18,
+           10.54
+          ]
+         ],
+         "fill": false,
+         "stroke": true
+        }
+       ]
+      },
+      {
+       "name": "項目{{index}}の内容（完了）",
+       "x": 56,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 760,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "muted"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（進行中）",
+       "x": 56,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 760,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（未着手）",
+       "x": 56,
+       "y": 0,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 760,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の担当・期限",
+       "x": 836,
+       "y": 0,
+       "if": "note",
+       "r": 0,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{note}}",
+            "size": 24,
+            "color": "muted"
+           }
+          ],
+          "align": "r"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         20,
+         18,
+         16
+        ],
+        "group": "note"
+       }
+      }
+     ]
+    },
+    {
+     "name": "最後の区切り線",
+     "x": 0,
+     "y": 399.0,
+     "w": 1136,
+     "h": 1,
+     "fill": "border"
+    }
+   ]
+  },
+  "6": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0.0,
+      "w": 1136,
+      "h": 400.0,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の区切り線",
+       "x": 0,
+       "y": 0,
+       "w": 1136,
+       "h": 1,
+       "fill": "border"
+      },
+      {
+       "name": "項目{{index}}の枠（未着手）",
+       "x": 0,
+       "y": 16.333333333333336,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 34,
+       "h": 34,
+       "radius": "$radius.small",
+       "line": {
+        "color": "muted",
+        "width": "$line.normal"
+       }
+      },
+      {
+       "name": "項目{{index}}の枠（進行中）",
+       "x": 0,
+       "y": 16.333333333333336,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 34,
+       "h": 34,
+       "radius": "$radius.small",
+       "line": {
+        "color": "accent",
+        "width": "$line.edge_strong"
+       }
+      },
+      {
+       "name": "項目{{index}}の進行中の印",
+       "x": 10.2,
+       "y": 26.533333333333335,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 13.600000000000001,
+       "h": 13.600000000000001,
+       "fill": "accent",
+       "radius": "$radius.tiny"
+      },
+      {
+       "name": "項目{{index}}のチェック枠",
+       "x": 0,
+       "y": 16.333333333333336,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 34,
+       "h": 34,
+       "fill": "primary",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "項目{{index}}のチェック",
+       "x": 0,
+       "y": 16.333333333333336,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 34,
+       "h": 34,
+       "line": {
+        "color": "on_primary",
+        "width": "$line.edge_strong"
+       },
+       "geom": "custom",
+       "path": [
+        {
+         "cmds": [
+          [
+           "M",
+           8.16,
+           17.68
+          ],
+          [
+           "L",
+           14.62,
+           23.8
+          ],
+          [
+           "L",
+           26.18,
+           10.54
+          ]
+         ],
+         "fill": false,
+         "stroke": true
+        }
+       ]
+      },
+      {
+       "name": "項目{{index}}の内容（完了）",
+       "x": 56,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 760,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "muted"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（進行中）",
+       "x": 56,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 760,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（未着手）",
+       "x": 56,
+       "y": 0,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 760,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の担当・期限",
+       "x": 836,
+       "y": 0,
+       "if": "note",
+       "r": 0,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{note}}",
+            "size": 24,
+            "color": "muted"
+           }
+          ],
+          "align": "r"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         20,
+         18,
+         16
+        ],
+        "group": "note"
+       }
+      }
+     ]
+    },
+    {
+     "name": "最後の区切り線",
+     "x": 0,
+     "y": 399.0,
+     "w": 1136,
+     "h": 1,
+     "fill": "border"
+    }
+   ]
+  },
+  "7": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0.0,
+      "w": 1136,
+      "h": 400.0,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の区切り線",
+       "x": 0,
+       "y": 0,
+       "w": 1136,
+       "h": 1,
+       "fill": "border"
+      },
+      {
+       "name": "項目{{index}}の枠（未着手）",
+       "x": 0,
+       "y": 14.571428571428573,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 28,
+       "h": 28,
+       "radius": "$radius.small",
+       "line": {
+        "color": "muted",
+        "width": "$line.normal"
+       }
+      },
+      {
+       "name": "項目{{index}}の枠（進行中）",
+       "x": 0,
+       "y": 14.571428571428573,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 28,
+       "h": 28,
+       "radius": "$radius.small",
+       "line": {
+        "color": "accent",
+        "width": "$line.edge_strong"
+       }
+      },
+      {
+       "name": "項目{{index}}の進行中の印",
+       "x": 8.4,
+       "y": 22.971428571428575,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 11.200000000000001,
+       "h": 11.200000000000001,
+       "fill": "accent",
+       "radius": "$radius.tiny"
+      },
+      {
+       "name": "項目{{index}}のチェック枠",
+       "x": 0,
+       "y": 14.571428571428573,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 28,
+       "h": 28,
+       "fill": "primary",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "項目{{index}}のチェック",
+       "x": 0,
+       "y": 14.571428571428573,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 28,
+       "h": 28,
+       "line": {
+        "color": "on_primary",
+        "width": "$line.edge_strong"
+       },
+       "geom": "custom",
+       "path": [
+        {
+         "cmds": [
+          [
+           "M",
+           6.72,
+           14.56
+          ],
+          [
+           "L",
+           12.04,
+           19.6
+          ],
+          [
+           "L",
+           21.56,
+           8.68
+          ]
+         ],
+         "fill": false,
+         "stroke": true
+        }
+       ]
+      },
+      {
+       "name": "項目{{index}}の内容（完了）",
+       "x": 50,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "done"
+       },
+       "w": 766,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "muted"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（進行中）",
+       "x": 50,
+       "y": 0,
+       "if": {
+        "slot": "state",
+        "is": "wip"
+       },
+       "w": 766,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の内容（未着手）",
+       "x": 50,
+       "y": 0,
+       "if": {
+        "not": {
+         "slot": "state",
+         "in": [
+          "done",
+          "wip"
+         ]
+        }
+       },
+       "w": 766,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{text}}",
+            "size": 32,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "text"
+       }
+      },
+      {
+       "name": "項目{{index}}の担当・期限",
+       "x": 836,
+       "y": 0,
+       "if": "note",
+       "r": 0,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{note}}",
+            "size": 24,
+            "color": "muted"
+           }
+          ],
+          "align": "r"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         20,
+         18,
+         16
+        ],
+        "group": "note"
+       }
+      }
+     ]
+    },
+    {
+     "name": "最後の区切り線",
+     "x": 0,
+     "y": 399.0,
+     "w": 1136,
+     "h": 1,
+     "fill": "border"
+    }
+   ]
+  }
+ },
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    556,
+    400
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 50.0,
+        "w": 556,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 556,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 30.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 30.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 12.0,
+         "y": 42.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 16.0,
+         "h": 16.0,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 30.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 30.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             9.6,
+             20.8
+            ],
+            [
+             "L",
+             17.2,
+             28.0
+            ],
+            [
+             "L",
+             30.8,
+             12.4
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 494,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "muted"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 494,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 494,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 349.0,
+       "w": 556,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 556,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 556,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 30.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 30.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 12.0,
+         "y": 42.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 16.0,
+         "h": 16.0,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 30.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 30.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             9.6,
+             20.8
+            ],
+            [
+             "L",
+             17.2,
+             28.0
+            ],
+            [
+             "L",
+             30.8,
+             12.4
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 494,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "muted"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 494,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 494,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 399.0,
+       "w": 556,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 556,
+        "h": 400.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 556,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 23.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 23.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 10.2,
+         "y": 33.2,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 13.600000000000001,
+         "h": 13.600000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 23.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 23.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             8.16,
+             17.68
+            ],
+            [
+             "L",
+             14.62,
+             23.8
+            ],
+            [
+             "L",
+             26.18,
+             10.54
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 500,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "muted"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 500,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 500,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 399.0,
+       "w": 556,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 556,
+        "h": 400.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 556,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 16.333333333333336,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 16.333333333333336,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 10.2,
+         "y": 26.533333333333335,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 13.600000000000001,
+         "h": 13.600000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 16.333333333333336,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 16.333333333333336,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             8.16,
+             17.68
+            ],
+            [
+             "L",
+             14.62,
+             23.8
+            ],
+            [
+             "L",
+             26.18,
+             10.54
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 500,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "muted"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 500,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 500,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 399.0,
+       "w": 556,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "7": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 556,
+        "h": 400.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 556,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 14.571428571428573,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 14.571428571428573,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 8.4,
+         "y": 22.971428571428575,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 11.200000000000001,
+         "h": 11.200000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 14.571428571428573,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 14.571428571428573,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             6.72,
+             14.56
+            ],
+            [
+             "L",
+             12.04,
+             19.6
+            ],
+            [
+             "L",
+             21.56,
+             8.68
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 506,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "muted"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 506,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 506,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 32,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20.8,
+              "color": "muted"
+             }
+            ],
+            "if": "note"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 399.0,
+       "w": 556,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    }
+   },
+   "min_width": 390,
+   "min_width_by_count": {
+    "7": 470
+   }
+  },
+  {
+   "below": 700,
+   "below_h": 340,
+   "size": [
+    540,
+    300
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 12.0,
+        "w": 540,
+        "h": 276,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 12.0,
+         "y": 38.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 16.0,
+         "h": 16.0,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             9.6,
+             20.8
+            ],
+            [
+             "L",
+             17.2,
+             28.0
+            ],
+            [
+             "L",
+             30.8,
+             12.4
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 312,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 312,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 312,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 390,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 287.0,
+       "w": 540,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 540,
+        "h": 300.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 20.5,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 20.5,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 10.2,
+         "y": 30.7,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 13.600000000000001,
+         "h": 13.600000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 20.5,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 20.5,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             8.16,
+             17.68
+            ],
+            [
+             "L",
+             14.62,
+             23.8
+            ],
+            [
+             "L",
+             26.18,
+             10.54
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 318,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 318,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 318,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 390,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 299.0,
+       "w": 540,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 540,
+        "h": 300.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 16.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 16.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 8.4,
+         "y": 24.4,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 11.200000000000001,
+         "h": 11.200000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 16.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 16.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             6.72,
+             14.56
+            ],
+            [
+             "L",
+             12.04,
+             19.6
+            ],
+            [
+             "L",
+             21.56,
+             8.68
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 390,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 299.0,
+       "w": 540,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 540,
+        "h": 300.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 11.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 11.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 8.4,
+         "y": 19.4,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 11.200000000000001,
+         "h": 11.200000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 11.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 11.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             6.72,
+             14.56
+            ],
+            [
+             "L",
+             12.04,
+             19.6
+            ],
+            [
+             "L",
+             21.56,
+             8.68
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 390,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 299.0,
+       "w": 540,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "7": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 540,
+        "h": 300.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 7.428571428571427,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 7.428571428571427,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 8.4,
+         "y": 15.828571428571427,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 11.200000000000001,
+         "h": 11.200000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 7.428571428571427,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 7.428571428571427,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             6.72,
+             14.56
+            ],
+            [
+             "L",
+             12.04,
+             19.6
+            ],
+            [
+             "L",
+             21.56,
+             8.68
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 324,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 390,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 299.0,
+       "w": 540,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 62.0,
+        "w": 800,
+        "h": 276,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 12.0,
+         "y": 38.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 16.0,
+         "h": 16.0,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             9.6,
+             20.8
+            ],
+            [
+             "L",
+             17.2,
+             28.0
+            ],
+            [
+             "L",
+             30.8,
+             12.4
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 512,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 512,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 512,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 590,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           18,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 337.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 16.0,
+        "w": 800,
+        "h": 368,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 12.0,
+         "y": 38.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 16.0,
+         "h": 16.0,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             9.6,
+             20.8
+            ],
+            [
+             "L",
+             17.2,
+             28.0
+            ],
+            [
+             "L",
+             30.8,
+             12.4
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 512,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 512,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 512,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 590,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           18,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 383.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 800,
+        "h": 400.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 23.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 23.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 10.2,
+         "y": 33.2,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 13.600000000000001,
+         "h": 13.600000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 23.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 23.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             8.16,
+             17.68
+            ],
+            [
+             "L",
+             14.62,
+             23.8
+            ],
+            [
+             "L",
+             26.18,
+             10.54
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 518,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 518,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 518,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 590,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           18,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 399.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 800,
+        "h": 400.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 16.333333333333336,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 16.333333333333336,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 10.2,
+         "y": 26.533333333333335,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 13.600000000000001,
+         "h": 13.600000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 16.333333333333336,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 16.333333333333336,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             8.16,
+             17.68
+            ],
+            [
+             "L",
+             14.62,
+             23.8
+            ],
+            [
+             "L",
+             26.18,
+             10.54
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 518,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 518,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 518,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 590,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           18,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 399.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "7": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 800,
+        "h": 400.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 14.571428571428573,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 14.571428571428573,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 8.4,
+         "y": 22.971428571428575,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 11.200000000000001,
+         "h": 11.200000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 14.571428571428573,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 14.571428571428573,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             6.72,
+             14.56
+            ],
+            [
+             "L",
+             12.04,
+             19.6
+            ],
+            [
+             "L",
+             21.56,
+             8.68
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 524,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 524,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 524,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 28,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 590,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           18,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 399.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "below_h": 340,
+   "size": [
+    800,
+    300
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 12.0,
+        "w": 800,
+        "h": 276,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 40,
+         "h": 40,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 12.0,
+         "y": 38.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 16.0,
+         "h": 16.0,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 26.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 40,
+         "h": 40,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             9.6,
+             20.8
+            ],
+            [
+             "L",
+             17.2,
+             28.0
+            ],
+            [
+             "L",
+             30.8,
+             12.4
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 522,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 522,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 62,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 522,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 600,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 287.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 800,
+        "h": 300.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 20.5,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 20.5,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 34,
+         "h": 34,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 10.2,
+         "y": 30.7,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 13.600000000000001,
+         "h": 13.600000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 20.5,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 20.5,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 34,
+         "h": 34,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             8.16,
+             17.68
+            ],
+            [
+             "L",
+             14.62,
+             23.8
+            ],
+            [
+             "L",
+             26.18,
+             10.54
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 528,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 528,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 56,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 528,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 600,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 299.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 800,
+        "h": 300.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 16.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 16.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 8.4,
+         "y": 24.4,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 11.200000000000001,
+         "h": 11.200000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 16.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 16.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             6.72,
+             14.56
+            ],
+            [
+             "L",
+             12.04,
+             19.6
+            ],
+            [
+             "L",
+             21.56,
+             8.68
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 600,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 299.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 800,
+        "h": 300.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 11.0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 11.0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 8.4,
+         "y": 19.4,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 11.200000000000001,
+         "h": 11.200000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 11.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 11.0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             6.72,
+             14.56
+            ],
+            [
+             "L",
+             12.04,
+             19.6
+            ],
+            [
+             "L",
+             21.56,
+             8.68
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 600,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 299.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    },
+    "7": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0.0,
+        "w": 800,
+        "h": 300.0,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の枠（未着手）",
+         "x": 0,
+         "y": 7.428571428571427,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "muted",
+          "width": "$line.normal"
+         }
+        },
+        {
+         "name": "項目{{index}}の枠（進行中）",
+         "x": 0,
+         "y": 7.428571428571427,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 28,
+         "h": 28,
+         "radius": "$radius.small",
+         "line": {
+          "color": "accent",
+          "width": "$line.edge_strong"
+         }
+        },
+        {
+         "name": "項目{{index}}の進行中の印",
+         "x": 8.4,
+         "y": 15.828571428571427,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 11.200000000000001,
+         "h": 11.200000000000001,
+         "fill": "accent",
+         "radius": "$radius.tiny"
+        },
+        {
+         "name": "項目{{index}}のチェック枠",
+         "x": 0,
+         "y": 7.428571428571427,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.small"
+        },
+        {
+         "name": "項目{{index}}のチェック",
+         "x": 0,
+         "y": 7.428571428571427,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 28,
+         "h": 28,
+         "line": {
+          "color": "on_primary",
+          "width": "$line.edge_strong"
+         },
+         "geom": "custom",
+         "path": [
+          {
+           "cmds": [
+            [
+             "M",
+             6.72,
+             14.56
+            ],
+            [
+             "L",
+             12.04,
+             19.6
+            ],
+            [
+             "L",
+             21.56,
+             8.68
+            ]
+           ],
+           "fill": false,
+           "stroke": true
+          }
+         ]
+        },
+        {
+         "name": "項目{{index}}の内容（完了）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "done"
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "muted"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（進行中）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "slot": "state",
+          "is": "wip"
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の内容（未着手）",
+         "x": 50,
+         "y": 0,
+         "if": {
+          "not": {
+           "slot": "state",
+           "in": [
+            "done",
+            "wip"
+           ]
+          }
+         },
+         "w": 534,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{text}}",
+              "size": 26,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "text"
+         }
+        },
+        {
+         "name": "項目{{index}}の担当・期限",
+         "x": 600,
+         "y": 0,
+         "if": "note",
+         "r": 0,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{note}}",
+              "size": 20,
+              "color": "muted"
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "note"
+         }
+        }
+       ]
+      },
+      {
+       "name": "最後の区切り線",
+       "x": 0,
+       "y": 299.0,
+       "w": 800,
+       "h": 1,
+       "fill": "border"
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

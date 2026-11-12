@@ -1,0 +1,4994 @@
+{
+ "name": "timeline",
+ "label": "時間軸（3〜6 個の節目）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "日付つきの節目を左から右の時間軸に並べ現在地を強調（日付なしの手順は numbered-columns）",
+ "description": "横の時間軸に 3〜6 個の節目（時期・名前・一言）を並べる。計画・沿革・導入の段取りなど「いつ何をするか」を順に見せる本文向け。現在地の節目だけ大きな色つきの点とタグで強調できる（見出し・リード・フッターはスライド側の title / lead が描く）。全節目の文字の大きさがそろい、文が短いほど大きい（目安を超えると収まらない警告が出る）。幅 1000px 未満の矩形（合成スライドの半幅・3 分の 2 など）では、縦の時間軸（左に日付、軸の点、右に名前と一言。現在地は大きな点と「現在地」の札）に組み替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。高さ 340px 未満の矩形（上下 2 段のブロックなど）では、行や列の詰め方を変えた短い構図に切り替わる。（本文の領域の縦中央に置く）",
+ "block_alt": "代わりに numbered-list（縦の番号つき）を使う（日付がなければ）",
+ "background": "background",
+ "slots": {
+  "items": {
+   "kind": "records",
+   "label": "節目",
+   "min": 3,
+   "max": 6,
+   "fields": {
+    "date": {
+     "kind": "text",
+     "label": "日付・時期",
+     "max_chars": 8,
+     "description": "「4 月」「第 2 四半期」「2027 年 1 月」など。短く"
+    },
+    "head": {
+     "kind": "text",
+     "label": "節目の名前",
+     "max_chars": 10
+    },
+    "body": {
+     "kind": "text",
+     "label": "一言の説明（3〜4 行まで）",
+     "max_chars": 26
+    },
+    "now": {
+     "kind": "flag",
+     "label": "現在地",
+     "at_most": 1,
+     "description": "現在地の節目だけ true（または「現在地」「○」）にする。その節目だけ大きな色つきの点と「現在地」のタグが付く。false・no・空は通常の節目。1 つだけにする（2 つ以上に付けると警告）"
+    }
+   },
+   "example": [
+    {
+     "date": "10 月",
+     "head": "旧設備の停止",
+     "body": "配膳ラインを止めて、調理機器を搬出する",
+     "now": false
+    },
+    {
+     "date": "11 月",
+     "head": "新棟の試運転",
+     "body": "週 2 回、実際の献立で調理して手順を確かめる",
+     "now": true
+    },
+    {
+     "date": "12 月",
+     "head": "全校で稼働",
+     "body": "冬休み明けから、全校分を新棟でまとめて調理する",
+     "now": false
+    },
+    {
+     "date": "1 月",
+     "head": "旧棟の撤去",
+     "body": "解体工事に入り、跡地を駐車場として整える",
+     "now": false
+    }
+   ],
+   "required": true,
+   "description": "左から右へ時間順。現在地にしたい節目の now を true にすると、その節目だけ大きく色が付く（現在地は 1 つだけ）"
+  }
+ },
+ "elements": [],
+ "variants_by": "items",
+ "variants": {
+  "3": {
+   "elements": [
+    {
+     "name": "時間軸",
+     "x": 0,
+     "y": 148.5,
+     "w": 1136,
+     "h": "$line.edge_strong",
+     "fill": "border"
+    },
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0,
+      "w": 1136,
+      "h": 400,
+      "cols": "row",
+      "gap": 28
+     },
+     "template": [
+      {
+       "name": "節目{{index}}の現在地タグ",
+       "x": 0,
+       "y": 16,
+       "if": "now",
+       "w": 108,
+       "h": 36,
+       "fill": "primary",
+       "radius": "$radius.pill",
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "現在地",
+            "size": 18,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       }
+      },
+      {
+       "name": "節目{{index}}の日付",
+       "x": 0,
+       "y": 62,
+       "h": 50,
+       "r": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{date}}",
+            "size": 40,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         40,
+         38,
+         36,
+         34,
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20
+        ],
+        "group": "date"
+       }
+      },
+      {
+       "name": "節目{{index}}の点",
+       "x": 0,
+       "y": 138,
+       "if": "!now",
+       "w": 24,
+       "h": 24,
+       "fill": "primary",
+       "geom": "ellipse"
+      },
+      {
+       "name": "節目{{index}}の現在地の点",
+       "x": 0,
+       "y": 132,
+       "if": "now",
+       "w": 36,
+       "h": 36,
+       "fill": "accent",
+       "line": {
+        "color": "background",
+        "width": "$line.bold"
+       },
+       "geom": "ellipse"
+      },
+      {
+       "name": "節目{{index}}の名前",
+       "x": 0,
+       "y": 184,
+       "h": 70,
+       "r": 4,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         19,
+         18
+        ],
+        "group": "head"
+       }
+      },
+      {
+       "name": "節目{{index}}の説明",
+       "x": 0,
+       "y": 260,
+       "r": 4,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.4,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 28,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         28,
+         26,
+         24,
+         22,
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "body"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "4": {
+   "elements": [
+    {
+     "name": "時間軸",
+     "x": 0,
+     "y": 148.5,
+     "w": 1136,
+     "h": "$line.edge_strong",
+     "fill": "border"
+    },
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0,
+      "w": 1136,
+      "h": 400,
+      "cols": "row",
+      "gap": 28
+     },
+     "template": [
+      {
+       "name": "節目{{index}}の現在地タグ",
+       "x": 0,
+       "y": 16,
+       "if": "now",
+       "w": 108,
+       "h": 36,
+       "fill": "primary",
+       "radius": "$radius.pill",
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "現在地",
+            "size": 18,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       }
+      },
+      {
+       "name": "節目{{index}}の日付",
+       "x": 0,
+       "y": 62,
+       "h": 50,
+       "r": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{date}}",
+            "size": 40,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         40,
+         38,
+         36,
+         34,
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20
+        ],
+        "group": "date"
+       }
+      },
+      {
+       "name": "節目{{index}}の点",
+       "x": 0,
+       "y": 138,
+       "if": "!now",
+       "w": 24,
+       "h": 24,
+       "fill": "primary",
+       "geom": "ellipse"
+      },
+      {
+       "name": "節目{{index}}の現在地の点",
+       "x": 0,
+       "y": 132,
+       "if": "now",
+       "w": 36,
+       "h": 36,
+       "fill": "accent",
+       "line": {
+        "color": "background",
+        "width": "$line.bold"
+       },
+       "geom": "ellipse"
+      },
+      {
+       "name": "節目{{index}}の名前",
+       "x": 0,
+       "y": 184,
+       "h": 70,
+       "r": 4,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         19,
+         18
+        ],
+        "group": "head"
+       }
+      },
+      {
+       "name": "節目{{index}}の説明",
+       "x": 0,
+       "y": 260,
+       "r": 4,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.4,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 28,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         28,
+         26,
+         24,
+         22,
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "body"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "5": {
+   "elements": [
+    {
+     "name": "時間軸",
+     "x": 0,
+     "y": 148.5,
+     "w": 1136,
+     "h": "$line.edge_strong",
+     "fill": "border"
+    },
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0,
+      "w": 1136,
+      "h": 400,
+      "cols": "row",
+      "gap": 28
+     },
+     "template": [
+      {
+       "name": "節目{{index}}の現在地タグ",
+       "x": 0,
+       "y": 16,
+       "if": "now",
+       "w": 108,
+       "h": 36,
+       "fill": "primary",
+       "radius": "$radius.pill",
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "現在地",
+            "size": 18,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       }
+      },
+      {
+       "name": "節目{{index}}の日付",
+       "x": 0,
+       "y": 62,
+       "h": 50,
+       "r": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{date}}",
+            "size": 40,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         40,
+         38,
+         36,
+         34,
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20
+        ],
+        "group": "date"
+       }
+      },
+      {
+       "name": "節目{{index}}の点",
+       "x": 0,
+       "y": 138,
+       "if": "!now",
+       "w": 24,
+       "h": 24,
+       "fill": "primary",
+       "geom": "ellipse"
+      },
+      {
+       "name": "節目{{index}}の現在地の点",
+       "x": 0,
+       "y": 132,
+       "if": "now",
+       "w": 36,
+       "h": 36,
+       "fill": "accent",
+       "line": {
+        "color": "background",
+        "width": "$line.bold"
+       },
+       "geom": "ellipse"
+      },
+      {
+       "name": "節目{{index}}の名前",
+       "x": 0,
+       "y": 184,
+       "h": 70,
+       "r": 4,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         19,
+         18
+        ],
+        "group": "head"
+       }
+      },
+      {
+       "name": "節目{{index}}の説明",
+       "x": 0,
+       "y": 260,
+       "r": 4,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.4,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 28,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         28,
+         26,
+         24,
+         22,
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "body"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "6": {
+   "elements": [
+    {
+     "name": "時間軸",
+     "x": 0,
+     "y": 148.5,
+     "w": 1136,
+     "h": "$line.edge_strong",
+     "fill": "border"
+    },
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0,
+      "w": 1136,
+      "h": 400,
+      "cols": "row",
+      "gap": 28
+     },
+     "template": [
+      {
+       "name": "節目{{index}}の現在地タグ",
+       "x": 0,
+       "y": 16,
+       "if": "now",
+       "w": 108,
+       "h": 36,
+       "fill": "primary",
+       "radius": "$radius.pill",
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "現在地",
+            "size": 18,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       }
+      },
+      {
+       "name": "節目{{index}}の日付",
+       "x": 0,
+       "y": 62,
+       "h": 50,
+       "r": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{date}}",
+            "size": 40,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         40,
+         38,
+         36,
+         34,
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20
+        ],
+        "group": "date"
+       }
+      },
+      {
+       "name": "節目{{index}}の点",
+       "x": 0,
+       "y": 138,
+       "if": "!now",
+       "w": 24,
+       "h": 24,
+       "fill": "primary",
+       "geom": "ellipse"
+      },
+      {
+       "name": "節目{{index}}の現在地の点",
+       "x": 0,
+       "y": 132,
+       "if": "now",
+       "w": 36,
+       "h": 36,
+       "fill": "accent",
+       "line": {
+        "color": "background",
+        "width": "$line.bold"
+       },
+       "geom": "ellipse"
+      },
+      {
+       "name": "節目{{index}}の名前",
+       "x": 0,
+       "y": 184,
+       "h": 70,
+       "r": 4,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20,
+         19,
+         18
+        ],
+        "group": "head"
+       }
+      },
+      {
+       "name": "節目{{index}}の説明",
+       "x": 0,
+       "y": 260,
+       "r": 4,
+       "b": 0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.4,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 28,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         28,
+         26,
+         24,
+         22,
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "body"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    400
+   ],
+   "elements": [],
+   "min_width": 440,
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 66.66666666666667,
+       "w": "$line.edge_strong",
+       "h": 266.66666666666663,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 133.33333333333334,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 70.66666666666667,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 46,
+         "y": 74.66666666666667,
+         "if": "now",
+         "w": 84,
+         "h": 24.0,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 15,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 138.0,
+         "y": 58.66666666666667,
+         "if": "!now",
+         "w": 16,
+         "h": 16,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 133.0,
+         "y": 53.66666666666667,
+         "if": "now",
+         "w": 26,
+         "h": 26,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の文",
+         "x": 172,
+         "y": 3,
+         "r": 2,
+         "b": 3,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 21.6,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 50.0,
+       "w": "$line.edge_strong",
+       "h": 300.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 100.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 54.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 46,
+         "y": 58.0,
+         "if": "now",
+         "w": 84,
+         "h": 24.0,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 15,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 138.0,
+         "y": 42.0,
+         "if": "!now",
+         "w": 16,
+         "h": 16,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 133.0,
+         "y": 37.0,
+         "if": "now",
+         "w": 26,
+         "h": 26,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の文",
+         "x": 172,
+         "y": 3,
+         "r": 2,
+         "b": 3,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 20.16,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 40.0,
+       "w": "$line.edge_strong",
+       "h": 320.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 80.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 44.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 46,
+         "y": 48.0,
+         "if": "now",
+         "w": 84,
+         "h": 24.0,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 15,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 139.0,
+         "y": 33.0,
+         "if": "!now",
+         "w": 14,
+         "h": 14,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 134.0,
+         "y": 28.0,
+         "if": "now",
+         "w": 24,
+         "h": 24,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の文",
+         "x": 172,
+         "y": 3,
+         "r": 2,
+         "b": 3,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 18.72,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 33.333333333333336,
+       "w": "$line.edge_strong",
+       "h": 333.3333333333333,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 66.66666666666667,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 37.333333333333336,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 46,
+         "y": 41.333333333333336,
+         "if": "now",
+         "w": 84,
+         "h": 22.400000000000002,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 14,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 139.0,
+         "y": 26.333333333333336,
+         "if": "!now",
+         "w": 14,
+         "h": 14,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 135.0,
+         "y": 22.333333333333336,
+         "if": "now",
+         "w": 22,
+         "h": 22,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の文",
+         "x": 172,
+         "y": 3,
+         "r": 2,
+         "b": 3,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 17.28,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "min_width_by_count": {
+    "6": 470
+   }
+  },
+  {
+   "below": 700,
+   "below_h": 340,
+   "size": [
+    540,
+    300
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 50.0,
+       "w": "$line.edge_strong",
+       "h": 200.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 100.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 54.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 46,
+         "y": 56.0,
+         "if": "now",
+         "w": 84,
+         "h": 22.400000000000002,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 14,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 138.0,
+         "y": 42.0,
+         "if": "!now",
+         "w": 16,
+         "h": 16,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 133.0,
+         "y": 37.0,
+         "if": "now",
+         "w": 26,
+         "h": 26,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の文",
+         "x": 172,
+         "y": 3,
+         "r": 2,
+         "b": 3,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 19.24,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 37.5,
+       "w": "$line.edge_strong",
+       "h": 225.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 75.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 41.5,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 46,
+         "y": 43.5,
+         "if": "now",
+         "w": 84,
+         "h": 22.400000000000002,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 14,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 139.0,
+         "y": 30.5,
+         "if": "!now",
+         "w": 14,
+         "h": 14,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 134.0,
+         "y": 25.5,
+         "if": "now",
+         "w": 24,
+         "h": 24,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の文",
+         "x": 172,
+         "y": 3,
+         "r": 2,
+         "b": 3,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 17.76,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 30.0,
+       "w": "$line.edge_strong",
+       "h": 240.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 60.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 34.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 46,
+         "y": 34.0,
+         "if": "now",
+         "w": 84,
+         "h": 20.8,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 13,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 140.0,
+         "y": 24.0,
+         "if": "!now",
+         "w": 12,
+         "h": 12,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 135.0,
+         "y": 19.0,
+         "if": "now",
+         "w": 22,
+         "h": 22,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の文",
+         "x": 172,
+         "y": 1,
+         "r": 2,
+         "b": 1,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 22,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 16.28,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 25.0,
+       "w": "$line.edge_strong",
+       "h": 250.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 50.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 29.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 46,
+         "y": 27.0,
+         "if": "now",
+         "w": 84,
+         "h": 20.0,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 12.5,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 140.0,
+         "y": 19.0,
+         "if": "!now",
+         "w": 12,
+         "h": 12,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 136.0,
+         "y": 15.0,
+         "if": "now",
+         "w": 20,
+         "h": 20,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の文",
+         "x": 172,
+         "y": 0,
+         "r": 2,
+         "b": 0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 20,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 14.8,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 2
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 66.66666666666667,
+       "w": "$line.edge_strong",
+       "h": 266.66666666666663,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 133.33333333333334,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 70.66666666666667,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 30,
+         "y": 74.66666666666667,
+         "if": "now",
+         "w": 100,
+         "h": 27.200000000000003,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 17,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 137.0,
+         "y": 57.66666666666667,
+         "if": "!now",
+         "w": 18,
+         "h": 18,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 131.0,
+         "y": 51.66666666666667,
+         "if": "now",
+         "w": 30,
+         "h": 30,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の名前",
+         "x": 172,
+         "y": 2,
+         "w": 240,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "head"
+         }
+        },
+        {
+         "name": "節目{{index}}の一言",
+         "x": 430,
+         "y": 2,
+         "r": 2,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "body"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 50.0,
+       "w": "$line.edge_strong",
+       "h": 300.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 100.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 54.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 30,
+         "y": 58.0,
+         "if": "now",
+         "w": 100,
+         "h": 27.200000000000003,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 17,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 137.0,
+         "y": 41.0,
+         "if": "!now",
+         "w": 18,
+         "h": 18,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 131.0,
+         "y": 35.0,
+         "if": "now",
+         "w": 30,
+         "h": 30,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の名前",
+         "x": 172,
+         "y": 2,
+         "w": 240,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "head"
+         }
+        },
+        {
+         "name": "節目{{index}}の一言",
+         "x": 430,
+         "y": 2,
+         "r": 2,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "body"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 40.0,
+       "w": "$line.edge_strong",
+       "h": 320.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 80.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 44.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 30,
+         "y": 48.0,
+         "if": "now",
+         "w": 100,
+         "h": 25.6,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 16,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 138.0,
+         "y": 32.0,
+         "if": "!now",
+         "w": 16,
+         "h": 16,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 132.0,
+         "y": 26.0,
+         "if": "now",
+         "w": 28,
+         "h": 28,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の名前",
+         "x": 172,
+         "y": 2,
+         "w": 240,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "head"
+         }
+        },
+        {
+         "name": "節目{{index}}の一言",
+         "x": 430,
+         "y": 2,
+         "r": 2,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "body"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 33.333333333333336,
+       "w": "$line.edge_strong",
+       "h": 333.3333333333333,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 66.66666666666667,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 37.333333333333336,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 30,
+         "y": 41.333333333333336,
+         "if": "now",
+         "w": 100,
+         "h": 25.6,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 16,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 139.0,
+         "y": 26.333333333333336,
+         "if": "!now",
+         "w": 14,
+         "h": 14,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 134.0,
+         "y": 21.333333333333336,
+         "if": "now",
+         "w": 24,
+         "h": 24,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の名前",
+         "x": 172,
+         "y": 2,
+         "w": 240,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "head"
+         }
+        },
+        {
+         "name": "節目{{index}}の一言",
+         "x": 430,
+         "y": 2,
+         "r": 2,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "body"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "below_h": 340,
+   "size": [
+    800,
+    300
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 50.0,
+       "w": "$line.edge_strong",
+       "h": 200.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 100.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 54.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 30,
+         "y": 56.0,
+         "if": "now",
+         "w": 100,
+         "h": 25.6,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 16,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 138.0,
+         "y": 42.0,
+         "if": "!now",
+         "w": 16,
+         "h": 16,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 132.0,
+         "y": 36.0,
+         "if": "now",
+         "w": 28,
+         "h": 28,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の名前",
+         "x": 172,
+         "y": 2,
+         "w": 200,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "head"
+         }
+        },
+        {
+         "name": "節目{{index}}の一言",
+         "x": 390,
+         "y": 2,
+         "r": 2,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 22,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15
+          ],
+          "group": "body"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 37.5,
+       "w": "$line.edge_strong",
+       "h": 225.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 75.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 41.5,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 30,
+         "y": 43.5,
+         "if": "now",
+         "w": 100,
+         "h": 24.0,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 15,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 138.0,
+         "y": 29.5,
+         "if": "!now",
+         "w": 16,
+         "h": 16,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 133.0,
+         "y": 24.5,
+         "if": "now",
+         "w": 26,
+         "h": 26,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の名前",
+         "x": 172,
+         "y": 2,
+         "w": 200,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "head"
+         }
+        },
+        {
+         "name": "節目{{index}}の一言",
+         "x": 390,
+         "y": 2,
+         "r": 2,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 22,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15
+          ],
+          "group": "body"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 30.0,
+       "w": "$line.edge_strong",
+       "h": 240.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 60.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 34.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 30,
+         "y": 34.0,
+         "if": "now",
+         "w": 100,
+         "h": 22.400000000000002,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 14,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 139.0,
+         "y": 23.0,
+         "if": "!now",
+         "w": 14,
+         "h": 14,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 134.0,
+         "y": 18.0,
+         "if": "now",
+         "w": 24,
+         "h": 24,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の名前",
+         "x": 172,
+         "y": 2,
+         "w": 200,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "head"
+         }
+        },
+        {
+         "name": "節目{{index}}の一言",
+         "x": 390,
+         "y": 2,
+         "r": 2,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 22,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15
+          ],
+          "group": "body"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "name": "時間軸",
+       "x": 144.5,
+       "y": 25.0,
+       "w": "$line.edge_strong",
+       "h": 250.0,
+       "fill": "border"
+      },
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "節目{{index}}の日付",
+         "x": 0,
+         "y": 0,
+         "if": "!now",
+         "w": 130,
+         "h": 50.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の日付（現在地）",
+         "x": 0,
+         "y": 0,
+         "if": "now",
+         "w": 130,
+         "h": 29.0,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "b",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{date}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "r"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "date"
+         }
+        },
+        {
+         "name": "節目{{index}}の現在地の札",
+         "x": 30,
+         "y": 27.0,
+         "if": "now",
+         "w": 100,
+         "h": 20.8,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "現在地",
+              "size": 13,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "節目{{index}}の点",
+         "x": 140.0,
+         "y": 19.0,
+         "if": "!now",
+         "w": 12,
+         "h": 12,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の現在地の点",
+         "x": 136.0,
+         "y": 15.0,
+         "if": "now",
+         "w": 20,
+         "h": 20,
+         "fill": "accent",
+         "line": {
+          "color": "background",
+          "width": "$line.bold"
+         },
+         "geom": "ellipse"
+        },
+        {
+         "name": "節目{{index}}の名前",
+         "x": 172,
+         "y": 2,
+         "w": 200,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "head"
+         }
+        },
+        {
+         "name": "節目{{index}}の一言",
+         "x": 390,
+         "y": 2,
+         "r": 2,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 22,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15
+          ],
+          "group": "body"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

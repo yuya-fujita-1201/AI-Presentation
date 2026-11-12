@@ -1,0 +1,2097 @@
+{
+ "name": "roadmap-lanes",
+ "label": "ロードマップ（Now / Next / Later）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "いま・次・その先の 3 列に取り組みを置き、優先順位と時間の遠さを一緒に見せる",
+ "description": "いま・次・その先の 3 列に、取り組む項目を置く。計画の優先順位と時間の遠さを一緒に見せたいときに使う本文向け（機能開発・施策・業務改善の計画）。左の列（いま）が色つきで強調され、各列に 1〜3 項目。列の名前と時期は書き換えられる（見出し・リード・フッターはスライド側の title / lead が描く）。項目は 2 行に収まる長さで書く（全項目が同じ大きさ。文が短いほど大きく、目安を超えると収まらない警告が出る）。項目が少ない列は、項目の箱が列の高さいっぱいに大きくなる（1 項目なら列全体）。幅 1000px 未満の矩形（合成スライドの半幅・3 分の 2 など）では、3 つの列を縦に積み、左に列の名前と時期、右に項目を並べる構図に組み替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。shape: soft のとき面に影が付く。（本文の領域の縦中央に置く）",
+ "block_alt": "代わりに numbered-list（縦の番号つき）か timeline を使う",
+ "background": "background",
+ "slots": {
+  "now_label": {
+   "kind": "text",
+   "label": "左の列の名前",
+   "max_chars": 7,
+   "default": "Now",
+   "example": "Now"
+  },
+  "next_label": {
+   "kind": "text",
+   "label": "中央の列の名前",
+   "max_chars": 7,
+   "default": "Next",
+   "example": "Next"
+  },
+  "later_label": {
+   "kind": "text",
+   "label": "右の列の名前",
+   "max_chars": 7,
+   "default": "Later",
+   "example": "Later"
+  },
+  "now_when": {
+   "kind": "text",
+   "label": "左の列の時期（任意）",
+   "max_chars": 7,
+   "example": "今四半期"
+  },
+  "next_when": {
+   "kind": "text",
+   "label": "中央の列の時期（任意）",
+   "max_chars": 7,
+   "example": "来四半期"
+  },
+  "later_when": {
+   "kind": "text",
+   "label": "右の列の時期（任意）",
+   "max_chars": 7,
+   "example": "半年以降"
+  },
+  "now": {
+   "kind": "list",
+   "label": "いまやること",
+   "min": 1,
+   "max": 3,
+   "max_chars": 24,
+   "example": [
+    "棚卸の記録をタブレットに移す",
+    "発注の締め時刻を前倒しする",
+    "新人向けの売場マップを作る"
+   ],
+   "required": true,
+   "description": "左の列（強調）。着手済み・今期に終えること"
+  },
+  "next": {
+   "kind": "list",
+   "label": "次にやること",
+   "min": 1,
+   "max": 3,
+   "max_chars": 24,
+   "example": [
+    "特売の価格を店舗ごとに決める",
+    "冷蔵ケースの配置を見直す"
+   ],
+   "required": true,
+   "description": "中央の列。次の期に着手すること"
+  },
+  "later": {
+   "kind": "list",
+   "label": "その先にやること",
+   "min": 1,
+   "max": 3,
+   "max_chars": 24,
+   "example": [
+    "産地直送の取引先を増やす",
+    "移動販売の試験運用を始める",
+    "全店で同じ手順に統一する"
+   ],
+   "required": true,
+   "description": "右の列。時期未定でも構想として置くこと"
+  }
+ },
+ "elements": [
+  {
+   "name": "1列目の見出し面",
+   "x": 0.0,
+   "y": 0,
+   "w": 362.67,
+   "h": 68,
+   "fill": "primary",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "1列目の名前",
+   "x": 22.0,
+   "y": 0,
+   "if": "now_when",
+   "w": 188.67000000000002,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{now_label}}",
+        "size": 36,
+        "color": "on_primary",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     36,
+     34,
+     32,
+     30,
+     28
+    ],
+    "group": "label"
+   }
+  },
+  {
+   "name": "1列目の名前（時期なし）",
+   "x": 22.0,
+   "y": 0,
+   "if": "!now_when",
+   "w": 318.67,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{now_label}}",
+        "size": 36,
+        "color": "on_primary",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     36,
+     34,
+     32,
+     30,
+     28
+    ],
+    "group": "label"
+   }
+  },
+  {
+   "name": "1列目の時期",
+   "x": 210.67000000000002,
+   "y": 0,
+   "if": "now_when",
+   "w": 130,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{now_when}}",
+        "size": 20,
+        "color": "on_primary_soft"
+       }
+      ],
+      "align": "r"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     20,
+     18,
+     16
+    ],
+    "group": "when"
+   }
+  },
+  {
+   "name": "1列目の台",
+   "x": 0.0,
+   "y": 76,
+   "w": 362.67,
+   "h": 324,
+   "fill": "surface",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "repeat": "now",
+   "grid": {
+    "x": 12.0,
+    "y": 88,
+    "w": 338.67,
+    "h": 300,
+    "cols": 1,
+    "gap": 12
+   },
+   "template": [
+    {
+     "name": "1列目の項目{{index}}の面",
+     "x": 0,
+     "y": 0,
+     "fill": "background",
+     "radius": "$radius.small"
+    },
+    {
+     "name": "1列目の項目{{index}}の帯",
+     "x": 0,
+     "y": 0,
+     "w": 6,
+     "fill": "accent"
+    },
+    {
+     "name": "1列目の項目{{index}}",
+     "x": 24,
+     "y": 4,
+     "r": 12,
+     "b": 4,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 34,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17
+      ],
+      "group": "item"
+     }
+    }
+   ]
+  },
+  {
+   "name": "2列目の見出し面",
+   "x": 386.67,
+   "y": 0,
+   "w": 362.67,
+   "h": 68,
+   "fill": "surface",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "2列目の名前",
+   "x": 408.67,
+   "y": 0,
+   "if": "next_when",
+   "w": 188.67000000000002,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{next_label}}",
+        "size": 36,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     36,
+     34,
+     32,
+     30,
+     28
+    ],
+    "group": "label"
+   }
+  },
+  {
+   "name": "2列目の名前（時期なし）",
+   "x": 408.67,
+   "y": 0,
+   "if": "!next_when",
+   "w": 318.67,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{next_label}}",
+        "size": 36,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     36,
+     34,
+     32,
+     30,
+     28
+    ],
+    "group": "label"
+   }
+  },
+  {
+   "name": "2列目の時期",
+   "x": 597.34,
+   "y": 0,
+   "if": "next_when",
+   "w": 130,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{next_when}}",
+        "size": 20,
+        "color": "heading_text"
+       }
+      ],
+      "align": "r"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     20,
+     18,
+     16
+    ],
+    "group": "when"
+   }
+  },
+  {
+   "name": "2列目の台",
+   "x": 386.67,
+   "y": 76,
+   "w": 362.67,
+   "h": 324,
+   "fill": "surface",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "repeat": "next",
+   "grid": {
+    "x": 398.67,
+    "y": 88,
+    "w": 338.67,
+    "h": 300,
+    "cols": 1,
+    "gap": 12
+   },
+   "template": [
+    {
+     "name": "2列目の項目{{index}}の面",
+     "x": 0,
+     "y": 0,
+     "fill": "background",
+     "radius": "$radius.small"
+    },
+    {
+     "name": "2列目の項目{{index}}の帯",
+     "x": 0,
+     "y": 0,
+     "w": 6,
+     "fill": "border"
+    },
+    {
+     "name": "2列目の項目{{index}}",
+     "x": 24,
+     "y": 4,
+     "r": 12,
+     "b": 4,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 34,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17
+      ],
+      "group": "item"
+     }
+    }
+   ]
+  },
+  {
+   "name": "3列目の見出し面",
+   "x": 773.34,
+   "y": 0,
+   "w": 362.67,
+   "h": 68,
+   "fill": "surface",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "3列目の名前",
+   "x": 795.34,
+   "y": 0,
+   "if": "later_when",
+   "w": 188.67000000000002,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{later_label}}",
+        "size": 36,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     36,
+     34,
+     32,
+     30,
+     28
+    ],
+    "group": "label"
+   }
+  },
+  {
+   "name": "3列目の名前（時期なし）",
+   "x": 795.34,
+   "y": 0,
+   "if": "!later_when",
+   "w": 318.67,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{later_label}}",
+        "size": 36,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     36,
+     34,
+     32,
+     30,
+     28
+    ],
+    "group": "label"
+   }
+  },
+  {
+   "name": "3列目の時期",
+   "x": 984.01,
+   "y": 0,
+   "if": "later_when",
+   "w": 130,
+   "h": 68,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{later_when}}",
+        "size": 20,
+        "color": "heading_text"
+       }
+      ],
+      "align": "r"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     20,
+     18,
+     16
+    ],
+    "group": "when"
+   }
+  },
+  {
+   "name": "3列目の台",
+   "x": 773.34,
+   "y": 76,
+   "w": 362.67,
+   "h": 324,
+   "fill": "surface",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "repeat": "later",
+   "grid": {
+    "x": 785.34,
+    "y": 88,
+    "w": 338.67,
+    "h": 300,
+    "cols": 1,
+    "gap": 12
+   },
+   "template": [
+    {
+     "name": "3列目の項目{{index}}の面",
+     "x": 0,
+     "y": 0,
+     "fill": "background",
+     "radius": "$radius.small"
+    },
+    {
+     "name": "3列目の項目{{index}}の帯",
+     "x": 0,
+     "y": 0,
+     "w": 6,
+     "fill": "border"
+    },
+    {
+     "name": "3列目の項目{{index}}",
+     "x": 24,
+     "y": 4,
+     "r": 12,
+     "b": 4,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 34,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17
+      ],
+      "group": "item"
+     }
+    }
+   ]
+  }
+ ],
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    400
+   ],
+   "elements": [
+    {
+     "name": "1段目の見出し面",
+     "x": 0,
+     "y": 0.0,
+     "w": 124,
+     "h": 126.66666666666667,
+     "fill": "primary",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の名前",
+     "x": 8,
+     "y": 0.0,
+     "if": "now_when",
+     "w": 108,
+     "h": 69.33333333333334,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{now_label}}",
+          "size": 26,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       20,
+       18,
+       16
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "1段目の時期",
+     "x": 8,
+     "y": 73.33333333333334,
+     "if": "now_when",
+     "w": 108,
+     "h": 53.333333333333336,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{now_when}}",
+          "size": 17,
+          "color": "on_primary_soft"
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       17,
+       16,
+       15,
+       14,
+       13
+      ],
+      "group": "when"
+     }
+    },
+    {
+     "name": "1段目の名前（時期なし）",
+     "x": 8,
+     "y": 0.0,
+     "if": "!now_when",
+     "w": 108,
+     "h": 126.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{now_label}}",
+          "size": 26,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       20,
+       18,
+       16
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "1段目の台",
+     "x": 132,
+     "y": 0.0,
+     "w": 408,
+     "h": 126.66666666666667,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "repeat": "now",
+     "grid": {
+      "x": 140,
+      "y": 8.0,
+      "w": 392,
+      "h": 110.66666666666667,
+      "cols": 1,
+      "gap": 6
+     },
+     "template": [
+      {
+       "name": "1段目の項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "background",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "1段目の項目{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "w": 5,
+       "fill": "accent"
+      },
+      {
+       "name": "1段目の項目{{index}}",
+       "x": 17,
+       "y": 2,
+       "r": 8,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.25,
+          "runs": [
+           {
+            "text": "{{.}}",
+            "size": 20,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         20,
+         19,
+         18,
+         17,
+         16,
+         15,
+         14
+        ],
+        "group": "item"
+       }
+      }
+     ]
+    },
+    {
+     "name": "2段目の見出し面",
+     "x": 0,
+     "y": 136.67,
+     "w": 124,
+     "h": 126.66666666666667,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の名前",
+     "x": 8,
+     "y": 136.67,
+     "if": "next_when",
+     "w": 108,
+     "h": 69.33333333333334,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{next_label}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       20,
+       18,
+       16
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "2段目の時期",
+     "x": 8,
+     "y": 210.00333333333333,
+     "if": "next_when",
+     "w": 108,
+     "h": 53.333333333333336,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{next_when}}",
+          "size": 17,
+          "color": "muted"
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       17,
+       16,
+       15,
+       14,
+       13
+      ],
+      "group": "when"
+     }
+    },
+    {
+     "name": "2段目の名前（時期なし）",
+     "x": 8,
+     "y": 136.67,
+     "if": "!next_when",
+     "w": 108,
+     "h": 126.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{next_label}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       20,
+       18,
+       16
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "2段目の台",
+     "x": 132,
+     "y": 136.67,
+     "w": 408,
+     "h": 126.66666666666667,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "repeat": "next",
+     "grid": {
+      "x": 140,
+      "y": 144.67,
+      "w": 392,
+      "h": 110.66666666666667,
+      "cols": 1,
+      "gap": 6
+     },
+     "template": [
+      {
+       "name": "2段目の項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "background",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "2段目の項目{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "w": 5,
+       "fill": "border"
+      },
+      {
+       "name": "2段目の項目{{index}}",
+       "x": 17,
+       "y": 2,
+       "r": 8,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.25,
+          "runs": [
+           {
+            "text": "{{.}}",
+            "size": 20,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         20,
+         19,
+         18,
+         17,
+         16,
+         15,
+         14
+        ],
+        "group": "item"
+       }
+      }
+     ]
+    },
+    {
+     "name": "3段目の見出し面",
+     "x": 0,
+     "y": 273.33,
+     "w": 124,
+     "h": 126.66666666666667,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の名前",
+     "x": 8,
+     "y": 273.33,
+     "if": "later_when",
+     "w": 108,
+     "h": 69.33333333333334,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{later_label}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       20,
+       18,
+       16
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "3段目の時期",
+     "x": 8,
+     "y": 346.6633333333333,
+     "if": "later_when",
+     "w": 108,
+     "h": 53.333333333333336,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{later_when}}",
+          "size": 17,
+          "color": "muted"
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       17,
+       16,
+       15,
+       14,
+       13
+      ],
+      "group": "when"
+     }
+    },
+    {
+     "name": "3段目の名前（時期なし）",
+     "x": 8,
+     "y": 273.33,
+     "if": "!later_when",
+     "w": 108,
+     "h": 126.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{later_label}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       20,
+       18,
+       16
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "3段目の台",
+     "x": 132,
+     "y": 273.33,
+     "w": 408,
+     "h": 126.66666666666667,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "repeat": "later",
+     "grid": {
+      "x": 140,
+      "y": 281.33,
+      "w": 392,
+      "h": 110.66666666666667,
+      "cols": 1,
+      "gap": 6
+     },
+     "template": [
+      {
+       "name": "3段目の項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "background",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "3段目の項目{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "w": 5,
+       "fill": "border"
+      },
+      {
+       "name": "3段目の項目{{index}}",
+       "x": 17,
+       "y": 2,
+       "r": 8,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.25,
+          "runs": [
+           {
+            "text": "{{.}}",
+            "size": 20,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         20,
+         19,
+         18,
+         17,
+         16,
+         15,
+         14
+        ],
+        "group": "item"
+       }
+      }
+     ]
+    }
+   ],
+   "min_width": 380
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [
+    {
+     "name": "1段目の見出し面",
+     "x": 0,
+     "y": 0.0,
+     "w": 170,
+     "h": 125.33333333333333,
+     "fill": "primary",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の名前",
+     "x": 8,
+     "y": 0.0,
+     "if": "now_when",
+     "w": 154,
+     "h": 68.66666666666666,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{now_label}}",
+          "size": 34,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "1段目の時期",
+     "x": 8,
+     "y": 72.66666666666666,
+     "if": "now_when",
+     "w": 154,
+     "h": 52.666666666666664,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{now_when}}",
+          "size": 20,
+          "color": "on_primary_soft"
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       20,
+       19,
+       18,
+       17,
+       16
+      ],
+      "group": "when"
+     }
+    },
+    {
+     "name": "1段目の名前（時期なし）",
+     "x": 8,
+     "y": 0.0,
+     "if": "!now_when",
+     "w": 154,
+     "h": 125.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{now_label}}",
+          "size": 34,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "1段目の台",
+     "x": 178,
+     "y": 0.0,
+     "w": 622,
+     "h": 125.33333333333333,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "repeat": "now",
+     "grid": {
+      "x": 188,
+      "y": 10.0,
+      "w": 602,
+      "h": 105.33333333333333,
+      "cols": 1,
+      "gap": 8
+     },
+     "template": [
+      {
+       "name": "1段目の項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "background",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "1段目の項目{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "w": 6,
+       "fill": "accent"
+      },
+      {
+       "name": "1段目の項目{{index}}",
+       "x": 18,
+       "y": 2,
+       "r": 8,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.25,
+          "runs": [
+           {
+            "text": "{{.}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         25,
+         24,
+         23,
+         22,
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "item"
+       }
+      }
+     ]
+    },
+    {
+     "name": "2段目の見出し面",
+     "x": 0,
+     "y": 137.33,
+     "w": 170,
+     "h": 125.33333333333333,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の名前",
+     "x": 8,
+     "y": 137.33,
+     "if": "next_when",
+     "w": 154,
+     "h": 68.66666666666666,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{next_label}}",
+          "size": 34,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "2段目の時期",
+     "x": 8,
+     "y": 209.99666666666667,
+     "if": "next_when",
+     "w": 154,
+     "h": 52.666666666666664,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{next_when}}",
+          "size": 20,
+          "color": "muted"
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       20,
+       19,
+       18,
+       17,
+       16
+      ],
+      "group": "when"
+     }
+    },
+    {
+     "name": "2段目の名前（時期なし）",
+     "x": 8,
+     "y": 137.33,
+     "if": "!next_when",
+     "w": 154,
+     "h": 125.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{next_label}}",
+          "size": 34,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "2段目の台",
+     "x": 178,
+     "y": 137.33,
+     "w": 622,
+     "h": 125.33333333333333,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "repeat": "next",
+     "grid": {
+      "x": 188,
+      "y": 147.33,
+      "w": 602,
+      "h": 105.33333333333333,
+      "cols": 1,
+      "gap": 8
+     },
+     "template": [
+      {
+       "name": "2段目の項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "background",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "2段目の項目{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "w": 6,
+       "fill": "border"
+      },
+      {
+       "name": "2段目の項目{{index}}",
+       "x": 18,
+       "y": 2,
+       "r": 8,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.25,
+          "runs": [
+           {
+            "text": "{{.}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         25,
+         24,
+         23,
+         22,
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "item"
+       }
+      }
+     ]
+    },
+    {
+     "name": "3段目の見出し面",
+     "x": 0,
+     "y": 274.67,
+     "w": 170,
+     "h": 125.33333333333333,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の名前",
+     "x": 8,
+     "y": 274.67,
+     "if": "later_when",
+     "w": 154,
+     "h": 68.66666666666666,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{later_label}}",
+          "size": 34,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "3段目の時期",
+     "x": 8,
+     "y": 347.3366666666667,
+     "if": "later_when",
+     "w": 154,
+     "h": 52.666666666666664,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{later_when}}",
+          "size": 20,
+          "color": "muted"
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       20,
+       19,
+       18,
+       17,
+       16
+      ],
+      "group": "when"
+     }
+    },
+    {
+     "name": "3段目の名前（時期なし）",
+     "x": 8,
+     "y": 274.67,
+     "if": "!later_when",
+     "w": 154,
+     "h": 125.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{later_label}}",
+          "size": 34,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "label"
+     }
+    },
+    {
+     "name": "3段目の台",
+     "x": 178,
+     "y": 274.67,
+     "w": 622,
+     "h": 125.33333333333333,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "repeat": "later",
+     "grid": {
+      "x": 188,
+      "y": 284.67,
+      "w": 602,
+      "h": 105.33333333333333,
+      "cols": 1,
+      "gap": 8
+     },
+     "template": [
+      {
+       "name": "3段目の項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "background",
+       "radius": "$radius.small"
+      },
+      {
+       "name": "3段目の項目{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "w": 6,
+       "fill": "border"
+      },
+      {
+       "name": "3段目の項目{{index}}",
+       "x": 18,
+       "y": 2,
+       "r": 8,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.25,
+          "runs": [
+           {
+            "text": "{{.}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         25,
+         24,
+         23,
+         22,
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "item"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -12,6 +12,8 @@
 スライド番号は build_deck.expand_slides() 適用後（swimlaneの凡例自動挿入・agendaの
 自動改ページ込み）の実際の出力枚数を基準にする（deck.json記載の枚数とは異なることがある）。
 出力: <deck_dir>/build/preview/slide-NN.png
+番号を省略して全スライドを出したときは、スライド枚数を超えた古い slide-NN.png（デッキを減らした後の残り）を消す。
+描画はフォント・画像の読み込み完了を待ってから撮る（固定の待ち時間ではない）。
 """
 from __future__ import annotations
 
@@ -52,6 +54,32 @@ setup_console = getattr(build_deck, "setup_console", None) or _fallback_setup_co
 fail = getattr(build_deck, "fail", None) or _fallback_fail
 warn = getattr(build_deck, "warn", None) or _fallback_warn
 note = getattr(build_deck, "note", None) or _fallback_note
+
+
+# ページ（フォント・画像）の読み込み完了と、描画の反映を待つ（check_layout.py と同じ内容）
+WAIT_READY_JS = """async () => {
+  try { await document.fonts.ready; } catch (e) {}
+  await Promise.all(Array.from(document.images).map(i => (i.decode ? i.decode().catch(() => null) : null)));
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+}"""
+
+
+def wait_ready(page) -> None:
+    page.evaluate(WAIT_READY_JS)
+
+
+def remove_stale_pngs(out_dir: Path, total: int) -> list:
+    """slide-NN.png のうち NN が total を超えるもの（以前の長いデッキの残り）を消して、消した名前を返す。"""
+    removed = []
+    for p in sorted(out_dir.glob("slide-*.png")):
+        try:
+            n = int(p.stem.split("-")[1])
+        except (IndexError, ValueError):
+            continue
+        if n > total:
+            p.unlink()
+            removed.append(p.name)
+    return removed
 
 
 def _slide_total(deck_dir: Path) -> int:
@@ -112,7 +140,7 @@ def main():
         browser = pw.chromium.launch()
         page = browser.new_page(viewport={"width": 1280, "height": 720})
         page.goto(f"{url}#{nums[0]}")
-        page.wait_for_timeout(400)
+        wait_ready(page)
         # 下部ツールバー（#toolbar）とノート欄がスライド下端に重なるため隠す
         page.evaluate("""() => {
           for (const id of ['toolbar', 'notes', 'hud']) {
@@ -121,14 +149,19 @@ def main():
           }
           window.dispatchEvent(new Event('resize'));
         }""")
+        wait_ready(page)
         for n in nums:
             # 1枚ごとにページを読み直すと大きいデッキで遅いので、ビューアの show() で切り替える
             page.evaluate("(n) => show(n - 1)", n)
-            page.wait_for_timeout(80)
+            wait_ready(page)
             out = out_dir / f"slide-{n:02d}.png"
             page.screenshot(path=str(out))
             print(f"PNG: {out}")
         browser.close()
+    if not args.slides:
+        removed = remove_stale_pngs(out_dir, total)
+        if removed:
+            note(f"スライド枚数（{total}枚）を超えた古いプレビュー画像を消しました: {', '.join(removed)}")
     return 0
 
 

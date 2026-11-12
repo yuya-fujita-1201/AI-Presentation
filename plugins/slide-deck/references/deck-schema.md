@@ -2,12 +2,40 @@
 
 デッキは `<deck_dir>/deck.json` の 1 ファイルで管理する。**内容（コンテンツ）とデザイン（パラメーター）を分離**しており、デザインの微修正は JSON の数値を変えるだけで行える。AI に再生成させる必要はない。
 
+**このファイルは索引**。座標系・3層構造・`meta`・全タイプ共通のオプション・タイプ一覧表・文字量の目安・ビルドの手順だけを持つ。各タイプのキー・例・注意は下の「タイプ一覧表」から**使うタイプのファイルだけ**開いて読む（新規デッキの典型は、この索引＋[schema/basic.md](schema/basic.md)で約 3.2 万字）。**索引は「タイプ一覧表」の終わりまで読めば足りる**。「文字量・要素量の目安」は項目数に迷うとき、「ビルドとプレビュー」はコマンドを確かめるときに開く。
+
 ```json
 {
   "meta": { ... },
   "slides": [ { "type": "...", ..., "style": { ... } }, ... ]
 }
 ```
+
+## パスの書き方（`references/` 全体で共通）
+
+- `${CLAUDE_PLUGIN_ROOT}` はプラグインのディレクトリ（このリポジトリ内で直接動かすときは `plugins/slide-deck`）。スクリプトは `python "${CLAUDE_PLUGIN_ROOT}/tools/<スクリプト名>.py"` の形で実行する。
+- 文中の `tools/…` `templates/…` `references/…` は、すべて上のディレクトリからの相対パスの略記。`<deck_dir>` は deck.json があるフォルダ。
+
+## 読むファイルの選び方
+
+| 作るもの・知りたいこと | 読むもの |
+|---|---|
+| 通常のデッキ（表紙・箇条書き・表・カード・ステップ・まとめなど） | この索引 ＋ [schema/basic.md](schema/basic.md) |
+| 大きな数字（成果・KPI）、推移・比較・内訳のグラフ | ＋ [schema/visual.md](schema/visual.md) |
+| 登録した構図（パターン。同梱 19 個の一覧・PPTX からの型起こし） | ＋ [schema/pattern.md](schema/pattern.md) |
+| 1 枚に図・要点・数字を並べる（`composite`）、色面や画像のパネル＋本文（`split`） | ＋ [schema/composite.md](schema/composite.md) |
+| 主役のページ（表紙・章扉・言い切りの `variant` と `background`、cards の強弱、画像を端まで） | ＋ [schema/hero.md](schema/hero.md) |
+| 業務フロー | ＋ [schema/swimlane.md](schema/swimlane.md) |
+| 構成図・データフロー・状態遷移・シーケンス図（凡例ページ・配線の診断を含む） | ＋ [schema/diagram.md](schema/diagram.md)（作図の規約は [diagram-guide.md](diagram-guide.md)） |
+| 工程表・ガント | ＋ [schema/schedule.md](schema/schedule.md) |
+| 提案書の定型ページ（要旨・選ばれる理由・体制図・全体像・KPI ツリーなど） | ＋ [schema/proposal.md](schema/proposal.md) |
+| 既存 PowerPoint の取り込み（`canvas`） | ＋ [schema/canvas.md](schema/canvas.md) |
+| 文字が小さくなった・「縮めても収まらない」警告が出た（自動フィットの規則） | [schema/autofit.md](schema/autofit.md) |
+| ビルドの警告・エラーの意味を知りたい | [schema/validation.md](schema/validation.md) |
+| テーマ（配色・フォント）の追加・確認 | [themes.md](themes.md) |
+| 話の組み立て・タイトルの書き方・根拠の置き方 | [content-guide.md](content-guide.md) |
+
+`style` で動かせる領域とプロパティは、各タイプの「領域:」行と `templates/layouts/default.json` にある。
 
 ## 座標系
 
@@ -19,13 +47,18 @@
 
 | 層 | ファイル / キー | 役割 |
 |----|----------------|------|
-| テーマ | `templates/themes/<名前>.json` | 色トークンとフォント。`meta.theme` で選択 |
-| レイアウト既定値 | `templates/layouts/default.json` | スライドタイプごとの全オブジェクト（領域）の位置・サイズ・フォント |
+| テーマ | `templates/themes/<名前>.json` | 色トークンとフォント。`meta.theme` で選択（[themes.md](themes.md)） |
+| レイアウト既定値 | `templates/layouts/default.json` | スライドタイプごとの全オブジェクト（領域）の位置・サイズ・フォント。密度ごとの差分（`densities`）も持つ |
 | オーバーライド | `meta.layout_overrides`（デッキ全体）/ `slides[i].style`（スライド個別） | 既定値への差分だけを書く |
 
-解決順: **レイアウト既定値 ← meta.layout_overrides ← slides[i].style**（後勝ち・deep merge）。
+解決順: **レイアウト既定値 ← 密度（`density`）のプリセット ← meta.layout_overrides ← slides[i].style**（後勝ち・deep merge）。そのあとに自動フィットが、**書いていない値だけ**を内容に合わせて縮める。**利用者が `style` / `layout_overrides` に書いた値は、自動フィットも密度も動かさない。**
 
 全スライド共通の領域として `common.brand`（右上のブランド表記）があり、`meta.layout_overrides.common.brand` で全デッキ共通の位置・サイズを調整できる（3層構造の対象）。
+
+### 文字量に合わせた調整は自動フィットがやる（`style` で手詰めしない）
+
+内容に合わせて文字サイズ・列幅・行の高さ・箱の高さを決めるのは自動フィット（`tools/autofit.py`）。レイアウト既定値を「上限」にして、収まらないときだけ縮める。既定で収まる内容は見た目が変わらない。
+警告が出たら、まず内容（項目数・文の長さ・分割）を直す。`style` で大きさを書くのは、見た目を具体的に指示されたときと、内容を直しても警告が消えないときだけ。規則・下限・警告の意味は [schema/autofit.md](schema/autofit.md)。
 
 ### 微修正の例
 
@@ -38,673 +71,137 @@
 "meta": { "layout_overrides": { "bullets": { "body": { "size": 22 } } } }
 ```
 
-領域（`title`, `body`, `table` など）の名前と既定値は `templates/layouts/default.json` を見るのが早い。共通プロパティ: `x` `y` `w` `h`（px）、`size`（フォントpx）、`color` / `fill`（テーマトークン名 or hex 直書き）、`bold`、`align`（left/center/right）、`line_height`、`gap`（箇条書き間隔）など。
+領域（`title`, `body`, `table` など）の名前と既定値は `templates/layouts/default.json` を見るのが早い（最上位の `tokens` は形のトークン `$radius.card` など、`variants` / `palettes` は主役のページの値、`readable_pairs` は「この地の上にこの文字色」の組で、足りない対比をビルドが自動で整える（[themes.md](themes.md)）、`todo_color` / `todo_color_on_dark` / `todo_bg` は【要確認】の強調の色、`densities` は密度ごとの差分）。共通プロパティ: `x` `y` `w` `h`（px）、`size`（フォントpx）、`color` / `fill`（テーマトークン名 or hex 直書き）、`bold`、`align`（left/center/right）、`valign`（top/middle/bottom）、`line_height`、`gap`（箇条書き間隔）など。
 
 ## meta
 
 | キー | 必須 | 説明 |
 |------|------|------|
 | `id` | 省略可 | デッキ ID（出力ファイル名になる）。省略時はフォルダ名を使う。指定する場合は `\ / : * ? " < > \|` と制御文字を含められない（ファイル名として不正なため） |
-| `title` | ✅ | デッキタイトル（フッターにも表示） |
-| `subtitle` / `author` / `date` | | 補足情報 |
-| `theme` | | テーマ名（省略時 `default`）。`templates/themes/` から選択（同梱: `default` / `accenture` / `acn-slide-master` / `acn-technology-graphik`。旧名 `accenture-purple` は `acn-slide-master` の別名） |
-| `layout` | | レイアウト名（省略時 `default`） |
+| `title` | ✅ | デッキタイトル（フッターにも表示）。無い・空だと警告（ビルドは続く）。HTML の `<title>` と PPTX の文書プロパティは、`meta.title` → `meta.id` → 先頭スライドの `title` → フォルダ名の順で最初に見つかったものを使う |
+| `subtitle` / `author` / `date` | | 補足情報。`author` は PPTX の作成者・最終更新者になる（無ければ空） |
+| `theme` | | テーマ名（省略時 `default`）。名前だけを書く（パス区切りは不可）。同梱: `default` / `accenture` / `acn-slide-master` / `acn-technology-graphik`（旧名 `accenture-purple` は `acn-slide-master` の別名）。自作テーマも下記「探索順」で見つかる。**絶対パスは書けない**（ビルドエラー。`<deck_dir>/themes/` などに置いて名前で指定する） |
+| `layout` | | レイアウト名（省略時 `default`）。名前だけを書く（`theme` と同じく絶対パスは不可）。`extends` で差分だけ書ける（下記） |
 | `layout_overrides` | | デッキ全体のレイアウト調整（タイプ名 → 領域 → プロパティ）。`common.brand` も指定可 |
-| `brand` | | 全スライド右上に表示する短いブランド表記（例: `ACME`）。アクセント色・太字・右寄せ。位置は `layout_overrides.common.brand` で調整 |
+| `density` | | 密度。`"talk"`（映して話す。大きく少なく）/ `"standard"`（既定）/ `"read"`（配って読ませる。小さめ・密）。それ以外はビルドエラー。スライドの `density` で 1 枚だけ上書きできる。**表が 7 行以上・5 列以上なら `read` を勧める**。値の中身は [schema/autofit.md](schema/autofit.md) |
+| `autofit` | | 自動フィットの全体スイッチ（既定 `true`）。`false` で文字サイズ・列幅・行高を変えず、中身が少ないときの拡大もしない（あふれの警告だけ出る）。スライドの `autofit: false` でそのスライドだけ切れる。真偽値以外はビルドエラー。止まる範囲と止まらないものは [schema/autofit.md](schema/autofit.md) |
+| `brand` | | 全スライド右上に表示する短いブランド表記（例: `ACME`）。アクセント色・太字・右寄せ。右上の箱は既定で幅 140px・文字 23px なので、**目安は全角 6 字まで・半角は小文字なら 9 字ほど（大文字が多いと 7 字ほど）**。1 行に収まらないとビルドが 1 回警告する（直し方: 短くする／`layout_overrides.common.brand` で `w` を広げ `x` を同じだけ左へ／`size` を下げる）。brand を付けると、タイトルの右端を brand の文字の左端から 24px 手前（`common.brand.clear_gap`）までに狭める（長いタイトルはその幅で折れ、縮められる。PPTX のタイトル枠も同じ幅になる）。1 行に収まる下限まで縮めても入らない長さ（目安 44 字）は「タイトルを短くする」警告。`style.title.w` を書いたときは動かさない。status_table は凡例も同じだけ狭める。暗い地の章扉・結びでは brand の文字色が地に合わせて自動で変わる |
 | `as_of` | | 資料の基準日（`"YYYY-MM"` か `"YYYY-MM-DD"`）。`lint_deck_text.py` の日付チェック（基準日より後の「実績」・基準日より前に始まる計画）に使う。省略時は `date`、それも無ければ今日の日付 |
+| `shape` | | 形のプリセット（角丸・罫線・太さ・字間・箱の影）。`classic`（既定。従来の見た目）/ `sharp` / `soft` / `editorial`、または登録した shape。色の `theme` とは独立で、どの組み合わせでもよい。テーマ JSON の `"shape"` より `meta.shape` が優先。選び方・自作は [themes.md](themes.md) の「形（shape）とトークン」 |
+| `variants` / `section_numbers` | | 主役のページの既定。`variants` は `{"title": "left-band", "section": "number"}` のようにタイプ別の variant の既定、`section_numbers: true` は `number` を書いていない section に `01` `02` … を振る（[schema/hero.md](schema/hero.md)） |
+| `todo_marks` | | `false` で `【要確認】` の強調表示（HTML の下地・PPTX の色と太字）を止める。既定は `true`。一覧の note は出る。真偽値以外はビルドエラー（下記「根拠が無い箇所は…」） |
 | `line_balance` | | `false` で泣き別れ対策（最終行が1〜2文字になる文への自動改行）をデッキ全体で止める。既定は有効 |
+
+`meta` の未知のキーは警告される（先頭が `_` のキーはメモ用として無警告）。
+
+### テーマ・レイアウト・パターンの探索順
+
+`meta.theme` / `meta.layout` / パターン名は、次の順に探す（先に見つかったものが勝つ。同じ規則を `build_deck.py` / `check_theme.py` / `new_theme.py` / パターンの読み込みが使う）。
+
+1. 環境変数（`SLIDE_DECK_THEMES` / `SLIDE_DECK_LAYOUTS` / `SLIDE_DECK_PATTERNS`。OS のパス区切りで複数可）→ 2. `<deck_dir>/themes/`（`layouts/` `patterns/`）→ 3. デッキの親（3 階層上まで）の同名フォルダ（`decks/<名前>/deck.json` ならプロジェクト直下の `themes/` も見つかる）→ 4. カレントディレクトリの同名フォルダ（`new_theme.py` の既定の書き込み先 `./themes/`）→ 5. 同梱 `templates/`。
+
+同梱以外（1〜4）から、**同梱と同じ名前**のテーマ・レイアウト・型・形を読んだときは、ビルドが note を 1 行出す（「テーマ 'acn-slide-master' は同梱のものではなく <パス> を読みました」。探索順で先に見つかったほうが使われるため、意図していなければそのファイルを別の名前にするか移す）。
+
+レイアウト JSON は `extends`（省略時は `default`）で土台を継承するので、変えたいタイプ・領域・プロパティだけ書けばよい。循環はエラー。見つからないときは「使える名前」と探索先が表示される:
+```json
+{ "name": "tall-title", "extends": "default", "types": { "bullets": { "title": { "size": 40 } } } }
+```
+テーマの作り方・確認は [themes.md](themes.md)。
 
 ## slides — スライドタイプ一覧
 
-全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）、`relation`、`line_balance`。提案書向けタイプでは結論の帯 `conclusion` と出典の行 `source` も使える（下記「提案書向けタイプ共通」）。
+全タイプ共通のオプション: `notes`（スピーカーノート。**HTML でのみ表示**、N キーで開閉。PPTX には出力されない）、`style`（レイアウトオーバーライド）、`relation`、`line_balance`、`density`、`autofit`。提案書向けタイプ・`kpi`・`chart` では結論の帯 `conclusion` と出典の行 `source` も使える（書式は下記「結論の帯と出典」。タイプごとの注意は [schema/proposal.md](schema/proposal.md)）。スライド直下の `null` は「書いていない」とみなされる。
 
-- `relation`（任意）: そのスライドで見せる内容の関係。描画には使わず、`lint_deck_text.py` がタイプとの不一致を警告する。値と合うタイプ: `parallel`（並列）→ cards / bullets / two_column / table / matrix / image_text / status_table / summary / row_matrix / house、`sequence`（順序）→ steps / swimlane / schedule / sequence / dataflow / agenda / row_matrix、`flow`（流れ）→ dataflow / swimlane / steps / sequence / architecture、`hierarchy`（階層）→ architecture / bullets / table / org / house / kpi_tree、`cause`（因果）→ steps / dataflow / two_column / bullets / reasons、`contrast`（対比）→ two_column / table / matrix / status_table / reasons / row_matrix、`cycle`（循環）→ lifecycle / cycle
-- `line_balance`（任意）: `false` でそのスライドの泣き別れ対策を止める。既定では `title` / `subtitle` / `lead` / `punch` / `message` と箇条書き（bullets / closing / image_text / two_column）の最終行が1〜2文字になるとき、ビルド時に文節の切れ目（助詞・読点の後など）で改行を入れる。改行（`\n`）を書いてある文字列は触らない
+- `relation`（任意）: そのスライドで見せる内容の関係。描画には使わず、`lint_deck_text.py` がタイプとの不一致を警告する。値と合うタイプ: `parallel`（並列）→ cards / bullets / two_column / table / matrix / image_text / status_table / summary / row_matrix / house / kpi、`sequence`（順序）→ steps / swimlane / schedule / sequence / dataflow / agenda / row_matrix、`flow`（流れ）→ dataflow / swimlane / steps / sequence / architecture、`hierarchy`（階層）→ architecture / bullets / table / org / house / kpi_tree、`cause`（因果）→ steps / dataflow / two_column / bullets / reasons、`contrast`（対比）→ two_column / table / matrix / status_table / reasons / row_matrix / chart、`cycle`（循環）→ lifecycle / cycle
+- `line_balance`（任意）: `false` でそのスライドの泣き別れ対策を止める。既定では `title` / `subtitle` / `lead` / `punch` / `message` と箇条書き（bullets / closing / image_text / two_column）の最終行が1〜2文字になるとき、ビルド時に文節の切れ目（助詞・読点の後など）で改行を入れる（36px 以上の大きな文字は、表紙・章扉・言い切り・引用も語の途中で切らない。規則は [schema/autofit.md](schema/autofit.md) の「折り返しの規則」）。改行（`\n`）を書いてある文字列は触らない
+- `density` / `autofit`（任意）: そのスライドだけ密度を変える（`talk` / `standard` / `read`）、自動フィットを切る（`false`）。デッキ全体の指定は `meta` の同名キー
 
 `eyebrow`（タイトル上の小さなサブタイトル。15px・アクセント色・太字。章や系列の目印に使う）は、見出し（`chrome()`）を持つほぼ全タイプで指定できる: `bullets` / `two_column` / `table` / `code` / `image` / `image_text` に加え `agenda` / `steps` / `matrix` / `cards` / `swimlane` / `architecture` / `dataflow` / `lifecycle` / `sequence` でも使える（`title` / `section` / `quote` / `closing` のような固有レイアウトのタイプは対象外）。
 
 ページ番号を消したい/変えたいスライドは `style.footer_r.text` に表示文字列を指定する（空文字は不可。既定はページ番号）。
 
-### `title` — 表紙
-```json
-{ "type": "title", "title": "資料タイトル", "subtitle": "...", "meta": "社内勉強会 / 2026-08" }
-```
-領域: `bar`（左帯）, `title`, `subtitle`, `meta`
+### 根拠が無い箇所は `【要確認】` と書く
 
-### `section` — 章扉
-```json
-{ "type": "section", "number": "01", "title": "...", "subtitle": "..." }
-```
-領域: `bg`, `number`, `title`, `rule`, `subtitle`
+材料（口述・メモ・既存資料）に無い数字・固有名詞・日付・出どころは**作らない**（作ると、それが事実として配られるため）。文字列の中に `【要確認】` または `【要確認: 何を確かめるか】`（コロンは全角・半角どちらでも可）と書く。タイトル・リード・箇条書き・表のセル・グラフの注記・`notes`・`meta` のどこにも書ける。
+ビルドは、画面に出る文字の中の `【要確認】` を **HTML では黄色い下地＋濃い茶の太字（`<mark class="todo">`）、PPTX では濃い茶（暗い地の上では明るい黄）の太字**にして目立たせる。bullets・表・cards・図解のノード・kpi・chart の注釈・パターンのスロット・合成スライドのブロック・split のパネル、どこに書いても効く。折り返しで割れても行ごとに強調される。`notes` と `code` の中は強調しない（notes は PPTX に出ない）。
+さらにビルドの最後に `note: 要確認が 5 件あります（1 枚目 2 件（経理に確認）、4 枚目 1 件、…）→ 根拠を確かめて文を確定し、マーカーを消す` と、枚ごとの件数と確かめる点を一覧にする。強調だけを止めるときは `meta.todo_marks: false`（一覧の note は出る）。色を変えるときは、レイアウト JSON の最上位 `todo_color`（明るい地の上の文字）・`todo_color_on_dark`（暗い地の上の PPTX の文字）・`todo_bg`（HTML の下地）に `#RRGGBB` で書く。
+`lint_deck_text.py` は `notes` も含めて件数と一覧（スライド番号・項目つき）を出し、`--fail-on-todo` で 1 つでも残っていれば exit 1 にする。引き渡しのときは件数と一覧を必ず報告し、確認が済んだものからマーカーを消す。強調はあくまで目印で、残ったまま配られてよいわけではない。
 
-### `bullets` — 箇条書き
-```json
-{ "type": "bullets", "title": "見出し", "lead": "リード文（任意）",
-  "bullets": [
-    "文字列そのまま",
-    { "text": "子項目つき", "children": ["子1", "子2"] },
-    { "text": "強調したい行", "bold": true, "size": 26, "color": "accent" }
-  ] }
-```
-領域: `title`, `rule`, `lead`, `body`, `footer_l`, `footer_r`。項目単位で `size` / `color` / `bold` を上書き可能（子項目も同様）。目安: **3〜6項目、1項目40字以内**（超えると自動的な折返し・縮小はされないため、`check_layout.py` の警告を確認する）。
+### タイプ一覧表
 
-既定は内容を上詰め（`valign: "top"`）。項目数が少ないスライドはキャンバス下半分が空白になりがちなので、`style.body.valign` を `"middle"` にすると `body` 枠（既定 y=192, h=456）の縦中央に項目群を寄せられる（`two_column` の `left`/`right` と同じ考え方。HTML/PPTX 共通で実際の描画高さに応じて自動的に中央寄せされるため、項目数を変えても再調整不要）。
+`slides[i].type` に書ける値と、詳細を書いたファイル。**伝えたいこと（主張の種類）から合うタイプを引く**表で、タイプ名は `templates/layouts/default.json` の `types` のキーと一致する。タイプを足したときは 1 行足す。
 
-### `two_column` — 2カラム比較
-```json
-{ "type": "two_column", "title": "見出し",
-  "left":  { "heading": "左見出し", "bullets": ["..."] },
-  "right": { "heading": "右見出し", "bullets": ["..."] } }
-```
-領域: `left` / `right`（ボックス）, `col_heading`, `col_body` ほか。既定は内容を上詰め（`valign: "top"`）。`style.left.valign` / `style.right.valign` を `"middle"` にすると箱内で縦中央寄せになる。
+| 伝えたいこと | タイプ | 向く内容・特徴 | 詳細 |
+|---|---|---|---|
+| 表紙 | `title` | タイトル・サブタイトル・日付など（`variant` / `background` で主役の表紙に） | [schema/basic.md](schema/basic.md) |
+| 章の区切り | `section` | 章扉（番号＋章タイトル。`variant` / `background` で大きな章番号や写真つきに） | [schema/basic.md](schema/basic.md) |
+| 目次・全体の流れ | `agenda` | 連番・現在地の強調・自動 2 段／ページ繰り越し | [schema/basic.md](schema/basic.md) |
+| 要点を並べる | `bullets` | 箇条書き（子項目・項目単位の強調可。3〜6項目） | [schema/basic.md](schema/basic.md) |
+| 並列の要素を整理する | `cards` | ボックスチャート・カードグリッド（見出し＋本文＋箇条書き。3〜6枚。`emphasis` / `span` で主役のカードを作れる） | [schema/basic.md](schema/basic.md) |
+| 2 案の比較・対比 | `two_column` | 左右の箱（`connector` で矢印） | [schema/basic.md](schema/basic.md) |
+| 項目 × 複数案の比較・一覧 | `table` | 表（URL 自動リンク・行見出し・合計行・行の強調・セルの意味づけ） | [schema/basic.md](schema/basic.md) |
+| 観点 × 対象の整理（フェーズ別の実施事項など） | `row_matrix` | 行見出し × 列の整理表 | [schema/proposal.md](schema/proposal.md) |
+| 2 軸での位置づけ・優先度の散布 | `matrix` | 2×2（4 象限・軸ラベル・点の散布） | [schema/basic.md](schema/basic.md) |
+| 手順・工程（単純な直線） | `steps` | 横並びカードをシェブロンで接続 | [schema/basic.md](schema/basic.md) |
+| 業務フロー（役割をまたぐ） | `swimlane` | レーン × 工程のグリッドに自動配線 | [schema/swimlane.md](schema/swimlane.md) |
+| 日程・工程表 | `schedule` | 矢羽根スケジュール（ガント。日付だけ書けば位置は自動） | [schema/schedule.md](schema/schedule.md) |
+| 進捗報告 | `status_table` | 信号＋実績／計画（PowerPoint のネイティブ表） | [schema/basic.md](schema/basic.md) |
+| システムの構成・連携 | `architecture` | `type` でアイコンの形、`groups` で境界 | [schema/diagram.md](schema/diagram.md) |
+| データの流れ | `dataflow` | 工程の列見出し・データ区分つきの矢印 | [schema/diagram.md](schema/diagram.md) |
+| 状態の遷移 | `lifecycle` | `kind` で状態の性質を描き分け | [schema/diagram.md](schema/diagram.md) |
+| 呼び出し・やり取りの順序 | `sequence` | 参加者のライフラインとメッセージ | [schema/diagram.md](schema/diagram.md) |
+| （図解の凡例） | `diagram_legend` | 図解スライドに `legend_page: true` で自動挿入。直接は書かない | [schema/diagram.md](schema/diagram.md) |
+| 数字を主役にする（成果・KPI・進捗） | `kpi` | 1〜4 個の大きな数字（変化前→後・増減・進捗バー） | [schema/visual.md](schema/visual.md) |
+| 推移・比較・内訳をグラフで見せる | `chart` | 棒・横棒・積み上げ・折れ線・ウォーターフォール・ドーナツ（ネイティブ図形） | [schema/visual.md](schema/visual.md) |
+| 冒頭で要旨を示す | `summary` | 番号の箱＋要点＋説明の行 | [schema/proposal.md](schema/proposal.md) |
+| 課題 × 強みを対応させる | `reasons` | 選ばれる理由 | [schema/proposal.md](schema/proposal.md) |
+| 物語の転換点で言い切る | `statement` | 濃色の全面に大きな一文（デッキに 2〜3 枚まで。`variant` / `background` あり） | [schema/proposal.md](schema/proposal.md) |
+| 体制を示す | `org` | 左右の組織ツリー＋提案範囲 | [schema/proposal.md](schema/proposal.md) |
+| 全体像を示す | `house` | 屋根・柱・土台 | [schema/proposal.md](schema/proposal.md) |
+| 繰り返す運用・サイクル | `cycle` | 中央の円＋円弧の矢印＋段のパネル | [schema/proposal.md](schema/proposal.md) |
+| 目標と KPI の対応 | `kpi_tree` | 目標 → 方向性 → KPI＋目標値＋測り方 | [schema/proposal.md](schema/proposal.md) |
+| 図・要点・数字を 1 枚に並べる | `composite` | 本文を格子に分け、図解・表・グラフ・要点・数字などのブロックを 2〜4 個置く | [schema/composite.md](schema/composite.md) |
+| 主役の数字・一文＋根拠の図表（結論・実績の 1 枚） | `split` | 端まで届く色面か画像のパネル（大きな数字・一文）＋ 残りの領域に `composite` と同じブロック | [schema/composite.md](schema/composite.md) |
+| 登録した構図で見せる | `pattern` | 型（同梱 19 個＋自作）に中身（スロット）を差し込む。合成・分割のブロックにも置ける | [schema/pattern.md](schema/pattern.md) |
+| キーメッセージ・引用 | `quote` | 強調したい一文 | [schema/basic.md](schema/basic.md) |
+| まとめ・次のアクション | `closing` | 箇条書き＋締めの一言 | [schema/basic.md](schema/basic.md) |
+| コード・設定例 | `code` | 行数に応じて縮小。右に番号付き注釈も可 | [schema/basic.md](schema/basic.md) |
+| 画像・図版 | `image` / `image_text` | 画像 1 枚／画像＋パンチライン＋本文（`assets/` の png / jpg / svg など） | [schema/basic.md](schema/basic.md) |
+| 既存 PowerPoint の取り込み | `canvas` | 座標指定の自由配置。取り込み結果の修正専用（新規の構図は `pattern`） | [schema/canvas.md](schema/canvas.md) |
 
-### `table` — 表
-```json
-{ "type": "table", "title": "見出し", "columns": ["列1", "列2"], "rows": [["a", "b"]],
-  "style": { "table": { "row_h": 64, "cell_size": 16, "col_widths": [3, 3, 6], "border_color": "border" } } }
-```
-領域: `table`（`col_widths` は比率の配列。**要素数は `columns` と一致させること**（不一致はビルドエラー）。各行のセル数も `columns` の数と一致させる。`header_h` / `row_h` で行の高さ、`header_size` / `cell_size` でフォント、`border_color` で罫線色（テーマトークン、既定 `border`））。目安: **6行以内**（超える場合はスライドを分けるか要約する）。
+迷いやすい組:
+- **`bullets` / `cards` / `table`**: 順に読ませるなら `bullets`、並列で見出し付きなら `cards`、項目 × 比較軸なら `table`。
+- **`steps` / `swimlane` / `lifecycle`**: 見出しに部署・担当者が入るなら `swimlane`、状態名なら `lifecycle`、レーン不要の直線なら `steps`（詳しくは [diagram-guide.md](diagram-guide.md)）。
+- **`kpi` / `chart` / `table`**: 数字 1〜4 個を見せるなら `kpi`、推移・比較・内訳の形で見せるなら `chart`、数値を正確に読み取らせたい一覧は `table`。
+- **`pattern`**: 同梱・登録済みの構図があるときに使う（`pattern_engine.py list` で確かめる。一覧と選び方は [schema/pattern.md](schema/pattern.md)）。構図を `canvas` で手書きしない。例: 結論と根拠 = `conclusion-evidence`、対比 = `before-after`、柱 = `pillars`、一言＋説明 = `keyword-explain`、番号つきの項目 = `numbered-columns` / `numbered-list`。
+- **`composite` / `split` / 2 枚に分ける**: 2〜3 個のブロックが 1 つの主張を支えるなら `composite`、主役の数字や一文＋根拠の図表なら `split`。ブロックが 4 個を超える・ブロックごとに別の主張がある・文字が 12〜14px まで縮むときは 2 枚に分ける（[schema/composite.md](schema/composite.md)）。
 
-セル全体が `http://` または `https://` のURLなら、HTMLではクリック可能なリンク、PPTXでは外部ハイパーリンクとして自動出力する。説明文にURLを混ぜたセルは自動リンク化しない。
+`swimlane_legend` は `swimlane` の `legend`（既定 `true`）で自動挿入される凡例ページの内部タイプ。直接は書かない（[schema/swimlane.md](schema/swimlane.md)）。
 
-URLを見せず、資料名など別の文字列をリンクにする場合は、セルを `{"text": "表示文字列", "url": "https://..."}` と書く。セル値が `null`（JSON の `null`）の場合は空文字として表示される。
-
-**リンク先のスキーム制限（セキュリティ）**: リンクとして出力できるのは `http` / `https` / `mailto` のスキームだけ。ビルダーは href に出力する直前に `urlparse` でスキームを取り出して許可リストと突き合わせ、
-- 自動リンク化（セル全体がURL）の対象は `http` / `https` のみ
-- 明示指定の `url` は `http` / `https` / `mailto` のみ
-
-とし、`javascript:` / `data:` / `vbscript:` / `file:` などが指定された場合は**ビルドエラー**にする（`url` を明示指定した場合）。文字列セルとして書かれた `javascript:...` はリンク化されず、そのまま通常のテキストとして表示される。HTMLのエスケープ（`<` `>` `&` `"` `'`）ではスキーム由来のXSSは防げないため、この許可リストで弾いている。
-
-行単位の背景色は `style.table.row_fills` で指定する（キーは 0 始まりの行番号の文字列、値はテーマトークン or hex）。指定のない行は従来どおり交互色。意味のある行（例: AI 関連の行）に「しるし」を付ける用途に使う（強調色には `highlight_fill` トークンを推奨）:
-```json
-{ "type": "table", "...": "...",
-  "style": { "table": { "row_fills": { "3": "highlight_fill" } } } }
-```
-
-### `status_table` — 進捗ステータス表（信号＋実績／計画）
-```json
-{ "type": "status_table", "title": "1. 全体・個別進捗報告（1/2）", "lead": "10/9(金)時点で、各チーム予定通り進行中。",
-  "columns": ["チーム", "進捗状況", "実績（10/9時点）", "計画（今週末時点）"],
-  "rows": [
-    { "label": "PMO", "status": "green",
-      "cells": [
-        [ { "text": "進捗管理、課題管理等", "children": ["（継続）進捗管理", { "text": "論点議論", "children": ["顧客対応：…"] }] } ],
-        [ "計画の項目" ]
-      ] }
-  ] }
-```
-- 1列目＝ラベル列（`label`、`highlight_fill` 地）、2列目＝信号（`status` の色の ●）、3列目以降＝内容列。`cells` の数は `columns` 数 − 2 と一致させる（不一致はビルドエラー）。
-- セル内は文字列 or `{ "text", "children" }` の入れ子。最上位は ✓＋下線、2階層目以降は • で、階層ごとに字下げされる（PPTX ではネイティブ箇条書き）。
-- `status` は凡例の `key`、テーマトークン、`#hex` のいずれか。凡例（右上）は `legend: [{ "key", "color", "label" }]` で指定し、省略時は赤（日程再調整が必要）／黄（リカバリ予定有）／緑（予定通り）の3色。`legend: false` で非表示、`legend_title` で凡例左の見出しを変更。
-- 行の高さはセル内容から自動計算し、`table.fill_height`（既定 true）なら表の高さ（`table.h`）いっぱいまで比例配分する。内容が収まらない見込みならビルド時に warning。
-- 領域: `title`（凡例と重ならないよう既定幅 690px）, `rule`, `lead`, `legend`, `table`（`col_widths` / `header_h` / `cell_size` / `label_size` / `status_size` / `indent` / `border_color` / `check_char` / `bullet_char` / `heading_underline` 等）, `footer_l/r`。
-- 1枚3行程度が目安。PPTX は PowerPoint のネイティブ表として出力されるので、文字や信号の色を PowerPoint 上でも編集できる。
-
-### 既存タイプの拡張（提案書の型に合わせたオプション）
-- `agenda`: 項目に `desc`（説明文）を書くと、項目名の下に小さく説明が入る（行の高さは自動で 64px に広がる）。`{"text": "背景と目的", "desc": "…"}`
-- `table`: `row_header: true` で1列目を行見出し（淡い色の塗り・太字）、`total_row: true` で最終行を合計行（`surface` 塗り・太字）にする。色は `style.table.label_fill` / `total_fill` / `label_color`
-- `two_column`: `connector: "arrow"` で左右の箱の間に灰色の三角（左から右への流れ・因果）を置く（目的 → 骨子など）
-- `steps`: `header_style: "arrow"` で見出しを工程の矢羽根（先頭は五方向、2つ目以降は山形）にし、間の「›」をなくす
-- `matrix`: `points: [{"label": "本番ガード", "x": 0.8, "y": 0.9, "highlight": true, "n": 1}]` で格子の上に項目を番号付きの点で置く（`x` は右、`y` は上ほど大きい 0〜1）。散布して優先度を見せるときに使う
-- `code`: `annotations: [{"line": 6, "title": "確認", "text": "…"}]` で右に番号付きの注釈を並べ、該当行に同じ番号の丸と左端の印を付ける（コードの幅は自動で6割に狭まり、文字は横幅にも収まるよう縮む）
-
-### `code` — コード / 設定例
-```json
-{ "type": "code", "title": "見出し", "language": "yaml", "code": "type: Concept\n..." }
-```
-領域: `code`。行数が多いときは `min_size` まで自動縮小（HTML/PPTX 共通ロジック）。折り返しはせずクリップする（HTML/PPTX 共通）ので、1行が極端に長いコードは事前に改行を入れる。
-
-### `quote` — 引用・キーメッセージ
-```json
-{ "type": "quote", "text": "強調したい一文", "attribution": "出典（任意）" }
-```
-領域: `mark`, `text`, `attribution`
-
-### `image` — 画像
-```json
-{ "type": "image", "title": "見出し（任意）", "path": "assets/figure.png", "caption": "..." }
-```
-`path` はデッキフォルダ配下（`assets/` 推奨）の相対パスのみ（デッキフォルダの外を指すパスや存在しないファイルはビルドエラー）。対応拡張子: png / jpg / jpeg / gif / bmp / svg / webp / tiff。領域 `img`（既定 1136×440px、比率 約2.58:1）の枠内に等比で収まる（拡大・縮小どちらも行う）。**推奨アスペクト比は 4:3 〜 2:1**（例 1024×768、1200×600）。極端な縦長・横長の画像は左右または上下に余白（レターボックス/ピラーボックス）ができる。
-
-**画像アセットはテーマに自動追従しない。** SVG/PNG 等の画像は静的なファイルなので、`meta.theme` を切り替えても配色・背景は変わらない。暗色系テーマ（背景が濃色のテーマ）で白背景の図版を使うと、スライドの中で図版だけ浮いて見える。暗色テーマを使うデッキでは (a) 画像側もそのテーマの背景色に合わせて用意する、(b) 可能なら `swimlane` / `matrix` / `steps` などテーマトークンで自動的に配色されるネイティブ図解タイプを使う、のいずれかを検討する。
-
-### `image_text` — 画像＋パンチライン＋本文（1枚で伝える統合レイアウト）
-```json
-{ "type": "image_text", "title": "見出し",
-  "punch": "一目で伝えたい一文（全幅・太字・アクセント色）",
-  "bullets": ["本文（bullets と同じ書式。children 可）"],
-  "path": "assets/figure.png", "caption": "画像の下の補足（任意）",
-  "image_side": "right" }
-```
-領域: `title`, `rule`, `punch`（全幅パンチライン）, `body`（本文カラム）, `img`（既定 524×378px）, `caption`, `footer_l/r`。
-`image_side` を `"left"` にすると画像と本文の左右が入れ替わる（既定は右）。
-**画像だけ・文章だけのページに分離せず、メッセージと図解を1枚に載せたいときはこのタイプを使う。**
-画像は 4:3 前後（例: 1024×768）が最も収まりが良い。`path` の制約は `image` タイプと同じ（デッキフォルダ配下・対応拡張子のみ）。
-
-### `closing` — まとめ
-```json
-{ "type": "closing", "title": "まとめ", "bullets": ["..."], "message": "締めの一言（任意）" }
-```
-領域: `bg`, `title`, `rule`, `body`, `message`。`message` の縦位置は既定で **`body` の実描画高さの直後**に自動配置される（`follow_body: true`。`body` が短ければ `message` が上に詰まり、長ければ下がる。下限 `min_y`、上限はレイアウトの既定 `y`）。`style.message.y` を明示すればその固定値が優先される。
-
-### `agenda` — アジェンダ / 目次
-```json
-{ "type": "agenda", "title": "Agenda", "lead": "（任意）",
-  "items": [ "はじめに", { "text": "本日の議題", "active": true }, "まとめ" ] }
-```
-領域: `title`, `rule`, `lead`, `body`, `footer_l/r`。各項目に自動で連番（`01`, `02`…）が付く。`active: true` の項目は面（`active_fill`）で強調され、文字色が `active_color` になる。`bullets` の代替ではなく「番号付き＋現在地ハイライト」が要るときに使う。
-
-**自動2段組・ページ送り**（項目数に応じて自動。**deck.json に書いたスライド数より実際の出力枚数が増えることがある**）:
-- 1列あたりの最大行数 `R = floor(body.h / (row_h+gap))`（既定値で **R = 8 行**）。
-- 項目数 **N ≤ R** → 1段。**R < N ≤ R×max_cols** → 自動で2段（左列を上から埋めて右列へ）。**N > R×max_cols** → 次ページの agenda に自動で繰り越し（連番は通し、2枚目以降のタイトルに「（続き）」）。
-- `body` の `max_cols`（既定 2）/ `row_h` / `gap` / `col_gap` で段数・行ピッチを調整できる。既定では **9〜16 項目=2段、17 項目以上=2ページ目**。
-
-### `steps` — ステップチャート / フロー
-```json
-{ "type": "steps", "title": "見出し", "lead": "（任意）",
-  "steps": [
-    { "label": "研究開発", "items": ["基礎研究", "実験・検証"] },
-    { "label": "社会実装", "items": ["インフラ整備"] }
-  ] }
-```
-領域: `title`, `rule`, `lead`, `body`, `footer_l/r`。手順・フロー・バリューチェーンを横並びのカードで表現し、カード間をシェブロン（›）で接続する。ステップ数（3〜5推奨）に応じてカード幅は自動調整。各カードはヘッダ（`header_fill`＝primary、`STEP n` は `num_color`）＋本文の箇条書き（`items`）。色はテーマの `primary` / `surface` / `on_primary_soft` に固定されており、カードごとに任意の色を指定するオプションは無い（要素ごとに色を変えたい場合は `image` / `image_text` で図を用意する）。
-
-**カードの高さ**: 既定（`style.body.fit: "content"`）では最も長いカードの内容に合わせて高さを縮め、行全体を領域の上寄り中央に置く（短い内容で下半分が空くのを防ぐ）。下限は `style.body.min_h`（既定 260px）、上限は `body.h`。従来どおり領域いっぱいに描きたいときは `"fit": "fill"`。カードの枠線色は `card_border`（既定 `border` トークン）。
-
-### `matrix` — 2×2 マトリクス
-```json
-{ "type": "matrix", "title": "見出し", "lead": "（任意）",
-  "x_axis": { "label": "モデルの複雑さ", "low": "低", "high": "高" },
-  "y_axis": { "label": "データの量", "low": "少", "high": "多" },
-  "quadrants": [
-    { "heading": "…", "body": "…", "highlight": true },
-    { "heading": "…", "body": "…" },
-    { "heading": "…", "body": "…" },
-    { "heading": "…", "body": "…" }
-  ] }
-```
-領域: `title`, `rule`, `lead`, `grid`, `axis`, `footer_l/r`。`quadrants` は**必ず4個**（左上 → 右上 → 左下 → 右下の順）。4個未満は残りが空象限になり、5個以上は5個目以降が無視され警告が出る。y軸は上が `high`、x軸は右が `high`。`highlight: true` の象限は `highlight_fill`／`hi_heading_color`（accent）で強調する。単純な行列は `table`、2軸の位置づけは `matrix` を使い分ける。既定で箱内のコンテンツは縦中央寄せ（`grid.valign: "middle"`）。`style.grid.valign: "top"` にすると上詰めに戻せる。
-
-### `cards` — ボックスチャート / カードグリッド
-```json
-{ "type": "cards", "title": "見出し", "lead": "（任意）", "columns": 3,
-  "cards": [
-    { "heading": "Python", "body": "汎用・データ分析", "items": ["初学者向け", "AI/ML の定番"] },
-    { "heading": "Go", "body": "クラウド基盤" }
-  ] }
-```
-領域: `title`, `rule`, `lead`, `grid`, `footer_l/r`。整理軸に沿って要素カードを並べる（`two_column` の一般化）。`columns` で列数を指定（既定 3、数値で渡す）、カード数に応じて行が自動で折り返す。各カードは `heading`＋任意の `body`＋任意の `items`（箇条書き）。目安: **カード3〜6枚**。既定で箱内のコンテンツは縦中央寄せ（`grid.valign: "middle"`）。`style.grid.valign: "top"` にすると上詰めに戻せる。カードごとの色分け（系列色）は無く、全カード同一の配色（`surface` 地）になる。
-
-### `swimlane` — スイムレーン業務フロー
-```json
-{ "type": "swimlane", "title": "見出し", "lead": "（任意）",
-  "cols": 6,
-  "phases": ["", "作成", "精緻化", "レビュー", "判定", "次工程"],
-  "lanes": [
-    { "group": "Japan", "name": "開発T(Lead)" },
-    { "group": "Japan", "name": "開発T(Member)" },
-    { "name": "AI（Claude Code等）" }
-  ],
-  "nodes": [
-    { "id": "start", "lane": 0, "col": 0, "shape": "terminal", "text": "開始" },
-    { "id": "t1", "lane": 1, "col": 1, "shape": "task", "text": "ドラフト作成", "loop": true },
-    { "id": "d1", "lane": 1, "col": 2, "shape": "decision", "text": "指摘あり" },
-    { "id": "io1", "lane": 2, "col": 1, "shape": "io", "input": ["論点一覧"], "output": ["検討資料"] },
-    { "id": "end", "lane": 1, "col": 3, "shape": "terminal", "text": "完了" }
-  ],
-  "edges": [
-    { "from": "start", "to": "t1" },
-    { "from": "t1", "to": "d1" },
-    { "from": "d1", "to": "end", "label": "Y" }
-  ] }
-```
-領域: `title`, `rule`, `lead`, `flow`, `footer_l/r`。業務フロー・運用フローを **image に頼らずネイティブ描画**する（座標を自動計算するのでズレない）。ノード・レーン帯・矢印はテーマの `primary` / `surface` / `on_primary_soft` / `highlight_fill` / `border` に固定される（系列ごとの色分けはできない。多系列を色分けしたい場合は `image` で図を用意する）。
-
-- **レーン（横帯）＝役割**。`lanes[]` は上から順の行（1個以上必須）。`group`（Lv1）が同じ連続レーンは左端に縦帯でまとめられる。`group` を省けば **Lv1 なしのフラットなレーン** になる（Lv1 のみ・Lv1+Lv2 どちらも可）。
-- **配置はグリッド**。各ノードに `lane`（行 index）と `col`（工程＝列 index、0始まり）を指定。**`id` はノード間で重複不可**（重複するとビルドエラー）。列数は `cols`（省略時はノードの最大 col+1。ノードの `col` が `cols` 以上の場合は `cols` を自動拡張して警告）。`phases[]` を書くと上部に工程ヘッダ帯が出る（列と対応、空文字で省略）。
-- **ノード形状 `shape`**: `task`（角丸四角・`loop:true` で反復記号／`variant` で `onpf`＝オンラインPF・`onother`＝PF以外・`offline`＝オフラインを色分け）/ `system`（システム・サービス）/ `decision`（ひし形・分岐）/ `terminal`（楕円・前/次ページ等のラベル付き連結）/ `marker`（小さな丸・`kind` で `start`/`end`/`mid`）/ `connector`（ペンタゴン・分岐の遷移先）/ `mail`（メール配信）/ `io`（`input`/`output` の成果物リスト）。
-- **エッジ `edges[]`**: `{ from, to, label, style }`。`from`/`to` は存在する `id` を指定する（未知の `id` はビルドエラー）。ノード id 同士を結ぶと、レーンをまたぐ L 字・Z 字の直交矢印を**自動ルーティング**する。`label` は Y/N などの分岐ラベル、`style: "dashed"` で破線（システム操作）になる（既定は実線＝作業の流れ）。
-- **凡例 `legend`**: **既定 `true`**。true のとき、そのスイムレーンの**直前に凡例専用ページ（`swimlane_legend`）を自動挿入**する（業務フロー標準記号の一覧：作業3種・システム・分岐・成果物・開始/終了/途中・前/次ページ・遷移先・メール・実線/破線の15種）。**この自動挿入は合計ページ数に影響する（+1枚）**。指定枚数を厳守したい場合はあらかじめ考慮するか、`"legend": false` で凡例ページを省略する。`legend_title` で凡例ページのタイトル、`legend_items` で凡例内容をカスタムできる。
-  - `legend_items` の正しい形は **4要素配列の配列**: `[[shape, variant_or_kind, label, description], ...]`（例: `[["task", "onpf", "オンラインPF作業", "..."], ["decision", "", "分岐", "..."]]`）。辞書形式 `{"shape": "...", "variant": "...", "label": "...", "desc": "..."}`（または `kind`/`label`/`desc`）も受理されるが、**要素数の合わない配列やこれ以外の形は文字化けした凡例の原因になる**ので必ず4要素配列（または上記の辞書キー）で書く。
-- 色・線幅・ノードサイズは `flow` の各トークンで調整可（`task_onpf_fill` / `task_offline_fill` / `system_fill` / `marker_start` / `connector_fill` / `decision_fill` / `edge_color` / `lane_border`（レーン区切り線の色、既定 `border` トークン）など）。
-- **v0.3.0 の変更点**（`architecture` 等の追加にともなう配線エンジン共通化）: 配線が下記「図解タイプ共通」と同じ共通ルーター（`tools/diagram_engine.py`）に置き換わった。見た目はほぼ従来どおりだが、線が途中のノードを横切らなくなり、同じ辺から出る複数の線・同じ回廊を通る線は自動で等間隔にずれ、ラベルは背景ピル付きで重なりにくくなる。
-  - `edges[].variant`（`default` / `emphasis` / `security` / `dashed`）と `edges[].arrow`（`end` / `both` / `none`）が使える。従来の `style: "dashed"` は引き続き受理する（両方書くと `style-conflict` の警告になり `variant` を優先する）。
-  - ノードの `text` の別名として `label` も受理する。
-  - `decision`（ひし形）は箱に内接するサイズで描かれるようになり、HTML と PPTX の大きさが一致する（従来は HTML だけ大きく見えていた）。
-  - 反復記号 `loop: true` は右上の丸バッジ（円弧矢印）に変わった。
-  - 追加された検証（warning）: ノードの `variant` が `onpf` / `onother` / `offline` 以外（`architecture` 系タイプの `emphasis` 等は swimlane では使えない）、`shape` が未知、`text`/`label` が無い、`edges[].variant` / `edges[].style` の未知値。
-  - 凡例ページ（`legend` bool による自動挿入）と凡例記号15種、`groups` を持たない点は変わらない。
-
-### 図解タイプ共通（`architecture` / `dataflow` / `lifecycle`）
-
-この3タイプは同じ描画エンジン（`tools/diagram_engine.py`）を共有し、ノード・エッジの語彙とトークンも共通。タイプごとの違いは行・列の意味づけだけで、詳細は次項以降の各タイプ節を見る。ノード・エッジの見た目トークン（`node_*` / `edge_*` / `label_*` など）は `sequence` の参加者・メッセージにも使われる（自動配線・groups・凡例は grid 系3タイプ専用）。
-
-領域名は共通で `diagram`（既定 `x=72 y=190 w=1136 h=468`。`style.diagram.*` または `meta.layout_overrides.<type>.diagram.*` で調整する）。図全体を `rows`×`cols` のセルに分け、ノードはセル中央に置かれる（`cols`/`rows` は省略可。ノードの最大 `col`/`row`+1、または見出し数から自動算出）。
-
-**ノード `nodes[]`**（lifecycle は `states[]` も同じ形）
-
-| フィールド | 必須 | 説明 |
-|---|---|---|
-| `id` | ✅ | 一意な id（英数字推奨）。重複は `duplicate-id` エラー |
-| `label`（別名 `text`） | 推奨 | 表示名（無いと `missing-label` 警告） |
-| `sublabel` | | 小さな補足（1行） |
-| `tag` | | 右上の小ピル（例: `"JWT"`） |
-| `type` | | `frontend` / `backend` / `database` / `cloud` / `security` / `messagebus` / `external` / `generic`（既定）。**色ではなくアイコンの形**でコンポーネントの役割を表す |
-| `variant` | | `default`（既定）/ `emphasis` / `security` / `dashed` / `muted`。**色はこちらが担う** |
-| `row` / `col` | | 0始まりの整数。同じ (row, col) の重複は `cell-collision` エラー、負値や非整数は `invalid-position` エラー |
-
-**エッジ `edges[]`**
-
-| フィールド | 必須 | 説明 |
-|---|---|---|
-| `from` / `to` | ✅ | 既知の `id`（未知は `unknown-endpoint` エラー） |
-| `label` | | ラベル文字列 |
-| `variant` | | `default` / `emphasis` / `security` / `dashed`。旧 swimlane 互換の `style: "dashed"` も受理（`variant` と両方書くと `style-conflict` 警告、`variant` を優先） |
-| `arrow` | | `end`（既定）/ `both` / `none` |
-| `from_side` / `to_side` | | `left` / `right` / `top` / `bottom`。他ノードを避けられない場合は無視され `side-ignored` 警告 |
-| `via` | | `[[x, y], ...]`（キャンバス絶対 px の経由点）。**最初から書かず、`check_diagram.py` が提示してから 1 つ加える** |
-| `label_at` | | `[x, y]`（ラベル中心の固定座標） |
-| `route` | | `auto`（既定）/ `straight` |
-| `classification` | | `dataflow` 用。ラベルの2行目に小さく表示（例: 「個人データ」） |
-
-**別名**: 列見出し帯は `col_headers`（正式）＝ `stages`（dataflow で自然）＝ `phases`（swimlane 流）のどれでも同じ。行見出しは `lanes: [{"name": "..."}]`（正式。`label` も可）＝ `row_headers`。lifecycle は `states`=`nodes`、`transitions`=`edges`、ノードの `lane`=`row`。dataflow はノードの `stage`=`col`、`flows`=`edges`。
-
-**グループ（境界） `groups[]`**: `{ "label", "kind": "region" | "security" | "zone" | "generic", "nodes": [id, ...] }`。メンバーの外接セル範囲を囲む（`region`=破線、`security`=primary破線、`zone`=surface塗り）。範囲内に非メンバーが混ざると `group-leak` 警告（**本当の所有・信頼・配備の境界だけ**に使い、単なる見た目のグルーピングには使わない）。swimlane の `lanes[].group`（縦帯グループ）とは別概念で、swimlane には `groups` は無い。
-
-**凡例 `legend`**: `"auto"`（既定。`type` が2種以上あると図の下に1行で表示）/ `true` / `false`。**ページを追加しない**（swimlane の `legend` bool＝凡例ページの自動挿入とは意味が違う）。type の表示名既定は「フロント／バックエンド／DB／クラウド／セキュリティ／メッセージ基盤／外部」（`style.diagram.type_labels` で変更可）。
-
-**自動配線**: 列・行のガターとノード中心線を格子にした最短の直交経路を探索し、途中のノードを横切らないルートを優先する（横切ってしまう場合は `edge-through-node` の診断。ビルド自体は止まらず警告として報告される）。同じ辺から出入りする複数の線・同じ回廊を通る線は自動で等間隔にずらす。ラベルは最長セグメントの脇に背景ピル付きで置き、ノード・他ラベルと衝突すれば別候補へ、それでも衝突すれば `label-collision` 警告（`label_at` の候補座標が提示される）。`from == to` の自己ループは右上の小さなコの字で描く。
-
-**主な `style.diagram` トークン**（既定値は `templates/layouts/default.json` 参照）: `node_wr` / `node_hr` / `node_max_w` / `node_max_h` / `node_radius` / `node_pad` / `node_size` / `sub_size` / `tag_size` / `node_fill` / `node_border` / `node_border_w` / `node_color` / `sub_color` / `emphasis_fill` / `emphasis_border` / `security_border` / `dashed_border` / `muted_color` / `tag_fill` / `tag_color` / `icon_size` / `icon_color` / `group_border` / `group_color` / `group_radius` / `security_group_border` / `zone_fill` / `header_h` / `header_fill` / `header_color` / `row_label_w` / `row_fill` / `row_color` / `edge_color` / `edge_w` / `edge_emphasis_color` / `edge_security_color` / `edge_dashed_color` / `edge_return_color` / `label_size` / `label_color` / `label_fill` / `legend_h` / `type_labels`。dataflow 追加: `class_size` / `class_color`。lifecycle 追加: `start_` / `active_` / `waiting_` / `decision_` / `success_` / `failure_` / `neutral_` / `external_` の `_fill` / `_border`、`success_color` / `step_color` / `step_size`。
-
-### `architecture` — システム構成図
-```json
-{ "type": "architecture", "eyebrow": "SYSTEM", "title": "システム構成",
-  "nodes": [
-    {"id":"web","type":"frontend","label":"Web","sublabel":"React","row":0,"col":0},
-    {"id":"api","type":"backend","label":"API","sublabel":"FastAPI","row":0,"col":1,"variant":"emphasis"},
-    {"id":"db","type":"database","label":"PostgreSQL","row":0,"col":2},
-    {"id":"auth","type":"security","label":"認証","sublabel":"OAuth","row":1,"col":1}
-  ],
-  "groups": [{"label":"VPC","kind":"region","nodes":["api","db","auth"]}],
-  "edges": [
-    {"from":"web","to":"api","label":"HTTPS","variant":"emphasis"},
-    {"from":"api","to":"db","label":"SQL"},
-    {"from":"auth","to":"api","label":"JWT検証","variant":"security"}
-  ] }
-```
-領域・フィールド・別名・groups・凡例・配線・`style.diagram` トークンは上記「図解タイプ共通」を参照。
-
-目安: ノード12個以下、列6以下（超えると `too-dense` 警告で自動拡張はしない）。
-
-注意: コンポーネントの役割は `type`（アイコンの形）で表し、強調したいノード／境界越えの通信は `variant`（ノードは `emphasis`、エッジは `security` 等）で表す。主経路が1本の左→右（または上→下）になるよう `row`/`col` を揃えると線が交差しにくい。
-
-**AWS 風タイルアイコン**: `style.diagram.icon_style` を `"aws"` にすると、`type` を **カテゴリ色の角丸タイル＋白いグリフ**（AWS の構成図アイコン風）で描く（既定は `"line"` の線画グリフ）。実物の AWS アイコン画像は使わず自作しているので、テーマ・PPTX・HTML すべてで同じに出る。タイル色は `icon_tile_<type>` トークンで上書きでき（既定: frontend=マゼンタ / backend=オレンジ / database=ブルー / cloud=ティール / security=レッド / messagebus=ピンク / external=スレート / generic=グレー）、タイルの大きさは `icon_tile_size`（既定 30）。`architecture` / `dataflow` / `sequence` で有効（`lifecycle` は kind の形で表すのでタイルにはしない）。`legend_page` の凡例はこの設定を自動で引き継ぐので、図と凡例で見た目が揃う。
-
-### `dataflow` — データフロー
-```json
-{ "type": "dataflow", "eyebrow": "DATA", "title": "データフロー",
-  "stages": ["収集", "処理", "保存", "活用"],
-  "nodes": [
-    {"id":"app","type":"frontend","label":"アプリ","col":0,"row":0},
-    {"id":"collector","type":"cloud","label":"収集API","col":1,"row":0},
-    {"id":"stream","type":"messagebus","label":"Kafka","col":2,"row":0},
-    {"id":"dwh","type":"database","label":"DWH","col":3,"row":0}
-  ],
-  "edges": [
-    {"from":"app","to":"collector","label":"送信"},
-    {"from":"collector","to":"stream","label":"正規化"},
-    {"from":"stream","to":"dwh","label":"格納","classification":"匿名化済み"}
-  ] }
-```
-領域・フィールド・別名・凡例・配線・`style.diagram` トークンは上記「図解タイプ共通」を参照。`stages` は列見出し（`col_headers` の別名）で、工程を上部の帯に表示する。
-
-目安: 列（`stages` の数、または最大 `col`+1）6以下、ノード12個以下。
-
-注意: `edges[].classification` はラベル下に小さく表示され、データの区分（個人データ・匿名化済み等）を添えるのに使う。`row` は同じ工程内で並行する経路の書き分けに使う（lifecycle の `lane` と役割が近い）。
-
-### `lifecycle` — ライフサイクル / 状態遷移
-```json
-{ "type": "lifecycle", "eyebrow": "STATE", "title": "承認フローの状態遷移",
-  "lanes": [{"name":"主経路"},{"name":"差し戻し"}],
-  "states": [
-    {"id":"draft","kind":"start","label":"下書き","lane":0,"col":0},
-    {"id":"review","kind":"decision","label":"レビュー","lane":0,"col":1},
-    {"id":"done","kind":"success","label":"承認済み","lane":0,"col":2},
-    {"id":"reject","kind":"failure","label":"差し戻し","lane":1,"col":1}
-  ],
-  "transitions": [
-    {"from":"draft","to":"review"},
-    {"from":"review","to":"done","label":"OK","variant":"emphasis"},
-    {"from":"review","to":"reject","label":"NG"},
-    {"from":"reject","to":"draft","label":"再提出","variant":"dashed"}
-  ] }
-```
-`states`（`nodes` も受理）と `transitions`（`edges` も受理）を使う。`lane` は `row` の別名で、`lanes[]`（1個以上）が縦の帯になる（Archify のように main/terminal の3帯固定ではなく、任意の本数を書ける）。状態の性質は `kind` で描き分ける:
-
-| `kind` | 見た目 |
-|---|---|
-| `start` | ピル形。accent 枠＋highlight_fill 塗り |
-| `active`（既定） | 通常の角丸カード。primary 枠 |
-| `waiting` | 破線・muted＋砂時計アイコン |
-| `decision` | ひし形（accent 枠・highlight_fill 塗り） |
-| `success` | accent 塗り・白文字＋チェック |
-| `failure` | 太い破線＋×印 |
-| `neutral` | surface 塗り |
-| `external` | 破線・muted |
-
-`step`（`"01"` のような番号バッジ）も指定できる。
-
-目安: 状態12個以下。レーンは意味のある単位で3〜4本程度（本数の上限は無いが増やすほど1本あたりの文字が小さくなる）。
-
-注意: 分岐は `decision`、成功/失敗の終端は `success`/`failure` を使い分けると状態の性質が一目で伝わる。
-
-### `sequence` — シーケンス図
-```json
-{ "type": "sequence", "eyebrow": "FLOW", "title": "ログイン処理のやり取り",
-  "participants": [
-    {"id":"user","type":"external","label":"利用者"},
-    {"id":"web","type":"frontend","label":"Web"},
-    {"id":"api","type":"backend","label":"API"},
-    {"id":"db","type":"database","label":"DB"}
-  ],
-  "messages": [
-    {"from":"user","to":"web","label":"ログイン"},
-    {"from":"web","to":"api","label":"POST /login","variant":"emphasis"},
-    {"from":"api","to":"db","label":"SELECT user"},
-    {"from":"db","to":"api","label":"rows","variant":"return"},
-    {"from":"api","to":"web","label":"200 OK","variant":"return"}
-  ] }
-```
-領域: `diagram`（他3タイプと共通）。上部に参加者カードを横並びに置き、下へライフライン（破線）を伸ばす。
-
-| フィールド | 説明 |
-|---|---|
-| `participants[].id/label/sublabel/type/variant` | ノードと同じ語彙（`type` のアイコン、`variant` の `emphasis`/`security`/`dashed`/`muted` も使える） |
-| `messages[].from/to/label` | 配列の**順に上から等間隔**に描く（`label` が無いと `missing-label` 警告） |
-| `messages[].variant` | `default` / `emphasis` / `security` / `dashed` / `return`（戻りは破線の開いた矢印） |
-| `activations[]`（任意） | `{ "participant", "from", "to" }`。`from`/`to` は `messages` の index（0始まり）または `id`。ライフライン上の帯 |
-| `segments[]`（任意） | `{ "from", "to", "label" }`（同じく index/id）。区間を薄い破線枠で囲み左上にラベル |
-
-`from == to` は自己メッセージ（右側に小さなコの字）として描く。
-
-目安: 参加者7人以下、メッセージ12本以下（超えると `too-dense` 警告）。ラベルが矢印の長さより長いと `label-collision` 警告。
-
-注意: 参加者カード・メッセージの矢印は「図解タイプ共通」節と同じノード/エッジのトークン・語彙で着色されるが、自動配線・groups・凡例（横切り回避を含む）は grid 系3タイプ専用でここには無い（メッセージは常に横一直線）。
-
-### `schedule` — 矢羽根スケジュール（ガント／工程表）
-```json
-{ "type": "schedule", "eyebrow": "SCHEDULE", "title": "全体スケジュール",
-  "timeline": { "start": "2026-09", "end": "2027-08", "unit": "month" },
-  "periods": [ { "label": "FY27 Q1（2026/9〜11月）", "span": 3 }, { "label": "Q2", "span": 3 } ],
-  "today": "2026-10-05",
-  "rows": [
-    { "group": "節目", "label": "マイルストーン",
-      "milestones": [ { "at": "2026-10-31", "label": "10月末 RV完了" } ] },
-    { "group": "開発", "label": "要件定義〜テスト", "sub": "開発チーム",
-      "bars": [
-        { "start": "2026-09", "end": "2026-10", "label": "要件定義" },
-        { "start": "2026-11", "end": "2026-12-25", "label": "運用", "variant": "ongoing" } ] }
-  ],
-  "legend_labels": { "main": "主要タスク（成果物を出す）" },
-  "note": "※ 注記（凡例の右端に表示）" }
-```
-領域: `title`, `rule`, `lead`, `chart`, `footer_l/r`。左に行見出し（`label`＋小さな `sub`）、上に時間軸（`periods` の大見出し＋列見出し）、右に矢羽根・節目・現在線を描く。**座標は書かない**。期間（日付・列）だけを書けば、エンジン（`tools/schedule_engine.py`）が時間軸に合わせて位置を計算するので、HTML と PPTX のどちらでも矢羽根の始点・終点が軸とズレない。PPTX では矢羽根＝ホームベース／山形、節目＝ひし形、見出し＝四角形のネイティブ図形で描き、文字も図形に直接入れるため、PowerPoint 上で1本ずつ選んで文言・色・長さを直せる（図全体は1つのグループ。ダブルクリックで中の図形を編集できる）。
-
-- **時間軸**: `timeline`（`unit` は `month`＝"YYYY-MM"〜"YYYY-MM" / `week`＝"YYYY-MM-DD"〜"YYYY-MM-DD"、列見出しは自動で「9月」「10/5」形式）か、`columns`（列見出しの配列を直接指定）のどちらかが必須。両方書くと `columns` が見出しの表示文字列として使われる（数は timeline の列数と一致させる）。
-- **位置の書き方**（`bars[].start` / `end`、`milestones[].at`、`today`）: `"YYYY-MM-DD"`（timeline 指定時。日単位で按分）/ `"YYYY-MM"`（start は月初、end は月末）/ 列見出しの文字列（例 `"10月"`。start は列の左端、end は列の右端）/ 数値（列単位。0 が先頭列の左端）。時間軸の範囲外・`end` が `start` 以前はビルドエラー。
-- **行 `rows[]`**: `label`（必須推奨）/ `sub`（担当など小さく2段目）/ `group`（連続する同じ値を左端の縦帯にまとめる）/ `bars[]` / `milestones[]`。節目は専用の行（例「マイルストーン」）に置くのを推奨（近いラベルは自動で段をずらし、行の高さも自動で確保する）。
-- **矢羽根 `bars[]`**: `{ start, end, label, variant, shape, label_pos }`。`variant`: `main`（既定・primary 塗り）/ `accent`（accent 塗り）/ `muted`（muted 塗り）/ `prep`（淡色＋枠）/ `ongoing`（白地＋枠）/ `tbd`（白地＋破線枠＝要調整・未確定）。`shape`: `arrow`（既定・ホームベース）/ `chevron`（山形）/ `bar`（四角）。ラベルが矢羽根に収まらないと文字を縮め、それでも入らなければ `bar-label-overflow` 警告（`"label_pos": "after"` で矢羽根の右に出せる）。同じ行で期間が重なると `bar-overlap` 警告。
-- **節目 `milestones[]`**: `{ at, label }`。ひし形＋下にラベル。
-- **`periods[]`**: `{ label, span }`（span＝列数）。四半期・年度などの大見出し。境界の縦罫線は太線になる。
-- **`today`**: 現在線（縦の破線）。日付で書くと凡例に「現在（10/5）」と自動表示。
-- **凡例**: 既定で図の下に1行（使われた variant ＋ 節目 ＋ 現在線だけ）。`legend: false` で非表示、`legend_labels`（キーは variant 名・`milestone`・`today`）で文言を変更。収まらなければ文字を縮めてから自動で折り返す（`legend-wrapped` note）。`note` は凡例行の右端に出る注記。
-- **行の高さ**: 図の高さ（lead があれば `chart.y/h`、無ければ `chart.y_no_lead/h_no_lead` で上に詰める）から自動で等分し、`min_row_h`〜`max_row_h` に収める。行が多く `min_row_h` を下回ると `too-dense` 警告（目安 14 行以下）。行が低いと行見出しの文字も比例して縮む。
-- **主な `style.chart` トークン**: `label_w`（行見出し欄の幅、既定 250）/ `group_w` / `period_h` / `col_h` / `min_row_h` / `max_row_h` / `bar_hr`（行高に対する矢羽根の高さ比）/ `bar_max_h` / `bar_head`（矢頭の深さ上限 px）/ `bar_gap` / `<variant>_fill` / `<variant>_border` / `<variant>_color` / `period_fill` / `col_fill` / `group_fill` / `row_alt_fill` / `grid_color` / `milestone_fill` / `today_color` / 各 `*_size`。
-
-診断は `check_diagram.py` で確認できる（スキーマ的な誤りはビルドエラー、文字あふれ・重なりは警告）。
-
-### 提案書向けタイプ共通（`summary` / `reasons` / `statement` / `row_matrix` / `org` / `house` / `cycle` / `kpi_tree`）
-
-提案書・報告書の定型ページを、人が作った提案書と同じ型で描くタイプ。レイアウトは `tools/proposal_engine.py` が計算し、HTML と PPTX の両方でネイティブ図形（PowerPoint では四角・矢羽根・線を1つずつ編集できる）になる。文字の大きさはテーマのフォントの実測字幅で行数を見積もり、枠に収まる最大のサイズを自動で選ぶ。`statement` 以外はタイトル・罫線・リード・フッターを持ち、本文は `body` 領域（lead が無ければ `y_no_lead` まで上に詰める）に描く。色・寸法は `style.body.<トークン>` で上書きできる（トークン名は `templates/layouts/default.json` の各タイプの `body`）。
+### 結論の帯と出典（`conclusion` / `source`）
 
 **共通パーツ**（`title` / `section` / `quote` / `closing` / `canvas` / `statement` 以外の全タイプで使える）:
-- `conclusion`: 本文の下に結論の帯（`primary` 塗り・白抜き太字・中央揃え）を付ける。帯の分だけ本文の領域が上に詰まる（既存タイプでは本文の領域の高さを、`table` では行の高さを自動で詰める）。見た目は `style.conclusion`（`h` / `gap` / `size` / `fill` / `color`）
-- `source`: 本文の下に出典の行（12px・`muted`）を付ける。試算値は「試算の前提: …」と書く。見た目は `style.source`
-
-### `summary` — 要旨（番号の箱＋要点＋説明の行）
-```json
-{ "type": "summary", "title": "ご提案の背景と要旨", "lead": "（任意）",
-  "items": [ { "lead": "背景｜…", "text": "説明" }, { "lead": "課題｜…", "text": "…" } ],
-  "source": "（任意）出典", "conclusion": "（任意）結論の帯" }
-```
-提案書の冒頭で結論と骨子を示す。各行は左に番号の箱（`primary`）、右に要点（太字）と説明。行の高さはすべて同じ。目安: **3〜6行**（7行以上は警告）。`items` に文字列だけを並べると要点だけの行になる。
-
-### `reasons` — 選ばれる理由（課題 × 強みの対応）
-```json
-{ "type": "reasons", "title": "アクセンチュアが選ばれる理由",
-  "left_heading": "貴社の課題", "right_heading": "選ばれる理由",
-  "issues":    [ { "title": "判断材料が少ない", "text": "新機能で事例がない" } ],
-  "strengths": [ { "title": "一次情報を読み解き…", "text": "（任意）", "items": ["根拠1", "根拠2"], "label": "a" } ] }
-```
-左に相手の課題（番号付き）、右に自社の強み（`label` 省略時は a/b/c…）を同じ行に並べ、間を灰色の三角でつなぐ。`issues` と `strengths` は同じ順で対応させる。目安: **3行前後**（6行以上は警告）。
-
-### `statement` — 言い切り（濃色の面に大きな一文）
-```json
-{ "type": "statement", "kicker": "本提案の結論", "message": "Modsは、統制を先に固めた組織だけが、安全に増やせる",
-  "support": "（任意）補足の一文" }
-```
-物語の転換点に置く全面ページ（タイトル・罫線・フッターなし）。`message`（無ければ `title`）を大きく、`kicker` を上に小さく、`support` を下に置く。長い一文は自動で文字を縮める。デッキに2〜3枚までが目安。領域: `background`（`fill`）/ `kicker` / `message` / `support`。
-
-### `row_matrix` — 行見出し × 列の整理表
-```json
-{ "type": "row_matrix", "title": "フェーズ別の実施事項", "header_style": "arrow",
-  "corner": "（任意）左上の見出し", "columns": ["Phase 0", "Phase 1", "Phase 2"], "col_ratios": [1, 1, 1],
-  "emph_col": 0,
-  "rows": [ { "label": "統制", "cells": [ ["現状の棚卸し", "管理設定の設計"], "文字列も可", { "text": "本文", "items": ["箇条書き"] } ] } ] }
-```
-左の行見出しの帯と上の列見出しで、観点×対象（機会とリスク、工程×領域、前提・参考資料など）を整理する。セルは文字列・箇条書きの配列・`{text, items}` のいずれか。`header_style: "arrow"` で列見出しを工程の矢羽根（五方向）にする。`emph_col`（0 始まり）で主張する列を淡い色で塗る。`columns` を省略（または `[""]`）すると、行見出し＋1列の一覧（前提条件・参考資料など）になる。行の高さは中身に合わせて配分し、余りは均等に足す。目安: **6行以内**。
-
-### `org` — 体制図（左右の組織ツリー＋提案範囲）
-```json
-{ "type": "org", "title": "推進体制", "legend": "(F) フルタイム　(P) パートタイム",
-  "left":  { "title": "貴社", "nodes": [ { "id": "po", "title": "プロジェクトオーナー", "name": "開発本部長" },
-                                        { "id": "pm", "parent": "po", "title": "貴社PM", "name": "開発基盤部" } ] },
-  "right": { "title": "アクセンチュア", "scope": "ご支援範囲",
-             "nodes": [ { "id": "apm", "title": "プロジェクトマネージャー", "name": "1名 (F)", "members": "（任意）" } ] },
-  "links": [ { "from": "po", "to": "apm", "label": "ステアリング" } ] }
-```
-左右（片方だけでも可）に組織のツリーを描く。ノードは `id` と `parent`（同じ側の親の id）で親子を表し、見出し帯（左は `muted`、右は `primary`）＋本文（`name` / `members`）の箱になる。親子はカギ線で結ぶ。`scope` を書いた側は破線の枠で囲み、文字列なら札（既定「ご支援範囲」）を付ける。`links` は組織をまたぐ連携（点線＋ラベル）。id の重複・存在しない parent / links はビルドエラー。目安: 各側 **3階層・1段4ノード以内**。
+- `conclusion`: 本文の下に結論の帯（`primary` 塗り・白抜き太字・中央揃え）を付ける。帯の分だけ本文の領域が上に詰まる（既存タイプでは本文の領域の高さを、`table` では行の高さを自動で詰める）。結論の文字は 17px から 13px まで縮み、入らなければ帯が最大 72px まで高くなる。見た目は `style.conclusion`（`h` / `gap` / `size` / `min_size` / `max_h` / `fill` / `color`）
+- `source`: 本文の下に出典の行（12px・`muted`）を付ける。試算値は「試算の前提: …」と書く。2 行以上になると本文を狭めて高さを確保する。見た目は `style.source`
 
 ### アイコン（`icon`）
-提案書向けタイプと `cards` の項目には `icon` を書ける。値は同梱アイコンの名前（例 `"shield-check"`）か概念語（例 `"セキュリティ"` / `"q:統制 安全"`）で、概念語なら最も近いアイコンが選ばれる（似た概念は同じ絵を使い回す）。アイコンは Tabler Icons（MIT License、`templates/icons/LICENSE-tabler.txt`）から定番の約70点だけを同梱しており、HTML でも PPTX でも線だけのネイティブ図形になる（PowerPoint で色・太さを変えられる）。合うアイコンが無い指定はビルド時に警告する。
-- 置ける場所: `summary` の `items[].icon`（帯の左）/ `reasons` の `strengths[].icon`（強みの記号の右）/ `house` の `pillars[].icon`（柱の見出しの左）/ `cycle` の `stages[].icon`（パネルの右上）/ `cards` の `cards[].icon`（カードの右上）
-- 一覧と検索: `python tools/icon_engine.py --list`、`python tools/icon_engine.py "コスト削減"`、一覧画像は `--sheet icons.png`
-- アイコンは脇役として小さく（22〜28px）置く。アイコンだけで中身を語らせない
 
-### `house` — 全体像（屋根・柱・土台）
-```json
-{ "type": "house", "title": "ご提案の全体像",
-  "roof": { "title": "目指す姿｜安全に増やせるmod基盤", "text": "（任意）補足" },
-  "pillars": [ { "title": "① 統制", "items": ["入口を絞る", "成果物: 方針書"] }, { "title": "② 構築", "text": "本文でも可" } ],
-  "foundations": [ { "title": "土台", "text": "管理設定の配布" }, "文字列も可" ] }
-```
-屋根（台形の帯に目指す姿）、柱（見出し帯＋箇条書きの列）、土台（全幅の帯。最後が一番下）で提案の全体像を示す。柱の文字は収まる大きさに自動で縮む。目安: **柱3〜4本**（6本以上は警告）。
+提案書向けタイプ（`summary` / `reasons` / `house` / `cycle`）と `cards` の項目には `icon`（同梱アイコンの名前か概念語。例 `"セキュリティ"`）を書ける。HTML でも PPTX でも線だけのネイティブ図形になる。小さく（22〜28px）脇役として使い、並列・循環・全体像のページに絞る（`steps` や表・見積・スケジュールには入れない）。置ける場所・検索コマンド・ライセンスは [schema/proposal.md](schema/proposal.md) の「アイコン（`icon`）」。
 
-### `cycle` — 循環（中央の円＋円弧の矢印＋段のパネル）
-```json
-{ "type": "cycle", "title": "定着の仕組み", "center": "毎月",
-  "stages": [ { "title": "計測", "items": ["使用状況", "失敗"] }, { "title": "改善", "text": "本文でも可" }, { "title": "審査" }, { "title": "配布" } ] }
-```
-中央に円弧の矢印の輪（番号丸つき）、左右に段のパネルを置く。右列が前半（上から）、左列が後半（下から）で、時計回りに読める。`center` は輪の中央の文字（任意）。目安: **3〜6段**（2段以下はビルドエラー、7段以上は警告）。
+## 検証
 
-### `kpi_tree` — KPI ツリー（目標 → 方向性 → KPI＋目標値＋測り方）
-```json
-{ "type": "kpi_tree", "title": "期待する効果とKPI", "root": "mod基盤の価値",
-  "headers": ["目標", "施策の方向性", "KPIと目標値", "", "測り方・具体例"],
-  "branches": [ { "title": "止める（統制）", "kpis": [ { "title": "未承認modの稼働を無くす", "value": "0台", "note": "月次で棚卸し" } ] } ] }
-```
-左の目標から施策の方向性へ、方向性から KPI の行へカギ線でつなぎ、各 KPI に目標値（大きな数字）と測り方を添える。`headers` は列の見出し（4つ目は目標値の列で通常は空）。`note` の代わりに `items`（箇条書き）も可。目安: **KPI 6行以内**。
-
-### `diagram_legend` — 図解タイプの凡例ページ
-```json
-{ "type": "diagram_legend", "eyebrow": "SYSTEM — 凡例", "title": "システム構成図の記号",
-  "lead": "アイコンは役割、色は強調、矢印の線種は接続の性質を表す。",
-  "items": [
-    [{"icon": "backend"},     "バックエンド", "API・アプリケーションサーバ"],
-    [{"node": "emphasis"},    "主要ノード",   "強調色＝主経路の中心"],
-    [{"kind": "decision"},    "分岐",         "条件による分岐（ひし形）"],
-    [{"edge": "default"},     "実線矢印",     "同期の呼び出し・主なデータの流れ"],
-    [{"edge": "dashed"},      "破線矢印",     "非同期・任意・補助的な経路"],
-    [{"edge": "return"},      "戻り矢印",     "開いた破線矢印＝応答・戻り値"]
-  ] }
-```
-`architecture` / `dataflow` / `lifecycle` / `sequence` の記号を、swimlane の凡例ページと同じ「記号＋名前＋説明」の2カラム表で見せる専用タイプ。**記号は実図と同じ描画関数（`_node_visual` / `_edge_visual`）で描く**ので凡例と本体の見た目が必ず一致する。
-
-**自動挿入（推奨）**: 図解スライド（`architecture` / `dataflow` / `lifecycle` / `sequence`）に **`"legend_page": true`** を付けると、そのスライドの直前に `diagram_legend` ページが自動挿入される（swimlane の `legend` と同じ仕組み。ただし**既定はオフ**で、付けたスライドにだけ着く）。`items` は**そのスライドで実際に使われている** `type` / `variant` / `kind` / エッジの種類だけから自動生成されるので、図に出てこない記号は載らない。オプション: `legend_title`（凡例の見出し）/ `legend_eyebrow`（既定はスライドの `eyebrow` に「 — 凡例」を付けたもの）/ `legend_lead`（説明文）/ `legend_items`（自動生成を使わず内容を明示。形式は下記）。`icon_style:"aws"` などアイコン関連の `style.diagram` トークンは凡例に自動で引き継がれる。
-
-`diagram_legend` を直接スライドとして書けば、任意の位置・内容の凡例ページも作れる。その場合は次の `items` を指定する。
-
-`items` は `[サンプル, ラベル, 説明]` の配列。**サンプルはキー1つの辞書**で、種類は次の4つ:
-
-| サンプル | 描くもの |
-|---|---|
-| `{"icon": "<type>"}` | ノードカード＋type アイコン（`frontend` / `backend` / `database` / `cloud` / `security` / `messagebus` / `external`） |
-| `{"node": "<variant>"}` | variant の色見本ボックス（`emphasis` / `security` / `dashed` / `muted`） |
-| `{"kind": "<kind>"}` | lifecycle の状態記号（`start` / `active` / `waiting` / `decision` / `success` / `failure` / `neutral` / `external`。形とグリフ付き） |
-| `{"edge": "<variant>"}` | 矢印1本（`default`＝実線 / `emphasis`＝太線 / `security`＝鎖線 / `dashed`＝破線 / `return`＝開いた破線の戻り矢印） |
-
-領域は `area`（2カラムのグリッド。`cols` / `col_gap` / `row_h` / `sym_w` / `label_size` / `desc_size`）と `diagram`（記号の色トークン。`architecture` と同じ語彙＋lifecycle の kind トークン）。色を変えるときは `meta.theme` の切替か `style.diagram.*` で行う。
-
-### `canvas` — 座標指定の自由配置（既存 PPTX の取り込み専用）
-
-テーマのタイトル・罫線・フッターを付けず、1280×720 の座標に図形・文字・表を直接置く。用途は、既存の PowerPoint 資料を**見た目を崩さず** HTML 化すること（矢羽根付きのガントチャートやスイムレーン図など、他のタイプに当てはまらない自由配置の図）に限る。**`tools/pptx_import.py` で生成するもので、新規スライドを canvas で手書きしない**（テーマ切替・共通パーツ・自動レイアウトが効かないため。新規の図解・スケジュールは `architecture` / `schedule` 等を使う）。元 PPTX のマスター上の図形は各スライドの `elements` に展開される。
-
-```json
-{ "type": "canvas", "title": "全体スケジュール", "background": "#FFFFFF", "notes": "（任意）",
-  "elements": [
-    { "x": 280, "y": 280, "w": 51, "h": 21, "geom": "homePlate", "adj": {"adj": 13400},
-      "fill": "#FFFFFF", "line": {"color": "#7F7F7F", "width": 0.75},
-      "text": {"insets": [0, 0, 0, 0], "anchor": "ctr",
-               "paragraphs": [{"align": "ctr", "runs": [{"text": "CRP", "size": 9.33, "color": "#000000", "font": ["Meiryo UI"]}]}]} },
-    { "x": 68, "y": 262, "w": 1153, "h": 0, "geom": "line", "line": {"color": "#919191", "width": 0.75, "dash": "dash"} },
-    { "kind": "table", "x": 40, "y": 250, "w": 1180, "h": 400, "cols": [200, 160], "rows": [ {"h": 40, "cells": [ ... ]} ] },
-    { "kind": "svg", "x": 446, "y": 362, "w": 40, "h": 38, "svg": "<svg ...>…</svg>", "alt": "繰り返し" },
-    { "kind": "placeholder", "x": 128, "y": 0, "w": 528, "h": 321, "label": "画像（スクリーンショット）" }
-  ] }
-```
-
-- 単位はすべて px（文字サイズも px。pt × 4/3）。要素は配列の順に重なる（後ろほど手前）
-- `background` は `#RRGGBB`。色は `"#RRGGBB"` か `{"color": "#RRGGBB", "alpha": 0.5}`（テーマトークンは使わない＝元資料の色をそのまま持つ）。色・`anchor` / `align` / `dash` / `cap` / 矢じりの値・フォント名・パス命令はビルド時に検証され、規定外の値はエラーになる
-- PPTX に出力すると図形・線・表は PowerPoint ネイティブの図形になり、1つずつ編集できる（`svg` / `backdrop` は画像、`group` は解除して子要素を個別に配置）
-
-| kind | 内容 |
-|---|---|
-| `shape`（既定） | 図形。`geom` は `rect`（既定）/ `roundRect` / `ellipse` / `triangle` / `homePlate`（矢羽根）/ `chevron` / `flowChartDecision` / `flowChartMerge` / `flowChartDocument` / `can` / `flowChartMagneticDisk` / `borderCallout1` / `borderCallout2` / 線（`line` / `straightConnector1` / `bentConnector2`〜`5`）/ `custom`（`path` に `{"cmds": [["M",x,y],["L",x,y],["C",…],["Z"]], "fill": bool, "stroke": bool}` の配列）。`adj` は PowerPoint の調整値（`{"adj": 13400}` 等）。`rot`（度）/ `flipH` / `flipV` / `shadow`（`{dx, dy, blur, color}`）も可 |
-| `table` | 表。`cols`（列幅 px）と `rows`（`{"h", "cells"}`）。セルは `paragraphs` / `fill` / `pad`（[左,上,右,下]）/ `anchor`（`t`/`ctr`/`b`）/ `borders`（`l`/`r`/`t`/`b` に線指定）/ `span` / `rowspan` / `merged`（結合で隠れるセル。`"h"` か `"v"`）/ `vert`（縦書き）/ `nowrap`（折り返さない）/ `clip`（はみ出しを隠す） |
-| `svg` | ベクターアイコン（インライン SVG。要素・属性とも許可リスト方式で浄化され、`script` / `foreignObject` / イベント属性 / 外部参照（`#` 以外の href・`url()`）は除去される。DOCTYPE を含むものや解析できないものはエラー。id は衝突しないよう自動で接頭辞が付く）。PPTX では PNG 化して貼る |
-| `backdrop` | 全面背景の写真の近似（`grid`: `{"cols", "rows", "colors": [...]}` の色格子をぼかして描く。画像は埋め込まない） |
-| `placeholder` | 埋め込まない画像の代わりの枠（`label` を中央に表示） |
-| `group` | 回転したグループ（`rot` / `origin`: [cx, cy] / `children`） |
-
-- `fill` は色のほか `{"gradient": {"angle": 90, "stops": [[0, "#…"], [100, "#…"]]}}` / `{"pattern": "ltDnDiag", "fg": "#…", "bg": "#…"}`
-- `line` は `{"color", "width", "dash"（dash/sysDash/sysDot/lgDash…）, "cap", "head"/"tail": {"type": "triangle|arrow|stealth|oval|diamond", "w", "len"}}`
-- `text` は `{"insets": [左,上,右,下], "anchor", "anchorCtr", "wrap": false（折り返しなし）, "vert": true（縦書き）, "rot", "paragraphs": [...]}`。文字は図形ごとの文字領域（楕円なら内接矩形、ひし形なら中央の半分など PowerPoint と同じ）に置かれる
-- 段落は `{"align": "l|ctr|r|just", "lineHeight": 1.0（行間100%の倍率）| "lineHeightPx", "spaceBefore", "spaceAfter", "marL", "indent", "bullet": {"char", "color", "size", "font"}, "runs": [...]}`。ランは `{"text", "size", "bold", "italic", "underline", "strike", "baseline", "color", "highlight", "font": ["Arial", "Meiryo UI"]}` か改行 `{"br": true}`
-
-**取り込み手順**（既存 PPTX → canvas デッキ）:
-```bash
-python tools/pptx_import.py <src.pptx> --into <deck_dir> [--title "…"] [--slides 1 5]
-# ↑ deck.json が既にあると書き込まずに終了する（丸ごと置き換えになるため）。承認後に --confirm を付けて再実行（元は deck.json.bak に退避）
-python tools/build_deck.py <deck_dir> --html
-python tools/preview_deck.py <deck_dir>
-pwsh tools/export_pptx_png.ps1 -Src <src.pptx> -OutDir <deck_dir>/_work/ref   # Windows + PowerPoint で元資料を画像化
-python tools/compare_ref.py <deck_dir> <deck_dir>/_work/ref                  # 上=元・下=HTML の比較画像と差分スコア
-python tools/check_layout.py <deck_dir>                                       # 見切れ・スライド外へのはみ出し
-```
-- ラスタ画像（スクリーンショット等）は埋め込まず `placeholder` にする。SVG アイコンはベクターのまま、全面背景の写真は `backdrop` で近似、埋め込み Excel はブックの表示範囲（`oleSize`）を表にする（`openpyxl` が必要。範囲が 300行 × 60列・6000セルを超える場合は枠になる）
-- `check_layout.py` は canvas では「見切れ（clip）」「スライド外へのはみ出し（bleed）」だけを判定する（重なり等は元資料の配置そのものなので判定しない）
-
-## 検証（ビルド時にチェックされる内容）
-
-`build_deck.py` はビルド前に deck.json 全体を検証する。**エラー（`error:`）はビルドを停止**し、**警告（`warning:`）はビルドを続けたまま報告**する。メッセージには可能な限り「N枚目（type=xxx）」が含まれるので、報告されたスライド番号から修正箇所を特定できる。
-
-### エラー（ビルド停止）になる条件
-- スライドに `type` が無い、または未知の `type`
-- `color` / `fill` / `*_color` / `*_fill` / `marker_color` / `row_fills` の値、bullets 項目の `color` が「テーマ colors のキー」でも「`#RRGGBB` / `#RGB`」でもない（typo 検出。例: `primry` → 「テーマトークン名か #RRGGBB を指定してください」）
-- `meta.layout_overrides` のトップキーが未知の `type`
-- `table` の各行のセル数が `columns` 数と不一致、`col_widths` の長さが `columns` 数と不一致
-- `image` / `image_text` の `path` が未指定、デッキフォルダの外を指す、存在しない、対応外の拡張子
-- `swimlane` の `node.id` 重複、`edges` の `from`/`to` が未知 `id`、`lanes` が空、`legend_items` の各要素が4要素配列にも受理される辞書形式にも該当しない
-- `architecture` / `dataflow` / `lifecycle` / `sequence`: ノード（`states`/`participants`）の `id` 重複・欠落、`edges`（`transitions`/`messages`）の `from`/`to` が未知 `id`、`row`/`col` が0以上の整数でない、同じ `(row, col)` の重複、`nodes`/`states` が空、`sequence` の `messages[].id` 重複
-- `meta.id` に `\ / : * ? " < > |` や制御文字を含む
-
-### 警告（ビルドは続行）になる条件
-- `meta.layout_overrides[type]` や `slides[i].style` のトップキー（領域名）が、そのタイプの既定領域に無い（typo の可能性。候補が提示される。例:「'boddy' は bullets の領域名ではありません（候補: body）」）
-- `matrix` の `quadrants` が4個以外
-- `swimlane` のノードの `col` が `cols` 以上（自動拡張される）
-- `architecture` / `dataflow` / `lifecycle` / `sequence` の**配線・ラベル・文字量などの幾何診断**（`too-dense` / `label-collision` / `edge-through-node` / `group-leak` / `out-of-grid` / `node-text-overflow` など）はビルドを止めず警告として報告される。詳しくは次項「図解タイプの診断」を参照
-- タイトル・リード文・箇条書き本文・表などが**枠の高さを超える見込み**（文字あふれの推定）。「N枚目（type）: body が枠の高さを約 X px 超える見込み。項目を減らすか style.body.size を下げてください」のように表示される
-- `meta.id` がフォルダ名と異なる（省略時はこの警告は出ない）
-
-文字あふれの推定は、テーマのフォント（`fonts.body` / 見出しは `fonts.heading`）のフォントファイルを Pillow で実測した字幅で行う（英単語は途中で切らない・行頭禁則文字は前の行に残す、という描画側の挙動に寄せて折り返す）。Pillow かフォントファイルが見つからない環境では、全角 1.0 / 半角 0.55 の近似になる。
-
-ビルドとは別に、`lint_deck_text.py`（文言・構成・日付の整合）と `check_visual.py`（プレビュー画像の下1/3の空白・似たスライドの連続）も警告を出す。
-
-警告が出たら無視せず、内容に沿って `style` を調整するか項目数を減らして再ビルドする（`create-deck` スキルの手順4、または `review-deck` スキルでまとめて確認できる）。
-
-### 図解タイプの診断（`check_diagram.py`）
-
-`architecture` / `dataflow` / `lifecycle` / `sequence` / `swimlane` の配線・ラベル・密度は、専用 CLI で deck.json だけを読んでビルドせずに診断できる（Playwright / python-pptx 不要）:
-
-```bash
-python "$TOOLS/check_diagram.py" <deck_dir>                 # テキスト報告
-python "$TOOLS/check_diagram.py" <deck_dir> --json out.json # JSON 出力（code / subject / evidence / fixes）
-python "$TOOLS/check_diagram.py" <deck_dir> --strict        # warning も不合格にする
-python "$TOOLS/check_diagram.py" <deck_dir> --slides 3 7    # 対象スライド番号（deck.json 内、1始まり）を絞る
-```
-
-**exit 1 になるのは診断に error が1件でもあるとき**（`--strict` を付けると warning も含める）。ここが `build_deck.py` と異なる点として、`edge-through-node` や `node-text-overflow` は診断としては error 相当でも、`build_deck.py` の通常ビルドは（見た目が崩れているだけで座標計算自体は破綻していないため）止めずに警告として報告する。**「`check_diagram.py` は error と言うのにビルドは通る」のはこの理由による意図した挙動**で、矢印の向きやラベルの意味の正しさまでは診断できないので、`check_diagram.py` を通したうえで `preview_deck.py` の目視確認も行う。
-
-修理ループの進め方は `references/diagram-guide.md` の「修理ループ」を参照。
-
-| code | level | 内容 | fixes の例 |
-|---|---|---|---|
-| `duplicate-id` | error | ノード/状態/メッセージの `id` が重複 | id を一意にする |
-| `missing-id` | error | ノードに `id` が無い | 一意な id（英数字）を付ける |
-| `empty` | error | `nodes`/`states`/`lanes` が空 | 1個以上書く |
-| `cell-collision` | error | 同じ `(row, col)` に2ノード | どちらかの `row`/`col` を変える |
-| `invalid-position` | error | `row`/`col` が0以上の整数でない、`lane` が `lanes` の範囲外 | 整数にする／`lanes` に行を追加する |
-| `unknown-endpoint` | error（`edges`/`groups`/`messages` の参照）／warning（`activations`/`segments`） | `from`/`to`/`nodes` が存在しない `id` を指す | 存在する `id` を指定する |
-| `invalid-group` | error | `groups[]` の要素がオブジェクトでない | オブジェクトにする |
-| `edge-through-node` | error（`check_diagram.py`）／ビルドは warning 扱い | エッジが無関係なノードを横切る | `via` を指定する／`row`/`col` を変える／`from_side`/`to_side` を指定する |
-| `node-text-overflow` | error または warning（あふれ量による。`check_diagram.py`）／ビルドは warning 扱い | `label`/`sublabel` が箱に収まらない | `label` を短くする／`cols`/`rows` を減らす／`node_size` を下げる |
-| `label-collision` | warning | ラベルが他要素と重なる | `label_at` を指定する／`row`/`col` を離す／文言を短くする |
-| `crossings` | warning（2箇所以上）／info（1箇所） | エッジ同士が交差する | `row`/`col` を入れ替える／戻りの線を `from_side`/`to_side` で外側に回す |
-| `edge-overlap` | warning | 無関係なエッジが同じ線上で重なる | 片方に `via` を指定する／`row`/`col` をずらす |
-| `too-dense` | warning | ノード>12／列>6／メッセージ>12／参加者>7 | 要素を減らす／2枚に分ける |
-| `group-leak` | warning | `groups` の範囲内に非メンバーが混入 | メンバーの `row`/`col` を隣接させる／範囲外へ動かす |
-| `out-of-grid` | warning | `cols`/`rows` を超える `row`/`col` があり自動拡張された | `cols`/`rows` を明示する |
-| `short-segment` | info | 8px未満の短いセグメント | `row`/`col` の間隔を広げる／`via` で単純化する |
-| `unknown-key` | warning | 未知のフィールド名（typo の可能性。候補が提示される） | `deck-schema.md` の該当タイプのキー名に直す |
-| `unknown-type` | warning | ノードの `type` が未対応 | 近い `type` に直す（不明なら省略して `generic`） |
-| `unknown-variant` | warning | `variant` が未対応 | `default`/`emphasis`/`security`/`dashed`/`muted` のいずれかにする |
-| `unknown-kind` | warning | lifecycle の `kind` が未対応 | 近い `kind` に直す |
-| `style-conflict` | warning | `edges` の `style` と `variant` が矛盾 | `variant` だけを書く |
-| `side-ignored` | warning | 指定した `from_side`/`to_side` では他ノードを避けられず無視された | 指定を外す／別の辺にする |
-| `invalid-side` | warning | `from_side`/`to_side` の値が不正 | `left`/`right`/`top`/`bottom` のいずれかにする |
-| `invalid-via` | warning | `via` の形式が不正 | `[[x, y], ...]` の形にする |
-| `missing-label` | warning | ノード/メッセージに `label` が無い | 表示名・やり取りの内容を `label` に書く |
-| `empty-group` | warning | `groups[].nodes` が空 | ノード id を1個以上書く |
+ビルド時のエラー（停止）と警告（続行）の条件は [schema/validation.md](schema/validation.md)。自動フィットの警告の直し方は [schema/autofit.md](schema/autofit.md)。図解タイプの配線・ラベルの診断コードは [schema/diagram.md](schema/diagram.md) の「図解タイプの診断」。
 
 ## 文字量・要素量の目安
+
+文字量・要素量の目安はこの 1 つの表に集めた（各タイプのファイルにも、説明つきで同じ目安が書いてある）。`meta.density` を変えると上限が変わる（`talk` は少なめ、`read` は多め。目安は `lint_deck_text.py` も密度で切り替える）。以下は `standard` の値。
 
 | タイプ | 目安 |
 |---|---|
 | `title` の `title` | 25字以内 |
 | `lead` | 60字以内 |
 | `bullets` の項目数 | 3〜6項目、1項目40字以内 |
-| `table` の行数 | 6行以内 |
+| `table` の行数 | 6行以内（7行以上・5列以上は `meta.density: "read"` か 2 枚に分ける） |
 | `cards` の枚数 | 3〜6枚（列数は3前後） |
 | `steps` | 3〜5ステップ |
 | `matrix` の `quadrants` | 必ず4個 |
@@ -713,34 +210,53 @@ python "$TOOLS/check_diagram.py" <deck_dir> --slides 3 7    # 対象スライド
 | `sequence` の参加者 | 7人以下 |
 | `sequence` のメッセージ数 | 12本以下 |
 | 図解タイプのエッジ `label` | 全角8〜12字程度 |
+| `status_table` の行数 | 1枚3行程度 |
+| `agenda` の項目数 | 1段8行まで（9〜16項目は自動で2段、17項目以上は次ページへ繰り越し） |
+| `lifecycle` のレーン | 3〜4本程度 |
+| `schedule` の行数 | 14行以下 |
+| `summary` の行数 | 3〜6行（7行以上は警告） |
+| `reasons` の行数 | 3行前後（6行以上は警告） |
+| `row_matrix` の行数 | 6行以内 |
+| `org` | 各側3階層・1段4ノード以内 |
+| `house` の柱 | 3〜4本（6本以上は警告） |
+| `cycle` の段 | 3〜6段（2段以下はビルドエラー、7段以上は警告） |
+| `kpi_tree` の KPI | 6行以内 |
+| `statement` | デッキに2〜3枚まで |
+| `kpi` の `items` | 1〜4件（5件以上は警告） |
+| `chart` | 縦棒 12 項目以内・横棒 15 項目以内・系列 5 本まで（超えると警告） |
+| `pattern` | パターンごとの個数（`min` / `max`。超えた分は描かれない）。`pattern_engine.py show <名前>` で見る |
+| `composite` のブロック | 2〜4 個（1 個・7 個以上は警告）。1 ブロックの文章は 3〜4 行まで |
+| `split` | パネルの `items` は 3 つまで、`title` は 30 字以内。本文のブロックは 1〜2 個 |
+| `cards` の `emphasis` | 強調は 1〜2 枚まで（3 枚以上は警告）。主役のページ（`variant` / `background` / `split`）はデッキに数枚まで |
 
-超える場合はスライドを分ける、`two_column`/`cards` などの別タイプに分割する、または `style` でフォントサイズ・行間を調整する。目安を超えても即エラーにはならないが、`check_layout.py` / ビルド時の文字あふれ警告で検出されやすくなる。
+超える場合はスライドを分ける、`two_column`/`cards` などの別タイプに分割する、`meta.density` を変える。目安を超えても即エラーにはならないが、自動フィットが文字を縮め、下限でも収まらなければ警告になる。`check_layout.py` でも検出される。
 
 ## ビルドとプレビュー
 
 ```bash
-# <deck_dir> は deck.json があるフォルダ。$TOOLS はビルダーの場所:
-#   プラグイン利用時: "${CLAUDE_PLUGIN_ROOT}/tools" / このリポジトリ内: plugins/slide-deck/tools
-python "$TOOLS/build_deck.py" <deck_dir>            # HTML + PPTX
-python "$TOOLS/build_deck.py" <deck_dir> --html      # HTML のみ（高速）
-python "$TOOLS/preview_deck.py" <deck_dir> 5         # 5枚目だけPNG化して目視確認
-python "$TOOLS/preview_deck.py" <deck_dir>           # 全スライドPNG化
-python "$TOOLS/check_layout.py" <deck_dir>           # 構造チェック（はみ出し・重なり）
-python "$TOOLS/lint_deck_text.py" <deck_dir>         # 文言チェック
-python "$TOOLS/export_pdf.py" <deck_dir>             # PDF書き出し（要 LibreOffice）
+# <deck_dir> は deck.json があるフォルダ（${CLAUDE_PLUGIN_ROOT} の意味は冒頭「パスの書き方」を参照）
+python "${CLAUDE_PLUGIN_ROOT}/tools/build_deck.py" <deck_dir>            # HTML + PPTX（PPTX は保存直後に自動検証される）
+python "${CLAUDE_PLUGIN_ROOT}/tools/build_deck.py" <deck_dir> --html      # HTML のみ（高速）
+python "${CLAUDE_PLUGIN_ROOT}/tools/preview_deck.py" <deck_dir> 5         # 5枚目だけPNG化して目視確認
+python "${CLAUDE_PLUGIN_ROOT}/tools/preview_deck.py" <deck_dir>           # 全スライドPNG化
+python "${CLAUDE_PLUGIN_ROOT}/tools/check_layout.py" <deck_dir>           # 構造チェック（はみ出し・重なり・小さい文字・コントラストなど）
+python "${CLAUDE_PLUGIN_ROOT}/tools/check_visual.py" <deck_dir>           # 見た目チェック（空白帯・似たスライドの連続）
+python "${CLAUDE_PLUGIN_ROOT}/tools/lint_deck_text.py" <deck_dir>         # 文言チェック（【要確認】の一覧を含む）
+python "${CLAUDE_PLUGIN_ROOT}/tools/verify_pptx.py" <deck_dir>/build/<id>.pptx   # PPTX の構造検証（zip 整合・ノート無し・文書プロパティ）
+python "${CLAUDE_PLUGIN_ROOT}/tools/export_pdf.py" <deck_dir>             # PDF書き出し（要 LibreOffice）
 ```
-`preview_deck.py` / `check_layout.py` / `contact_sheet.py` の総枚数は、`agenda` の自動繰り越しや `swimlane` の凡例自動挿入を含めた**実際のビルド後の枚数**を使う（deck.json に書いた `slides` の要素数そのものではない）。
+検査ツールの出力の読み方・種別ごとの直し方は `skills/create-deck/checks.md`。`preview_deck.py` / `check_layout.py` / `check_visual.py` / `lint_deck_text.py` / `check_diagram.py` / `contact_sheet.py` の**スライド番号は、実際のビルド後の PNG の番号**（`agenda` の自動繰り越しや `swimlane` の凡例自動挿入を含む）で、deck.json に書いた `slides` の要素数とずれることがある。ずれたスライドは「slide-03（deck.json 2枚目）」と併記される。
 
 ### 微修正ループ（推奨ワークフロー）
 
-1. `deck.json` の該当スライドの `style`（または内容）だけを編集
+1. `deck.json` の該当スライドの**内容**（文・項目数・分割・密度）を先に直す。それでも足りないときだけ `style` を編集
 2. `build_deck.py <deck_dir> --html` → `preview_deck.py <deck_dir> <番号>` で当該スライドのみ確認
 3. 納得したら `build_deck.py <deck_dir>` で PPTX も再生成
 
-ビルドは全体でも1秒未満なので、再生成コストを気にする必要はない。**生成物（build/ 配下）は絶対に直接編集しない**。
+ビルドは全体でも1秒未満なので、再生成コストを気にする必要はない。**生成物（build/ 配下）は直接編集しない**（再ビルドで消えるため）。
 
 ## 注意
 
 - PPTX にスピーカーノートは出力しない仕様（python-pptx の notes_slide が Keynote 互換性を壊すため）
-- 色は必ずテーマトークン（`primary`, `accent` など）で指定し、hex 直書きはスライド固有の特例に限る（テーマ切替が効かなくなるため）。テーマトークンでも hex でもない値を指定するとビルドエラーになる
-- 新しいテーマは `tools/new_theme.py <name>` で雛形を作り、`colors`/`fonts` を編集して `meta.theme` を切り替えるだけでよい。テーマは `default` をベースにマージされ、明示していないトークンは自動導出されるので上書きしたいトークンだけ書けばよい（詳細は `themes.md`）
+- 色はテーマトークン（`primary`, `accent` など）で指定し、hex 直書きはスライド固有の特例に限る（テーマ切替が効かなくなるため）。テーマトークンでも hex でもない値を指定するとビルドエラーになる
+- 新しいテーマは `${CLAUDE_PLUGIN_ROOT}/tools/new_theme.py <name>` で雛形を作り、`colors`/`fonts` を編集して `meta.theme` を切り替えるだけでよい。テーマは `default` をベースにマージされ、明示していないトークンは自動導出されるので上書きしたいトークンだけ書けばよい（詳細は [themes.md](themes.md)）

@@ -1,0 +1,523 @@
+{
+ "name": "pillars",
+ "label": "3〜4 本の柱",
+ "summary": "戦略の柱・方針を 3〜4 本のカードで並べ、土台の一文を置く全面型（本文の並びは icon-grid）",
+ "version": 1,
+ "description": "等間隔の柱（カード）を 3〜4 本並べ、下に土台の帯を置く。戦略の柱・方針・取り組みの束を見せるページ向け。柱の数に合わせて幅が自動で決まる。",
+ "background": "background",
+ "slots": {
+  "eyebrow": {
+   "kind": "text",
+   "label": "見出し上の小見出し",
+   "max_chars": 16,
+   "example": "推進方針"
+  },
+  "title": {
+   "kind": "text",
+   "required": true,
+   "label": "見出し",
+   "max_chars": 34,
+   "example": "3 つの柱で、定着までやり切る"
+  },
+  "lead": {
+   "kind": "text",
+   "label": "見出し下の一文",
+   "max_chars": 70,
+   "example": "どの柱も、現場の担当者が自分で回せる状態をゴールにします"
+  },
+  "pillars": {
+   "kind": "records",
+   "required": true,
+   "label": "柱",
+   "min": 3,
+   "max": 4,
+   "fields": {
+    "head": {
+     "kind": "text",
+     "label": "柱の名前",
+     "max_chars": 14
+    },
+    "body": {
+     "kind": "text",
+     "label": "柱の説明",
+     "max_chars": 70
+    }
+   },
+   "example": [
+    {
+     "head": "業務の見える化",
+     "body": "今の手順と所要時間を一覧にして、どこに時間がかかっているかを数字で示す"
+    },
+    {
+     "head": "小さな自動化",
+     "body": "繰り返しの多い作業から順に、1 か月ごとに 1 つずつ自動化する"
+    },
+    {
+     "head": "使いこなす人づくり",
+     "body": "各部署に 1 名の推進役を置き、勉強会と相談窓口で支える"
+    },
+    {
+     "head": "効果の測定",
+     "body": "毎月同じ指標で効果を測り、経営会議に報告する"
+    }
+   ]
+  },
+  "foundation": {
+   "kind": "text",
+   "required": true,
+   "label": "土台の一文",
+   "max_chars": 50,
+   "example": "経営層の後押しと、毎月の振り返りが土台です"
+  },
+  "note": {
+   "kind": "text",
+   "label": "出典・補足",
+   "max_chars": 80,
+   "example": "※ 期間は 2026 年 4 月〜2027 年 3 月"
+  }
+ },
+ "elements": [
+  {
+   "name": "背景",
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 720,
+   "fill": "background"
+  },
+  {
+   "if": "eyebrow",
+   "role": "eyebrow",
+   "name": "見出し上の小見出し",
+   "x": 72,
+   "y": 16,
+   "w": 1136,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{eyebrow}}",
+        "size": 15,
+        "bold": true,
+        "color": "accent",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "role": "title",
+   "name": "見出し",
+   "x": 72,
+   "y": 42,
+   "w": 1136,
+   "h": 64,
+   "fit": {
+    "sizes": [
+     36,
+     32,
+     28
+    ]
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{title}}",
+        "size": 36,
+        "bold": true,
+        "color": "heading_text",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "role": "rule",
+   "name": "見出しの罫線",
+   "x": 72,
+   "y": 106,
+   "w": 1136,
+   "h": 5,
+   "fill": "accent"
+  },
+  {
+   "if": "lead",
+   "name": "見出し下の一文",
+   "x": 72,
+   "y": 124,
+   "w": 1136,
+   "h": 36,
+   "fit": {
+    "sizes": [
+     20,
+     18,
+     16
+    ]
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{lead}}",
+        "size": 20,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "repeat": "pillars",
+   "grid": {
+    "x": 72,
+    "y": 172,
+    "w": 1136,
+    "h": 342,
+    "cols": "auto",
+    "gap": 20
+   },
+   "template": [
+    {
+     "name": "柱{{index}}の面",
+     "radius": "$radius.cell",
+     "x": 0,
+     "y": 0,
+     "fill": "surface"
+    },
+    {
+     "name": "柱{{index}}の上帯",
+     "x": 0,
+     "y": 0,
+     "h": 8,
+     "fill": "accent"
+    },
+    {
+     "name": "柱{{index}}の番号",
+     "x": 22,
+     "y": 24,
+     "w": 60,
+     "h": 40,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "0{{index}}",
+          "size": 34,
+          "bold": true,
+          "color": "accent",
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "name": "柱{{index}}の名前",
+     "x": 22,
+     "y": 74,
+     "r": 22,
+     "h": 64,
+     "fit": {
+      "sizes": [
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20,
+       18
+      ],
+      "group": true
+     },
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.05,
+        "runs": [
+         {
+          "text": "{{head}}",
+          "size": 32,
+          "bold": true,
+          "color": "heading_text",
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "name": "柱{{index}}の罫線",
+     "x": 22,
+     "y": 146,
+     "r": 22,
+     "h": 2,
+     "fill": "border"
+    },
+    {
+     "name": "柱{{index}}の説明",
+     "x": 22,
+     "y": 162,
+     "r": 22,
+     "b": 18,
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       20,
+       18,
+       17,
+       16,
+       14
+      ],
+      "group": true
+     },
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 26,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "土台の帯",
+   "x": 72,
+   "y": 534,
+   "w": 1136,
+   "h": 84,
+   "fill": "primary",
+   "radius": "$radius.card"
+  },
+  {
+   "name": "土台のラベル",
+   "x": 104,
+   "y": 534,
+   "w": 90,
+   "h": 84,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "土台",
+        "size": 20,
+        "bold": true,
+        "color": "accent_on_primary",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "土台の一文",
+   "x": 200,
+   "y": 534,
+   "w": 980,
+   "h": 84,
+   "fit": {
+    "sizes": [
+     28,
+     26,
+     24,
+     22,
+     20
+    ]
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.1,
+      "runs": [
+       {
+        "text": "{{foundation}}",
+        "size": 28,
+        "bold": true,
+        "color": "on_primary",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "if": "note",
+   "name": "補足",
+   "x": 72,
+   "y": 630,
+   "w": 1136,
+   "h": 32,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{note}}",
+        "size": 14,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "フッター左",
+   "x": 72,
+   "y": 678,
+   "w": 700,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{deck.title}}",
+        "size": 13,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ページ番号",
+   "x": 1088,
+   "y": 678,
+   "w": 120,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "align": "r",
+      "runs": [
+       {
+        "text": "{{page}} / {{total}}",
+        "size": 13,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

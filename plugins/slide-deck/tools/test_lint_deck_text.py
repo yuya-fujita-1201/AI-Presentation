@@ -111,5 +111,174 @@ class CliTests(unittest.TestCase):
         self.assertIn("桁区切り", r.stdout)
 
 
+class TodoMarkerTests(unittest.TestCase):
+    def test_find_todos_with_and_without_note(self):
+        slides = [{"type": "bullets", "title": "a", "bullets": ["売上は伸びる【要確認】", "根拠あり"], "notes": "【要確認: 出典URL】を探す"},
+                  {"type": "table", "title": "b", "rows": [["x", "【要確認：単位】"]]}]
+        todos = L.find_todos(slides)
+        self.assertEqual([(t["slide"], t["path"], t["note"]) for t in todos],
+                         [("slide-01", "bullets[0]", ""), ("slide-01", "notes", "出典URL"), ("slide-02", "rows[0][1]", "単位")])
+
+    def test_lint_counts_todos_and_fail_flag(self):
+        deck = {"meta": {"title": "t"}, "slides": [{"type": "bullets", "title": "結論", "bullets": ["数字【要確認: 出典】"]}]}
+        res = L.lint(deck)
+        self.assertEqual(res["stats"]["todo"], 1)
+        self.assertTrue(any("要確認マーカー【出典】" in w and "slide-01" in w for w in res["warnings"]))
+        self.assertIn("要確認マーカー1箇所", res["summary"])
+        self.assertEqual(res["errors"], [])   # 既定は警告のみ
+
+    def test_cli_fail_on_todo(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "deck.json").write_text(json.dumps(
+                {"meta": {"title": "t"}, "slides": [{"type": "bullets", "title": "結論", "bullets": ["数字【要確認】"]}]}, ensure_ascii=False), encoding="utf-8")
+            base = [sys.executable, str(TOOLS / "lint_deck_text.py"), d]
+            self.assertEqual(subprocess.run(base, capture_output=True, text=True, encoding="utf-8").returncode, 0)
+            r = subprocess.run(base + ["--fail-on-todo"], capture_output=True, text=True, encoding="utf-8")
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("NG: 【要確認】マーカーが1箇所", r.stdout)
+
+
+class PageReferenceTests(unittest.TestCase):
+    def lint_text(self, text, n_slides=3):
+        deck = {"meta": {}, "slides": [{"type": "bullets", "title": f"t{i}", "bullets": [text if i == 0 else "x"]} for i in range(n_slides)]}
+        return L.lint(deck)
+
+    def test_pdf_page_counts_are_not_references(self):
+        for text in ("全200ページのPDF", "3ページ構成", "A4で5ページ分", "12ページ"):
+            self.assertEqual(self.lint_text(text, 2)["errors"], [], msg=text)
+
+    def test_real_references_beyond_total_fail(self):
+        self.assertTrue(self.lint_text("詳細は50ページを参照", 3)["errors"])
+        self.assertTrue(self.lint_text("9枚目で説明", 3)["errors"])
+        self.assertTrue(self.lint_text("10ページ目に戻る", 3)["errors"])
+
+    def test_reference_within_total_is_warning(self):
+        res = self.lint_text("詳細は2ページを参照", 3)
+        self.assertEqual(res["errors"], [])
+        self.assertTrue(any("ページ番号直書き" in w for w in res["warnings"]))
+
+
+    def test_estimate_review_words_are_not_references(self):
+        # 「見積もり」「見込み」「見直し」の「見」、「枚目標」「枚目安」の「枚目」を参照と誤認しない
+        for text in ("全体で200ページの見積もりが必要", "現行は100ページの見直しを行う", "50ページの見込み",
+                     "3枚目標を設定", "5枚目安で作る"):
+            res = self.lint_text(text, 1)
+            self.assertEqual(res["errors"], [], msg=text)
+            self.assertFalse(any("ページ番号直書き" in w for w in res["warnings"]), msg=text)
+
+    def test_see_verb_forms_are_references(self):
+        for text in ("200ページを見る", "200ページを見て確認", "200ページを見よ"):
+            self.assertTrue(self.lint_text(text, 3)["errors"], msg=text)
+
+    def test_p_dot_prefix_form(self):
+        self.assertTrue(self.lint_text("p.9 を参照", 3)["errors"])
+        self.assertTrue(self.lint_text("P.12", 3)["errors"])
+        res = self.lint_text("p.2 を参照", 3)
+        self.assertEqual(res["errors"], [])
+        self.assertTrue(any("ページ番号直書き" in w for w in res["warnings"]))
+
+
+class TodoMarkerColonTests(unittest.TestCase):
+    def half_colon_warns(self, text):
+        deck = {"meta": {}, "slides": [{"type": "bullets", "title": "B", "bullets": [text]}]}
+        return [w for w in L.lint(deck)["warnings"] if "半角コロン:" in w]
+
+    def test_todo_marker_colon_is_not_warned(self):
+        self.assertEqual(self.half_colon_warns("売上は 120 億円【要確認: 根拠の出典】"), [])
+        self.assertEqual(self.half_colon_warns("い【要確認:根拠】"), [])
+
+    def test_real_halfwidth_colon_next_to_marker_still_warned(self):
+        self.assertTrue(self.half_colon_warns("売上: 日本【要確認: 根拠】"))
+
+
+class SlideNumberLabelTests(unittest.TestCase):
+    def test_relabel_uses_png_numbers_only_where_shifted(self):
+        text = "slide-01 a / slide-02 b / slide-02〜slide-03 c"
+        out = L.relabel_slides(text, [1, 3, 4])
+        self.assertIn("slide-01 a", out)
+        self.assertIn("slide-03（deck.json 2枚目） b", out)
+        self.assertIn("slide-03（deck.json 2枚目）〜slide-04（deck.json 3枚目）", out)
+
+    def test_lint_applies_png_numbers_to_warnings_and_todos(self):
+        deck = {"meta": {}, "slides": [
+            {"type": "bullets", "title": "A", "bullets": ["x"]},
+            {"type": "bullets", "title": "B", "bullets": ["【要確認: 出典】"]}]}
+        plain = L.lint(deck)
+        self.assertEqual(plain["todos"][0]["slide"], "slide-02")
+        res = L.lint(deck, png_numbers=[1, 3])
+        self.assertEqual(res["todos"][0]["slide"], "slide-03（deck.json 2枚目）")
+        self.assertTrue(any("slide-03（deck.json 2枚目）" in w for w in res["warnings"]))
+
+
+class ErrorMessagesHaveFixesTests(unittest.TestCase):
+    def test_every_error_has_arrow_fix(self):
+        deck = {"meta": {}, "slides": [
+            {"type": "closing", "title": "あ" * 30},
+            {"type": "bullets", "title": "t", "bullets": ["**強調**", "これを実現します", "9枚目を見る"]}]}
+        errors = L.lint(deck)["errors"]
+        self.assertGreaterEqual(len(errors), 4)
+        for e in errors:
+            self.assertIn("→", e)
+
+
+class SourceAndNonDisplayTests(unittest.TestCase):
+    def test_source_halfwidth_colon_not_warned(self):
+        deck = {"meta": {}, "slides": [{"type": "bullets", "title": "t", "source": "試算の前提: 削減時間は6,300時間", "bullets": ["本文: これは警告"]}]}
+        warns = [w for w in L.lint(deck)["warnings"] if "半角コロン" in w]
+        self.assertTrue(any("bullets[0]" in w for w in warns))
+        self.assertFalse(any(" source " in w for w in warns))
+
+    def test_icon_variant_shape_are_not_body_text(self):
+        s = {"type": "cards", "title": "t", "cards": [{"heading": "h", "icon": "shield-check 100000", "variant": "最適化 onpf", "shape": "を実現"}]}
+        paths = [p for p, _ in L.iter_texts(s)]
+        self.assertFalse(any(p.endswith(("icon", "variant", "shape")) for p in paths), paths)
+        deck = {"meta": {}, "slides": [s]}
+        res = L.lint(deck)
+        self.assertEqual(res["errors"], [])
+
+
+class DensityTests(unittest.TestCase):
+    def deck(self, density, punch="あ" * 60):
+        meta = {"density": density} if density else {}
+        return {"meta": meta, "slides": [{"type": "bullets", "title": "t", "punch": punch,
+                                          "bullets": ["い" * 35, "う", "え", "お", "か", "き"]}]}
+
+    def test_punch_limit_follows_density(self):
+        talk = L.lint(self.deck("talk"))
+        std = L.lint(self.deck(None))
+        read = L.lint(self.deck("read"))
+        self.assertTrue(any("punch" in w and "density=talk" in w for w in talk["warnings"]))
+        self.assertFalse(any("punch 60字" in w for w in std["warnings"]))
+        self.assertFalse(any("punch 60字" in w for w in read["warnings"]))
+
+    def test_bullet_chars_and_count_follow_density(self):
+        talk = L.lint(self.deck("talk"))
+        std = L.lint(self.deck("standard"))
+        self.assertTrue(any("bullets の項目が30字超" in w for w in talk["warnings"]))
+        self.assertTrue(any("bullets 6項目 > 5" in w for w in talk["warnings"]))
+        self.assertFalse(any("bullets の項目が" in w or "項目 >" in w for w in std["warnings"]))
+
+    def test_explicit_punch_max_wins(self):
+        res = L.lint(self.deck("read"), punch_max=40)
+        self.assertTrue(any("punch 60字 > 40" in w for w in res["warnings"]))
+
+    def test_non_string_density_does_not_crash(self):
+        for bad in (["talk"], {"a": 1}, 3):
+            res = L.lint({"meta": {"density": bad}, "slides": []})
+            self.assertEqual(res["density"], "standard")
+            self.assertTrue(any("meta.density" in w for w in res["warnings"]))
+
+    def test_unknown_density_warns_and_falls_back(self):
+        res = L.lint(self.deck("dense"))
+        self.assertEqual(res["density"], "standard")
+        self.assertTrue(any("meta.density" in w and "未知" in w for w in res["warnings"]))
+
+    def test_slide_volume(self):
+        deck = {"meta": {"density": "talk"}, "slides": [{"type": "table", "title": "t", "rows": [["あ" * 20] * 15]}]}
+        self.assertTrue(any("表示文字数" in w for w in L.lint(deck)["warnings"]))
+        deck["meta"]["density"] = "read"
+        self.assertFalse(any("表示文字数" in w for w in L.lint(deck)["warnings"]))
+
+
 if __name__ == "__main__":
     unittest.main()

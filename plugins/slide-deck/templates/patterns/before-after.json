@@ -1,0 +1,519 @@
+{
+ "name": "before-after",
+ "label": "対比（Before / After）",
+ "summary": "左に現状（Before）、右に変えたあと（After）、中央に矢印、下に一言で、変化の前後を見せる（全面）",
+ "version": 1,
+ "description": "左に現状（Before）、右に変えたあと（After）、中央に矢印、下に一言。変化の前後を並べて見せたいページ向け。左右の箇条書きは 2〜5 点で、文が長いと文字サイズが自動で縮んで枠に収まる。",
+ "background": "background",
+ "slots": {
+  "eyebrow": {
+   "kind": "text",
+   "label": "見出し上の小見出し",
+   "max_chars": 16,
+   "example": "業務の変化"
+  },
+  "title": {
+   "kind": "text",
+   "required": true,
+   "label": "見出し",
+   "max_chars": 34,
+   "example": "手作業の集計を、毎朝の自動レポートに置き換える"
+  },
+  "before_label": {
+   "kind": "text",
+   "label": "左の見出し",
+   "default": "Before",
+   "max_chars": 12,
+   "example": "導入前"
+  },
+  "after_label": {
+   "kind": "text",
+   "label": "右の見出し",
+   "default": "After",
+   "max_chars": 12,
+   "example": "導入後"
+  },
+  "before": {
+   "kind": "list",
+   "required": true,
+   "label": "左（現状）の点",
+   "min": 2,
+   "max": 5,
+   "max_chars": 30,
+   "example": [
+    "毎朝 2 時間かけて集計",
+    "担当者ごとに表の形が違う",
+    "ミスの確認が後回し"
+   ]
+  },
+  "after": {
+   "kind": "list",
+   "required": true,
+   "label": "右（変更後）の点",
+   "min": 2,
+   "max": 5,
+   "max_chars": 30,
+   "example": [
+    "8 時に自動でレポートが届く",
+    "全員が同じ形式で見られる",
+    "差異は赤字で自動表示"
+   ]
+  },
+  "message": {
+   "kind": "text",
+   "required": true,
+   "label": "下の一言",
+   "max_chars": 50,
+   "example": "毎朝の 2 時間が、考える時間に変わる"
+  },
+  "note": {
+   "kind": "text",
+   "label": "出典・補足",
+   "max_chars": 80,
+   "example": "出典: 経理部ヒアリング（2026 年 9 月）"
+  }
+ },
+ "elements": [
+  {
+   "name": "背景",
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 720,
+   "fill": "background"
+  },
+  {
+   "if": "eyebrow",
+   "role": "eyebrow",
+   "name": "見出し上の小見出し",
+   "x": 72,
+   "y": 16,
+   "w": 1136,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{eyebrow}}",
+        "size": 15,
+        "bold": true,
+        "color": "accent",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "role": "title",
+   "name": "見出し",
+   "x": 72,
+   "y": 42,
+   "w": 1136,
+   "h": 64,
+   "fit": {
+    "sizes": [
+     36,
+     32,
+     28
+    ]
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{title}}",
+        "size": 36,
+        "bold": true,
+        "color": "heading_text",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "role": "rule",
+   "name": "見出しの罫線",
+   "x": 72,
+   "y": 106,
+   "w": 1136,
+   "h": 5,
+   "fill": "accent"
+  },
+  {
+   "name": "左の面",
+   "x": 72,
+   "y": 138,
+   "w": 512,
+   "h": 362,
+   "fill": "surface",
+   "radius": "$radius.card"
+  },
+  {
+   "name": "左の見出し",
+   "x": 104,
+   "y": 156,
+   "w": 448,
+   "h": 40,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{before_label}}",
+        "size": 22,
+        "bold": true,
+        "color": "muted",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "左の罫線",
+   "x": 104,
+   "y": 200,
+   "w": 448,
+   "h": 2,
+   "fill": "border"
+  },
+  {
+   "name": "左の点",
+   "x": 104,
+   "y": 216,
+   "w": 448,
+   "h": 268,
+   "fit": {
+    "sizes": [
+     32,
+     30,
+     28,
+     26,
+     24,
+     22,
+     20,
+     18,
+     16
+    ],
+    "group": "points"
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "repeat": "before",
+      "spaceAfter": 10,
+      "lineHeight": 1.15,
+      "marL": 26,
+      "indent": -26,
+      "bullet": {
+       "char": "●",
+       "color": "muted",
+       "size": 12
+      },
+      "runs": [
+       {
+        "text": "{{.}}",
+        "size": 32,
+        "color": "text"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "矢印",
+   "x": 600,
+   "y": 268,
+   "w": 80,
+   "h": 92,
+   "geom": "homePlate",
+   "fill": "accent",
+   "adj": {
+    "adj": 50000
+   }
+  },
+  {
+   "name": "右の面",
+   "x": 696,
+   "y": 138,
+   "w": 512,
+   "h": 362,
+   "fill": "primary",
+   "radius": "$radius.card"
+  },
+  {
+   "name": "右の見出し",
+   "x": 728,
+   "y": 156,
+   "w": 448,
+   "h": 40,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{after_label}}",
+        "size": 22,
+        "bold": true,
+        "color": "accent_on_primary",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "右の罫線",
+   "x": 728,
+   "y": 200,
+   "w": 448,
+   "h": 2,
+   "fill": "accent_on_primary"
+  },
+  {
+   "name": "右の点",
+   "x": 728,
+   "y": 216,
+   "w": 448,
+   "h": 268,
+   "fit": {
+    "sizes": [
+     32,
+     30,
+     28,
+     26,
+     24,
+     22,
+     20,
+     18,
+     16
+    ],
+    "group": "points"
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "repeat": "after",
+      "spaceAfter": 10,
+      "lineHeight": 1.15,
+      "marL": 26,
+      "indent": -26,
+      "bullet": {
+       "char": "●",
+       "color": "accent_on_primary",
+       "size": 12
+      },
+      "runs": [
+       {
+        "text": "{{.}}",
+        "size": 32,
+        "color": "on_primary"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "一言の帯",
+   "x": 72,
+   "y": 522,
+   "w": 1136,
+   "h": 88,
+   "fill": "highlight_fill",
+   "radius": "$radius.card"
+  },
+  {
+   "name": "一言の左帯",
+   "x": 72,
+   "y": 522,
+   "w": 10,
+   "h": 88,
+   "fill": "accent"
+  },
+  {
+   "name": "一言",
+   "x": 104,
+   "y": 522,
+   "w": 1076,
+   "h": 88,
+   "fit": {
+    "sizes": [
+     30,
+     28,
+     26,
+     24,
+     22
+    ]
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.1,
+      "runs": [
+       {
+        "text": "{{message}}",
+        "size": 30,
+        "bold": true,
+        "color": "heading_text",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "if": "note",
+   "name": "補足",
+   "x": 72,
+   "y": 628,
+   "w": 1136,
+   "h": 36,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{note}}",
+        "size": 14,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "フッター左",
+   "x": 72,
+   "y": 678,
+   "w": 700,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{deck.title}}",
+        "size": 13,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ページ番号",
+   "x": 1088,
+   "y": 678,
+   "w": 120,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "align": "r",
+      "runs": [
+       {
+        "text": "{{page}} / {{total}}",
+        "size": 13,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

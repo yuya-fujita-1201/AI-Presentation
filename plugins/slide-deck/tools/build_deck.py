@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import contextlib
 import copy
 import difflib
 import hashlib
@@ -47,10 +48,22 @@ CANVAS_W, CANVAS_H = 1280, 720
 # 他ツールから import build_deck されるケースでも解決できるよう明示的に追加する。
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import diagram_engine as de  # noqa: E402
+import diagram_scale as dscale  # noqa: E402
 import canvas_engine as ce  # noqa: E402
 import schedule_engine as se  # noqa: E402
 import ja_text  # noqa: E402
+import engine_registry  # noqa: E402
 import proposal_engine as pe  # noqa: E402
+import pattern_engine as pat_e  # noqa: E402
+import deck_paths  # noqa: E402
+import deck_schema as dschema  # noqa: E402
+import shape_engine as shp  # noqa: E402
+import autofit  # noqa: E402
+import composite_engine as comp  # noqa: E402
+import hero_engine as hero  # noqa: E402
+import todo_marks  # noqa: E402
+import wrap_fix  # noqa: E402
+import color_pick as cp  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -58,15 +71,45 @@ import proposal_engine as pe  # noqa: E402
 # ---------------------------------------------------------------------------
 
 _WARNED: set = set()
+# 合成スライドのブロックを既存タイプの検証・フィットに通すとき、メッセージの先頭の「N枚目（type=xxx）」を
+# 「N枚目（type=composite）の K つ目のブロック（xxx）」に書き換える（既存の検証コードをそのまま使うため）。[(正規表現, 置換)]
+_MSG_REWRITES: list = []
+
+
+def _rewrite_msg(msg: str) -> str:
+    for rx, rep in _MSG_REWRITES:
+        msg = rx.sub(rep, msg)
+    return msg
+
+
+@contextlib.contextmanager
+def block_messages(page: int, k: int, bt: str, stype: str = "composite"):
+    """この中で出る fail / warn / note の場所表記を、合成スライド（split も）の k 番目（0 始まり）のブロックにする。"""
+    rx = re.compile(rf"{page}枚目（type={re.escape(bt)}(?:[,、][^）]*)?）")
+    rep = f"{page}枚目（type={stype}）の {k + 1} つ目のブロック（{bt}）"
+    # 色指定のエラーは「（N枚目 type=xxx の body.color）」の形で出る（_color_issue）ので、これもブロックの場所にする
+    rx2 = re.compile(rf"{page}枚目 type={re.escape(bt)} の ")
+    _MSG_REWRITES.append((rx, rep))
+    _MSG_REWRITES.append((rx2, rep + "の "))
+    try:
+        yield
+    finally:
+        _MSG_REWRITES.pop()
+        _MSG_REWRITES.pop()
 
 
 def fail(msg: str):
     """stderr に error: <msg> を出して exit code 1 で終了する。"""
-    sys.exit(f"error: {msg}")
+    sys.exit(f"error: {_rewrite_msg(msg)}")
+
+
+class OutputLockedError(SystemExit):
+    """出力ファイルに書き込めない（PowerPoint 等で開いている）ときの終了。main は PPTX が書けなくても HTML は作ってから、これで終了する。"""
 
 
 def warn(msg: str):
     """stderr に warning: <msg> を出す。ビルドは続行する。同一メッセージは1回だけ表示。"""
+    msg = _rewrite_msg(msg)
     if msg in _WARNED:
         return
     _WARNED.add(msg)
@@ -75,7 +118,28 @@ def warn(msg: str):
 
 def note(msg: str):
     """stderr に note: <msg> を出す。"""
-    print(f"note: {msg}", file=sys.stderr)
+    print(f"note: {_rewrite_msg(msg)}", file=sys.stderr)
+
+
+def _import_sync_playwright():
+    """SVG の画像化に使う playwright を読み込む。無ければ直し方つきで fail（トレースバックにしない）。"""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        fail("このデッキは SVG の画像を含むため、PPTX 化に playwright が必要です（SVG を PNG にして貼ります）"
+             " → `/slide-deck:setup --playwright` で導入する（または `pip install playwright` と `playwright install chromium`）。"
+             "HTML だけなら --html を付けて再実行できます")
+    return sync_playwright
+
+
+def _launch_chromium(pw):
+    """SVG の画像化に使う Chromium を起動する。ブラウザ本体が未導入などで起動できなければ直し方つきで fail。"""
+    try:
+        return pw.chromium.launch()
+    except Exception as e:      # playwright は入っているがブラウザ本体が無い、など
+        fail(f"SVG の画像化に使う Chromium を起動できません（{type(e).__name__}）"
+             " → `/slide-deck:setup --playwright`（または `playwright install chromium`）でブラウザを導入する。"
+             "HTML だけなら --html を付けて再実行できます")
 
 
 def setup_console():
@@ -103,19 +167,23 @@ def load_json(path: Path):
 
 
 def theme_dirs(deck_dir: Path):
-    """テーマの探索ディレクトリを優先順に返す。
+    """テーマの探索ディレクトリを優先順に返す（規則は deck_paths.search_dirs に集約）。
     1. 環境変数 SLIDE_DECK_THEMES（複数可・OS区切り）… ユーザー追加テーマ置き場
-    2. <deck_dir>/themes/                           … デッキ／プロジェクト同梱テーマ
-    3. 同梱テーマ（templates/themes/）              … default・accenture・acn-slide-master・acn-technology-graphik
+    2. <deck_dir>/themes/ → deck_dir の親（3 階層上まで）の themes/ … デッキ／プロジェクト同梱テーマ
+    3. カレントディレクトリの themes/（new_theme.py の既定の書き込み先）
+    4. 同梱テーマ（templates/themes/）
     先に見つかったものが勝つ。プラグイン更新で消したくないテーマは 1 か 2 に置く。"""
-    dirs = []
-    env = os.environ.get("SLIDE_DECK_THEMES")
-    if env:
-        dirs += [Path(p) for p in env.split(os.pathsep) if p.strip()]
-    if deck_dir is not None:
-        dirs.append(Path(deck_dir) / "themes")
-    dirs.append(ROOT / "templates" / "themes")
-    return dirs
+    return deck_paths.search_dirs("themes", deck_dir)
+
+
+def layout_dirs(deck_dir: Path):
+    """レイアウト JSON の探索ディレクトリ（環境変数 SLIDE_DECK_LAYOUTS → デッキ → 親 → カレント → 同梱）。"""
+    return deck_paths.search_dirs("layouts", deck_dir)
+
+
+def pattern_dirs(deck_dir: Path):
+    """パターン JSON の探索ディレクトリ（環境変数 SLIDE_DECK_PATTERNS → デッキ → 親 → カレント → 同梱）。"""
+    return deck_paths.search_dirs("patterns", deck_dir)
 
 
 def _hex_to_rgb(h: str):
@@ -136,14 +204,6 @@ def mix(a: str, b: str, t: float) -> str:
     return _rgb_to_hex((ra + (rb - ra) * t, ga + (gb - ga) * t, ba + (bb - ba) * t))
 
 
-# default 以外のテーマで明示指定が無い場合、default の固定 hex をそのまま継承せず、
-# そのテーマ自身の基本色（background/surface/text/muted/primary/accent/on_primary）から
-# 導出するトークン群（themes.md 参照）。
-DERIVABLE_COLOR_TOKENS = (
-    "surface", "muted", "table_header_bg", "table_header_text", "table_row_alt",
-    "on_primary_soft", "on_primary_muted", "code_bg", "code_text",
-    "highlight_fill", "border", "accent_on_primary", "heading_text",
-)
 
 
 def _luminance(hex_color: str) -> float:
@@ -162,16 +222,8 @@ def contrast_ratio(a: str, b: str) -> float:
 
 
 def readable_on(color: str, bg: str, min_ratio: float = 4.5) -> str:
-    """color を bg 上で min_ratio 以上のコントラストになるまで白/黒側へ寄せた色を返す。
-    暗い背景なら白へ、明るい背景なら黒へ 0.1 刻みで混ぜる（既に十分ならそのまま）。"""
-    if contrast_ratio(color, bg) >= min_ratio:
-        return color
-    toward = "#FFFFFF" if _luminance(bg) < 0.5 else "#000000"
-    for i in range(1, 11):
-        cand = mix(color, toward, i / 10)
-        if contrast_ratio(cand, bg) >= min_ratio:
-            return cand
-    return toward
+    """color を bg 上で min_ratio 以上のコントラストになるまで白/黒側へ寄せた色を返す（color_pick.readable_on）。"""
+    return cp.readable_on(color, bg, min_ratio)
 
 
 def _derive_colors(colors: dict, own_color_keys) -> None:
@@ -190,9 +242,19 @@ def _derive_colors(colors: dict, own_color_keys) -> None:
         # ディスプレイによって面が背景に溶けて見えなくなる。0.88 まで primary 側に寄せて
         # 面自体をはっきり視認できるようにする（check_theme.py の面チェック参照）。
         colors["surface"] = mix(primary, bg, 0.88)
-    if "muted" not in own_color_keys:
-        colors["muted"] = mix(text, bg, 0.35)
     surface = colors.get("surface", bg)
+    if "muted" not in own_color_keys:
+        # 補助文字色。背景の上でも、面（surface）の上でも 4.5:1 以上で読めるまで text 側へ寄せる
+        # （check_theme の muted/surface 組。寄せないと extends しただけのテーマで NG になる）
+        muted0 = mix(text, bg, 0.35)
+        colors["muted"] = muted0
+        for i in range(0, 11):
+            cand = mix(muted0, text, i / 10) if i else muted0
+            if min(contrast_ratio(cand, bg), contrast_ratio(cand, surface)) >= 4.5:
+                colors["muted"] = cand
+                break
+        else:
+            colors["muted"] = readable_on(readable_on(muted0, bg), surface)
     derived = {
         "table_header_bg": primary,
         "table_header_text": on_primary,
@@ -213,35 +275,71 @@ def _derive_colors(colors: dict, own_color_keys) -> None:
             colors[key] = value
 
 
-def _load_theme_chain(name: str, dirs, _seen):
+def _load_theme_chain(name: str, dirs, _seen, key: str = "meta.theme"):
     """テーマ JSON を extends チェーンに沿って読み込み、マージ済み dict を返す。
     default 以外の各階層は、親（既にこの関数で解決済み＝派生も適用済み）を deep_merge した直後、
     自分の JSON ファイルが明示していない colors キーだけをその階層自身の基本色から再導出する。
     階層ごとに導出をやり直すことで、`extends` 先が default 以外のテーマ（例: acn-slide-master）
     であっても、子テーマが primary/accent だけを上書きすれば派生トークン（table_header_bg 等）
     が親の固定値のままにならず新しい基本色に追随する。"""
+    _check_resource_name("テーマ", name, key)   # パス区切り等を拒否（デッキ外の JSON を読ませない）
     if name in _seen:
         fail(f"テーマの extends が循環しています: {' -> '.join(_seen + [name])}")
     path = next((d / f"{name}.json" for d in dirs if (d / f"{name}.json").exists()), None)
     if path is None:
         searched = ", ".join(str(d) for d in dirs)
-        fail(f"テーマ '{name}' が見つかりません（探索: {searched}）")
+        fix = "meta.theme を直す" if key == "meta.theme" else f"{key} を直す"
+        fail(f"テーマ '{name}' が見つかりません（探索: {searched}） → {fix}か、{name}.json を探索先のどれかに置く")
+    _note_shadowed("themes", "テーマ", name, path)
     own = load_json(path)
+    _report_issues(dschema.validate_theme_data(own, name, _default_color_keys()))
     if own.get("alias_of"):
         # 旧名（別名）テーマ: 本体をそのまま使う（派生トークンを再計算すると色が少しずれるため）
-        target = _load_theme_chain(own["alias_of"], dirs, _seen + [name])
+        target = _load_theme_chain(own["alias_of"], dirs, _seen + [name], f"テーマ '{name}' の alias_of")
         return target
     own_color_keys = set(own.get("colors", {}).keys())
     parent = own.get("extends") or (None if name == "default" else "default")
     if parent:
-        parent_data = _load_theme_chain(parent, dirs, _seen + [name])
+        parent_data = _load_theme_chain(parent, dirs, _seen + [name], f"テーマ '{name}' の extends")
         merged = deep_merge(parent_data, own)
     else:
         merged = copy.deepcopy(own)
     merged["name"] = name
-    if name != "default":
+    unchanged = bool(parent) and all(
+        dschema.normalize_hex(v) == dschema.normalize_hex(parent_data["colors"].get(k))
+        for k, v in (own.get("colors") or {}).items())
+    if name != "default" and not unchanged:
+        # 色を書いていない・親と同じ値しか書いていないテーマ（new_theme の雛形のまま、fonts だけ変える等）は、
+        # 親の色（default なら手で調整した値）をそのまま継承する。1 つでも変えたときだけ、変えていない派生トークンを導出し直す
         _derive_colors(merged.setdefault("colors", {}), own_color_keys)
+    merged["colors"] = {k: dschema.normalize_hex(v) for k, v in merged.get("colors", {}).items()}
     return merged
+
+
+_DEFAULT_COLOR_KEYS: list = []
+
+
+def _default_color_keys():
+    """標準の色トークン名（同梱 default テーマの colors のキー）。テーマ JSON の打ち間違い検出に使う。"""
+    if not _DEFAULT_COLOR_KEYS:
+        try:
+            data = json.loads((ROOT / "templates" / "themes" / "default.json").read_text(encoding="utf-8-sig"))
+            _DEFAULT_COLOR_KEYS.extend(data.get("colors", {}).keys())
+        except (OSError, ValueError):
+            pass
+    return tuple(_DEFAULT_COLOR_KEYS)
+
+
+def _report_issues(issues, prefix: str = ""):
+    """deck_schema の (level, 本文) のリストを warn / fail に流す。fail は最初の 1 件で終了する。"""
+    for level, msg in issues:
+        if level == "fail":
+            fail(prefix + msg)
+    for level, msg in issues:
+        if level == "warn":
+            warn(prefix + msg)
+        elif level == "note":
+            note(prefix + msg)
 
 
 def load_theme(name: str, dirs, _seen=None):
@@ -253,6 +351,191 @@ def load_theme(name: str, dirs, _seen=None):
     return _load_theme_chain(name, dirs, _seen or [])
 
 
+_SHADOW_NOTED: set = set()
+
+
+def _note_shadowed(kind: str, kind_label: str, name: str, path: Path, layered: bool = False):
+    """同梱と同じ名前の <kind>/<name>.json を、同梱以外（環境変数・デッキ・デッキの親・カレント）から読んだことを 1 回だけ知らせる。
+    同じ deck.json の見た目が置き場所で変わる原因に、利用者が気づけるようにする。"""
+    bundled = deck_paths.bundled_dir(kind) / f"{name}.json"
+    try:
+        if not bundled.is_file() or path.resolve() == bundled.resolve():
+            return
+    except OSError:
+        return
+    key = (kind, str(path))
+    if key in _SHADOW_NOTED:
+        return
+    _SHADOW_NOTED.add(key)
+    how = "同梱のものに重ねて" if layered else "同梱のものではなく"
+    note(f"{kind_label} '{name}' は{how} {path} を読みました（探索順で先に見つかったほうが優先されます。"
+         f"意図していなければ、そのファイルを別の名前にするか移します）")
+
+
+def _check_resource_name(kind_label: str, name, key: str):
+    """テーマ・レイアウト・パターンの「名前」を検査する。パス区切り・絶対パスは任意ファイル読みになるので fail。"""
+    if not isinstance(name, str) or not name.strip():
+        fail(f"{key} は{kind_label}の名前（文字列。例: \"default\"）で指定してください")
+    if any(ch in name for ch in ("/", "\\", ":", "\x00")) or name.startswith(".") or os.path.isabs(name):
+        fail(f"{key} '{name}' は名前だけを指定してください（パス区切り・絶対パス・先頭のドットは使えません）。"
+             f"{kind_label}は探索先に <名前>.json として置きます")
+
+
+def _without_refs(region):
+    """領域の値のうち ``"$グループ.名前"``（形トークンの参照）を除いた浅いコピー（型の検査は解決後の値で行うため）。"""
+    if not isinstance(region, dict):
+        return region
+    return {k: v for k, v in region.items() if not shp.is_ref(v)}
+
+
+def _layout_candidates(name: str, dirs):
+    return [d / f"{name}.json" for d in dirs if (d / f"{name}.json").is_file()]
+
+
+def _load_layout_chain(name: str, dirs, seen, key: str):
+    """レイアウト JSON を extends チェーンに沿って読み、マージ済み dict を返す。
+    extends 省略時の親は default（default 自身は親なし）。差分だけ書ける。循環は fail。"""
+    _check_resource_name("レイアウト", name, key)
+    used = {p for _, p in seen}
+    cands = [p for p in _layout_candidates(name, dirs) if p.resolve() not in used]
+    if not cands:
+        if any(n == name for n, _ in seen):
+            fail(f"レイアウトの extends が循環しています: {' -> '.join([n for n, _ in seen] + [name])}")
+        avail = deck_paths.list_names("layouts", None)
+        pool = list(dict.fromkeys(
+            [p.stem for d in dirs if d.is_dir() for p in sorted(d.glob("*.json"))] + avail))
+        hint = dschema.hint(name, pool)
+        fail(f"レイアウト '{name}' が見つかりません{hint}（使える名前: {', '.join(pool) or 'なし'}。"
+             f"探索: {', '.join(str(d) for d in dirs)}）→ {key} を直すか、{name}.json を探索先のどれかに置く")
+    path = cands[0]
+    _note_shadowed("layouts", "レイアウト", name, path, layered=True)   # 同名のレイアウトは同梱の既定に差分として重なる
+    own = load_json(path)
+    if not isinstance(own, dict):
+        fail(f"レイアウト '{name}'（{path}）の最上位はオブジェクトにしてください")
+    for k in own:
+        if isinstance(k, str) and not k.startswith("_") and k not in dschema.LAYOUT_TOP_KEYS:
+            warn(f"レイアウト '{name}': 未知のトップキー \"{k}\" は無視されます{dschema.hint(k, dschema.LAYOUT_TOP_KEYS)}"
+                 f"（使えるキー: {' / '.join(sorted(dschema.LAYOUT_TOP_KEYS))}）")
+    for sec in ("common", "types"):
+        if sec in own and not isinstance(own[sec], dict):
+            fail(f"レイアウト '{name}': {sec} はオブジェクトにしてください")
+    for tname, tdef in (own.get("types") or {}).items():
+        if not isinstance(tdef, dict) or any(not isinstance(v, dict) for v in tdef.values()):
+            fail(f"レイアウト '{name}': types.{tname} は {{ 領域名: {{ プロパティ }} }} の形にしてください")
+    for rname, rdef in (own.get("common") or {}).items():
+        if not isinstance(rdef, dict):
+            fail(f"レイアウト '{name}': common.{rname} は {{ プロパティ }} の形にしてください")
+    # 領域の値の型（size が文字列、align が不正な値など）は、描画の途中で TypeError になる前にここで知らせる
+    for sec_name, regions in [("common", own.get("common") or {})] + \
+            [(f"types.{tn}", td) for tn, td in (own.get("types") or {}).items()]:
+        for rn, rd in regions.items():
+            _report_issues(dschema.check_region_value(_without_refs(rd), None, f"レイアウト '{name}'（{path.name}）の {sec_name}.{rn}",
+                                                      check_unknown=False))
+    dens = own.get("densities")
+    if dens is not None:
+        if not isinstance(dens, dict):
+            fail(f"レイアウト '{name}': densities は {{ 密度名: {{ タイプ名: {{ 領域名: {{ プロパティ }} }} }} }} の形にしてください")
+        for dn, dd in dens.items():
+            if dn not in autofit.DENSITIES:
+                warn(f"レイアウト '{name}': densities の \"{dn}\" は使われません → 使えるのは {' / '.join(autofit.DENSITIES)}")
+            if not isinstance(dd, dict) or any(not isinstance(tv, dict) or any(not isinstance(rv, dict) for rv in tv.values())
+                                              for tv in dd.values()):
+                fail(f"レイアウト '{name}': densities.{dn} は {{ タイプ名: {{ 領域名: {{ プロパティ }} }} }} の形にしてください")
+            for tn, tv in dd.items():
+                for rn, rv in tv.items():
+                    _report_issues(dschema.check_region_value(_without_refs(rv), None, f"レイアウト '{name}'（{path.name}）の densities.{dn}.{tn}.{rn}",
+                                                              check_unknown=False))
+    _check_readable_pairs(own, name, path)
+    parent = own.get("extends")
+    if parent is not None and not isinstance(parent, str):
+        fail(f"レイアウト '{name}': extends はレイアウト名（文字列）で指定してください")
+    if parent is None and name != "default":
+        parent = "default"
+    elif parent is None and path.resolve() != (deck_paths.bundled_dir("layouts") / "default.json").resolve():
+        parent = "default"   # 利用者が置いた default.json は、同梱の default を土台にして差分だけ上書きする
+    if parent:
+        base = _load_layout_chain(parent, dirs, seen + [(name, path.resolve())], f"レイアウト '{name}' の extends")
+        merged = deep_merge(base, own)
+    else:
+        merged = copy.deepcopy(own)
+    merged.pop("extends", None)
+    merged["name"] = name
+    if "tokens" in own and not isinstance(own["tokens"], dict):
+        fail(f"レイアウト '{name}': tokens は {{ グループ: {{ 名前: 値 }} }} の形にしてください")
+    return merged
+
+
+def shape_dirs(deck_dir: Path):
+    """shape（形のプリセット）の探索ディレクトリ（環境変数 SLIDE_DECK_SHAPES → デッキ → 親 → カレント → 同梱）。"""
+    return deck_paths.search_dirs("shapes", deck_dir)
+
+
+def _check_readable_pairs(own: dict, name: str, path) -> None:
+    """レイアウト JSON の readable_pairs（タイプ名 → [[領域, 文字色のキー, [地の色…]], …]）と todo_*（#RRGGBB）の形を確かめる。
+    形が違うと、描画の途中で TypeError になる・黙って既定色に戻る、のどちらかになるので、ここで場所つきで知らせる。"""
+    where = f"レイアウト '{name}'（{path.name}）"
+    for key in ("todo_color", "todo_color_on_dark", "todo_bg"):
+        v = own.get(key)
+        if v is not None and not (isinstance(v, str) and re.fullmatch(r"#[0-9A-Fa-f]{6}", v.strip())):
+            warn(f"{where}: {key} は #RRGGBB の形で書いてください（{v!r} は使われず、既定の色になります）→ 例: \"#9A3412\"")
+    pairs = own.get("readable_pairs")
+    if pairs is None:
+        return
+    if not isinstance(pairs, dict):
+        fail(f"{where}: readable_pairs は {{ タイプ名: [[領域, 文字色のキー, [地の色…]], …] }} の形にしてください"
+             f"（{dschema._vtype(pairs)}が書かれています）→ 例: \"readable_pairs\": {{\"steps\": [[\"body\", \"num_color\", [\"body.fill\"]]]}}")
+    for tname, specs in pairs.items():
+        if isinstance(tname, str) and tname.startswith("_"):
+            continue            # "_comment" などのメモ
+        if not isinstance(specs, list):
+            fail(f"{where}: readable_pairs.{tname} は [[領域, 文字色のキー, [地の色…]], …] の配列にしてください"
+                 f"（{dschema._vtype(specs)}が書かれています）→ 使わないタイプは [] にするか、キーごと消す")
+        for k, spec in enumerate(specs):
+            if not (isinstance(spec, list) and len(spec) == 3 and isinstance(spec[0], str) and isinstance(spec[1], str)
+                    and isinstance(spec[2], list) and all(isinstance(o, str) for o in spec[2])):
+                fail(f"{where}: readable_pairs.{tname}[{k}] は [領域, 文字色のキー, [地の色…]] の形にしてください"
+                     f"（地の色は色トークン名 / hex / \"領域.キー\" / \"@ground\" の配列）→ 例: [\"body\", \"num_color\", [\"body.fill\"]]")
+
+
+def load_layout(name, deck_dir=None):
+    """meta.layout の名前からレイアウトを探して読む（探索は layout_dirs。名前だけ受け付け、パスは fail）。
+    形トークンの参照（$radius.card など）は既定の tokens（classic）で解決済みの形で返す。shape・テーマの層を重ねるのは load_deck
+    （元の参照つきのレイアウトは "_unresolved" に持つ）。"""
+    raw = _load_layout_chain(name, layout_dirs(deck_dir), [], "meta.layout")
+    out = shp.apply_to_layout(raw, None, None, fail=fail)
+    out["_unresolved"] = raw
+    return out
+
+
+def _apply_shape(layout, theme, meta, deck_dir):
+    """形の層を重ねる: レイアウト既定 → shape（meta.shape、無ければテーマの shape、無ければ classic）→ テーマの tokens / layout。
+    ``$`` 参照を解決したレイアウトと shape 名を返す。"""
+    key = "meta.shape"
+    resolved_base = layout                            # 領域名・値の型の検査に使う（既定 tokens で解決済み）
+    layout = layout.get("_unresolved") or layout      # 参照つきの元のレイアウトに shape の層を重ねる
+    name = meta.get("shape")
+    if name is None:
+        name = theme.get("shape")
+        key = f"テーマ '{theme.get('name', '')}' の shape"
+    shape = None
+    if name is not None:
+        shape = shp.load_shape(name, deck_dir, key, fail=fail)
+        _report_issues(shp.validate_shape(shape, name, layout.get("tokens"), resolved_base, theme.get("colors") or {}))
+    else:
+        name = shp.DEFAULT_SHAPE
+    th = {}
+    if theme.get("tokens") or theme.get("layout"):
+        th = {"tokens": theme.get("tokens"), "layout": theme.get("layout")}
+        where = f"テーマ '{theme.get('name', '')}'"
+        _report_issues(shp.check_tokens(th["tokens"], layout.get("tokens"), where))
+        _report_issues(shp.check_layout_diff(th["layout"], where, shp.merge_tokens(layout.get("tokens"), (shape or {}).get("tokens"),
+                                                                                  th["tokens"] if isinstance(th["tokens"], dict) else None),
+                                             resolved_base, theme.get("colors") or {}))
+    out = shp.apply_to_layout(layout, shape, th or None, fail=fail)
+    out["_shape"] = name
+    return out, name
+
+
 def load_deck(deck_dir: Path):
     deck = load_json(deck_dir / "deck.json")
     if not isinstance(deck, dict):
@@ -260,8 +543,15 @@ def load_deck(deck_dir: Path):
     meta = deck.get("meta", {})
     if not isinstance(meta, dict):
         fail("deck.json の形式が不正です（meta はオブジェクトである必要があります）")
-    theme = load_theme(meta.get("theme", "default"), theme_dirs(deck_dir))
-    layout = load_json(ROOT / "templates" / "layouts" / f"{meta.get('layout', 'default')}.json")
+    theme_name = meta.get("theme", "default")
+    if not isinstance(theme_name, str) or not theme_name.strip():
+        fail("meta.theme はテーマ名（文字列。例: \"default\"）で指定してください")
+    theme = load_theme(theme_name, theme_dirs(deck_dir))
+    layout = load_layout(meta.get("layout", "default"), deck_dir)
+    layout, shape_name = _apply_shape(layout, theme, meta, deck_dir)
+    theme["tokens"] = copy.deepcopy(layout["tokens"])     # パターン・dataviz・canvas が同じ解決済みの表を読む
+    layout["_colors"] = theme.get("colors") or {}         # resolve_style が「地の色に対して読める文字色」を決めるために読む（apply_readable_pairs）
+    theme["_shape"] = shape_name
     # 文字あふれの見積もり・改行位置の調整はテーマのフォントの実測字幅で行う（Pillow が無ければ近似）
     ja_text.set_fonts(theme.get("fonts", {}))
     return deck, theme, layout
@@ -276,30 +566,611 @@ def deep_merge(base, over):
     return out
 
 
-def resolve_style(layout, deck, slide):
+class WrapSrc:
+    """apply_wrap_fix が文に入れた改行を取り除いた元の内容（変えたキーだけ）。スライド・ブロックの `_wrap_src` に持たせる。
+    大きさを決める自動フィットは、この元の文で行う（改行の有無で大きさが揺れない。順序は「大きさを決める → 決まった大きさで改行を入れる」）。
+    辞書・リスト・文字列ではないので、内容を走査する処理（【要確認】の一覧など）には見えない。"""
+    __slots__ = ("orig",)
+
+    def __init__(self, orig: dict):
+        self.orig = orig
+
+
+def _sizing_view(slide):
+    """大きさを決めるときに見るスライド（ブロック）の内容。文節の改行を入れていれば、入れる前の文に戻したもの。"""
+    src = slide.get("_wrap_src") if isinstance(slide, dict) else None
+    return {**slide, **src.orig} if isinstance(src, WrapSrc) else slide
+
+
+def resolve_style(layout, deck, slide, block_defaults=None):
     """スタイル解決順: layout["common"]（全タイプ共通の領域。brand 等）
        ← layout["types"][t]（タイプ既定値）
        ← meta.layout_overrides.common（全タイプ共通のデッキ全体調整）
        ← meta.layout_overrides[t]（タイプ単位のデッキ全体調整）
        ← slide.style（スライド個別の微修正）"""
     t = slide.get("type")
+    drawn = slide                          # 合成ブロックの描画には、改行を入れた内容のまま渡す
+    slide = _sizing_view(slide)            # 大きさ・余白の決定は、文節の改行を入れる前の内容で行う
+    if not layout.get("_tokens_resolved"):
+        # load_deck を通っていないレイアウト（json から直接読んだものなど）は、既定の tokens で $ 参照を解決する
+        layout = shp.apply_to_layout(layout, None, None, fail=fail)
     types = layout.get("types", {})
     if not t:
         fail("スライドに type がありません")
     if t not in types:
         fail(f"未知のスライドタイプ: {t}")
-    st = deep_merge(layout.get("common", {}), types[t])
-    overrides = deck.get("meta", {}).get("layout_overrides", {})
-    st = deep_merge(st, overrides.get("common", {}))
-    st = deep_merge(st, overrides.get(t, {}))
-    st = deep_merge(st, slide.get("style", {}))
+    # split は composite（見出し骨格・ブロックの枠と既定）に、パネルの領域を足したもの。composite への shape・密度の指定がそのまま効く
+    base_t = deep_merge(types["composite"], types[t]) if t == "split" and "composite" in types else types[t]
+    st = deep_merge(layout.get("common", {}), base_t)
+    # variant（全面系タイプの見た目の型）と背景の文字色（palette）。タイプ既定の上、密度・利用者の明示値の下
+    st = hero.apply_style_layers(st, layout, deck, slide, t)
+    # 密度（meta.density / slide.density）のプリセット。レイアウト既定の上、利用者の明示値（overrides・slide.style）の下
+    if t == "split":
+        st = deep_merge(st, autofit.density_layer(layout, autofit.density_of(deck, slide), "composite"))
+        hero.apply_split_geometry(st, slide, bool((deck.get("meta") or {}).get("brand")))
+    st = deep_merge(st, autofit.density_layer(layout, autofit.density_of(deck, slide), t))
+    if block_defaults:
+        # 合成スライドのブロック: その中で釣り合う文字サイズ・余白（types.composite.blocks.<タイプ>）。密度の上、利用者の明示値の下
+        st = deep_merge(st, block_defaults)
+    overrides = shp.resolve_style_refs(deck.get("meta", {}).get("layout_overrides") or {}, layout,
+                                       "meta.layout_overrides", fail)
+    slide_style = shp.resolve_style_refs(slide.get("style") or {}, layout, "style", fail)
+    for layer in (overrides.get("common"), overrides.get(t), slide_style):
+        st = deep_merge(st, layer or {})
+        shp.apply_bold_override(st, layer)       # 利用者が bold を書いた領域は、レイアウト・shape 由来の weight より bold を優先
     if t == "code" and slide.get("annotations") and "w" not in (slide.get("style", {}).get("code") or {}):
         st["code"]["w"] = round(st["code"]["w"] * 0.6)   # 右の 4 割を注釈の欄にする
     if t == "agenda" and any(isinstance(it, dict) and it.get("desc") for it in slide.get("items", []) or []) \
             and "row_h" not in (slide.get("style", {}).get("body") or {}):
         st["body"]["row_h"] = max(st["body"].get("row_h", 44), 64)   # 説明文の2行目が入る高さ
         st["body"]["gap"] = min(st["body"].get("gap", 10), 8)
-    return pe.shrink_for_bottom(slide, st)
+    if t == "status_table" and not status_legend(slide):
+        # 凡例を出さない（legend: false）ときは、凡例のために空けてあるタイトル脇の幅（690px）を、罫線と同じ幅まで使う（長いタイトルが 2 行に折れない）
+        wide = (st.get("rule") or {}).get("w")
+        ex = autofit.explicit_props(deck, slide)
+        for reg in ("eyebrow", "title"):
+            if isinstance(st.get(reg), dict) and wide and "w" not in ex.get(reg, ()):
+                st[reg]["w"] = wide
+    if t == "status_table" and isinstance(slide.get("columns"), list) and len(slide["columns"]) >= 3:
+        # 既定の col_widths は 4 列分。3 列や 5 列以上の最小形でも組めるよう、利用者が列幅を書いていないときだけ
+        # 内容列の数に合わせて作る（ラベル列・状況列は既定のまま、内容列で残りを等分）
+        widths = st.get("table", {}).get("col_widths")
+        user_set = any(isinstance(src, dict) and isinstance(src.get("table"), dict) and src["table"].get("col_widths")
+                       for src in (overrides.get("common"), overrides.get(t), slide.get("style")))
+        n = len(slide["columns"])
+        if not user_set and isinstance(widths, list) and len(widths) != n and len(widths) >= 3:
+            k = n - 2
+            total_content = sum(widths[2:])
+            st["table"]["col_widths"] = widths[:2] + [round(total_content / k, 3)] * k
+    if not block_defaults:
+        _brand_clearance(deck, slide, st)
+    # 自動フィット（文字サイズ・列幅・行高。明示値は動かさない）。結論帯・出典の分の下端は自動フィットが見るので、
+    # 表の行高を詰める従来処理は、自動フィットが行高を決めたときは飛ばす
+    fit = autofit.apply(layout, deck, slide, st)
+    # rule.style（短い帯・縦帯・なし）は、利用者の層（density・overrides・style）と自動フィットが決めたタイトルの位置・大きさに合わせて最後に当てる
+    user_rule = {}
+    for layer in (overrides.get("common"), overrides.get(t), slide_style):
+        if isinstance(layer, dict) and isinstance(layer.get("rule"), dict):
+            user_rule.update(layer["rule"])
+    if user_rule and isinstance(st.get("rule"), dict) and shp.tok(layout.get("tokens"), "rule", "style", "line") == "none":
+        warn(f"rule.style が none のため、type={t} の rule への指定（meta.layout_overrides / style の rule）は無視します（罫線は描きません）"
+             f" → 罫線を出したいなら shape の rule.style を line / short / bar-left にする。この指定を消してもよい")
+    if isinstance(fit, dict):
+        hero.fit_boxes_to_content(st, fit.get("info") or {}, slide.get("style"))      # variant の箱（closing の contact）を中身の高さに合わせる
+    tl = ((fit.get("info") or {}).get("title") or {}).get("lines") if isinstance(fit, dict) else None
+    shp.apply_rule_style(st, layout.get("tokens"), t, user_rule=user_rule, title_lines=tl if isinstance(tl, int) else 1)
+    st = pe.shrink_for_bottom(slide, st, skip_table_rows=("table" in fit.get("info", {}) and autofit.autofit_on(deck, slide)))
+    apply_readable_pairs(st, layout, deck, slide, t)
+    if t in COMPOSITE_TYPES:
+        st["_composite"] = resolve_composite_blocks(layout, deck, drawn, st)       # ブロックごとの矩形・枠・スタイル（描画と検証が共有）
+    return st
+
+
+CARD_PHRASE_MIN_SIZE = 20     # cards の見出し・本文がこの大きさ以上のとき、改行を文節の切れ目に置く（語の途中で折れない）
+BRAND_FIT_SAFETY = 0.97       # brand でタイトルの幅を狭めたとき、自動フィットの見積もりに掛ける余裕（幅の 97%）
+
+
+def _brand_clearance(deck, slide, st):
+    """meta.brand を付けたとき、タイトルの右端を brand の文字の左端より brand.clear_gap 手前までに狭める（長いタイトルが brand に重なるのを避ける）。
+    タイトルが折れるときは自動フィット・文節折り返しがこの幅で行う。利用者がタイトルの幅（style.title.w）を書いたときは動かさない。"""
+    brand_text = (deck.get("meta") or {}).get("brand")
+    br = st.get("brand")
+    if not brand_text or not isinstance(brand_text, str) or not isinstance(br, dict):
+        return
+    if not all(isinstance(br.get(k), (int, float)) for k in ("x", "y", "w", "h")):
+        return
+    size = br.get("size", 23)
+    tw = min(autofit.text_em(brand_text, bool(br.get("bold"))) * size + 4, br["w"])
+    left = br["x"] + br["w"] - tw if br.get("align", "left") == "right" else br["x"]
+    ex = autofit.explicit_props(deck, slide)
+    for name, min_w in (("title", 200), ("legend", 300)):          # legend: status_table の凡例（タイトル脇に置く）
+        r = st.get(name)
+        if not isinstance(r, dict) or not all(isinstance(r.get(k), (int, float)) for k in ("x", "y", "w", "h")):
+            continue
+        if r["y"] >= br["y"] + br["h"] or r["y"] + r["h"] <= br["y"]:
+            continue                              # 縦に重ならない（brand より下にある型）
+        if "w" in ex.get(name, ()):
+            continue
+        new_w = left - br.get("clear_gap", 24) - r["x"]       # clear_gap: brand の文字との間に空ける幅（レイアウト JSON の brand）
+        if min_w <= new_w < r["w"]:
+            r["w"] = round(new_w, 1)
+            # 狭めた幅ぎりぎりの長さのタイトルは、見積もりが 1 行に収まると判断してもブラウザは 1 字だけ 2 行目に送る（s4-C-02）。
+            # 狭めたときだけ見積もりに余裕を持たせる（利用者が fit_safety を書いていれば、小さいほうを採る）
+            r["fit_safety"] = min(r.get("fit_safety", 1.0), BRAND_FIT_SAFETY)
+
+
+def _pair_color(colors: dict, st: dict, region: dict, ref):
+    """readable_pairs の色の参照を hex にする。参照は同じ領域のキー / "領域.キー" / テーマの色トークン / hex。解決できなければ None。"""
+    v = ref
+    if isinstance(ref, str):
+        if ref in region:
+            v = region[ref]
+        elif "." in ref:
+            rn, _, pn = ref.partition(".")
+            v = (st.get(rn) or {}).get(pn) if isinstance(st.get(rn), dict) else None
+    if not isinstance(v, str):
+        return None
+    if v in colors:
+        v = colors[v]
+    return dschema.normalize_hex(v) if _HEX_RE.match(v) else None
+
+
+def _ground_of(st: dict, layout: dict, deck: dict, slide: dict, t: str, region: str):
+    """領域 region の文字の地の色（トークン名 / hex）。背景（slide["_bg"]）があれば None（背景の側が決める）。
+    variant に panel があるとき: on_bg に挙げた領域は panel の塗り、それ以外はスライドの下地。on_bg が無い variant は不明（None）。"""
+    if slide.get("_bg"):
+        return None
+    if t == "split" and region == "brand":
+        panel = st.get("panel")      # split の brand はパネルの上（hero_engine.apply_split_geometry）。地はパネルの塗り
+        return panel.get("fill") if isinstance(panel, dict) else None
+    bgr = next((st[k] for k in ("bg", "background") if isinstance(st.get(k), dict) and st[k].get("fill")), None)
+    base = bgr.get("fill") if bgr else None
+    panel = st.get("panel")
+    if isinstance(panel, dict) and panel.get("fill") and hero.variant_of(layout, deck, slide) is not None:
+        only = hero.on_bg_regions(layout, t, hero.variant_of(layout, deck, slide), bool((deck.get("meta") or {}).get("brand")), slide)
+        if only is None:
+            return None
+        return panel["fill"] if region in only else base
+    return base
+
+
+def apply_readable_pairs(st: dict, layout: dict, deck: dict, slide: dict, t: str):
+    """レイアウトの readable_pairs（タイプ別 [[領域, 文字色のキー, [地の色…]], …]。"*" は全タイプ）に従って、
+    文字色が地の色の上で 4.5:1 に満たなければ、同じ色味のまま白 / 黒の側へ寄せる（color_pick.readable_on_all）。
+    地の色は、同じ領域のキー・"領域.キー"・テーマの色トークン・hex のどれか。"@ground" は「この領域の文字が載る下地」
+    （章扉・表紙・statement の背景の塗り、variant のパネル。背景つきのスライドは hero_engine の palette が決めるので触らない）。
+    利用者が明示した値（meta.layout_overrides / slide.style）は動かさない。地の色が複数あるときは全部の上で読める色にする。"""
+    colors = layout.get("_colors")
+    pairs = layout.get("readable_pairs")
+    if not colors or not isinstance(pairs, dict):
+        return
+    explicit = autofit.explicit_props(deck, slide)
+    for spec in list(pairs.get("*") or []) + list(pairs.get(t) or []):
+        if not (isinstance(spec, (list, tuple)) and len(spec) == 3):
+            continue
+        rn, prop, ons = spec
+        region = st.get(rn)
+        if not isinstance(region, dict) or prop not in region or prop in explicit.get(rn, ()):
+            continue
+        fg = _pair_color(colors, st, region, region[prop])
+        bgs = []
+        for o in ons:
+            if o == "@ground":
+                o = _ground_of(st, layout, deck, slide, t, rn)
+            bgs.append(_pair_color(colors, st, region, o))
+        if fg is None or not any(bgs):
+            continue
+        new = cp.readable_on_all(fg, bgs)
+        if new != fg:
+            region[prop] = new
+
+
+# ---------------------------------------------------------------------------
+# 合成スライド（type: "composite"）: ブロックごとの矩形・枠・スタイルの解決
+# ---------------------------------------------------------------------------
+# 設計: ブロックを「見出し骨格なしの小さなスライド」として扱う。ブロックの辞書から bs（スライドの形）を作り、
+# 本文領域（bullets の body、cards の grid …）をブロックの矩形で差し替えて resolve_style に通す。
+# 矩形は bs["style"] に書くので、自動フィットは明示値として動かさず、その矩形に収まるよう文字サイズなどを決める。
+# 描画は既存の html_slide_body(bare=True) / build_pptx のビルダー（chrome を呼ばない）をそのまま使う。
+
+COMPOSITE_TYPES = ("composite", "split")      # ブロックを格子に置くタイプ（split は本文領域がパネルの残り）
+COMPOSITE_CHROME_REGIONS = ("eyebrow", "title", "rule", "lead", "footer_l", "footer_r", "brand", "conclusion", "source")
+# ブロックのタイプ → 本文領域の名前（矩形を差し替える領域）。A 型タイプ（提案書系・kpi・chart）と pattern は "body"
+BLOCK_MAIN_REGION = {
+    "bullets": "body", "steps": "body", "table": "table", "code": "code", "cards": "grid",
+    "architecture": "diagram", "dataflow": "diagram", "lifecycle": "diagram", "sequence": "diagram",
+    "swimlane": "flow", "schedule": "chart", "matrix": "grid", "status_table": "table",
+    "pattern": "body",
+}
+# valign（縦位置）を領域の valign に写せるタイプ
+BLOCK_VALIGN_REGION = {"bullets": "body", "steps": "body", "cards": "grid", "matrix": "grid"}
+# emphasis（濃い塗りに白文字）の色替えに対応する既存タイプ。ほかは emphasis を無視して warn（合成専用の text / callout は対応）
+EMPHASIS_TYPES = ("bullets",)
+# 合成ブロックにできないことが実装上わかったタイプ → 理由と直し方（実装の結果で更新する）
+BLOCK_RUNTIME_UNSUPPORTED: dict = {}
+
+
+def block_main_region(bt):
+    if bt in BLOCK_MAIN_REGION:
+        return BLOCK_MAIN_REGION[bt]
+    if engine_registry.has(bt):
+        return "body"
+    return None
+
+
+def block_type_problem(bt, types_known) -> str | None:
+    """ブロックの type が使えないときの理由と直し方。使えるなら None。"""
+    if not isinstance(bt, str):
+        return f"type は文字列で指定してください（{dschema._vtype(bt)}が書かれています）"
+    if bt in comp.NATIVE_TYPES:
+        return None
+    if bt in comp.UNSUPPORTED:
+        return f"{bt} は合成スライドのブロックにできません。{comp.UNSUPPORTED[bt]}"
+    if bt in BLOCK_RUNTIME_UNSUPPORTED:
+        return f"{bt} は合成スライドのブロックにできません。{BLOCK_RUNTIME_UNSUPPORTED[bt]}"
+    if block_main_region(bt) is None:
+        usable = sorted(set(comp.NATIVE_TYPES) | set(BLOCK_MAIN_REGION) | set(engine_registry.names()))
+        if bt in types_known:
+            return f"{bt} は合成スライドでは使えません → 単独のスライドにする（ブロックに使えるタイプ: {', '.join(usable)}）"
+        hint = difflib.get_close_matches(bt, usable, n=1)
+        return (f"未知のタイプ '{bt}' です{('（もしかして ' + hint[0] + '）') if hint else ''}"
+                f" → ブロックに使えるタイプ: {', '.join(usable)}")
+    if bt not in types_known and bt not in comp.NATIVE_TYPES:
+        return f"{bt} のレイアウト定義がありません"
+    return None
+
+
+def block_slide(slide, block, k, deck):
+    """合成ブロックを、既存タイプのスライドとして扱える辞書にする（内容のキーだけ引き継ぐ浅いコピー）。style は呼び出し側が作る。"""
+    bs = {key: v for key, v in block.items() if key not in comp.BLOCK_COMMON_KEYS and key not in _BLOCK_IGNORED_KEYS}   # 「ブロックでは描かれません」と警告するキー（conclusion など）は描かない（S5b）
+    bs["type"] = block.get("type")
+    bs["density"] = autofit.density_of(deck, slide)
+    if not autofit.autofit_on(deck, slide):
+        bs["autofit"] = False
+    bs["_bare"] = True
+    bs["_block"] = k
+    if bs["type"] == "pattern":
+        bs.setdefault("title", "（ブロック）")      # パターンの検査はスライド直下の title を求める。ブロックでは見出し骨格を描かないので形だけ満たす
+    return bs
+
+
+def _matrix_axis_boxes(ax: dict, gx: float, gy: float, gw: float, gh: float, xa: dict, ya: dict) -> list:
+    """matrix の軸ラベル 6 個（縦軸の名前・高 / 低、横軸の名前・低 / 高）の位置と文字。HTML と PPTX が共有する。
+    位置は格子（gx, gy, gw, gh）からの相対で決め、オフセットはレイアウトの axis 領域のトークンで持つ（格子を動かすと軸ラベルも付いてくる）。
+    縦軸の名前の x（x0）は、指定が無ければ格子の左端から left_margin だけ左（既定 100）。"""
+    size = ax.get("size", 15)
+    acol, ncol = ax.get("color", "muted"), ax.get("name_color", "text")
+    th = ax.get("tick_h", 22)
+    ytw, ytg = ax.get("y_tick_w", 88), ax.get("y_tick_gap", 8)
+    xtw = ax.get("x_tick_w", 160)
+    x0 = ax.get("x0", gx - ax.get("left_margin", 100))
+    return [
+        {"text": "▲ " + str(ya.get("label", "")),
+         "region": {"x": x0, "y": gy + ax.get("y_name_dy", -30), "w": ax.get("y_name_w", 360), "h": th, "size": size, "color": ncol, "bold": True}},
+        {"text": str(ya.get("high", "")),
+         "region": {"x": gx - ytw - ytg, "y": gy + ax.get("y_high_dy", 6), "w": ytw, "h": th, "size": size, "color": acol, "align": "right"}},
+        {"text": str(ya.get("low", "")),
+         "region": {"x": gx - ytw - ytg, "y": gy + gh + ax.get("y_low_dy", -28), "w": ytw, "h": th, "size": size, "color": acol, "align": "right"}},
+        {"text": str(xa.get("label", "")) + " ▶",
+         "region": {"x": gx, "y": gy + gh + ax.get("x_name_dy", 30), "w": gw, "h": th, "size": size, "color": ncol, "align": "center", "bold": True}},
+        {"text": str(xa.get("low", "")),
+         "region": {"x": gx, "y": gy + gh + ax.get("x_tick_dy", 6), "w": xtw, "h": th, "size": size, "color": acol}},
+        {"text": str(xa.get("high", "")),
+         "region": {"x": gx + gw - xtw, "y": gy + gh + ax.get("x_tick_dy", 6), "w": xtw, "h": th, "size": size, "color": acol, "align": "right"}},
+    ]
+
+
+def _block_rect_layer(bt, rect, block):
+    """ブロックの内容矩形を、そのタイプの本文領域に差し替える style の層。"""
+    x, y, w, h = rect
+    region = block_main_region(bt)
+    r = {"x": round(x, 2), "y": round(y, 2), "w": round(w, 2), "h": round(h, 2)}
+    layer = {region: r}
+    if region == "body" and (bt == "pattern" or engine_registry.has(bt)):
+        r["y_no_lead"] = r["y"]               # lead が無いと本文の y を y_no_lead で上書きする仕組みを、矩形の y に合わせる
+    if bt == "schedule":
+        r["y_no_lead"], r["h_no_lead"] = r["y"], r["h"]
+    r["block_rect"] = True                    # 矩形は格子が決めた値（利用者の明示ではない）。中身が薄いとき文字を大きくする・箱を詰めるのを許す（autofit.thin_*）
+    if bt == "matrix":
+        # 軸ラベル（縦軸の名前・高低・横軸の名前）が格子の外に出るぶんの余白を、矩形の中に取る（左 100・上 34・下 58）
+        ml, mt, mb = 100, 34, 58
+        r.update({"x": round(x + ml, 2), "y": round(y + mt, 2), "w": round(max(w - ml, 40), 2), "h": round(max(h - mt - mb, 40), 2)})
+        layer["axis"] = {"x0": round(x, 2)}
+    if bt == "status_table":
+        # 凡例は矩形の上に置き（標準ではスライド右上のタイトル脇）、表はその下
+        lh = 84
+        has_legend = block.get("legend") is not False
+        layer["legend"] = {"x": round(x, 2), "y": round(y, 2), "w": round(w, 2), "h": lh}
+        if has_legend:
+            r.update({"y": round(y + lh + 12, 2), "h": round(max(h - lh - 12, 60), 2)})
+    va = block.get("valign")
+    if va in comp.VALIGNS and bt in BLOCK_VALIGN_REGION:
+        layer.setdefault(BLOCK_VALIGN_REGION[bt], r)["valign"] = va
+    return layer
+
+
+def _emphasize_style(bst, bt, bk):
+    """emphasis ブロックの文字色を、濃い塗りの上で読める色にする（対応するタイプだけ）。"""
+    fg = bk.get("emphasis_color", "on_primary")
+    if bt == "bullets":
+        for key in ("color", "child_color", "marker_color"):
+            bst["body"][key] = fg
+
+
+def resolve_block(layout, deck, slide, st, k, block, rect, issues, limits=None):
+    """合成ブロック 1 つの解決: 矩形 rect（x, y, w, h）に、枠・小見出し・本文のスタイルとフィット（文字サイズなど）を決める。
+    resolve_composite_blocks が格子の矩形ごとに呼ぶ。S2d の split のように、格子を使わず自分で決めた矩形にブロックを置くときも、
+    これをそのまま呼べる（slide は {"blocks": [...]} を持つ親スライド、st はその resolve_style の結果、k は blocks の何番目か）。
+    戻り値は resolve_composite_blocks の説明にあるブロックの dict。フィットの警告・注記は issues（[level, code, 文]）に足す。"""
+    bk = st.get("block") or {}
+    bdefs = st.get("blocks") or {}
+    bt = block.get("type") if isinstance(block, dict) else None
+    where = f"{{label}}の {k + 1} つ目のブロック（{bt}）"
+    sblock = _sizing_view(block)                      # 文字の大きさのフィットは、文節の改行を入れる前の内容で行う（block は描画用）
+    blk = {"index": k, "type": bt, "block": block, "rect": rect, "native": bt in comp.NATIVE_TYPES,
+           "emph": bool(block.get("emphasis")) and (bt in ("text", "callout") or bt in EMPHASIS_TYPES), "bs": None, "st": None, "fit": None, "heading_fit": None}
+    # emphasis が効かないタイプ（警告して無視するもの）は、枠も強調の箱にしない（frame の指定どおり）
+    gblock = block if (blk["emph"] or not block.get("emphasis")) else {**block, "emphasis": False}
+    geo0 = comp.frame_geometry(rect, gblock, bk)
+    if block.get("heading"):
+        hf = comp.fit_heading(str(block["heading"]), geo0["heading"][2], bk)
+        blk["heading_fit"] = hf
+        if not hf["fits"]:
+            issues.append(["warn", "block-heading", f"{where}: 小見出しが 1 行に収まりません（{hf['size']}px まで縮めても{hf['lines']}行）"
+                           f" → 小見出しを短くする（目安: ブロックの幅に 1 行）"])
+    geo = comp.frame_geometry(rect, gblock, bk, blk["heading_fit"])
+    blk["geo"] = geo
+    cx, cy, cw, ch = geo["content"]
+    user_style = block.get("style") if isinstance(block.get("style"), dict) else {}
+    if bt in comp.NATIVE_TYPES:
+        reg = deep_merge(st.get(bt) or {}, user_style.get(bt) or {})
+        blk["region"] = reg
+        if bt in ("text", "callout"):
+            reg["block_rect"] = True                  # 矩形は格子が決めた値。中身が薄いとき文字を大きくするのを許す（利用者が size を書いた・autofit が切れているときは動かさない）
+            if "size" in (user_style.get(bt) or {}) or "size" in autofit.explicit_props(deck, slide).get(bt, ()) or not autofit.autofit_on(deck, slide):
+                reg["_size_fixed"] = True
+            lim = (limits or {}).get(bt)
+            if lim is not None:
+                reg["thin_limit"] = lim
+        if bt == "text":
+            fit = comp.fit_text_block(sblock, geo["content"], reg)
+        elif bt == "callout":
+            fit = comp.fit_callout(sblock, geo["content"], reg)
+        else:
+            fit = {"caption_h": comp.caption_height(sblock, reg)}
+        if sblock is not block and bt == "text":
+            fit["paras"] = comp.text_paragraphs(block)       # 描く段落は改行を入れた内容（大きさは入れる前の内容で決めた）
+        blk["fit"] = fit
+        blk["thin_factor"] = fit.get("thin_factor")
+        if bt == "text":
+            ratio = bk.get("thin_center_ratio")
+            if (ratio and geo["frame"] == "box" and not block.get("valign") and "valign" not in (user_style.get(bt) or {})
+                    and fit["avail"] > 0 and fit["need"] < fit["avail"] * ratio and not reg.get("_size_fixed")):
+                if not _center_heading_group(slide, block, blk, fit["need"], bst=None):
+                    reg["valign"] = "middle"
+                blk["thin_centered"] = True
+        if bt in ("text", "callout"):
+            over = int(fit["need"] - fit["avail"])
+            if not fit["fits"]:
+                issues.append(["warn", "block-overflow", f"{where}: 文字がブロックに収まりません（{fit['size']}px まで縮めても約{over}px はみ出す。"
+                               f"{len(str(block.get('text') or ''))}字）→ 文を短くするか、ブロックを広くする（columns / rows の比率）、2 枚に分ける"])
+            elif fit["cap"] - fit["size"] >= 2:
+                issues.append(["note", "block-shrunk", f"{where}: 文字が多いので {fit['cap']}px → {fit['size']}px に縮めました → 短くすると大きく読ませられます"])
+        return blk
+    bs = block_slide(slide, block, k, deck)
+    layer = _block_rect_layer(bt, geo["content"], block)
+    lim = (limits or {}).get(bt)
+    if lim is not None:
+        layer[block_main_region(bt)]["thin_limit"] = lim          # 同じ種類のブロックで文字の倍率をそろえる上限（resolve_composite_blocks の 2 周目）
+    region0 = block_main_region(bt)
+    if any(_user_set_block_prop(deck, slide, block, bs, bt, region0, k) for k in THIN_SIZE_KEYS.get(bt, ())):
+        layer[region0]["thin_grow"] = 1.0                         # 利用者が文字の大きさを書いた種類は、中身が少なくても大きくしない（meta.layout_overrides.composite.blocks も含む）
+    bs["style"] = deep_merge(copy.deepcopy(user_style), layer)
+    bst = resolve_style(layout, deck, bs, block_defaults=bdefs.get(bt))
+    for key in COMPOSITE_CHROME_REGIONS:
+        bst.pop(key, None)
+    if blk["emph"] and bt in EMPHASIS_TYPES:
+        _emphasize_style(bst, bt, bk)
+    blk["bs"], blk["st"] = bs, bst
+    blk["thin_factor"] = ((bst.get("_fit") or {}).get("info") or {}).get("thin_factor")
+    _thin_valign(deck, slide, st, block, bs, bst, blk)
+    if bt == "table":
+        added = _stretch_table_block(deck, slide, st, block, bs, bst)
+        _center_lone_table(deck, slide, st, block, bs, bst, blk, added)
+        _warn_sparse_block(blk, bk, bst, issues, where, extra=added)
+    elif bt == "bullets":
+        _warn_sparse_block(blk, bk, bst, issues, where)
+    elif bt == "steps":
+        n_steps = len([x for x in (bs.get("steps") or []) if isinstance(x, dict)])
+        min_w = bk.get("steps_min_w")
+        body_w = (bst.get("body") or {}).get("w", 0)
+        if min_w and n_steps >= 2 and body_w / n_steps < min_w:
+            issues.append(["warn", "block-steps-narrow", f"{where}: steps の 1 段の幅が約{int(body_w / n_steps)}px しかありません（{n_steps} 段をブロックの幅 {int(body_w)}px に横並び）。"
+                           f"文が 1〜2 文字で折り返して読みにくくなります → 幅の広いブロックにする（col_span / columns の比率）、段を減らす、または bullets のブロックにする"])
+    return blk
+
+
+def _thin_valign(deck, slide, st, block, bs, bst, blk):
+    """箱（frame: box）つきのブロックで、中身が枠の thin_center_ratio 割未満のとき、本文を箱の縦中央に置く（上に寄って下が空くのを避ける）。
+    箱の見出しは動かさない（隣のブロックと見出しの位置がそろう）。利用者が valign を書いたとき・箱が無いときは動かさない。
+    値は types.composite.block.thin_center_ratio（0 または無しで無効）。"""
+    bt = blk["type"]
+    ratio = (st.get("block") or {}).get("thin_center_ratio")
+    region = BLOCK_VALIGN_REGION.get(bt)
+    if not ratio or not region or blk["geo"]["frame"] != "box" or block.get("valign"):
+        return
+    if _user_set_block_prop(deck, slide, block, bs, bt, region, "valign") or not autofit.autofit_on(deck, slide):
+        return
+    ent = ((bst.get("_fit") or {}).get("info") or {}).get("body" if bt == "bullets" else bt)
+    if not ent or not ent.get("avail") or ent.get("need") is None:
+        return
+    if ent["need"] < ent["avail"] * ratio and isinstance(bst.get(region), dict):
+        if not (bt == "bullets" and _center_heading_group(slide, block, blk, ent["need"], bst=bst)):
+            bst[region]["valign"] = "middle"
+        blk["thin_centered"] = True
+
+
+def _center_heading_group(slide, block, blk, need, bst=None) -> bool:
+    """箱つきブロックで小見出しと本文を 1 つの塊にして箱の縦中央に置く（小見出しだけ上に残って本文と離れるのを避ける・s4-A-02）。
+    同じスライドに小見出しつきの箱が他にもあるときは、見出しの位置をそろえるため塊にしない（False を返して、本文だけ中央に置く従来の置き方）。
+    塊にしたら小見出しと本文の矩形を下へずらして True。bst があれば本文の領域（bullets の body）も同じだけずらす。"""
+    geo = blk["geo"]
+    if not geo.get("heading") or geo["frame"] != "box":
+        return False
+    for j, other in enumerate(slide.get("blocks") or []):
+        if isinstance(other, dict) and j != blk.get("index") and other.get("heading") and comp.frame_of(other) == "box":
+            return False
+    ox, oy, ow, oh = geo["outer"]
+    hx, hy, hw, hh = geo["heading"]
+    cx, cy, cw, ch = geo["content"]
+    pad = geo.get("pad", 0)
+    group_h = (cy - hy) + need
+    off = round((oh - 2 * pad - group_h) / 2, 1)
+    if off < 4:
+        return False
+    geo["heading"] = (hx, round(hy + off, 1), hw, hh)
+    geo["content"] = (cx, round(cy + off, 1), cw, max(1.0, round(ch - off, 1)))
+    if bst is not None:
+        reg = bst.get(BLOCK_VALIGN_REGION.get(blk["type"]))
+        if isinstance(reg, dict) and "y" in reg:
+            reg["y"] = round(reg["y"] + off, 1)
+            if "h" in reg:
+                reg["h"] = max(1.0, round(reg["h"] - off, 1))
+    return True
+
+
+THIN_SIZE_KEYS = {"bullets": ("size",), "steps": ("label_size", "item_size"), "table": ("cell_size",),
+                  "cards": ("heading_size", "body_size", "item_size")}      # これらを利用者が書いたら、中身が少なくても文字を大きくしない
+
+
+def _user_set_block_prop(deck, slide, block, bs, bt, region, key) -> bool:
+    """合成ブロックの region.key を利用者が書いたか（ブロックの style・スライドの style.blocks・meta.layout_overrides の composite.blocks / <タイプ>）。"""
+    if key in autofit.explicit_props(deck, bs).get(region, ()):
+        return True        # ブロックの style と meta.layout_overrides.<タイプ>（autofit が見る明示値）
+    sources = [((slide.get("style") or {}).get("blocks") or {}),
+               ((((deck.get("meta") or {}).get("layout_overrides") or {}).get("composite") or {}).get("blocks") or {})]
+    for src in sources:
+        reg = (src.get(bt) or {}).get(region) if isinstance(src, dict) else None
+        if isinstance(reg, dict) and reg.get(key) is not None:
+            return True
+    return False
+
+
+def _stretch_table_block(deck, slide, st, block, bs, bst):
+    """表のブロックが、表の自然な高さよりずっと高いとき、行の高さを広げて隣のブロックの下端に近づける
+    （上限は types.composite.block.table_row_h_max）。利用者が row_h を書いたときは動かさない。"""
+    info = ((bst.get("_fit") or {}).get("info") or {}).get("table")
+    tr = bst.get("table")
+    if not info or not isinstance(tr, dict) or not info.get("adjusted") or not info.get("rows_fit") or "row_h" not in tr:
+        return 0.0
+    cap_h = (st.get("block") or {}).get("table_row_h_max")
+    n = len(bs.get("rows") or [])
+    if not cap_h or not n or _user_set_block_prop(deck, slide, block, bs, "table", "table", "row_h"):
+        return 0.0
+    spare = info["avail"] - info["total_h"]
+    row_h = info.get("row_h", tr["row_h"])
+    new_h = int(min(cap_h, row_h + spare / n))
+    if new_h - row_h >= 2:
+        tr["row_h"] = new_h
+        return float((new_h - row_h) * n)
+    return 0.0
+
+
+def _center_lone_table(deck, slide, st, block, bs, bst, blk, added):
+    """表だけの split（本文側のブロックが表 1 つ）で、行を広げても余る高さがあれば、表を本文側の上下中央に置く
+    （上に詰まって下が空くのを避ける。talk の表と同じ考え方。types.composite.block.center_lone_table が true のとき）。
+    枠（frame: box）つき・利用者が表の y を書いたとき・複数ブロックのスライドは動かさない。"""
+    if not (st.get("block") or {}).get("center_lone_table") or slide.get("type") != "split":
+        return
+    if len([x for x in (slide.get("blocks") or []) if isinstance(x, dict)]) != 1 or blk["geo"]["frame"] == "box":
+        return
+    info = ((bst.get("_fit") or {}).get("info") or {}).get("table")
+    tr = bst.get("table")
+    ust = block.get("style") if isinstance(block.get("style"), dict) else {}
+    if not info or not isinstance(tr, dict) or not info.get("rows_fit") or "y" in (ust.get("table") or {}):
+        return
+    spare = info.get("avail", 0) - (info.get("total_h", 0) + added)
+    if spare >= 24:
+        tr["y"] = round(tr["y"] + spare / 2, 2)
+
+
+def _warn_sparse_block(blk, bk, bst, issues, where, extra=0.0):
+    """枠（frame: box）つきのブロックの中身が、枠の高さの半分に満たないとき、下が空くことを知らせる（箱は格子の高さいっぱいに描くため）。"""
+    geo = blk["geo"]
+    if geo["frame"] != "box" or blk.get("thin_centered"):
+        return          # 箱でないとき・文字を大きくして縦中央に置いて整えたとき（_thin_valign）は、空きを警告しない
+    ratio = bk.get("sparse_ratio")
+    info = ((bst.get("_fit") or {}).get("info") or {})
+    if not ratio:
+        return
+    ent = info.get("body") if blk["type"] == "bullets" else None
+    if ent:
+        need, avail = ent.get("need"), ent.get("avail")
+    else:
+        t = info.get("table")
+        if not t or not t.get("adjusted"):
+            return
+        need, avail = t.get("total_h", 0) + extra, t.get("avail")      # 行を広げた分も含めた、表の高さ
+    if not need or not avail or avail <= 0:
+        return
+    if need < avail * ratio and avail - need >= bk.get("sparse_min_px", 140):
+        issues.append(["warn", "block-sparse", f"{where}: 枠の中身が少なく、下の約{int(avail - need)}px が空きます（枠の高さの{int(need / avail * 100)}%しか使っていません）"
+                       f" → 項目を増やす、rows の比率を変えて低くする、枠（frame）を外す、2 枚に分ける"])
+
+
+def _grid_spec(slide):
+    """(columns, rows, arrange)。split で何も書かないときは 1 列（ブロックを縦に並べる。パネルの残りは幅が狭いので横には並べない）。"""
+    cols, rows, arr = slide.get("columns"), slide.get("rows"), slide.get("arrange")
+    if slide.get("type") == "split" and cols is None and arr is None:
+        cols = [1]
+    return cols, rows, arr
+
+
+THIN_GROUP = {"bullets": "body", "text": "body", "steps": "body", "cards": "body"}      # 文字を大きくする倍率をそろえるグループ（同じグループの隣のブロックより大きくしない）
+
+
+def resolve_composite_blocks(layout, deck, slide, st):
+    """合成スライドの格子とブロックを解決する。戻り値:
+    {"plan": 格子の割り付け, "body": 本文矩形, "blocks": [ブロックごとの dict], "issues": [[level, code, 文]]}
+    ブロックの dict: index / type / block / rect / geo（枠・小見出し・内容の矩形）/ native（text・callout・image か）/
+    fit（合成専用ブロックの文字サイズ）/ bs, st（既存タイプのブロックのスライド辞書と解決済みスタイル）/ emph。
+    issues の文は {label} を含む（検証が「N枚目（type=composite）」に置き換える）。ここでは warn / fail を出さない。"""
+    blocks = slide.get("blocks")
+    blocks = blocks if isinstance(blocks, list) else []
+    plan = comp.plan_grid(blocks, *_grid_spec(slide))
+    out = {"plan": plan, "body": None, "blocks": [], "issues": []}
+    if plan["problems"] or not blocks:
+        return out
+    b = dict(st["body"])
+    if not slide.get("lead") and "y_no_lead" in b:
+        bottom = b["y"] + b["h"]
+        b["y"] = b["y_no_lead"]
+        b["h"] = bottom - b["y"]
+    out["body"] = b
+    gap = b.get("gap", 24)
+    rects = comp.grid_rects(b, plan, b.get("col_gap", gap), b.get("row_gap", gap))
+    results = []
+    for k, block in enumerate(blocks):
+        iss: list = []
+        results.append((resolve_block(layout, deck, slide, st, k, block, rects[k], iss), iss))
+    # 中身が少なくて文字を大きくしたブロックは、同じスライドの同じ種類のブロックと倍率をそろえる（いちばん小さい倍率に合わせて 2 周目を解く）
+    # 本文の文字（bullets / text / steps / cards）は同じ「本文」として倍率をそろえる（隣の text が小さいまま bullets だけ大きい、を避ける・s4-A-03）
+    limits: dict = {}
+    for blk, _ in results:
+        f = blk.get("thin_factor")
+        if f is not None:
+            gk = THIN_GROUP.get(blk["type"], blk["type"])
+            limits[gk] = min(limits.get(gk, f), f)
+    for k, block in enumerate(blocks):
+        blk, iss = results[k]
+        f = blk.get("thin_factor")
+        gk = THIN_GROUP.get(blk["type"], blk["type"]) if f is not None else None
+        if f is not None and f > limits[gk] + 1e-6:
+            iss = []
+            blk = resolve_block(layout, deck, slide, st, k, block, rects[k], iss, limits={blk["type"]: limits[gk]})
+        out["blocks"].append(blk)
+        out["issues"].extend(iss)
+    return out
 
 
 _HEX_RE = re.compile(r"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$")
@@ -317,9 +1188,9 @@ def col(theme, c):
     （通常は validate_deck が事前に検出するので、これは最後の防波堤）。"""
     colors = theme.get("colors", {})
     if isinstance(c, str) and c in colors:
-        return colors[c]
+        return dschema.normalize_hex(colors[c])
     if isinstance(c, str) and _HEX_RE.match(c):
-        return c
+        return dschema.normalize_hex(c)   # #RGB は #RRGGBB にそろえる（PPTX は 6 桁しか受けない）
     fail(f"不明な色指定 '{c}' です。テーマトークン名か #RRGGBB 形式のhexを指定してください")
 
 
@@ -342,7 +1213,8 @@ def _font_names(value) -> list:
 def font_css(value, mono: bool = False) -> str:
     """fonts.* の値（文字列 or 配列）から CSS font-family 用の文字列を作る。
     末尾に組込フォールバック（和文 or 等幅）を必ず付ける。"""
-    names = _font_names(value)
+    # 検証（validate_theme_data）をすり抜けた値でも CSS の外へ出ないよう、引用符・タグ・区切りと制御文字を除く
+    names = [n for n in (dschema.FONT_NAME_BAD_RE.sub("", n).strip() for n in _font_names(value)) if n]
     quoted = ", ".join(f'"{n}"' for n in names)
     fallback = FONT_FALLBACK_MONO if mono else FONT_FALLBACK_SANS
     return f"{quoted}, {fallback}" if quoted else fallback
@@ -350,7 +1222,7 @@ def font_css(value, mono: bool = False) -> str:
 
 def font_pptx(value):
     """fonts.* の値（文字列 or 配列）から PPTX に設定する先頭の1フォント名を返す。"""
-    names = _font_names(value)
+    names = [n for n in (dschema.FONT_NAME_BAD_RE.sub("", n).strip() for n in _font_names(value)) if n]
     return names[0] if names else None
 
 
@@ -365,19 +1237,7 @@ def steps_arrow_header(i, n, x, y, card_w, gap, header_h, b, theme):
 
 def norm_items(items):
     """bullets 配列を正規化。要素は文字列 or {text, children, size, color, bold}。"""
-    out = []
-    for it in items or []:
-        if isinstance(it, str):
-            out.append({"text": it, "children": []})
-        else:
-            d = dict(it)
-            d.setdefault("text", "")
-            kids = []
-            for c in d.get("children") or []:
-                kids.append({"text": c} if isinstance(c, str) else dict(c))
-            d["children"] = kids
-            out.append(d)
-    return out
+    return autofit.norm_items(items)
 
 
 def _route_edge(A, B):
@@ -405,6 +1265,57 @@ def _route_edge(A, B):
     midx = (sx + ex) / 2
     p = [(sx, A["cy"]), (midx, A["cy"]), (midx, B["cy"]), (ex, B["cy"])]
     return p, (midx + 8, (A["cy"] + B["cy"]) / 2)
+
+
+def _io_lines_fit(nd: dict, w: float, h: float, size: float, min_size: float, pad: float):
+    """swimlane の io ノード（左 input・右 output の 2 欄）の項目を、幅に収まるよう折り返した行にする。
+    size から min_size まで 1px ずつ下げ、全部の項目が（長い項目は 2 行までに折って）幅に収まり、かつ箱の高さに入る最初の大きさを返す。
+    返り値: ({"input": [[行, …], …], "output": […]}, size)。min_size でも収まらなければ None（呼び出し側が従来の縮小に戻す）。"""
+    half_w = (w - 2) / 2 - 2 * pad
+    cols = {k: [str(v) for v in (nd.get(k) or [])] for k in ("input", "output")}
+    if not any(cols.values()):
+        return None
+    sz = size
+    while sz >= min_size - 1e-9:
+        lines = {}
+        ok = True
+        for k, vals in cols.items():
+            lines[k] = []
+            for v in vals:
+                if de.text_width(v, sz) <= half_w:
+                    lines[k].append([v])
+                    continue
+                two = None
+                if de.text_width(v, sz) <= half_w * 2 * 0.94:
+                    two = ja_text._equal_two(v, sz, half_w, None, False, 2) or _split_greedy(v, sz, half_w)
+                if not two or any(de.text_width(x, sz) > half_w for x in two):
+                    ok = False
+                    break
+                lines[k].append(two)
+            if not ok:
+                break
+        if ok:
+            need = max(sz * 1.2 + sum(len(it) * sz * 1.2 + 3 for it in lines[k]) for k in lines) + pad * 2
+            if need <= h:
+                return lines, sz
+        sz -= 1
+    return None
+
+
+def _split_greedy(v: str, size: float, width: float):
+    """文字列を 2 行に分ける（ja_text._equal_two で切れ目が見つからないとき。漢字だけの語・カタカナ語は文節の切れ目が無い）。
+    行頭に来てはいけない文字（長音・小さい仮名・句読点）では切らない。漢字だけの語は 1 行目に幅いっぱい入れて 2 行目を短く（「原因分析／報告」）、
+    それ以外は前後の幅を近づける（「ポスト／モーテム」）。2 行目は 2 文字以上残す。"""
+    bad = set("ーッゃゅょっぁぃぅぇぉ、。・）」』】,.)")
+    cands = [k for k in range(2, len(v) - 1)
+             if v[k] not in bad and de.text_width(v[:k], size) <= width and de.text_width(v[k:], size) <= width]
+    if not cands:
+        return None
+    if all("\u4e00" <= ch <= "\u9fff" for ch in v):
+        k = max(cands)
+    else:
+        k = min(cands, key=lambda k: abs(de.text_width(v[:k], size) - de.text_width(v[k:], size)))
+    return [v[:k], v[k:]]
 
 
 def swimlane_geometry(slide, st, slide_no=None):
@@ -504,9 +1415,15 @@ def swimlane_geometry(slide, st, slide_no=None):
             half_w = (w - 2) / 2 - 12
             items = [str(v) for v in (nd.get("input") or []) + (nd.get("output") or [])]
             io_size = f.get("io_size", 11)
-            while io_size > 8 and items and max(de.text_width(v, io_size) for v in items) > half_w:
-                io_size -= 1
-            rec["io_font"] = io_size
+            # まず「文字を 10px 未満にしない」範囲で、長い項目を 2 行に折って収める（箱の高さに入るときだけ）。
+            # 収まらないときは従来どおり 1 行のまま 8px まで縮める
+            io_lines = _io_lines_fit(nd, w, h, io_size, f.get("io_min_size", 10), f.get("io_pad", 6))
+            if io_lines is not None:
+                rec["io_lines"], rec["io_font"] = io_lines
+            else:
+                while io_size > 8 and items and max(de.text_width(v, io_size) for v in items) > half_w:
+                    io_size -= 1
+                rec["io_font"] = io_size
         node_map[nd["id"]] = rec
     # エッジ配線: 共通の格子ルーター（diagram_engine）。列境界・レーン境界のガターをトラックにし、
     # 途中のノードを横切らない直交経路を選ぶ。同じ辺から出る複数線・同じ回廊を通る複数線は
@@ -532,6 +1449,7 @@ def swimlane_geometry(slide, st, slide_no=None):
         lb = e.get("label_box")
         edges.append({"points": e["points"], "label": e.get("label", ""),
                       "label_pos": ((lb["cx"], lb["cy"]) if lb else None), "label_box": lb,
+                      "label_back": e.get("label_back"), "label_back_box": e.get("label_back_box"),
                       "style": e.get("style", "solid"), "variant": e.get("variant", "default"),
                       "arrow": e.get("arrow", "end"), "from": e.get("from"), "to": e.get("to")})
     return {"flow": f, "content_x": content_x, "content_w": content_w, "top": top,
@@ -584,7 +1502,7 @@ def _sw_node_html(nd, theme, f):
                 f'color:{C(f.get("decision_color","primary"))};">{text}</div></div>')
     if shape == "terminal":
         return (f'<div style="{box}{center}font-size:{fs or ns-2}px;background:{C(f.get("terminal_fill","surface"))};'
-                f'border:1.5px solid {C(f.get("terminal_border","muted"))};border-radius:{h/2:.0f}px;'
+                f'border:1.5px solid {C(f.get("terminal_border","muted"))};border-radius:{min(h/2, rtok(theme, "pill", 999)):.0f}px;'
                 f'color:{C(f.get("terminal_color","muted"))};">{text}</div>')
     if shape == "connector":
         # M-90: PPTX（PENTAGON + connector_border 罫線）と見た目を揃える。
@@ -615,12 +1533,17 @@ def _sw_node_html(nd, theme, f):
         cells = []
         for key, lbl in (("input", "input"), ("output", "output")):
             vals = nd.get(key) or []
-            lis = "".join(f'<div style="margin-top:3px;">{esc(v)}</div>' for v in vals)
+            fitted_io = (nd.get("io_lines") or {}).get(key)
+            if fitted_io:
+                # 折り返しはエンジンが決めている（HTML と PPTX で同じ位置）。ブラウザに再折り返しさせない
+                lis = "".join(f'<div style="margin-top:3px;white-space:nowrap;">{"<br>".join(esc(x) for x in it)}</div>' for it in fitted_io)
+            else:
+                lis = "".join(f'<div style="margin-top:3px;">{esc(v)}</div>' for v in vals)
             cells.append(f'<div style="width:{half:.0f}px;padding:6px;box-sizing:border-box;'
                          f'font-size:{nd.get("io_font", f.get("io_size",11))}px;color:{C(f.get("io_color","text"))};line-height:1.2;">'
-                         f'<div style="font-weight:700;color:{C(f.get("io_head_color","accent"))};">{lbl}</div>{lis}</div>')
+                         f'<div style="font-weight:700;white-space:nowrap;color:{C(f.get("io_head_color","accent"))};">{lbl}</div>{lis}</div>')
         return (f'<div style="{box}display:flex;background:{C(f.get("io_fill","on_primary_soft"))};'
-                f'border:1px solid {C(f.get("io_border","accent"))};border-radius:8px;box-sizing:border-box;overflow:hidden;">'
+                f'border:1px solid {C(f.get("io_border","accent"))};border-radius:{rtok(theme, "node_sm", 8):g}px;box-sizing:border-box;overflow:hidden;">'
                 f'{cells[0]}<div style="width:1px;background:{C("border")};"></div>{cells[1]}</div>')
     if shape == "system":
         return (f'<div style="{box}{center}font-size:{fs or ns}px;background:{C(f.get("system_fill","surface"))};'
@@ -649,7 +1572,7 @@ def _sw_node_html(nd, theme, f):
 
 def _legend_sym_size(shape):
     return {"decision": (26, 26), "marker": (16, 16), "mail": (30, 20), "terminal": (74, 24),
-            "connector": (66, 26), "io": (78, 30), "flow": (54, 0)}.get(shape, (60, 26))
+            "connector": (66, 26), "io": (112, 42), "flow": (54, 0)}.get(shape, (60, 26))
 
 
 def _legend_symbol_html(shape, vk, x, cy, sym_w, theme, f):
@@ -745,6 +1668,14 @@ def norm_legend_items(items):
 # ---------------------------------------------------------------------------
 
 GRID_DIAGRAM_TYPES = ("architecture", "dataflow", "lifecycle")
+# HTML（html_slide_body）と PPTX（build_pptx の builders）の両方に描画器があるタイプ。
+# レイアウト JSON にだけ足したタイプは validate_deck が止める。新タイプを描画できるようにしたらここに足す。
+RENDERED_TYPES = frozenset({
+    "canvas", "title", "section", "bullets", "two_column", "table", "status_table", "code", "quote", "image",
+    "image_text", "closing", "agenda", "steps", "matrix", "cards", "swimlane", "swimlane_legend",
+    "architecture", "dataflow", "lifecycle", "sequence", "diagram_legend", "schedule",
+    "pattern", "composite", "split",
+}) | frozenset(engine_registry.names())     # A 型タイプ（提案書系・kpi・chart）は登録表（engine_registry）から
 DIAGRAM_TYPES = GRID_DIAGRAM_TYPES + ("sequence",)
 
 # type アイコン（16×16、stroke ベース）。HTML はインライン SVG、PPTX はプリセット図形で近似する。
@@ -769,7 +1700,7 @@ EDGE_DASH_SVG = {"dashed": "7,5", "security": "8,4,2,4", "return": "6,4"}
 EDGE_DASH_PPTX = {"dashed": "dash", "security": "dashDot", "return": "sysDash"}
 
 
-def _node_visual(box: dict, d: dict, kind: str) -> dict:
+def _node_visual(box: dict, d: dict, kind: str, pill_r: float = 999) -> dict:
     """ノード 1 個の描画属性（テーマトークン名）を variant / lifecycle kind から解決する。
     返り値: fill, border, border_w, dash(bool), color, sub_color, radius_mode(rect|pill|diamond)"""
     v = box.get("variant") or "default"
@@ -792,6 +1723,9 @@ def _node_visual(box: dict, d: dict, kind: str) -> dict:
             vis["border_w"] = 2
         elif k in ("start", "decision"):
             vis["border_w"] = 2
+            if k == "start" and pill_r < 4:
+                # 角丸が無い shape（sharp）では start が process と形で区別できない → 枠線を太くして区別する（角丸のある shape は従来どおり）
+                vis["border_w"] = d.get("start_border_w_sharp", 3.5)
     if v == "emphasis":
         vis["fill"] = d.get("emphasis_fill", "highlight_fill")
         vis["border"] = d.get("emphasis_border", "accent")
@@ -807,6 +1741,40 @@ def _node_visual(box: dict, d: dict, kind: str) -> dict:
         vis["color"] = d.get("muted_color", "muted")
         vis["sub_color"] = d.get("muted_color", "muted")
     return vis
+
+
+def _node_hexes(vis: dict, d: dict, theme, box: dict) -> dict:
+    """ノードの文字・アイコン・番号・タグの色（hex）。地（ノードの塗り / タグの塗り）の上で 4.5:1 に満たないときは、
+    同じ色味のまま白 / 黒へ寄せる（color_pick.readable_on_all）。HTML と PPTX が共有する（色の組み合わせを両方に直書きしない）。"""
+    fill = col(theme, vis["fill"])
+
+    def on(tok, bg=fill):
+        return cp.readable_on(col(theme, tok), bg)
+    icon_tok = d.get("muted_color", "muted") if box.get("variant") == "muted" else d.get("icon_color", "accent")
+    out = {"color": on(vis["color"]), "sub": on(vis["sub_color"]), "icon": on(icon_tok),
+           "step": on(d.get("step_color", "accent")), "glyph": on(d.get("icon_color", "accent")),
+           "tag": on(d.get("tag_color", "text"), col(theme, d.get("tag_fill", "highlight_fill")))}
+    return out
+
+
+def _step_label_spec(b: dict, vis: dict, d: dict, theme, hx: dict) -> dict:
+    """lifecycle の番号ラベル（01 など）の位置と文字色。HTML と PPTX が共有する。
+    四角のノードは左上の内側。角丸（pill）は輪郭の曲線の内側まで右へ寄せる。ひし形は中に置ける場所が無いので、
+    外接矩形の左上の角（輪郭の外）に置き、地（背景・レーンの面）の上で読める色にする。番号が図形の輪郭に重ならない。"""
+    import math
+    x, y, w, h = b["x"], b["y"], b["w"], b["h"]
+    ss = d.get("step_size", 11)
+    top = d.get("step_top", 4)
+    if vis["shape"] == "diamond":
+        c = cp.readable_on_all(col(theme, d.get("step_color", "accent")), [col(theme, "background"), col(theme, "surface")])
+        return {"x": x + d.get("step_corner_dx", 4), "y": y + top - 1, "color": c, "size": ss}
+    sx = x + d.get("step_dx", 8)
+    if vis["shape"] == "pill":
+        r = min(h / 2, rtok(theme, "pill", 999))
+        if r > top:
+            off = r - math.sqrt(max(0.0, r * r - (r - top) ** 2))
+            sx = x + max(d.get("step_dx", 8), off + d.get("step_clear", 6))
+    return {"x": sx, "y": y + top, "color": hx["step"], "size": ss}
 
 
 def _edge_visual(e: dict, d: dict) -> dict:
@@ -884,7 +1852,8 @@ def _glyph_svg(kind: str, size: float, color_hex: str, x: float, y: float) -> st
 
 def _diag_node_html(b: dict, fit: dict, d: dict, theme, kind: str, heading_font_css: str) -> str:
     """ノードカード 1 個（箱・アイコン・label/sublabel・tag・step）を HTML で描く。"""
-    vis = _node_visual(b, d, kind)
+    vis = _node_visual(b, d, kind, rtok(theme, "pill", 999))
+    hx = _node_hexes(vis, d, theme, b)
     x, y, w, h = b["x"], b["y"], b["w"], b["h"]
     pad = d.get("node_pad", 8)
     radius = d.get("node_radius", 10)
@@ -901,7 +1870,7 @@ def _diag_node_html(b: dict, fit: dict, d: dict, theme, kind: str, heading_font_
                      f'{dash_attr} stroke-linejoin="round"/></svg></div>')
         icon_w = 0.0
     else:
-        rad = f"{h/2:.0f}px" if vis["shape"] == "pill" else f"{radius}px"
+        rad = f"{min(h/2, rtok(theme, 'pill', 999)):.0f}px" if vis["shape"] == "pill" else f"{radius}px"   # PPTX（adjustments）と同じく radius.pill で頭打ち
         parts.append(f'<div style="{box_css}background:{fill};border:{vis["border_w"]}px {bstyle} {border};border-radius:{rad};"></div>')
         icon_w = 0.0
     # type アイコン（左・縦中央）。icon_style:"aws" ならカテゴリ色タイル、既定は線画グリフ。
@@ -916,10 +1885,9 @@ def _diag_node_html(b: dict, fit: dict, d: dict, theme, kind: str, heading_font_
             icon_w = tsz + 8
         else:
             # muted variant はアイコンも muted に落とす（type は形で表す・色は variant が担う、の唯一の例外）
-            icon_tok = d.get("muted_color", "muted") if (b.get("variant") == "muted") else d.get("icon_color", "accent")
             parts.append(f'<div style="position:absolute;left:{x+pad:.1f}px;top:{y + h/2 - icon_size/2:.1f}px;'
                          f'width:{icon_size}px;height:{icon_size}px;">'
-                         + _icon_svg(ntype, icon_size, col(theme, icon_tok)) + "</div>")
+                         + _icon_svg(ntype, icon_size, hx["icon"]) + "</div>")
             icon_w = icon_size + 6
     # テキストブロック（アイコンの右側の残り幅で中央寄せ）
     tx = x + pad + icon_w
@@ -932,31 +1900,30 @@ def _diag_node_html(b: dict, fit: dict, d: dict, theme, kind: str, heading_font_
     sub_html = ""
     if b.get("sublabel"):
         sub_lines = fit.get("sub_lines") if fit else [b["sublabel"]]
-        sub_html = (f'<div style="font-size:{d.get("sub_size", 11)}px;color:{col(theme, vis["sub_color"])};'
+        sub_html = (f'<div style="font-size:{d.get("sub_size", 11)}px;color:{hx["sub"]};'
                     f'line-height:1.2;margin-top:2px;">{"<br>".join(esc(l) for l in sub_lines)}</div>')
     parts.append(f'<div style="position:absolute;left:{tx:.1f}px;top:{y:.1f}px;width:{tw:.1f}px;height:{h:.1f}px;'
                  f'display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;'
                  f'box-sizing:border-box;padding:{pad}px 0;">'
-                 f'<div style="font-size:{size}px;font-weight:700;color:{col(theme, vis["color"])};line-height:1.15;'
+                 f'<div style="font-size:{size}px;font-weight:700;color:{hx["color"]};line-height:1.15;'
                  f'white-space:nowrap;font-family:{esc(heading_font_css)};">{label_html}</div>{sub_html}</div>')
     # tag（右上に小さなピル。枠線に半分かぶせる）
     if b.get("tag"):
         ts = d.get("tag_size", 10)
         tw_ = de.text_width(b["tag"], ts) + 12
         parts.append(f'<div style="position:absolute;left:{x + w - tw_ - 8:.1f}px;top:{y - ts*0.8:.1f}px;'
-                     f'width:{tw_:.1f}px;height:{ts*1.6:.1f}px;border-radius:{ts*0.8:.0f}px;'
-                     f'background:{col(theme, d.get("tag_fill", "highlight_fill"))};color:{col(theme, d.get("tag_color", "text"))};'
+                     f'width:{tw_:.1f}px;height:{ts*1.6:.1f}px;border-radius:{min(ts*0.8, rtok(theme, "pill", 999)):.0f}px;'
+                     f'background:{col(theme, d.get("tag_fill", "highlight_fill"))};color:{hx["tag"]};'
                      f'font-size:{ts}px;font-weight:700;display:flex;align-items:center;justify-content:center;'
                      f'line-height:1;">{esc(b["tag"])}</div>')
     if kind == "lifecycle":
         if b.get("step"):
-            ss = d.get("step_size", 11)
-            sx = (x + w / 2 + 8) if vis["shape"] == "diamond" else x + 8
-            parts.append(f'<div style="position:absolute;left:{sx:.1f}px;top:{y + 4:.1f}px;font-size:{ss}px;'
-                         f'font-weight:700;color:{col(theme, d.get("step_color", "accent"))};line-height:1;">{esc(b["step"])}</div>')
+            sp_ = _step_label_spec(b, vis, d, theme, hx)
+            parts.append(f'<div style="position:absolute;left:{sp_["x"]:.1f}px;top:{sp_["y"]:.1f}px;font-size:{sp_["size"]}px;'
+                         f'font-weight:700;color:{sp_["color"]};line-height:1;">{esc(b["step"])}</div>')
         k = b.get("kind") or "active"
         if k in KIND_GLYPHS and vis["shape"] == "rect":
-            gc = col(theme, vis["color"]) if k == "success" else col(theme, d.get("icon_color", "accent"))
+            gc = hx["color"] if k == "success" else hx["glyph"]
             parts.append(_glyph_svg(k, 13, gc, x + w - 21, y + 5))
     return "".join(parts)
 
@@ -999,21 +1966,23 @@ def _edges_svg_html(edges, d: dict, theme, uid: str, heading_font_css: str, laye
             mk += f' marker-start="url(#ae-{key})"'
         lines.append(f'<polyline points="{pts}" fill="none" stroke="{hexc}" stroke-width="{vis["w"]}"{dash}{mk} '
                      f'stroke-linejoin="round"/>')
-        lb = e.get("label_box")
-        if lb and e.get("label"):
-            pills.append(f'<rect x="{lb["x"]:.1f}" y="{lb["y"]:.1f}" width="{lb["w"]:.1f}" height="{lb["h"]:.1f}" rx="4" fill="{lf}"/>')
-            classification = e.get("classification")
+        # 順方向のラベルと、双方向（arrow: both）の逆向きのラベル（label_back）
+        for lb, ltext, classification in ((e.get("label_box"), e.get("label"), e.get("classification")),
+                                          (e.get("label_back_box"), e.get("label_back"), None)):
+            if not (lb and ltext):
+                continue
+            pills.append(f'<rect x="{lb["x"]:.1f}" y="{lb["y"]:.1f}" width="{lb["w"]:.1f}" height="{lb["h"]:.1f}" rx="{min(4, rtok(theme, "small", 6)):g}" fill="{lf}"/>')   # PPTX の _label_pill_pptx と同じ
             if classification:
                 # ピルは 2 行分の高さ（engine が class_h を足している）。上段 label・下段 classification
                 cs = d.get("class_size", 11)
                 ch = e.get("class_h", cs * 1.2)
                 pills.append(f'<text x="{lb["cx"]:.1f}" y="{lb["cy"] - ch / 2:.1f}" fill="{lc}" font-size="{lsize}" font-weight="700" '
-                             f'text-anchor="middle" dominant-baseline="central">{esc(e["label"])}</text>')
+                             f'text-anchor="middle" dominant-baseline="central">{esc(ltext)}</text>')
                 pills.append(f'<text x="{lb["cx"]:.1f}" y="{lb["cy"] + (lb["h"] - ch) / 2 - 1:.1f}" fill="{col(theme, d.get("class_color", "muted"))}" '
                              f'font-size="{cs}" text-anchor="middle" dominant-baseline="central">{esc(classification)}</text>')
             else:
                 pills.append(f'<text x="{lb["cx"]:.1f}" y="{lb["cy"]:.1f}" fill="{lc}" font-size="{lsize}" font-weight="700" '
-                             f'text-anchor="middle" dominant-baseline="central">{esc(e["label"])}</text>')
+                             f'text-anchor="middle" dominant-baseline="central">{esc(ltext)}</text>')
     body = ""
     if layer in ("both", "lines"):
         body += _arrow_defs(sorted(colors), uid) + "".join(lines)
@@ -1059,8 +2028,8 @@ def _group_html(g: dict, d: dict, theme) -> str:
 
 def grid_diagram_html(slide, st, theme, kind: str, page: int, heading_font_css: str) -> str:
     """architecture / dataflow / lifecycle の図領域を HTML で描く（chrome 以外）。"""
-    d = st["diagram"]
-    geo = de.layout_grid_diagram(slide, kind, d, [], subject_prefix="")
+    geo = dscale.layout_grid(slide, kind, st["diagram"], [], subject_prefix="")
+    d = dscale.scaled_style(st["diagram"])         # 合成ブロックで拡大した図（scale_k > 1）は、文字・線のトークンも同じ倍率（S5a）
     parts = []
     # 行帯（lifecycle の lanes）。区切り線は帯 div の border で描く（swimlane と同じ。独立した 1px div に
     # すると check_layout がラベル文字との交差を「罫線」誤検出するため）。
@@ -1093,18 +2062,13 @@ def grid_diagram_html(slide, st, theme, kind: str, page: int, heading_font_css: 
 
 
 def sequence_html(slide, st, theme, page: int, heading_font_css: str) -> str:
-    d = st["diagram"]
-    geo = de.layout_sequence(slide, d, [], subject_prefix="")
+    geo = dscale.layout_seq(slide, st["diagram"], [], subject_prefix="")
+    d = dscale.scaled_style(st["diagram"])
     parts = []
     # segments（区間の薄い枠）
     for sg in geo["segments"]:
         parts.append(f'<div style="{pos(sg)}box-sizing:border-box;border:1px dashed {col(theme, d.get("segment_border", "muted"))};'
-                     f'border-radius:6px;"></div>')
-        if sg.get("label"):
-            ss = d.get("segment_size", 12)
-            parts.append(f'<div style="position:absolute;left:{sg["x"] + 8:.1f}px;top:{sg["y"] - ss * 0.75:.1f}px;padding:0 6px;'
-                         f'background:{col(theme, "background")};font-size:{ss}px;font-weight:700;'
-                         f'color:{col(theme, d.get("segment_color", "muted"))};line-height:1.3;">{esc(sg["label"])}</div>')
+                     f'border-radius:{rtok(theme, "small", 6):g}px;"></div>')
     # lifelines
     svg = [f'<svg style="position:absolute;left:0;top:0;width:{CANVAS_W}px;height:{CANVAS_H}px;pointer-events:none;" '
            f'viewBox="0 0 {CANVAS_W} {CANVAS_H}">']
@@ -1117,10 +2081,17 @@ def sequence_html(slide, st, theme, page: int, heading_font_css: str) -> str:
                    f'stroke="{llc}" stroke-width="{d.get("lifeline_w", 1.5)}" stroke-dasharray="6,5"/>')
     svg.append("</svg>")
     parts.append("".join(svg))
+    # 区間の見出しは生存線より上に描く（背景つきの札で生存線を隠す。線が見出しの文字を貫通しない）
+    for sg in geo["segments"]:
+        if sg.get("label"):
+            ss = d.get("segment_size", 12)
+            parts.append(f'<div style="position:absolute;left:{sg["x"] + 8:.1f}px;top:{sg["y"] - ss * 0.75:.1f}px;padding:0 6px;'
+                         f'background:{col(theme, "background")};font-size:{ss}px;font-weight:700;'
+                         f'color:{col(theme, d.get("segment_color", "muted"))};line-height:1.3;">{esc(sg["label"])}</div>')
     # activations
     for a in geo["activations"]:
         parts.append(f'<div style="{pos(a)}background:{col(theme, d.get("activation_fill", "highlight_fill"))};'
-                     f'border:1.5px solid {col(theme, d.get("activation_border", "accent"))};border-radius:3px;box-sizing:border-box;"></div>')
+                     f'border:1.5px solid {col(theme, d.get("activation_border", "accent"))};border-radius:{rtok(theme, "tiny", 3):g}px;box-sizing:border-box;"></div>')
     # messages
     parts.append(_edges_svg_html(geo["messages"], d, theme, f"s{page}", heading_font_css))
     # participants
@@ -1215,6 +2186,10 @@ def schedule_html(slide, st, theme, heading_font_css: str) -> str:
 
     grid = cc("grid_color", "border")
     strong_w = c.get("grid_strong_w", 2)
+
+    def _sched_rowbg(item):
+        """行の地の色（縞の行か通常の行か）。節目・矢羽根の外のラベルの座布団に使う。"""
+        return cc("row_alt_fill", "on_primary_soft") if item.get("alt") else col(theme, "background")
     # 行の縞（見出し欄＋時間軸）。行境界は border-top（グループ境界は太線）で描き、
     # 1〜2px の細い要素を作らない（check_layout の rule 判定で文字との交差と誤認させないため）。
     hl = {round(h["y"], 2): h for h in geo["hlines"]}
@@ -1276,15 +2251,16 @@ def schedule_html(slide, st, theme, heading_font_css: str) -> str:
         stroke = col(theme, vis["border"]) if vis["border"] else None
         inner = _schedule_poly_svg(b["points"], b["x"], b["y"], b["w"], b["h"],
                                    col(theme, vis["fill"]), stroke, vis["dashed"])
-        if b["label"] and b["label_pos"] != "after":
+        if b["label"] and b["label_pos"] not in ("after", "before"):
             inner += (f'<div style="position:absolute;left:{b["tx"] - b["x"]:.2f}px;top:0;width:{b["tw"]:.2f}px;'
                       f'height:{b["h"]:.2f}px;display:flex;align-items:center;justify-content:center;'
-                      f'font-size:{b["size"]}px;font-weight:700;color:{col(theme, vis["color"])};'
+                      f'font-size:{b["size"]}px;font-weight:700;color:{cp.readable_on(col(theme, vis["color"]), col(theme, vis["fill"]))};'
                       f'white-space:nowrap;">{esc(b["label"])}</div>')
         out.append(f'<div style="{pos(b)}">{inner}</div>')
-        if b["label"] and b["label_pos"] == "after":
-            out.append(f'<div style="{pos({"x": b["x"] + b["w"] + 6, "y": b["y"], "w": de.text_width(b["label"], b["size"]) + 4, "h": b["h"]})}'
-                       f'display:flex;align-items:center;font-size:{b["size"]}px;font-weight:700;'
+        if b["label"] and b["label_pos"] in ("after", "before"):
+            # 矢羽根の外に出したラベルは、行の地の色の座布団を敷く（背後の月の縦線が文字を貫通しない）
+            out.append(f'<div style="{pos({"x": b["lbl_x"], "y": b["y"], "w": b["lbl_w"], "h": b["h"]})}'
+                       f'display:flex;align-items:center;justify-content:center;font-size:{b["size"]}px;font-weight:700;background:{_sched_rowbg(b)};'
                        f'color:{cc("label_color", "text")};white-space:nowrap;">{esc(b["label"])}</div>')
     # 節目（ひし形＋ラベル）
     for m in geo["milestones"]:
@@ -1295,8 +2271,8 @@ def schedule_html(slide, st, theme, heading_font_css: str) -> str:
                                         cc("milestone_fill", "accent"), cc("milestone_border", "primary"), False, 1)
                    + '</div>')
         if m["label"]:
-            out.append(f'<div style="{pos({"x": m["lx"], "y": m["ly"], "w": m["lw"], "h": m["lh"]})}'
-                       f'text-align:center;font-size:{m["size"]}px;font-weight:700;line-height:{m["lh"]}px;'
+            out.append(f'<div style="{pos({"x": m["lx"] - 2, "y": m["ly"], "w": m["lw"] + 4, "h": m["lh"]})}'
+                       f'text-align:center;font-size:{m["size"]}px;font-weight:700;line-height:{m["lh"]}px;background:{_sched_rowbg(m)};'
                        f'color:{cc("milestone_color", "text")};white-space:nowrap;">{esc(m["label"])}</div>')
     # 凡例と注記
     lg = geo["legend"]
@@ -1394,38 +2370,39 @@ def build_diagram_legend_slide(slide: dict, t: str) -> dict:
 def expand_slides(deck, layout):
     """ビルド前処理: agenda のあふれを複数ページに分割し、swimlane / 図解タイプの直前に凡例ページを挿入する。"""
     out = []
-    for s in deck.get("slides", []):
-        t = s.get("type")
-        if t == "swimlane" and s.get("legend", True):
-            leg = {"type": "swimlane_legend",
-                   "title": s.get("legend_title", "凡例（スイムレーン記号）"),
-                   "eyebrow": s.get("legend_eyebrow", s.get("eyebrow"))}
-            if "legend_items" in s:
-                leg["items"] = norm_legend_items(s["legend_items"])
-            out.append(leg)
-            out.append(s)
-        elif t in DIAGRAM_TYPES and s.get("legend_page"):
-            out.append(build_diagram_legend_slide(s, t))
-            out.append(s)
-        elif t == "agenda":
-            items = s.get("items", [])
-            st = resolve_style(layout, deck, s)
-            b = st.get("body", {})
-            pitch = b.get("row_h", 44) + b.get("gap", 10)
-            R = max(1, int(b.get("h", 452) // pitch))
-            cap = R * b.get("max_cols", 2)
-            if len(items) > cap:
-                for p in range(0, len(items), cap):
-                    ns = dict(s)
-                    ns["items"] = items[p:p + cap]
-                    ns["num_start"] = p
-                    if p > 0:
-                        ns["title"] = s.get("title", "") + "（続き）"
-                    out.append(ns)
+    for si, s in enumerate(deck.get("slides", [])):
+        with slide_guard(f"{si + 1}枚目（type={s.get('type')}）", "展開"):
+            t = s.get("type")
+            if t == "swimlane" and s.get("legend", True):
+                leg = {"type": "swimlane_legend",
+                       "title": s.get("legend_title", "凡例（スイムレーン記号）"),
+                       "eyebrow": s.get("legend_eyebrow", s.get("eyebrow"))}
+                if "legend_items" in s:
+                    leg["items"] = norm_legend_items(s["legend_items"])
+                out.append(leg)
+                out.append(s)
+            elif t in DIAGRAM_TYPES and s.get("legend_page"):
+                out.append(build_diagram_legend_slide(s, t))
+                out.append(s)
+            elif t == "agenda":
+                items = s.get("items", [])
+                st = resolve_style(layout, deck, s)
+                b = st.get("body", {})
+                pitch = b.get("row_h", 44) + b.get("gap", 10)
+                R = max(1, int(b.get("h", 452) // pitch))
+                cap = R * b.get("max_cols", 2)
+                if len(items) > cap:
+                    for p in range(0, len(items), cap):
+                        ns = dict(s)
+                        ns["items"] = items[p:p + cap]
+                        ns["num_start"] = p
+                        if p > 0:
+                            ns["title"] = s.get("title", "") + "（続き）"
+                        out.append(ns)
+                else:
+                    out.append(s)
             else:
                 out.append(s)
-        else:
-            out.append(s)
     d = dict(deck); d["slides"] = out
     return d
 
@@ -1453,7 +2430,7 @@ def estimate_lines(text, size_px: float, width_px: float, font=None, bold: bool 
 
 # 1 段落のテキスト領域（領域名, 見出しフォントで測るか）
 _BALANCE_TEXT_REGIONS = (("title", True), ("subtitle", False), ("lead", False),
-                         ("punch", True), ("message", True))
+                         ("punch", True), ("message", True), ("text", False))
 # 箇条書きを持つタイプ（bullets を body 領域に描くもの）
 _BALANCE_BULLET_TYPES = ("bullets", "closing", "image_text")
 
@@ -1492,56 +2469,337 @@ def apply_line_balance(deck: dict, layout: dict) -> dict:
     if deck.get("meta", {}).get("line_balance") is False:
         return deck
     slides = []
-    for slide in deck.get("slides", []):
-        t = slide.get("type")
-        if slide.get("line_balance") is False or t not in layout.get("types", {}) or t == "canvas":
-            slides.append(slide)
+    for si, slide in enumerate(deck.get("slides", [])):
+        with slide_guard(f"{si + 1}枚目（type={slide.get('type')}）", "文字組みの調整"):
+            t = slide.get("type")
+            if slide.get("line_balance") is False or t not in layout.get("types", {}) or t == "canvas":
+                slides.append(slide)
+                continue
+            st = resolve_style(layout, deck, slide)
+            ns = dict(slide)
+            # variant（表紙・章扉などの主役のページ）は大きな文字なので、改行を語の途中ではなく文節の切れ目に置く（何も指定しなければ従来どおり）
+            # 背景つきのスライドと title / section / quote / statement の大きな文（36px 以上）も同じ（背景を指定すると variant が付かないことがある）
+            big_phrase = (hero.variant_of(layout, deck, slide) is not None or bool(slide.get("background")) or t in ("title", "section", "quote", "statement"))
+            for key, heading in _BALANCE_TEXT_REGIONS:
+                r = st.get(key)
+                if key == "text" and t != "quote":
+                    continue                # "text" は quote の引用文だけ（ほかのタイプの text は別の領域・ブロックが扱う）
+                if isinstance(ns.get(key), str) and isinstance(r, dict) and r.get("w") and r.get("size"):
+                    font = ja_text.heading_fonts() if heading else None
+                    tail = ja_text.tail_min(r["size"])        # 大きな文字ほど、最終行に残す最低限の文字数を増やす
+                    if big_phrase and r["size"] >= 36:
+                        pw = ja_text.phrase_wrap(ns[key], r["size"], r["w"], font=font, bold=bool(r.get("bold")), min_tail=max(5, tail))
+                        if pw != ns[key]:
+                            ns[key] = pw
+                            continue
+                    ns[key] = ja_text.balance(ns[key], r["size"], r["w"], font=font, bold=bool(r.get("bold")), min_tail=tail)
+            if t in _BALANCE_BULLET_TYPES and isinstance(ns.get("bullets"), list):
+                ns["bullets"] = _balance_items(ns["bullets"], st.get("body"))
+            elif t == "two_column":
+                for side in ("left", "right"):
+                    box, colc = st.get(side), ns.get(side)
+                    if isinstance(box, dict) and isinstance(colc, dict) and isinstance(colc.get("bullets"), list):
+                        inner = dict(st.get("col_body", {}))
+                        inner["w"] = box.get("w", 400) - 2 * box.get("pad", 0)
+                        ns[side] = {**colc, "bullets": _balance_items(colc["bullets"], inner)}
+            elif t == "cards" and isinstance(ns.get("cards"), list) and isinstance(st.get("grid"), dict):
+                # カードの見出し・本文・項目: 各カードの幅・文字サイズで、最終行に 1〜2 文字だけ残る泣き別れを防ぐ
+                g = st["grid"]
+                geo = pe.cards_cells(len(ns["cards"]), ns.get("columns"), g, hero.card_spans(ns))
+                pad = g.get("pad", 18)
+                newc = []
+                for k, c in enumerate(ns["cards"]):
+                    if not isinstance(c, dict):
+                        newc.append(c)
+                        continue
+                    w_ = max(geo["cells"][k][2] - 2 * pad, 10)
+                    g = hero.emph_grid(st["grid"], hero.card_emphasis(c))
+                    nc = dict(c)
+                    if isinstance(nc.get("heading"), str):
+                        hsz, hw = g.get("heading_size", 19), w_ - autofit.card_icon_reserve(nc, g)
+                        pw = (ja_text.phrase_wrap(nc["heading"], hsz, hw, font=ja_text.heading_fonts(), bold=True, min_tail=max(4, ja_text.tail_min(hsz)))
+                              if hsz >= CARD_PHRASE_MIN_SIZE else nc["heading"])        # 大きな文字（20px 以上）は文節の切れ目で折る（S4）
+                        nc["heading"] = pw if pw != nc["heading"] else ja_text.balance(nc["heading"], hsz, hw, font=ja_text.heading_fonts(), bold=True)
+                    if isinstance(nc.get("body"), str):
+                        bsz = g.get("body_size", 15)
+                        pw = (ja_text.phrase_wrap(nc["body"], bsz, w_, min_tail=max(4, ja_text.tail_min(bsz))) if bsz >= CARD_PHRASE_MIN_SIZE else nc["body"])
+                        nc["body"] = pw if pw != nc["body"] else ja_text.balance(nc["body"], bsz, w_)
+                    if isinstance(nc.get("items"), list):
+                        nc["items"] = _balance_items(nc["items"], {"size": g.get("item_size", 14), "w": w_, "indent": autofit.CARD_ITEM_INDENT, "child_size": 12})
+                    newc.append(nc)
+                ns["cards"] = newc
+            elif t == "composite" and isinstance(ns.get("blocks"), list):
+                # 合成スライド: bullets のブロックは、そのブロックの本文の幅・文字サイズで泣き別れを防ぐ
+                nb = list(ns["blocks"])
+                for rb in (st.get("_composite") or {}).get("blocks", []):
+                    blk = nb[rb["index"]]
+                    if rb["type"] == "bullets" and rb["st"] and isinstance(blk.get("bullets"), list):
+                        nb[rb["index"]] = {**blk, "bullets": _balance_items(blk["bullets"], rb["st"].get("body"))}
+                    elif rb["type"] == "callout" and rb.get("fit") and isinstance(blk.get("text"), str):
+                        # 強調の一文: 最終行に 3 文字以下（「6 割」など）だけ残さない（大きく見せる文なので、短い切れ端を許さない）
+                        nb[rb["index"]] = {**blk, "text": ja_text.balance(blk["text"], rb["fit"]["size"], rb["fit"]["tw"],
+                                                                         font=ja_text.heading_fonts(), bold=True, min_tail=4)}
+                    elif rb["type"] == "text" and rb.get("fit") and isinstance(blk.get("paragraphs"), list):
+                        w_ = rb["geo"]["content"][2]
+                        nb[rb["index"]] = {**blk, "paragraphs": [ja_text.balance(p_, rb["fit"]["size"], w_) if isinstance(p_, str) else p_
+                                                                  for p_ in blk["paragraphs"]]}
+                ns["blocks"] = nb
+            slides.append(ns)
+    d = dict(deck)
+    d["slides"] = slides
+    return d
+
+
+# ---------------------------------------------------------------------------
+# 語の途中で折れる文を、文節の切れ目で折る（S5b。tools/wrap_fix.py。値は layout の common.wrap）
+# ---------------------------------------------------------------------------
+
+# 利用者が文字の大きさ・幅を書いた領域は、手で調整した折り返しなので触らない
+_WRAP_USER_KEYS = frozenset({"size", "w", "heading_size", "body_size", "item_size", "label_size", "child_size", "text_size",
+                             "cell_size", "header_size", "col_widths"})
+# 1 段落のテキスト領域（領域名, 見出しフォントで測るか）。apply_line_balance の領域に、副文（support / attribution）を足したもの
+_WRAP_TEXT_REGIONS = _BALANCE_TEXT_REGIONS + (("support", False), ("attribution", False))
+
+
+def _wrap_user(ex: dict, region: str) -> bool:
+    return bool(ex.get(region, ()) and set(ex[region]) & _WRAP_USER_KEYS)
+
+
+class _WrapRoom:
+    """箱の高さの余り（px）。語の途中の折れを直して行が増えるとき、余りの中に収まる行数だけ許す（収まらないなら増やさない）。"""
+
+    def __init__(self, px=0.0):
+        self.px = max(0.0, float(px or 0.0))
+
+    def fix(self, text, size, width, cfg, lh=1.4, font=None, bold=False, min_tail=4):
+        """wrap_fix.fix に、余りから決めた行数の増加を許して掛け、増えた行ぶんの高さを余りから引く。"""
+        if not isinstance(text, str):
+            return text
+        lines = max(1.0, size * lh)
+        out = wrap_fix.fix(text, size, width, cfg, font=font, bold=bold, min_tail=min_tail, extra=int(self.px // lines))
+        if out != text:
+            grown = wrap_fix.line_count(out, size, width, font, bold) - wrap_fix.line_count(text, size, width, font, bold)
+            self.px -= max(0, grown) * lines
+        return out
+
+
+def _wrap_items(items, region: dict, cfg: dict, room=None):
+    """bullets（文字列 or {text, children}）の各項目に wrap_fix.fix を掛けた新しいリスト（autofit.bullets_height と同じ幅・大きさ）。
+    room（_WrapRoom）が無ければ行数を増やさない。"""
+    if not isinstance(items, list) or not region:
+        return items
+    room = room or _WrapRoom(0)
+    size = region.get("size", 16)
+    lh = region.get("line_height", 1.4)
+    indent = region.get("indent", 30)
+    width = max(10.0, region.get("w", 400) - indent)
+    child_size = region.get("child_size", max(10, size - 3))
+    cw = max(10.0, width - (indent - 6))
+    out = []
+    for it in items:
+        if isinstance(it, str):
+            out.append(room.fix(it, size, width, cfg, lh))
+        elif isinstance(it, dict):
+            nit = dict(it)
+            if isinstance(nit.get("text"), str):
+                nit["text"] = room.fix(nit["text"], nit.get("size", size), width, cfg, lh, bold=bool(nit.get("bold")))
+            if isinstance(nit.get("children"), list):
+                nit["children"] = [
+                    room.fix(c, child_size, cw, cfg, lh) if isinstance(c, str)
+                    else ({**c, "text": room.fix(c["text"], c.get("size", child_size), cw, cfg, lh)}
+                          if isinstance(c, dict) and isinstance(c.get("text"), str) else c)
+                    for c in nit["children"]]
+            out.append(nit)
+        else:
+            out.append(it)
+    return out
+
+
+WRAP_TABLE_MAX_ROWS = autofit.TABLE_SEARCH_MAX_ROWS       # これより行の多い表は、文節の折り返しの探索を省く（時間がかかる。警告は従来どおり出る）
+
+
+def _wrap_table(ns: dict, tr: dict, cfg: dict) -> dict:
+    """表のセルの、語の途中で折れる文に文節の切れ目の改行を入れる（HTML は <br>、PPTX はセル内の改行）。
+    列幅（px。自動フィットか利用者が決めたもの）が分かるときだけ。行が増えると行の高さが変わるので、行数は増やさない。
+    列幅は改行を入れる前の文で決まる（resolve_style が _wrap_src の元の文で自動フィットする）ので、改行を入れても動かない。
+    URL のセル・数字だけのセル・利用者が cell_size / header_size / col_widths を書いた表は触らない。"""
+    widths = tr.get("col_widths")
+    if len(ns.get("rows") or ()) > WRAP_TABLE_MAX_ROWS:
+        return ns                                       # 行の多い表は探索に時間がかかるうえ、1 行ずつの折れは目立たない
+    if not (isinstance(widths, list) and widths and all(isinstance(w, (int, float)) and w > 0 for w in widths)
+            and isinstance(tr.get("w"), (int, float)) and tr.get("cell_size")):
+        return ns
+    total = float(sum(widths))
+    px = [w / total * float(tr["w"]) - 2 * tr.get("pad_x", 16) for w in widths]
+    ns = dict(ns)
+    cols = ns.get("columns")
+    if isinstance(cols, list) and tr.get("header_size"):
+        ns["columns"] = [wrap_fix.fix(c, tr["header_size"], px[j], cfg, bold=True) if isinstance(c, str) and j < len(px) else c
+                         for j, c in enumerate(cols)]
+    emph = set(ns.get("_row_emphasis") or [])
+    rows = []
+    for i, row in enumerate(ns["rows"]):
+        if not isinstance(row, list):
+            rows.append(row)
             continue
-        st = resolve_style(layout, deck, slide)
-        ns = dict(slide)
-        for key, heading in _BALANCE_TEXT_REGIONS:
-            r = st.get(key)
-            if isinstance(ns.get(key), str) and isinstance(r, dict) and r.get("w") and r.get("size"):
-                ns[key] = ja_text.balance(ns[key], r["size"], r["w"],
-                                          font=ja_text.heading_fonts() if heading else None,
-                                          bold=bool(r.get("bold")))
-        if t in _BALANCE_BULLET_TYPES and isinstance(ns.get("bullets"), list):
-            ns["bullets"] = _balance_items(ns["bullets"], st.get("body"))
-        elif t == "two_column":
-            for side in ("left", "right"):
-                box, colc = st.get(side), ns.get(side)
-                if isinstance(box, dict) and isinstance(colc, dict) and isinstance(colc.get("bullets"), list):
-                    inner = dict(st.get("col_body", {}))
-                    inner["w"] = box.get("w", 400) - 2 * box.get("pad", 0)
-                    ns[side] = {**colc, "bullets": _balance_items(colc["bullets"], inner)}
-        slides.append(ns)
+        strong_row = (bool(ns.get("total_row")) and i == len(ns["rows"]) - 1) or i in emph
+        out = []
+        for j, cell in enumerate(row):
+            text, url = table_cell_parts(cell)
+            if j >= len(px) or url or not text or isinstance(cell, bool):
+                out.append(cell)
+                continue
+            bold = strong_row or (bool(ns.get("row_header")) and j == 0) or (isinstance(cell, dict) and bool(cell.get("tone")))
+            new = wrap_fix.fix(text, tr["cell_size"], px[j], cfg, bold=bold)
+            if new == text:
+                out.append(cell)
+            elif isinstance(cell, dict):
+                out.append({**cell, "text": new})
+            else:
+                out.append(new)
+        rows.append(out)
+    ns["rows"] = rows
+    return ns
+
+
+def _wrap_fix_typed(t: str, ns: dict, st: dict, cfg: dict, ex: dict) -> dict:
+    """1 つのスライド（またはブロックを既存タイプのスライドとして見たもの）の、語の途中で折れる文を直した新しい辞書。
+    行が増える直し方は、箱の高さの余りに収まるときだけ使う（あふれ・縮小を新しく作らない）。"""
+    ns = dict(ns)
+    for key, heading in _WRAP_TEXT_REGIONS:
+        r = st.get(key)
+        if key == "text" and t != "quote":
+            continue
+        if isinstance(ns.get(key), str) and isinstance(r, dict) and r.get("w") and r.get("size") and not _wrap_user(ex, key):
+            font = ja_text.heading_fonts() if heading else None
+            lh = r.get("line_height", 1.4)
+            w = r["w"] / shp.width_factor(r)          # 字間（tracking）を入れた文字は 1 字が広がる。自動フィットと同じ見積もりの幅で測る
+            room = _WrapRoom((r.get("h") or 0) - ja_text.estimate_lines(ns[key], r["size"], w, font, shp.is_bold(r)) * r["size"] * lh)
+            ns[key] = room.fix(ns[key], r["size"], w, cfg, lh, font=font, bold=shp.is_bold(r), min_tail=max(4, ja_text.tail_min(r["size"])))
+    if t in _BALANCE_BULLET_TYPES and isinstance(ns.get("bullets"), list) and isinstance(st.get("body"), dict) and not _wrap_user(ex, "body"):
+        ns["bullets"] = _wrap_items(ns["bullets"], st["body"], cfg, _WrapRoom(st["body"].get("h", 0) - autofit.bullets_height(ns["bullets"], st["body"])))
+    elif t == "two_column":
+        for side in ("left", "right"):
+            box, colc = st.get(side), ns.get(side)
+            if isinstance(box, dict) and isinstance(colc, dict) and isinstance(colc.get("bullets"), list) and not _wrap_user(ex, "col_body"):
+                inner = dict(st.get("col_body", {}))
+                inner["w"] = box.get("w", 400) - 2 * box.get("pad", 0)
+                head = (st.get("col_heading", {}).get("size", 22) * 1.5 + 16) if colc.get("heading") else 0
+                room = _WrapRoom(box.get("h", 0) - 2 * box.get("pad", 0) - head - autofit.bullets_height(colc["bullets"], inner))
+                ns[side] = {**colc, "bullets": _wrap_items(colc["bullets"], inner, cfg, room)}
+    elif t == "cards" and isinstance(ns.get("cards"), list) and isinstance(st.get("grid"), dict):
+        g0 = st["grid"]
+        geo = pe.cards_cells(len(ns["cards"]), ns.get("columns"), g0, hero.card_spans(ns))
+        pad = g0.get("pad", 18)
+        user = ex.get("grid", set())
+        newc = []
+        for k, c in enumerate(ns["cards"]):
+            if not isinstance(c, dict):
+                newc.append(c)
+                continue
+            w_ = max(geo["cells"][k][2] - 2 * pad, 10)
+            g = hero.emph_grid(g0, hero.card_emphasis(c))
+            nc = dict(c)
+            room = _WrapRoom(geo["cells"][k][3] - autofit.cards_need(c, g, w_, pad))
+            if isinstance(nc.get("heading"), str) and "heading_size" not in user:
+                hsz = g.get("heading_size", 19)
+                nc["heading"] = room.fix(nc["heading"], hsz, w_ - autofit.card_icon_reserve(nc, g), cfg, autofit.CARD_HEAD_LH,
+                                         font=ja_text.heading_fonts(), bold=True, min_tail=max(4, ja_text.tail_min(hsz)))
+            if isinstance(nc.get("body"), str) and "body_size" not in user:
+                bsz = g.get("body_size", 15)
+                nc["body"] = room.fix(nc["body"], bsz, w_, cfg, autofit.CARD_BODY_LH, min_tail=max(4, ja_text.tail_min(bsz)))
+            if isinstance(nc.get("items"), list) and "item_size" not in user:
+                nc["items"] = _wrap_items(nc["items"], {"size": g.get("item_size", 14), "w": w_, "indent": autofit.CARD_ITEM_INDENT, "child_size": 12}, cfg, room)
+            newc.append(nc)
+        ns["cards"] = newc
+    elif t == "table" and isinstance(ns.get("rows"), list) and isinstance(st.get("table"), dict) and not _wrap_user(ex, "table"):
+        ns = _wrap_table(ns, st["table"], cfg)
+    elif t == "kpi":
+        # kpi のラベル・注記は描くとき（dataviz_engine.layout_kpi）に改行を入れる。入れてよいかの判定（止め方・利用者が書いた大きさ）をここでそろえる
+        if not (set(ex.get("body", ())) & (_WRAP_USER_KEYS | {"note_size", "value_size"})):
+            ns["_wrap_cfg"] = dict(cfg)
+    elif t == "steps" and isinstance(ns.get("steps"), list) and isinstance(st.get("body"), dict) and not _wrap_user(ex, "body"):
+        b = st["body"]
+        n = max(1, len(ns["steps"]))
+        card_w = (b["w"] - (n - 1) * b.get("gap", 20)) / n
+        inner = card_w - 2 * b.get("pad", 16)
+        proto = autofit.steps_item_params(b, inner)
+        avail = b.get("h", 0) - b.get("header_h", 60) - 2 * b.get("pad", 16) - 12
+        newc = []
+        for stp in ns["steps"]:
+            if not isinstance(stp, dict):
+                newc.append(stp)
+                continue
+            nst = dict(stp)
+            if isinstance(nst.get("label"), str):
+                nst["label"] = wrap_fix.fix(nst["label"], b.get("label_size", 18), inner, cfg, font=ja_text.heading_fonts(), bold=True)
+            if isinstance(nst.get("items"), list):
+                nst["items"] = _wrap_items(nst["items"], proto, cfg, _WrapRoom(avail - autofit.bullets_height(nst["items"], proto)))
+            newc.append(nst)
+        ns["steps"] = newc
+    return ns
+
+
+def _attach_src(old: dict, new: dict) -> dict:
+    """改行を入れて変わったキーについて、入れる前の内容を new["_wrap_src"] に持たせる（大きさを決める自動フィットはそちらを見る）。"""
+    changed = {k: old[k] for k, v in new.items() if k != "blocks" and k in old and not k.startswith("_") and v != old[k]}
+    if changed:
+        new["_wrap_src"] = WrapSrc(changed)
+    return new
+
+
+def apply_wrap_fix(deck: dict, layout: dict) -> dict:
+    """自然な折り返しだと語の途中で折れる段落に、文節の切れ目の改行（\\n）を入れたデッキを返す（apply_line_balance のあとに掛ける。
+    すでに \\n がある文（line_balance・phrase_wrap が入れたものを含む）・利用者が大きさ・幅を書いた領域は触らない）。
+    順序は「大きさを決める → 決まった大きさと幅で改行を入れる」: 改行を入れたスライド・ブロックは `_wrap_src` に入れる前の内容を持ち、
+    resolve_style / resolve_block はそちらで大きさを決める（改行の有無で自動フィットの結果が変わらない）。
+    止め方: meta.layout_overrides.common.wrap.enabled / スライドの style.wrap.enabled を false、meta.line_balance / slide.line_balance を false、
+    meta.autofit / slide.autofit を false（自動で整えない約束。kpi も含む）。"""
+    if deck.get("meta", {}).get("line_balance") is False:
+        return deck
+    slides = []
+    for si, slide in enumerate(deck.get("slides", [])):
+        with slide_guard(f"{si + 1}枚目（type={slide.get('type')}）", "文字組みの調整（語の途中の折れ）"):
+            t = slide.get("type")
+            if slide.get("line_balance") is False or t not in layout.get("types", {}) or t == "canvas" or not autofit.autofit_on(deck, slide):
+                slides.append(slide)
+                continue
+            st = resolve_style(layout, deck, slide)
+            cfg = wrap_fix.config(st)
+            if not cfg["enabled"]:
+                slides.append(slide)
+                continue
+            ex = autofit.explicit_props(deck, slide)
+            ns = _wrap_fix_typed(t, slide, st, cfg, ex)
+            if t in COMPOSITE_TYPES and isinstance(ns.get("blocks"), list):
+                nb = list(ns["blocks"])
+                for rb in (st.get("_composite") or {}).get("blocks", []):
+                    blk = nb[rb["index"]]
+                    if not isinstance(blk, dict) or isinstance(blk.get("style"), dict) and _wrap_user(blk["style"], "body"):
+                        continue
+                    new = None
+                    if rb["type"] == "callout" and rb.get("fit") and isinstance(blk.get("text"), str):
+                        new = {**blk, "text": wrap_fix.fix(blk["text"], rb["fit"]["size"], rb["fit"]["tw"], cfg,
+                                                           font=ja_text.heading_fonts(), bold=True, min_tail=4)}
+                    elif rb["type"] == "text" and rb.get("fit") and isinstance(blk.get("paragraphs"), list):
+                        w_ = rb["geo"]["content"][2]
+                        new = {**blk, "paragraphs": [wrap_fix.fix(p_, rb["fit"]["size"], w_, cfg) if isinstance(p_, str) else p_
+                                                      for p_ in blk["paragraphs"]]}
+                    elif rb.get("st") and rb["type"] in ("bullets", "steps", "cards", "kpi"):
+                        new = _wrap_fix_typed(rb["type"], blk, rb["st"], cfg, autofit.explicit_props(deck, {**blk, "type": rb["type"]}))
+                    if new is not None:
+                        nb[rb["index"]] = _attach_src(blk, new)
+                ns["blocks"] = nb
+            slides.append(_attach_src(slide, ns))
     d = dict(deck)
     d["slides"] = slides
     return d
 
 
 def estimate_bullets_height(items, r: dict) -> float:
-    """bullets 領域（親＋子）が実際に描画されたときのおおよその高さを推定する（px）。
-    items は norm_items() 前後どちらの形式でも受け付ける。"""
-    items = norm_items(items)
-    size = r.get("size", 16)
-    lh = r.get("line_height", 1.4)
-    gap = r.get("gap", 10)
-    indent = r.get("indent", 30)
-    width = max(10.0, r.get("w", 400) - indent)
-    child_size = r.get("child_size", max(10, size - 3))
-    child_gap = r.get("child_gap", 6)
-    child_width = max(10.0, width - 20)
-    total = 0.0
-    for it in items:
-        isize = it.get("size", size)
-        lines = estimate_lines(it.get("text", ""), isize, width)
-        total += lines * isize * lh + gap
-        for c in it.get("children", []):
-            csize = c.get("size", child_size)
-            clines = estimate_lines(c.get("text", ""), csize, child_width)
-            total += clines * csize * lh + child_gap
-    return total
+    """bullets 領域（親＋子）が実際に描画されたときのおおよその高さを推定する（px。末尾の間隔を含む）。
+    items は norm_items() 前後どちらの形式でも受け付ける。自動フィットと同じ見積もり（autofit.bullets_height）。"""
+    return autofit.bullets_height(items, r)
 
 
 DEFAULT_STATUS_LEGEND = [
@@ -1568,41 +2826,18 @@ def status_color(slide: dict, status) -> str:
 
 def flatten_status_items(items, level: int = 0) -> list:
     """status_table のセル内容（文字列 or {text, children} の入れ子）を (level, text) の平坦な列にする。"""
-    out = []
-    for it in items or []:
-        if isinstance(it, dict):
-            out.append((level, str(it.get("text", ""))))
-            out += flatten_status_items(it.get("children"), level + 1)
-        else:
-            out.append((level, str(it)))
-    return out
+    return autofit.flatten_status_items(items, level)
 
 
 def status_table_geometry(slide: dict, st: dict) -> dict:
     """status_table の列・行の座標を計算する（HTML/PPTX 共通）。
     行の高さはセル内容の見積もり高さを基準にし、fill_height なら余白を各行へ比例配分して表の高さを埋める。"""
     tr = st["table"]
-    cols = slide.get("columns", [])
-    widths = tr.get("col_widths") or [1] * len(cols)
-    if len(widths) != len(cols):
-        widths = [1] * len(cols)
-    unit = tr["w"] / sum(widths)
-    xs, ws, x = [], [], tr["x"]
-    for w in widths:
+    ws, rows = autofit.status_table_rows(slide, tr)
+    xs, x = [], tr["x"]
+    for w in ws:
         xs.append(x)
-        ws.append(w * unit)
-        x += w * unit
-    size, lh, indent = tr["cell_size"], tr["line_height"], tr["indent"]
-    rows = []
-    for row in slide.get("rows", []):
-        cells = [flatten_status_items(c) for c in row.get("cells", [])]
-        need = tr["label_size"] * 1.4 + 2 * tr["pad_y"]
-        for j, paras in enumerate(cells):
-            avail = ws[j + 2] - 2 * tr["pad_x"] if j + 2 < len(ws) else 100
-            h = sum(estimate_lines(text, size, avail - indent * (lv + 1)) * size * lh + tr["item_gap"]
-                    for lv, text in paras)
-            need = max(need, h + 2 * tr["pad_y"])
-        rows.append({"row": row, "cells": cells, "need": need})
+        x += w
     avail_h = tr["h"] - tr["header_h"]
     total_need = sum(r["need"] for r in rows) or 1
     scale = avail_h / total_need if tr.get("fill_height", True) and total_need < avail_h else 1.0
@@ -1621,8 +2856,7 @@ def steps_card_height(b: dict, steps, card_w: float) -> float:
     if b.get("fit", "content") != "content" or not steps:
         return b["h"]
     header_h = b.get("header_h", 60); pad = b.get("pad", 16)
-    proto = {"w": card_w - 2*pad, "size": b.get("item_size", 15), "gap": b.get("item_gap", 8),
-             "line_height": 1.4, "child_size": 13, "child_gap": 4, "indent": 16}
+    proto = autofit.steps_item_params(b, card_w - 2*pad)
     est = max(estimate_bullets_height(norm_items(st.get("items", [])), proto) for st in steps)
     return max(min(b["h"], header_h + 2*pad + est + 12), min(b["h"], b.get("min_h", 260)))
 
@@ -1651,25 +2885,23 @@ def _matrix_content_layout(body_text, g: dict, cw: float, ch: float, pad: float,
 
 def _cards_content_layout(card: dict, g: dict, cw: float, chh: float, pad: float, valign: str) -> dict:
     """cards の1枚（heading + body + items の縦積み）の各要素の y オフセット（カード上端からの
-    相対値）と items の高さを計算する（HTML/PPTX 共通）。valign:middle のときは heading を含めた
-    コンテンツ全体（実際に描画される段だけ）の実高さを見積もり、その全体をカードの中央に
-    配置できるよう heading の y から計算し直す。valign:top（既定）は従来どおり heading 上端固定。"""
+    相対値）と items の高さを計算する（HTML/PPTX 共通）。各段の高さは内容から決める
+    （autofit.cards_content。以前は本文の高さが固定 44px で、1 行の本文でも余白が出て、3 行以上は重なった）。
+    valign:middle のときは heading を含めたコンテンツ全体（実際に描画される段だけ）の実高さを見積もり、
+    その全体をカードの中央に配置できるよう heading の y から計算し直す。valign:top（既定）は heading 上端固定。"""
     body_w = cw - 2 * pad
     has_body = bool(card.get("body"))
     has_items = bool(card.get("items"))
-    head_h = 28
-    head_gap = 4
-    body_h_fixed = 44
-    body_gap = 4
-    items_h = None
-    if has_items:
-        probe = {"size": g.get("item_size", 14), "gap": g.get("item_gap", 6), "line_height": 1.35,
-                 "indent": 14, "child_size": 12, "child_gap": 4, "w": body_w}
-        items_h = estimate_bullets_height(card.get("items"), probe)
+    c = autofit.cards_content(card, g, body_w)
+    head_h = c["head_h"]
+    head_gap = autofit.CARD_HEAD_GAP
+    body_h = c["body_h"]
+    body_gap = autofit.CARD_BODY_GAP
+    items_h = c["items_h"]
     if valign == "middle":
         content_h = head_h
         if has_body:
-            content_h += head_gap + body_h_fixed
+            content_h += head_gap + body_h
         if has_items:
             content_h += body_gap + items_h
         head_y = pad + max(0.0, (chh - 2 * pad - content_h) / 2)
@@ -1679,13 +2911,13 @@ def _cards_content_layout(card: dict, g: dict, cw: float, chh: float, pad: float
     body_y = None
     if has_body:
         body_y = yy
-        yy += body_h_fixed + body_gap
+        yy += body_h + body_gap
     items_y = None
     if has_items:
         items_y = yy
         if valign != "middle":
             items_h = chh - yy - pad
-    return {"head_h": head_h, "head_y": head_y, "body_h": body_h_fixed, "body_y": body_y,
+    return {"head_h": head_h, "head_y": head_y, "body_h": body_h, "body_y": body_y,
             "items_h": items_h, "items_y": items_y}
 
 
@@ -1736,81 +2968,20 @@ def closing_message_style(st: dict, slide: dict) -> dict:
 
 
 def _check_overflow(slide: dict, st: dict, i: int, t: str):
-    """title / lead / bullets 系 body / table のあふれを見積もって warn する（warn のみ、fail しない）。"""
-    footer = st.get("footer_l") or st.get("footer_r")
-    bottom = footer["y"] if footer else CANVAS_H - 20
-    threshold = 24  # このくらいの超過までは丸め誤差として無視する
-
-    def region_h(region: dict) -> float:
-        if "h" in region:
-            return region["h"]
-        return max(0.0, bottom - region.get("y", 0))
-
-    def warn_text(label: str, region: dict, text, heading: bool = False) -> None:
-        if not region or not text:
-            return
-        h = region_h(region)
-        font = ja_text.heading_fonts() if heading else None
-        lines = estimate_lines(text, region.get("size", 16), region.get("w", 400),
-                               font=font, bold=bool(region.get("bold")))
-        est = lines * region.get("size", 16) * region.get("line_height", 1.2)
-        over = est - h
-        if over > threshold:
-            warn(f"{i + 1}枚目（type={t}）: {label} が枠の高さを約{int(over)}px超える見込みです。"
-                 f"文字数を減らすか style.{label}.size を下げてください")
-
-    def warn_bullets(label: str, region: dict, items) -> None:
-        if not region or not items:
-            return
-        h = region_h(region)
-        est = estimate_bullets_height(items, region)
-        over = est - h
-        if over > threshold:
-            warn(f"{i + 1}枚目（type={t}）: {label} が枠の高さを約{int(over)}px超える見込みです。"
-                 f"項目を減らすか style.{label}.size を下げてください")
-
-    warn_text("title", st.get("title"), slide.get("title"), heading=True)
-    warn_text("lead", st.get("lead"), slide.get("lead"))
-
-    if t == "bullets":
-        warn_bullets("body", st.get("body"), slide.get("bullets"))
-    elif t == "two_column":
-        for side in ("left", "right"):
-            box = st.get(side)
-            colc = slide.get(side, {})
-            if not box or not colc.get("bullets"):
-                continue
-            pad = box.get("pad", 0)
-            inner = dict(st.get("col_body", {}))
-            inner["w"] = box.get("w", 400) - 2 * pad
-            inner["h"] = box.get("h", 300) - 2 * pad
-            warn_bullets(f"{side}.bullets", inner, colc.get("bullets"))
-    elif t == "closing":
-        warn_bullets("body", st.get("body"), slide.get("bullets"))
-    elif t == "image_text":
-        warn_bullets("body", st.get("body"), slide.get("bullets"))
-    elif t == "table":
-        tr = st.get("table")
-        rows = slide.get("rows", [])
-        if tr and rows:
-            est = tr.get("header_h", 0) + tr.get("row_h", 0) * len(rows)
-            h = region_h(tr)
-            over = est - h
-            if over > threshold:
-                warn(f"{i + 1}枚目（type=table）: 表が枠の高さを約{int(over)}px超える見込みです。"
-                     f"行数を減らすか style.table.row_h を下げてください")
-    elif t == "status_table" and st.get("table"):
-        over = status_table_geometry(slide, st)["overflow"]
-        if over > threshold:
-            warn(f"{i + 1}枚目（type=status_table）: 表が枠の高さを約{int(over)}px超える見込みです。"
-                 f"項目を減らすかスライドを分ける、または style.table.cell_size を下げてください")
+    """文字・箱のあふれの警告。自動フィット（autofit）が文字量から見積もった結果（収まったか・縮めたか・
+    最小サイズでも収まらないか）を、st["_fit"]["issues"] からそのまま warn / note にする。
+    以前はタイプごとに「項目数×固定の高さ」で見積もり、文字量を見ずに警告していた（A2-05）。
+    新しいタイプの警告は autofit.fitter で issue を出せば、ここを足さずに出る。"""
+    label = f"{i + 1}枚目（type={t}）"
+    for level, _code, text in (st.get("_fit") or {}).get("issues", []):
+        (warn if level == "warn" else note)(text.replace("{label}", label))
 
 
 # ---------------------------------------------------------------------------
 # 色指定の検証（M-68 等）: テーマトークン名 or #RRGGBB/#RGB のみを許可する
 # ---------------------------------------------------------------------------
 
-_COLOR_KEY_RE = re.compile(r"(color|fill|fills)$")
+_COLOR_KEY_RE = re.compile(r"(color|fill|fills|series_colors)$")   # series_colors: chart の系列色（色の配列）
 
 
 def _color_issue(theme, value, path: str, i: int, t: str):
@@ -1841,7 +3012,7 @@ def _walk_colors(obj, path: str, theme, i: int, t: str, issues: list):
                     msg = _color_issue(theme, v, npath, i, t)
                     if msg:
                         issues.append(msg)
-            elif isinstance(v, (dict, list)):
+            elif isinstance(v, (dict, list)) and k != "_composite":
                 _walk_colors(v, npath, theme, i, t, issues)
     elif isinstance(obj, list):
         for idx, v in enumerate(obj):
@@ -1874,6 +3045,26 @@ def _validate_image_path(slide: dict, i: int, t: str, deck_dir: Path):
              f"（対応拡張子: {', '.join(sorted(e.lstrip('.') for e in ALLOWED_IMAGE_EXT))}）")
     if not resolved.exists():
         fail(f"{i + 1}枚目（type={t}）: 画像ファイルが見つかりません: {rel}")
+    if not resolved.is_file():
+        fail(f"{i + 1}枚目（type={t}）: path '{rel}' はファイルではありません")
+    big = dschema.image_too_big(resolved, rel)
+    if big:
+        fail(f"{i + 1}枚目（type={t}）: {big}")
+    # 壊れた画像は PPTX 段で例外になり HTML だけ先にできてしまうので、ここで開けるか確かめる
+    if ext != ".svg":
+        try:
+            from PIL import Image
+        except ImportError:
+            Image = None
+        if Image is not None:
+            try:
+                with Image.open(resolved) as im:
+                    im.verify()
+            except Exception as e:   # noqa: BLE001 - PIL は形式ごとに多様な例外を出す
+                fail(f"{i + 1}枚目（type={t}）: 画像ファイルを開けません（壊れているか、拡張子と中身の形式が違います）: "
+                     f"{rel}（{type(e).__name__}）→ 画像を作り直すか、正しい形式で保存し直す")
+    elif not resolved.read_text(encoding="utf-8", errors="replace").lstrip().startswith(("<", "\ufeff<")):
+        fail(f"{i + 1}枚目（type={t}）: SVG ファイルが SVG として読めません: {rel} → 中身が <svg …> で始まるファイルにする")
 
 
 # ---------------------------------------------------------------------------
@@ -1901,6 +3092,7 @@ def _validate_legend_items(items, i: int, t: str):
                  f"（4要素配列、または {{shape, variant, label, desc}} の辞書を指定してください）")
 
 
+SWIMLANE_MAX_COLS = 40   # これを超える列は読めず、配線の計算も極端に重くなる
 SWIMLANE_TASK_VARIANTS = ("onpf", "onother", "offline")
 SWIMLANE_SHAPES = ("task", "system", "decision", "terminal", "marker", "connector", "mail", "io")
 
@@ -1912,6 +3104,10 @@ def _validate_swimlane(slide: dict, i: int, t: str):
     if not isinstance(lanes, list):
         fail(f"{i + 1}枚目（type=swimlane）: lanes は配列（リスト）で指定してください")
     n_lanes = len(lanes)
+    sl_cols = slide.get("cols")
+    if isinstance(sl_cols, int) and not isinstance(sl_cols, bool) and sl_cols > SWIMLANE_MAX_COLS:
+        fail(f"{i + 1}枚目（type=swimlane）: cols が {sl_cols} です。列は {SWIMLANE_MAX_COLS} 列までです"
+             f" → 工程の数に合わせた cols にする（多すぎるときはスライドを分ける）")
 
     nodes = slide.get("nodes", [])
     if not isinstance(nodes, list):
@@ -1937,6 +3133,9 @@ def _validate_swimlane(slide: dict, i: int, t: str):
         col = nd.get("col", 0)
         if isinstance(col, bool) or not isinstance(col, int) or col < 0:
             fail(f"{i + 1}枚目（type=swimlane）: ノード '{nid}' の col は0以上の整数で指定してください")
+        if col >= SWIMLANE_MAX_COLS:
+            fail(f"{i + 1}枚目（type=swimlane）: ノード '{nid}' の col が {col} です。列は {SWIMLANE_MAX_COLS} 列までです"
+                 f" → col は 0 始まりの工程の順で、飛ばさずに詰めて指定する（多すぎるときはスライドを分ける）")
         # variant は task ノード専用の語彙（onpf / onother / offline）。新図解タイプの variant
         # （emphasis / security …）とは別の名前空間なので、混同した値は warning で知らせる
         # （未知の値は無警告で onother 扱いになり、typo が成果物に紛れ込むため）。
@@ -1998,13 +3197,185 @@ def _report_diagnostics(diags, i: int, t: str, geometry_only: bool = False):
             note(msg)
 
 
+DEBUG = False   # --debug を付けたとき True。スライド単位の例外をトレースバックのまま出す
+
+
+@contextlib.contextmanager
+def slide_guard(label: str, what: str = "処理"):
+    """スライド 1 枚の処理中に想定外の例外が出たら、トレースバックではなく fail で知らせる。
+    label は「3枚目（type=table）」のような場所の表記。--debug のときだけ元の例外を出す。"""
+    try:
+        yield
+    except (SystemExit, KeyboardInterrupt):
+        raise
+    except Exception as e:   # noqa: BLE001 - 想定外の入力の形をまとめて受ける
+        if DEBUG:
+            raise
+        detail = f"{type(e).__name__}: {e}"
+        if len(detail) > 160:
+            detail = detail[:157] + "..."
+        fail(f"{label}の{what}中にエラー: {detail}。入力の形を確認してください"
+             f"（キーの型・配列の要素・数値の範囲。詳細は --debug を付けて再実行）")
+
+
+def _drop_nulls(v):
+    """入れ子のオブジェクトの値が null のキーを取り除く（配列の要素は触らない: 要素が null なのは検証で fail にする）。"""
+    if isinstance(v, dict):
+        for k in [k for k, x in v.items() if x is None]:
+            del v[k]
+        for x in v.values():
+            _drop_nulls(x)
+    elif isinstance(v, list):
+        for x in v:
+            _drop_nulls(x)
+
+
+def _prune_and_coerce(slide: dict, t: str):
+    """スライド直下の値をそろえる（検証の前処理。deck を直接書き換える）。
+    - 値が null のキーは「書いていない」と同じ扱いで取り除く（style だけは別に fail する）。
+    - 文字列のはずのフィールドに数値が書かれていたら文字列にする（例: number: 1 → "1"）。"""
+    for key in [k for k, v in slide.items() if v is None and k != "style"]:
+        del slide[key]
+    if t != "canvas":
+        for key, v in slide.items():
+            if key != "style":
+                _drop_nulls(v)
+    shapes = dict(dschema.COMMON_SHAPES)
+    shapes.update(dschema.SLIDE_SHAPES.get(t, {}))
+    for key, shape in shapes.items():
+        v = slide.get(key)
+        if shape == "text" and isinstance(v, (int, float)) and not isinstance(v, bool):
+            slide[key] = str(v)
+        elif v == "" and not isinstance(shape, str) and key != "style":
+            del slide[key]   # 配列・オブジェクトのはずのフィールドに空文字が書かれていたら「書いていない」扱い
+
+
+def _validate_style_values(style, where_prefix: str, st_defaults: dict, common_defaults: dict, label: str):
+    """slide.style / meta.layout_overrides.<type> の各領域の中身（プロパティ名・値の型・範囲）を検査する。"""
+    for rname, region in style.items():
+        if not isinstance(rname, str) or rname.startswith("_"):
+            continue
+        if rname == "blocks" and isinstance(st_defaults.get("blocks"), dict):
+            continue    # 合成スライドのブロックのタイプ別既定（blocks.<タイプ>.<領域>.<プロパティ>）は _validate_block_defaults_style が見る
+        if isinstance(region, dict):
+            for pk in [pk for pk, pv in region.items() if pv is None]:
+                del region[pk]   # 値が null のプロパティは「指定なし」（既定値のまま）
+        defaults = st_defaults.get(rname, common_defaults.get(rname))
+        if rname not in st_defaults and rname not in common_defaults:
+            # 領域名の未知は呼び出し側が警告する。値が dict なら、プロパティの型（size が文字列など）だけは見る
+            if isinstance(region, dict):
+                _report_issues(dschema.check_region_value(region, None, f"{where_prefix}.{rname}", check_unknown=False), label)
+            continue
+        _report_issues(dschema.check_region_value(region, defaults, f"{where_prefix}.{rname}"), label)
+
+
+def _validate_block_defaults_style(bstyle, where_prefix: str, layout: dict, label: str):
+    """合成スライドの style.blocks / meta.layout_overrides.composite.blocks（ブロックのタイプ別の既定の上書き）を検査する。
+    形は blocks.<タイプ>.<領域>.<プロパティ>。型違い・範囲違いは、ブロックごとの style と同じ直し方つきの fail にする。"""
+    if not isinstance(bstyle, dict):
+        fail(f"{label}{where_prefix} はオブジェクト（タイプ名 → 領域名 → プロパティ。例: {{ \"bullets\": {{ \"body\": {{ \"size\": 18 }} }} }}）で指定してください"
+             f"（{dschema._vtype(bstyle)}が書かれています）")
+    types = layout.get("types", {})
+    for tk in list(bstyle):
+        tv = bstyle[tk]
+        if not isinstance(tk, str) or tk.startswith("_"):
+            continue
+        here = f"{where_prefix}.{tk}"
+        if tk in comp.NATIVE_TYPES:
+            warn(f"{label}{here} は無視されます（text / callout / image のブロックの文字サイズなどは、style.{tk} か、ブロックごとの style に書く）")
+            continue
+        if tk not in types or tk == "composite":
+            pool = [x for x in types if x != "composite"]
+            warn(f"{label}{here} は合成スライドのブロックのタイプ名ではありません{dschema.hint(tk, pool)}"
+                 f" → ブロックに使うタイプ名（bullets / table / cards / steps …）を書く")
+            continue
+        if not isinstance(tv, dict):
+            fail(f"{label}{here} はオブジェクト（領域名 → プロパティ。例: {{ \"body\": {{ \"size\": 18 }} }}）で指定してください"
+                 f"（{dschema._vtype(tv)}が書かれています）")
+        for rn in list(tv):
+            rv = tv[rn]
+            if not isinstance(rn, str) or rn.startswith("_"):
+                continue
+            if rn not in types[tk] and rn not in layout.get("common", {}):
+                warn(f"{label}{here}.{rn} は {tk} の領域名ではありません{dschema.hint(rn, list(types[tk]))}"
+                     f" → 使える領域: {' / '.join(types[tk].keys())}")
+                continue
+            if isinstance(rv, dict):
+                for pk in [pk for pk, pv in rv.items() if pv is None]:
+                    del rv[pk]
+            defaults = types[tk].get(rn, layout.get("common", {}).get(rn))
+            extra = ((types.get("composite", {}).get("blocks") or {}).get(tk) or {}).get(rn)       # ブロックの既定（thin_* など、合成のブロックだけが読むトークン）
+            if isinstance(extra, dict):
+                defaults = {**(defaults if isinstance(defaults, dict) else {}), **extra}
+            _report_issues(dschema.check_region_value(rv, defaults, f"{here}.{rn}"), label)
+
+
+def _validate_meta_hero(meta: dict, layout: dict):
+    """meta.section_numbers（章番号の自動採番）と meta.variants（タイプ別の既定の variant）の検査。"""
+    sn = meta.get("section_numbers")
+    if sn is not None and not isinstance(sn, bool):
+        fail(f"meta.section_numbers は true / false で指定してください（{dschema._vtype(sn)}が書かれています）"
+             f" → 章扉（section）に 01, 02 … を自動で振るなら true")
+    tm = meta.get("todo_marks")
+    if tm is not None and not isinstance(tm, bool):
+        fail(f"meta.todo_marks は true / false で指定してください（{dschema._vtype(tm)}が書かれています）"
+             f" → 【要確認】の強調表示を切るなら false（既定は true）")
+    mv = meta.get("variants")
+    if mv is None:
+        return
+    if not isinstance(mv, dict):
+        fail(f"meta.variants は {{ タイプ名: variant 名 }} のオブジェクトで指定してください（例: {{\"title\": \"left-band\", \"section\": \"number\"}}）")
+    vtypes = layout.get("variants") or {}
+    for tn, vn in mv.items():
+        if tn not in vtypes:
+            near = difflib.get_close_matches(str(tn), list(vtypes), n=1)
+            warn(f"meta.variants の '{tn}' は variant を持つタイプではありません。無視します{('（もしかして ' + near[0] + '）') if near else ''}"
+                 f" → variant を持つタイプ: {' / '.join(vtypes)}")
+            continue
+        names = list(vtypes[tn])
+        if not isinstance(vn, str) or (vn != "default" and vn not in names):
+            near = difflib.get_close_matches(str(vn), names, n=1)
+            fail(f"meta.variants.{tn} の '{vn}' という variant はありません{('（もしかして ' + near[0] + '）') if near else ''}"
+                 f" → {tn} の variant: {' / '.join(names)}（既定の見た目なら \"default\"）")
+
+
+def _check_brand_width(meta: dict, layout: dict):
+    """meta.brand が右上の箱（common.brand の w）に 1 行で入らないと、全スライドで 2 行に折れて箱からあふれる。ビルドで 1 回だけ知らせる。"""
+    brand = meta.get("brand")
+    if not isinstance(brand, str) or not brand.strip():
+        return
+    br = dict((layout.get("common") or {}).get("brand") or {})
+    ov = meta.get("layout_overrides")
+    ov_brand = ((ov.get("common") or {}).get("brand") if isinstance(ov, dict) and isinstance(ov.get("common"), dict) else None)
+    if isinstance(ov_brand, dict):
+        br.update(ov_brand)
+    w, size = br.get("w"), br.get("size")
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0 for v in (w, size)):
+        return
+    need = autofit.text_em(brand, bool(br.get("bold"))) * size
+    if need <= w + 0.5:
+        return
+    zen, han = max(1, int(w // size)), max(1, int(w // (size * 0.72)))     # 半角は英大文字の幅（約 0.72em）で見積もる
+    warn(f"meta.brand「{brand}」は右上の箱（幅 {w:g}px・文字 {size:g}px）に 1 行で収まりません（約 {need:.0f}px）。"
+         f"全スライドで 2 行に折れて箱からあふれます → 短くする（目安は全角 {zen} 字・半角 {han} 字前後まで）か、"
+         f"meta.layout_overrides.common.brand で w を広げる（x も同じだけ左へ）・size を下げる")
+
+
 def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
-    """deck.json をビルド前に一括検証する。問題があれば fail()（即終了）または warn()/note()。"""
+    """deck.json をビルド前に一括検証する。問題があれば fail()（即終了）または warn()/note()。
+    型違いの入力（配列のはずが文字列など）は fail、未知のキー・極端な値は warn。
+    スライド直下の null は「書いていない」とみなして取り除き、数値の文字列フィールドは文字列にそろえる（deck を書き換える）。"""
     if not isinstance(deck, dict):
         fail("deck.json の形式が不正です（トップレベルはオブジェクトである必要があります）")
     meta = deck.get("meta", {})
     if not isinstance(meta, dict):
         fail("deck.json の形式が不正です（meta はオブジェクトである必要があります）")
+
+    for key in deck:
+        if key not in ("meta", "slides") and isinstance(key, str) and not key.startswith("_"):
+            warn(f"deck.json の最上位の未知のキー \"{key}\" は無視されます{dschema.hint(key, ('meta', 'slides'))}"
+                 f" → 使えるのは meta と slides だけです")
+    _report_issues(dschema.unknown_meta_keys(meta), "")
 
     # meta.id: 省略可。禁止文字は fail、フォルダ名と異なる場合は note。
     raw_id = meta.get("id")
@@ -2015,38 +3386,73 @@ def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
         if deck_dir is not None and str(raw_id) != Path(deck_dir).name:
             note(f"meta.id（{raw_id}）とフォルダ名（{Path(deck_dir).name}）が一致していません")
 
+    mt = meta.get("title")
+    if mt is None or (isinstance(mt, str) and not mt.strip()):
+        warn("meta.title がありません。HTML の <title> と PPTX の文書プロパティ（Finder・メールで見える題名）には"
+             f"代わりに「{deck_title(deck, deck_dir) or 'デッキ'}」を使います"
+             " → meta.title に資料の題名を書く")
+
+    if not layout.get("_tokens_resolved"):
+        layout = shp.apply_to_layout(layout, None, None, fail=fail)   # json から直接読んだレイアウトも、既定の tokens で解決する
+    # 形トークンの参照（"$radius.card" など）は、型や範囲の検査の前に解決済みの値へ置き換える（未知の参照は fail）
+    if isinstance(meta.get("layout_overrides"), dict):
+        meta["layout_overrides"] = shp.resolve_style_refs(meta["layout_overrides"], layout, "meta.layout_overrides", fail)
+    for _s in (deck.get("slides") if isinstance(deck.get("slides"), list) else []):
+        if isinstance(_s, dict) and isinstance(_s.get("style"), dict):
+            _s["style"] = shp.resolve_style_refs(_s["style"], layout, f"{(deck['slides'].index(_s) + 1)}枚目の style", fail)
+
+    _check_brand_width(meta, layout)
+
     types_known = set(layout.get("types", {}).keys())
     common_keys = set(layout.get("common", {}).keys())
+    common_defaults = layout.get("common", {})
+
+    _check_density_autofit(meta, "meta.")
+    _validate_meta_hero(meta, layout)
 
     # meta.layout_overrides のトップキー検証（"common" は特別扱い）
     overrides = meta.get("layout_overrides", {})
+    if overrides is None:
+        overrides = {}
     if not isinstance(overrides, dict):
-        fail("meta.layout_overrides はオブジェクトである必要があります")
+        fail("meta.layout_overrides はオブジェクト（タイプ名 → 領域 → プロパティ）である必要があります")
     for ov_type, ov_val in overrides.items():
         if ov_type == "common":
-            for key in (ov_val or {}):
+            if not isinstance(ov_val, dict):
+                fail("meta.layout_overrides.common はオブジェクト（領域名 → プロパティ）で指定してください")
+            for key in ov_val:
                 if key not in common_keys:
                     hint = difflib.get_close_matches(key, common_keys, n=1)
                     hint_s = f"（候補: {hint[0]}）" if hint else ""
                     warn(f"meta.layout_overrides.common: '{key}' は共通領域名ではありません{hint_s}")
+            _validate_style_values(ov_val, "meta.layout_overrides.common", {}, common_defaults, "")
             continue
-        if ov_type not in types_known:
-            hint = difflib.get_close_matches(ov_type, types_known, n=1)
+        if not isinstance(ov_type, str) or ov_type not in types_known:
+            hint = difflib.get_close_matches(str(ov_type), types_known, n=1)
             hint_s = f"（候補: {hint[0]}）" if hint else ""
             fail(f"meta.layout_overrides に未知のスライドタイプ '{ov_type}' があります{hint_s}")
+        if not isinstance(ov_val, dict):
+            fail(f"meta.layout_overrides.{ov_type} はオブジェクト（領域名 → プロパティ）で指定してください"
+                 f"（{dschema._vtype(ov_val)}が書かれています）")
         allowed = common_keys | set(layout["types"][ov_type].keys())
-        for key in (ov_val or {}):
+        for key in ov_val:
             if key not in allowed:
                 hint = difflib.get_close_matches(key, allowed, n=1)
                 hint_s = f"（候補: {hint[0]}）" if hint else ""
                 warn(f"meta.layout_overrides.{ov_type}: '{key}' は {ov_type} の領域名ではありません{hint_s}")
+        _validate_style_values(ov_val, f"meta.layout_overrides.{ov_type}", layout["types"][ov_type],
+                               common_defaults, "")
+        if ov_type == "composite" and "blocks" in ov_val:
+            _validate_block_defaults_style(ov_val["blocks"], "meta.layout_overrides.composite.blocks", layout, "")
 
     slides = deck.get("slides", [])
     if not isinstance(slides, list):
         fail("slides は配列（リスト）である必要があります")
     if not slides:
-        warn("slides が空です。1枚もスライドがありません")
+        warn("slides が空です。1枚もスライドがありません → deck.json の最上位は meta と slides の2つです"
+             "（\"slide\" など打ち間違いがないか確認）")
 
+    _assign_section_numbers(deck, layout)
     for i, slide in enumerate(slides):
         if not isinstance(slide, dict):
             fail(f"{i + 1}枚目のスライドが正しい形式（オブジェクト）ではありません")
@@ -2054,149 +3460,649 @@ def validate_deck(deck: dict, layout: dict, theme: dict, deck_dir: Path):
         t = slide.get("type")
         if not t:
             fail(f"{i + 1}枚目のスライドに type がありません")
+        if not isinstance(t, str):
+            fail(f"{i + 1}枚目: type は文字列で指定してください（{dschema._vtype(t)}が書かれています）"
+                 f" → 使えるタイプ: {', '.join(sorted(types_known))}")
         if t not in types_known:
             hint = difflib.get_close_matches(t, types_known, n=1)
             hint_s = f"（候補: {hint[0]}）" if hint else ""
-            fail(f"{i + 1}枚目: 未知のスライドタイプ: {t}{hint_s}")
+            fail(f"{i + 1}枚目: 未知のスライドタイプ: {t}{hint_s}"
+                 f" → 使えるタイプ: {', '.join(sorted(types_known))}")
+        if t not in RENDERED_TYPES:
+            fail(f"{i + 1}枚目（type={t}）: このタイプの描画が登録されていません"
+                 f"（レイアウト JSON にはあるが、HTML / PPTX の描画器が無い）"
+                 f" → 描画器のあるタイプ: {', '.join(sorted(RENDERED_TYPES & types_known))}")
 
-        # bullets は配列（リスト）以外だと norm_items() が文字列を1文字ずつのイテレーションとして
-        # 扱ってしまい、クラッシュせず「1文字ずつの箇条書き」という無音の誤動作になる。
-        bullets_field = slide.get("bullets")
-        if bullets_field is not None and not isinstance(bullets_field, list):
-            fail(f"{i + 1}枚目（type={t}）: bullets は配列（リスト）で指定してください")
+        with slide_guard(f"{i + 1}枚目（type={t}）", "検証"):
+            _validate_slide(deck, layout, theme, deck_dir, i, slide, t, types_known, common_keys)
 
-        # slide.style は必ずオブジェクト（またはキー欠落）。文字列等だと deep_merge が
-        # 解決済みスタイルを丸ごと非dict値に置き換えてしまい、後段の全処理がクラッシュする。
-        slide_style = slide.get("style", {})
-        if slide_style and not isinstance(slide_style, dict):
-            fail(f"{i + 1}枚目（type={t}）: style はオブジェクトである必要があります")
 
-        # slide.style のキー名タイポ検証（M-75）
-        allowed = common_keys | set(layout["types"][t].keys())
-        for key in slide_style:
-            if key not in allowed:
-                hint = difflib.get_close_matches(key, allowed, n=1)
-                hint_s = f"（候補: {hint[0]}）" if hint else ""
-                warn(f"{i + 1}枚目（type={t}）: style の '{key}' は {t} の領域名ではありません{hint_s}")
+_BLOCK_IGNORED_KEYS = ("title", "lead", "eyebrow", "conclusion", "source")
 
-        st = resolve_style(layout, deck, slide)
 
-        if t in pe.PROPOSAL_TYPES or t == "cards":
-            pe.validate(slide, i, fail, warn)   # cards はアイコン指定の確認だけ
-
-        if t == "canvas":
-            # canvas は色を hex / {color, alpha} / gradient / pattern で直接持つため、専用の検証のみ行う
-            ce.validate_canvas(slide, i, fail, warn)
-            bg = slide.get("background", "#FFFFFF")
-            if not (isinstance(bg, str) and _HEX_RE.match(bg)):
-                fail(f"{i + 1}枚目（type=canvas）: background は #RRGGBB で指定してください（'{bg}'）")
+def _validate_composite_blocks(deck, layout, theme, deck_dir, i, slide, types_known, common_keys):
+    """合成スライドのブロックの検査（スタイル解決より前）。型違い・未知のキー・使えないタイプは fail / warn。
+    既存タイプのブロックは、そのタイプの検査（内容の型・未知キー・style）をブロックの場所つきでそのまま通す。"""
+    pre = f"{i + 1}枚目（type={slide.get('type')}）: "
+    blocks = slide.get("blocks")
+    if not isinstance(blocks, list) or not blocks:
+        fail(f"{pre}blocks（ブロックの配列）が空か書かれていません"
+             f" → \"blocks\": [{{\"type\": \"bullets\", \"bullets\": [\"…\"]}}, {{\"type\": \"architecture\", …}}] のように 2〜4 個書く"
+             f"（\"block\" など打ち間違いも確認）")
+    if len(blocks) > 6:
+        warn(f"{pre}ブロックが{len(blocks)}個あります（2〜4 個が目安。多いと文字が小さくなる）→ 2 枚に分ける")
+    elif len(blocks) == 1 and slide.get("type") == "composite":
+        warn(f"{pre}ブロックが 1 個だけです → 合成にする意味がありません。そのタイプのスライドにする（または 2 個以上にする）")
+    emph_n = 0
+    for k, block in enumerate(blocks):
+        where = f"{k + 1} つ目のブロック"
+        if not isinstance(block, dict):
+            fail(f"{pre}{where}がオブジェクトではありません（{dschema._vtype(block)}が書かれています）"
+                 f" → {{\"type\": \"bullets\", \"bullets\": [...]}} の形で書く")
+        bt = block.get("type")
+        if bt is None:
+            fail(f"{pre}{where}に type がありません → ブロックに使えるタイプ: "
+                 f"{', '.join(sorted(set(comp.NATIVE_TYPES) | set(BLOCK_MAIN_REGION) | set(engine_registry.names())))}")
+        prob = block_type_problem(bt, types_known)
+        if prob:
+            fail(f"{pre}{where}: {prob}")
+        # 共通キーの型
+        if block.get("heading") is not None and not isinstance(block["heading"], (str, int, float)):
+            fail(f"{pre}{where}: heading は文字列で指定してください（{dschema._vtype(block['heading'])}が書かれています）")
+        if isinstance(block.get("heading"), (int, float)) and not isinstance(block["heading"], bool):
+            block["heading"] = str(block["heading"])
+        if isinstance(block.get("heading"), bool):
+            fail(f"{pre}{where}: heading は文字列で指定してください（真偽値が書かれています） → \"heading\": \"ポイント\" のように書く")
+        if isinstance(block.get("heading"), str) and not block["heading"].strip():
+            warn(f"{pre}{where}（{bt}）: heading が空文字です。小見出しなしとして扱います → 小見出しが要らなければ heading を消す、要るなら文字を書く")
+            del block["heading"]
+        for key in ("x", "y", "w", "h"):
+            if key in block:
+                warn(f"{pre}{where}（{bt}）: {key} は書けません。位置と大きさは columns / rows / arrange（と col / row / col_span / row_span）で決まります。"
+                     f"この指定は無視します → 位置を変えたいときは配置の指定を直す")
+                del block[key]
+        if block.get("frame") is not None and block["frame"] not in comp.FRAMES:
+            fail(f"{pre}{where}: frame は {' / '.join(comp.FRAMES)} のいずれかで指定してください（{block['frame']!r}が書かれています）"
+                 f"{comp.key_hint(block['frame'], comp.FRAMES)}")
+        if block.get("emphasis") is not None and not isinstance(block["emphasis"], bool):
+            fail(f"{pre}{where}: emphasis は true / false で指定してください（{dschema._vtype(block['emphasis'])}が書かれています）")
+        for key, pool in (("align", comp.ALIGNS), ("valign", comp.VALIGNS)):
+            if block.get(key) is not None and block[key] not in pool:
+                fail(f"{pre}{where}: {key} は {' / '.join(pool)} のいずれかで指定してください（{block[key]!r}が書かれています）")
+        for key in ("col", "row", "col_span", "row_span"):
+            v = block.get(key)
+            lo = 1 if key.endswith("span") else 0
+            if v is not None and (isinstance(v, bool) or not isinstance(v, int) or v < lo):
+                fail(f"{pre}{where}: {key} は {lo} 以上の整数で指定してください（{v!r}が書かれています）"
+                     f"{'（0 始まり）' if lo == 0 else ''}")
+        if "style" in block and not isinstance(block["style"], dict):
+            fail(f"{pre}{where}: style はオブジェクト（{{ \"body\": {{ \"size\": 18 }} }}）である必要があります"
+                 f"（{dschema._vtype(block['style'])}が書かれています）")
+        for key in _BLOCK_IGNORED_KEYS:
+            if key in block:
+                warn(f"{pre}{where}（{bt}）: {key} はブロックでは描かれません"
+                     f"{' → ブロックの見出しは heading に書く' if key in ('title', 'eyebrow') else ' → スライド全体の ' + key + ' に書く'}")
+        for key in ("legend_page", "legend_lead", "legend_eyebrow", "legend_items"):
+            if key in block:
+                warn(f"{pre}{where}（{bt}）: {key} は合成スライドのブロックでは使えません（凡例ページは自動では挿入されません）"
+                     f" → 凡例が要るなら、その図解を単独のスライドにする")
+                block.pop(key)
+        if bt == "code" and block.get("annotations"):
+            warn(f"{pre}{where}（code）: annotations（番号つきの注釈）は合成スライドのブロックでは描きません。この指定は無視します"
+                 f" → 注釈つきのコードは単独のスライドにする（合成の中なら、注釈の文を隣の bullets / text のブロックに書く）")
+            block.pop("annotations")
+        if block.get("emphasis"):
+            emph_n += 1
+            if not (bt in ("text", "callout") or bt in EMPHASIS_TYPES):
+                warn(f"{pre}{where}（{bt}）: emphasis は {' / '.join(('text', 'callout') + EMPHASIS_TYPES)} のブロックで使えます。"
+                     f"この指定は無視します → 強調したいブロックを callout か bullets にする（または frame: box にする）")
+        if block.get("align") and bt not in ("text", "callout"):
+            warn(f"{pre}{where}（{bt}）: align は text / callout のブロックだけで効きます。この指定は無視します")
+        if block.get("valign") and bt not in ("text", "callout") and bt not in BLOCK_VALIGN_REGION:
+            warn(f"{pre}{where}（{bt}）: valign は text / callout / {' / '.join(BLOCK_VALIGN_REGION)} のブロックだけで効きます。この指定は無視します")
+        user_style = block.get("style") or {}
+        if user_style:
+            block["style"] = user_style = shp.resolve_style_refs(user_style, layout, f"{i + 1}枚目の {k + 1} つ目のブロックの style", fail)
+        main = block_main_region(bt)
+        for rname, region in user_style.items():
+            if isinstance(region, dict) and main and rname == main and any(g in region for g in ("x", "y", "w", "h")):
+                warn(f"{pre}{where}（{bt}）: style.{rname} の x / y / w / h は無視します（ブロックの位置と大きさは columns / rows / arrange で決まる）")
+        if bt in comp.NATIVE_TYPES:
+            allowed = set(comp.NATIVE_KEYS[bt]) | set(comp.BLOCK_COMMON_KEYS) | set(_BLOCK_IGNORED_KEYS)
+            for key in block:
+                if isinstance(key, str) and not key.startswith("_") and key not in allowed:
+                    warn(f"{pre}{where}（{bt}）: 未知のキー \"{key}\" は無視されます{dschema.suggest(key, allowed)}"
+                         f" → {bt} のキー: {' / '.join(sorted(comp.NATIVE_KEYS[bt]))}（共通: heading / frame / emphasis / align / valign / col / row / col_span / row_span / style）")
+            for rname, region in user_style.items():
+                if rname != bt:
+                    warn(f"{pre}{where}（{bt}）: style の '{rname}' は {bt} の領域名ではありません → 使える領域: {bt}")
+                else:
+                    _report_issues(dschema.check_region_value(region, layout.get("types", {}).get("composite", {}).get(bt), f"style.{bt}"), pre)
+            if bt in ("text", "callout"):
+                if bt == "text" and not comp.text_paragraphs(block):
+                    fail(f"{pre}{where}（text）: text（段落。改行で段落を分ける）か paragraphs（段落の配列）が必要です")
+                if bt == "callout" and not (isinstance(block.get("text"), str) and block["text"].strip()):
+                    fail(f"{pre}{where}（callout）: text（強調する一文）が必要です → \"text\": \"移行は 2 段階で進める\"、補足は note に書く")
+                for key in ("text", "note"):
+                    if block.get(key) is not None and not isinstance(block[key], (str, int, float)):
+                        fail(f"{pre}{where}（{bt}）: {key} は文字列で指定してください（{dschema._vtype(block[key])}が書かれています）")
+                if isinstance(block.get("paragraphs"), list) and not all(isinstance(p, (str, int, float)) for p in block["paragraphs"]):
+                    fail(f"{pre}{where}（text）: paragraphs は文字列の配列で指定してください")
+            else:
+                if block.get("fit") is not None and block["fit"] not in ("contain", "cover"):
+                    fail(f"{pre}{where}（image）: fit は contain / cover のどちらかで指定してください（{block['fit']!r}）")
+                if block.get("path") is not None and not isinstance(block["path"], str):
+                    fail(f"{pre}{where}（image）: path は文字列で指定してください（{dschema._vtype(block['path'])}が書かれています）"
+                         f" → \"path\": \"assets/図.png\" のように、デッキフォルダからの相対パスを 1 つ書く")
+                with block_messages(i + 1, k, "image", slide.get("type")):
+                    _validate_image_path({"path": block.get("path")}, i, "image", deck_dir)
             continue
+        # 既存タイプのブロック: そのタイプの前半の検査をそのまま通す（場所はブロックに書き換える）
+        bs = block_slide(slide, block, k, deck)
+        bs["style"] = user_style
+        for key in _BLOCK_IGNORED_KEYS:
+            bs.pop(key, None)
+        with block_messages(i + 1, k, bt, slide.get("type")):
+            _validate_slide_head(deck, layout, theme, deck_dir, i, bs, bt, types_known, common_keys)
+            if bt in GRID_DIAGRAM_TYPES:
+                # 格子の図解は row / col の上限を、スタイル解決（自動フィットの拡大が格子を作る）より前に確かめる（単独スライドと同じ上限）
+                _report_diagnostics([d for d in de.validate_grid_diagram(bs, bt) if d.get("level") == "error"], i, bt)
+        # 検査が書き換えた分（null の除去・数値の文字列化・表の行の正規化）を、元のブロックに戻す
+        for key in [key for key in block if key not in comp.BLOCK_COMMON_KEYS and key not in _BLOCK_IGNORED_KEYS]:
+            if key not in bs:
+                del block[key]
+            else:
+                block[key] = bs[key]
+        if "_row_emphasis" in bs:
+            block["_row_emphasis"] = bs["_row_emphasis"]
+        else:
+            block.pop("_row_emphasis", None)
+        if bt == "pattern":
+            try:
+                _pat = pat_e.load_pattern(block.get("pattern"), deck_dir)
+            except pat_e.PatternError:
+                _pat = None
+            if _pat is not None and pat_e.frame_of(_pat) != "body":
+                fail(f"{pre}{where}（pattern）: パターン '{block.get('pattern')}' は全面（frame: full）の型なのでブロックにできません"
+                     f" → 単独の pattern スライドにするか、body 枠のパターン（pattern_engine.py list で frame を確認）を使う")
+    if emph_n > 1:
+        warn(f"{pre}emphasis が{emph_n}個のブロックにあります（1 枚に 1 つまで。主役が分からなくなる）→ 主役のブロックだけにする")
+    plan = comp.plan_grid(blocks, *_grid_spec(slide))
+    if plan["problems"]:
+        fail(f"{pre}{plan['problems'][0]}")
+    if plan["empty"]:
+        cells = "、".join(f"{r + 1}行{c + 1}列目" for c, r in plan["empty"][:3])
+        warn(f"{pre}格子に空きがあります（{cells}）→ ブロックを足すか、columns / rows / arrange を減らす（col_span / row_span で広げるのも有効）")
 
-        # 色検証: 解決済みスタイル辞書と、スライド生データ（bullets の color 等）の両方を走査
-        issues: list = []
+
+def _validate_composite_tail(deck, layout, theme, deck_dir, i, slide, st):
+    """合成スライドのブロックの検査（スタイル解決より後）。合成専用ブロックの文字あふれと、既存タイプのブロックのタイプ別検査。"""
+    cs = st.get("_composite") or {}
+    for level, _code, text in cs.get("issues", []):
+        (warn if level == "warn" else note)(text.replace("{label}", f"{i + 1}枚目（type={slide.get('type')}）"))
+    for rb in cs.get("blocks", []):
+        bt, k = rb["type"], rb["index"]
+        if rb["native"]:
+            issues: list = []
+            _walk_colors(rb.get("region") or {}, "", theme, i, bt, issues)
+            if issues:
+                with block_messages(i + 1, k, bt, slide.get("type")):
+                    fail(issues[0])
+            continue
+        bs = rb["bs"]
+        if bt == "kpi_tree":
+            r = rb["st"]["body"]
+            # kpi_tree は領域が狭いと列の幅と間隔を同じ比率で縮める（proposal_engine.layout_kpi_tree。下限 min_scale）。
+            # 下限まで縮めても入らない幅だけを fail にする（縮めれば入る幅は通す）
+            cols_w = r.get("root_w", 150) + r.get("branch_w", 170) + r.get("kpi_w", 230) + r.get("value_w", 120)
+            has_note = any(isinstance(kp, dict) and (kp.get("items") or kp.get("note")) for br in (bs.get("branches") or [])
+                           if isinstance(br, dict) for kp in (br.get("kpis") or []))
+            need = (cols_w + 3 * r.get("gap_x", 26)) * r.get("min_scale", 0.5) + 12 + (r.get("note_min_w", 200) if has_note else 0)
+            if r["w"] < need:
+                fail(f"{i + 1}枚目（type={slide.get('type')}）の {k + 1} つ目のブロック（kpi_tree）: 幅 {int(r['w'])}px に収まりません"
+                     f"（列を半分まで縮めても、最低 {int(need)}px 要る）→ ブロックを広げる（arrange / columns の比率、col_span で 2 列にまたがせる）か、"
+                     f"単独のスライドにする")
+        with block_messages(i + 1, k, bt, slide.get("type")):
+            _validate_slide_tail(deck, layout, theme, deck_dir, i, bs, bt, st_fn=lambda rb=rb: rb["st"])
+
+
+def _normalize_table_rows(slide: dict, pre: str):
+    """table の行を [セルの配列] にそろえ、強調行は slide["_row_emphasis"]（行番号の配列）に移す。
+    行は [..] か {"cells": [..], "emphasis": true}。セルの tone（good / warn / bad / accent / muted）を検査する。"""
+    rows = slide.get("rows")
+    if not isinstance(rows, list):
+        return
+    emph = []
+    out = []
+    for ri, r in enumerate(rows):
+        if isinstance(r, dict):
+            if "cells" not in r:
+                fail(f"{pre}{ri + 1}行目に cells がありません → {{\"cells\": [\"A\", \"B\"], \"emphasis\": true}} の形で書く")
+            if r.get("emphasis"):
+                emph.append(ri)
+            r = r["cells"]
+        out.append(r)
+        for ci, cell in enumerate(r):
+            if isinstance(cell, dict) and cell.get("tone") is not None and cell["tone"] not in autofit.TONES:
+                fail(f"{pre}{ri + 1}行{ci + 1}列目の tone '{cell['tone']}' は使えません"
+                     f" → {' / '.join(autofit.TONES)} のいずれかを指定する")
+    slide["rows"] = out
+    if emph:
+        slide["_row_emphasis"] = emph
+    else:
+        slide.pop("_row_emphasis", None)
+
+
+def _check_density_autofit(src: dict, where: str):
+    """meta / スライドの density（talk / standard / read）と autofit（真偽値）の値を検査する。"""
+    d = src.get("density")
+    if d is not None and d not in autofit.DENSITIES:
+        shown = d if isinstance(d, str) else dschema._vtype(d)
+        fail(f"{where}density は {' / '.join(autofit.DENSITIES)} のいずれかで指定してください（{shown} が書かれています）"
+             f" → 話す用は talk、読ませる用は read、迷ったら省略（standard）")
+    a = src.get("autofit")
+    if a is not None and not isinstance(a, bool):
+        fail(f"{where}autofit は true / false で指定してください（{dschema._vtype(a)}が書かれています）"
+             f" → 自動フィットを切るときは false")
+
+
+def _check_col_widths(widths, i: int, t: str, ncols: int):
+    """col_widths（比率の配列）の検査: 要素数が列数と同じ・すべて 0 以上の数値・合計が 0 より大きい。"""
+    if not widths:
+        return
+    pre = f"{i + 1}枚目（type={t}）: "
+    if not isinstance(widths, list) or any(isinstance(w, bool) or not isinstance(w, (int, float)) or w < 0
+                                           for w in widths):
+        fail(f"{pre}col_widths は 0 以上の数値の配列（例: [3, 3, 6]）で指定してください")
+    if len(widths) != ncols:
+        fail(f"{pre}col_widths の要素数（{len(widths)}）が columns 数（{ncols}）と一致しません")
+    if sum(widths) <= 0:
+        fail(f"{pre}col_widths の合計が 0 です → 列の幅の比率を 1 つ以上 0 より大きくする（例: [3, 3, 6]）")
+
+
+def _warn_missing_text(missing: list, pre: str):
+    """text の無い項目の警告を 1 スライドにつき 1 件にまとめる（キーの打ち間違いは全項目で同じになるため）。"""
+    if not missing:
+        return
+    path, hint_s = missing[0]
+    if len(missing) == 1:
+        warn(f"{pre}{path} に text がありません（空の項目になります）{hint_s} → 項目の文字は \"text\" に書く")
+    else:
+        warn(f"{pre}{len(missing)} 個の項目に text がありません（例: {path}。空の項目になります）{hint_s}"
+             f" → 項目の文字は \"text\" に書く")
+
+
+def _check_bullet_items(items, path: str, pre: str, depth: int = 1, missing=None):
+    """箇条書きの項目の検査: dict なのに text が無い（txt などの打ち間違い）、3 階層目以降（描画されない）を warn。
+    text が無い項目は missing（リスト）に集める。None のときはこの呼び出しの分をその場でまとめて警告する。"""
+    if not isinstance(items, list):
+        return
+    own = missing is None
+    if own:
+        missing = []
+    for idx, it in enumerate(items):
+        if not isinstance(it, dict):
+            continue
+        if "text" not in it:
+            missing.append((f"{path}[{idx}]", dschema.hint(next(iter(it), ''), ['text'])))
+        kids = it.get("children")
+        if kids:
+            if depth >= 2:
+                warn(f"{pre}{path}[{idx}] の children は 3 階層目以降のため表示されません"
+                     f" → 2 階層（項目＋子項目）までにまとめるか、別のスライドに分ける")
+            else:
+                _check_bullet_items(kids, f"{path}[{idx}].children", pre, depth + 1, missing)
+    if own:
+        _warn_missing_text(missing, pre)
+
+
+# 本文として最低限必要な内容フィールド（すべて空のとき白紙スライドになる）。タイプ → フィールド名
+EMPTY_BODY_FIELDS = {
+    "bullets": ("bullets",), "cards": ("cards",), "steps": ("steps",), "agenda": ("items",),
+    "two_column": ("left", "right"), "matrix": ("quadrants",), "code": ("code",), "closing": ("bullets", "message", "title"),
+    "table": ("rows",), "status_table": ("rows",), "image_text": ("bullets", "punch"),
+}
+
+
+def _warn_empty_body(slide: dict, i: int, t: str):
+    fields = EMPTY_BODY_FIELDS.get(t)
+    if not fields:
+        return
+
+    def empty(v):
+        if v in (None, "", [], {}):
+            return True
+        if isinstance(v, dict):
+            return all(empty(x) for x in v.values())
+        if isinstance(v, list):
+            return all(empty(x) for x in v)
+        return False
+    if all(empty(slide.get(f)) for f in fields):
+        warn(f"{i + 1}枚目（type={t}）: 本文が空です（{' / '.join(fields)} が無いか空）。白紙に近いスライドになります"
+             f" → 内容を書くか、このスライドを削る（フィールド名の打ち間違いも確認）")
+
+
+# 主役系（S2d）: 背景・variant を持てる全面系のタイプと、画像の底上げをするタイプ
+HERO_BG_TYPES = hero.BG_TYPES
+
+
+def _assign_section_numbers(deck: dict, layout: dict):
+    """meta.section_numbers: true のとき、number の無い section に章の順で 01, 02 … を振る。
+    number / side の variant を使う section は、number が無ければ（meta の指定が無くても）同じ順で振る。"""
+    slides = deck.get("slides") if isinstance(deck.get("slides"), list) else []
+    on = (deck.get("meta") or {}).get("section_numbers") is True
+    n = 0
+    for sl in slides:
+        if not isinstance(sl, dict) or sl.get("type") != "section":
+            continue
+        n += 1
+        if sl.get("number") in (None, ""):
+            needs = hero.variant_of(layout, deck, sl) in ("number", "side")
+            if on or needs:
+                sl["number"] = f"{n:02d}"
+
+
+def _prepare_hero(deck, layout, theme, deck_dir, i, slide, t):
+    """主役系の入力の検査と、背景の解決（覆いの濃さ・文字色モード）。結果は slide["_bg"]（resolve_style と描画が読む）。"""
+    slide.pop("_bg", None)
+    colors = theme.get("colors", {})
+    pre = f"{i + 1}枚目（type={t}）"
+    img_check = lambda rel: ce.check_image_path(rel, deck_dir)
+    for level, text in hero.deco_problems(slide.get("style"), f"{pre}: ", colors):     # variant の飾り（style.deco1 など）の値
+        (fail if level == "fail" else warn)(text)
+    # variant の値
+    v = slide.get("variant")
+    if v is not None and t in (layout.get("variants") or {}):
+        names = hero.variant_names(layout, t)
+        if not isinstance(v, str) or (v != "default" and v not in names):
+            near = difflib.get_close_matches(str(v), names, n=1, cutoff=0.5)
+            fail(f"{pre}: variant '{v}' はありません{('（もしかして ' + near[0] + '）') if near else ''}"
+                 f" → {t} の variant: {' / '.join(names)}（既定の見た目にするなら variant を消すか \"default\"）")
+    name = hero.variant_of(layout, deck, slide)
+    bgd = None
+    rect = (0, 0, hero.CANVAS_W, hero.CANVAS_H)
+    merged = layout.get("types", {}).get(t, {})
+    if hero.variant_layer(layout, t, name):
+        merged = hero.deep_merge(merged, hero.variant_layer(layout, t, name))
+    if t in HERO_BG_TYPES:
+        raw = slide.get("background")
+        if raw is not None:
+            bgd = hero.validate_background(raw, f"{pre}: background", colors, deck_dir, fail, warn, img_check)
+            rect = hero.bg_rect_of(merged)
+    elif t == "split":
+        hero.validate_split(slide, pre, fail, warn, colors, deck_dir, img_check)
+        p = slide.get("panel") or {}
+        bgd = hero.validate_background({k: p[k] for k in ("fill", "image", "overlay", "opacity", "position") if k in p}, f"{pre}: panel", colors,
+                                       deck_dir, fail, warn, img_check) if any(k in p for k in ("fill", "image")) else None
+        if bgd is None:
+            bgd = {"fill": merged.get("panel", {}).get("fill", "primary")}
+        side, ratio = hero.split_params(slide, merged.get("panel") or {})
+        pw = round(hero.CANVAS_W * ratio)
+        rect = (0 if side == "left" else hero.CANVAS_W - pw, 0, pw, hero.CANVAS_H)
+    elif t == "image":
+        fit = slide.get("fit")
+        if fit is not None and fit not in hero.IMAGE_FITS:
+            fail(f"{pre}: fit は {' / '.join(hero.IMAGE_FITS)} のどちらかで指定してください（{fit!r}）→ 全面に敷くなら \"fit\": \"bleed\"（既定は contain）")
+        cp = slide.get("caption_position")
+        if cp is not None and cp not in hero.CAPTION_POSITIONS:
+            fail(f"{pre}: caption_position は {' / '.join(hero.CAPTION_POSITIONS)} のどちらかで指定してください（{cp!r}）→ 画像の下に帯を敷くなら \"band\"")
+        if cp == "band" and not str(slide.get("caption") or "").strip():
+            warn(f"{pre}: caption_position: band は caption（帯の中に入れる文）が必要です。caption が無いので帯は出しません"
+                 f" → caption を書く（帯が要らないなら caption_position を消す）")
+        if fit == "bleed":
+            src = {k: slide[k] for k in ("overlay", "opacity", "position") if k in slide}
+            src["image"] = slide.get("path")
+            bgd = hero.validate_background(src, f"{pre}: background", colors, deck_dir, fail, warn, img_check) if slide.get("path") else None
+        elif any(k in slide for k in ("overlay", "opacity")):
+            warn(f"{pre}: overlay / opacity は fit: bleed（画像を全面に敷く）のときだけ使います。この指定は無視します → 全面に敷くなら \"fit\": \"bleed\" を足す")
+    elif t == "image_text":
+        if slide.get("bleed") is not None and not isinstance(slide["bleed"], bool):
+            fail(f"{pre}: bleed は true / false で指定してください（{slide['bleed']!r}）→ 画像を端まで届かせるなら \"bleed\": true（届かせないなら書かない）")
+        if slide.get("bleed") is True and slide.get("path"):
+            src = {"image": slide["path"], "overlay": "none"}
+            if "position" in slide:
+                src["position"] = slide["position"]
+            bgd = hero.validate_background(src, f"{pre}: background", colors, deck_dir, fail, warn, img_check)
+            rect = hero.bg_rect_of(merged)
+    if bgd is None:
+        return
+    pal = hero.palettes_for(layout, t, name)
+    res = hero.solve_background(bgd, colors, rect, deck_dir, pal, hero.on_bg_regions(layout, t, name, bool((deck.get("meta") or {}).get("brand")), slide),
+                                (layout.get("palettes") or {}).get("_fallback"))
+    res["rect"] = rect
+    for level, text in hero.background_problems(res, bgd, f"{pre}: panel" if t == "split" else pre):
+        (warn if level == "warn" else note)(text)
+    slide["_bg"] = res
+
+
+def _validate_slide(deck, layout, theme, deck_dir, i, slide, t, types_known, common_keys):
+    """validate_deck のスライド 1 枚分。前半（内容の型・キー・style の検査）→ 合成スライドのブロック検査 → 後半（スタイル解決・タイプ別の検査）。"""
+    _validate_slide_head(deck, layout, theme, deck_dir, i, slide, t, types_known, common_keys)
+    _prepare_hero(deck, layout, theme, deck_dir, i, slide, t)
+    if t in COMPOSITE_TYPES:
+        _validate_composite_blocks(deck, layout, theme, deck_dir, i, slide, types_known, common_keys)
+    _validate_slide_tail(deck, layout, theme, deck_dir, i, slide, t)
+
+
+def _validate_slide_head(deck, layout, theme, deck_dir, i, slide, t, types_known, common_keys):
+    """_validate_slide の前半: 内容フィールドの型・未知のキー・style の領域名と値。スタイルの解決より前。"""
+    pre = f"{i + 1}枚目（type={t}）: "
+    # slide.style は必ずオブジェクト（またはキー欠落）。null・文字列・配列だと deep_merge が
+    # 解決済みスタイルを丸ごと非dict値に置き換えてしまい、後段の全処理がクラッシュする。
+    if "style" in slide and not isinstance(slide["style"], dict):
+        fail(f"{pre}style はオブジェクト（{{ \"body\": {{ \"size\": 20 }} }}）である必要があります"
+             f"（{dschema._vtype(slide['style'])}が書かれています）")
+    _prune_and_coerce(slide, t)
+    _check_density_autofit(slide, pre)
+    # 内容フィールドの型（配列のはずが文字列、要素が数値や null など）
+    shape_issues = dschema.check_slide_shapes(slide, t)
+    _report_issues(shape_issues, pre)
+    if t == "table":
+        _normalize_table_rows(slide, pre)
+    # 打ち間違いのキー
+    _report_issues(dschema.unknown_slide_keys(slide, t), pre)
+
+    missing_text: list = []
+    _check_bullet_items(slide.get("bullets"), "bullets", pre, missing=missing_text)
+    for side in ("left", "right"):
+        if isinstance(slide.get(side), dict):
+            _check_bullet_items(slide[side].get("bullets"), f"{side}.bullets", pre, missing=missing_text)
+    for ci, card in enumerate(slide.get("cards") or []):
+        if isinstance(card, dict):
+            _check_bullet_items(card.get("items"), f"cards[{ci}].items", pre, missing=missing_text)
+    for si, stp in enumerate(slide.get("steps") or []):
+        if isinstance(stp, dict):
+            _check_bullet_items(stp.get("items"), f"steps[{si}].items", pre, missing=missing_text)
+    _warn_missing_text(missing_text, pre)
+    _warn_empty_body(slide, i, t)
+
+    slide_style = slide.get("style", {})
+
+    # slide.style のキー名タイポ検証（M-75）
+    # variant が足す領域（panel・deco1 など）も style で調整できる
+    types_t = hero.deep_merge(layout["types"][t], hero.variant_layer(layout, t, hero.variant_of(layout, deck, slide)))
+    allowed = common_keys | set(types_t.keys())
+    for key in slide_style:
+        if key not in allowed:
+            hint = difflib.get_close_matches(key, allowed, n=1)
+            hint_s = f"（候補: {hint[0]}）" if hint else ""
+            warn(f"{i + 1}枚目（type={t}）: style の '{key}' は {t} の領域名ではありません{hint_s}"
+                 f" → 使える領域: {' / '.join(types_t.keys())}（共通: {' / '.join(common_keys)}）。"
+                 f"領域名を直す")
+    # 領域の中のプロパティ名・値の型・範囲
+    _validate_style_values(slide_style, "style", types_t, layout.get("common", {}), pre)
+    if t == "composite" and "blocks" in slide_style:
+        _validate_block_defaults_style(slide_style["blocks"], "style.blocks", layout, pre)
+
+
+def _check_partial_override_bleed(deck, slide, st, label: str):
+    """style / meta.layout_overrides に x・w（または y・h）の片方だけを書き、もう片方は既定値のままの領域が、
+    合わせるとスライドの外へ出るときに知らせる（既定の位置・幅はバージョンで変わることがある。両方書けば動かない）。"""
+    for region, props in autofit.explicit_props(deck, slide).items():
+        r = st.get(region)
+        if not isinstance(r, dict):
+            continue
+        for pos, size, limit, name in (("x", "w", CANVAS_W, "幅"), ("y", "h", CANVAS_H, "高さ")):
+            if (pos in props) == (size in props):
+                continue                      # 両方書いた（意図した配置）か、どちらも書いていない
+            a, b = r.get(pos), r.get(size)
+            if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in (a, b)):
+                continue
+            if a + b > limit + 0.5:
+                given, other = (pos, size) if pos in props else (size, pos)
+                warn(f"{label}: style の {region}.{given} だけが指定され、{other} は既定値（{r[other]:g}）のままのため、"
+                     f"{pos} + {size} = {a + b:g} がスライドの{name}（{limit}）を超えます"
+                     f" → {region} の {pos} と {size} を両方書く（片方だけだと、もう片方は既定値に従います）")
+
+
+def _validate_slide_tail(deck, layout, theme, deck_dir, i, slide, t, st_fn=None):
+    """_validate_slide の後半（スタイル解決より後）。合成スライドのブロックは、ブロックの矩形で解決したスタイルを st_fn で渡す。"""
+    if t == "pattern":
+        # 自動フィットは frame:"full" の型では見出し・結論帯を測らない（描かれないため）。枠の種類をスライドに控える
+        try:
+            _pat = pat_e.load_pattern(slide.get("pattern"), deck_dir)
+        except pat_e.PatternError:
+            _pat = None
+        if _pat is not None:
+            slide["_pattern_frame"] = pat_e.frame_of(_pat)
+        else:
+            slide.pop("_pattern_frame", None)
+
+    st = st_fn() if st_fn is not None else resolve_style(layout, deck, slide)
+    if st_fn is None:
+        _check_partial_override_bleed(deck, slide, st, f"{i + 1}枚目（type={t}）")
+
+    if t in COMPOSITE_TYPES:
+        _validate_composite_tail(deck, layout, theme, deck_dir, i, slide, st)
+    if t == "split":
+        for _code, _text in hero.panel_plan(slide, st, pe.Ctx(theme))["issues"]:
+            (warn if _code == "panel-overflow" else note)(_text.replace("{label}", f"{i + 1}枚目（type=split）"))
+
+    if engine_registry.has(t):
+        engine_registry.validate_slide(slide, i, fail, warn)      # A 型タイプ（提案書系・kpi・chart）は登録表の検証
+    elif t == "cards":
+        pe.validate(slide, i, fail, warn)   # アイコン指定の確認
+        hero.validate_cards(slide, f"{i + 1}枚目（type=cards）", st.get("grid"), fail, warn)   # emphasis / span
+
+    if t == "pattern":
+        # 色・スロットの検証は pattern_engine が行う（展開結果を canvas の検証にも通す）。見出し骨格の色（st）だけここで見る
+        pat_e.validate(slide, i, deck_dir, fail, warn, theme, rect_w=pe.body_region(slide, st).get("w"), rect_h=pe.body_region(slide, st).get("h"))   # 狭い・短い矩形（合成ブロックの半幅・上下 2 段など）では型の narrow 構図で検査し、描かれる文字の大きさも見る
+        _pat = pat_e.load_pattern(slide.get("pattern"), deck_dir)
+        if _pat is not None and pat_e.frame_of(_pat) == "body":
+            _fails, _warns = pat_e.body_rect_problems(slide, _pat, pe.body_region(slide, st), in_block="_block" in slide)
+            for m in _fails:
+                fail(f"{i + 1}枚目（type=pattern, pattern={slide.get('pattern')}）: {m}")
+            for m in _warns:
+                warn(f"{i + 1}枚目（type=pattern, pattern={slide.get('pattern')}）: {m}")
+        issues = []
         _walk_colors(st, "", theme, i, t, issues)
-        _walk_colors(slide, "", theme, i, t, issues)
         if issues:
             fail(issues[0])
-
-        if t == "table":
-            cols = slide.get("columns", [])
-            for ridx, row in enumerate(slide.get("rows", [])):
-                if len(row) != len(cols):
-                    fail(f"{i + 1}枚目（type=table）: {ridx + 1}行目のセル数（{len(row)}）が "
-                         f"columns 数（{len(cols)}）と一致しません")
-                # セルの url はスキーム許可リストで検証する。javascript: 等を href に
-                # 出すと XSS になるため、黙って無視せずビルド時点でエラーにして気付かせる。
-                for cidx, cell in enumerate(row):
-                    if isinstance(cell, dict) and cell.get("url") and not is_allowed_link_url(cell["url"]):
-                        fail(f"{i + 1}枚目（type=table）: {ridx + 1}行{cidx + 1}列目の url に"
-                             f"使用できないリンク先が指定されています: '{cell['url']}'"
-                             f"（使用できるのは {' / '.join(ALLOWED_LINK_SCHEMES)} のみ）")
-            widths = st.get("table", {}).get("col_widths")
-            if widths and len(widths) != len(cols):
-                fail(f"{i + 1}枚目（type=table）: col_widths の要素数（{len(widths)}）が "
-                     f"columns 数（{len(cols)}）と一致しません")
-
-        if t == "status_table":
-            cols = slide.get("columns", [])
-            if len(cols) < 3:
-                fail(f"{i + 1}枚目（type=status_table）: columns は「ラベル列・状況列・内容列1つ以上」の3つ以上が必要です")
-            rows = slide.get("rows", [])
-            if not isinstance(rows, list):
-                fail(f"{i + 1}枚目（type=status_table）: rows は配列（リスト）で指定してください")
-            for ridx, row in enumerate(rows):
-                if not isinstance(row, dict):
-                    fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目は "
-                         f"{{\"label\", \"status\", \"cells\"}} のオブジェクトで指定してください")
-                cells = row.get("cells", [])
-                if not isinstance(cells, list) or len(cells) != len(cols) - 2:
-                    fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の cells 数が "
-                         f"内容列の数（columns - 2 = {len(cols) - 2}）と一致しません")
-                for c in cells:
-                    if not isinstance(c, list):
-                        fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の cells の各要素は配列で指定してください")
-                color = status_color(slide, row.get("status"))
-                if not is_color_value(theme, color):
-                    fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の status '{row.get('status')}' が "
-                         f"凡例の key・テーマトークン・#hex のいずれでもありません")
-            widths = st.get("table", {}).get("col_widths")
-            if widths and len(widths) != len(cols):
-                fail(f"{i + 1}枚目（type=status_table）: col_widths の要素数（{len(widths)}）が "
-                     f"columns 数（{len(cols)}）と一致しません")
-
-        if t in ("image", "image_text"):
-            _validate_image_path(slide, i, t, deck_dir)
-
-        if t == "matrix":
-            quadrants = slide.get("quadrants", [])
-            if not isinstance(quadrants, list):
-                fail(f"{i + 1}枚目（type=matrix）: quadrants は配列（リスト）で指定してください")
-            n = len(quadrants)
-            if n != 4:
-                warn(f"{i + 1}枚目（type=matrix）: quadrants は4つの想定ですが{n}個指定されています"
-                     f"（5個以上は無視され、4個未満は空の象限になります）")
-
-        if t == "cards":
-            columns = slide.get("columns")
-            if columns is not None and not isinstance(columns, int):
-                fail(f"{i + 1}枚目（type=cards）: columns は数値で指定してください")
-
-        if t == "swimlane":
-            _validate_swimlane(slide, i, t)
-            _report_diagnostics(swimlane_geometry(slide, st, i + 1).get("diagnostics", []), i, t,
-                                geometry_only=True)
-
-        if t in GRID_DIAGRAM_TYPES:
-            _report_diagnostics(de.validate_grid_diagram(slide, t), i, t)
-            geo = de.layout_grid_diagram(slide, t, st["diagram"], [])
-            _report_diagnostics(geo["diagnostics"], i, t, geometry_only=True)
-
-        if t == "sequence":
-            diags = []
-            de.layout_sequence(slide, st["diagram"], diags)
-            _report_diagnostics(diags, i, t)
-
-        if t == "schedule":
-            _report_diagnostics(se.validate_schedule(slide), i, t)
-            _report_diagnostics(se.layout_schedule(slide, st["chart"])["diagnostics"], i, t,
-                                geometry_only=True)
-
         _check_overflow(slide, st, i, t)
+        return
+
+    if t == "canvas":
+        # canvas は色を hex / {color, alpha} / gradient / pattern で直接持つため、専用の検証のみ行う
+        ce.validate_canvas(slide, i, fail, warn, deck_dir)
+        bg = slide.get("background", "#FFFFFF")
+        if not (isinstance(bg, str) and _HEX_RE.match(bg)):
+            fail(f"{i + 1}枚目（type=canvas）: background は #RRGGBB で指定してください（'{bg}'）")
+        return
+
+    # 色検証: 解決済みスタイル辞書と、スライド生データ（bullets の color 等）の両方を走査
+    issues: list = []
+    _walk_colors(st, "", theme, i, t, issues)
+    _walk_colors(slide, "", theme, i, t, issues)
+    if issues:
+        fail(issues[0])
+
+    if t == "table":
+        cols = slide.get("columns", [])
+        if not cols:
+            fail(f"{i + 1}枚目（type=table）: columns（列見出しの配列）が空か書かれていません"
+                 f" → \"columns\": [\"項目\", \"内容\"] のように1つ以上書く（\"colums\" など打ち間違いも確認）")
+        for ridx, row in enumerate(slide.get("rows", [])):
+            if len(row) != len(cols):
+                fail(f"{i + 1}枚目（type=table）: {ridx + 1}行目のセル数（{len(row)}）が "
+                     f"columns 数（{len(cols)}）と一致しません")
+            # セルの url はスキーム許可リストで検証する。javascript: 等を href に
+            # 出すと XSS になるため、黙って無視せずビルド時点でエラーにして気付かせる。
+            for cidx, cell in enumerate(row):
+                if isinstance(cell, dict) and cell.get("url") and not is_allowed_link_url(cell["url"]):
+                    fail(f"{i + 1}枚目（type=table）: {ridx + 1}行{cidx + 1}列目の url に"
+                         f"使用できないリンク先が指定されています: '{cell['url']}'"
+                         f"（使用できるのは {' / '.join(ALLOWED_LINK_SCHEMES)} のみ）")
+        widths = st.get("table", {}).get("col_widths")
+        _check_col_widths(widths, i, t, len(cols))
+
+    if t == "status_table":
+        cols = slide.get("columns", [])
+        if len(cols) < 3:
+            fail(f"{i + 1}枚目（type=status_table）: columns は「ラベル列・状況列・内容列1つ以上」の3つ以上が必要です")
+        rows = slide.get("rows", [])
+        if not isinstance(rows, list):
+            fail(f"{i + 1}枚目（type=status_table）: rows は配列（リスト）で指定してください")
+        for ridx, row in enumerate(rows):
+            if not isinstance(row, dict):
+                fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目は "
+                     f"{{\"label\", \"status\", \"cells\"}} のオブジェクトで指定してください")
+            cells = row.get("cells", [])
+            if not isinstance(cells, list) or len(cells) != len(cols) - 2:
+                fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の cells 数が "
+                     f"内容列の数（columns - 2 = {len(cols) - 2}）と一致しません")
+            for c in cells:
+                if not isinstance(c, list):
+                    fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の cells の各要素は配列で指定してください")
+            color = status_color(slide, row.get("status"))
+            if not is_color_value(theme, color):
+                fail(f"{i + 1}枚目（type=status_table）: {ridx + 1}行目の status '{row.get('status')}' が "
+                     f"凡例の key・テーマトークン・#hex のいずれでもありません")
+        _check_col_widths(st.get("table", {}).get("col_widths"), i, t, len(cols))
+
+    if t in ("image", "image_text"):
+        _validate_image_path(slide, i, t, deck_dir)
+
+    if t == "matrix":
+        quadrants = slide.get("quadrants", [])
+        if not isinstance(quadrants, list):
+            fail(f"{i + 1}枚目（type=matrix）: quadrants は配列（リスト）で指定してください")
+        n = len(quadrants)
+        if n != 4:
+            warn(f"{i + 1}枚目（type=matrix）: quadrants は4つの想定ですが{n}個指定されています"
+                 f"（5個以上は無視され、4個未満は空の象限になります）")
+
+    if t == "cards":
+        columns = slide.get("columns")
+        if columns is not None and columns < 1:
+            warn(f"{i + 1}枚目（type=cards）: columns が {columns} です。1 列として描きます → 1 以上の整数にする")
+
+    if t == "swimlane":
+        _validate_swimlane(slide, i, t)
+        _report_diagnostics(swimlane_geometry(slide, st, i + 1).get("diagnostics", []), i, t,
+                            geometry_only=True)
+
+    if t in GRID_DIAGRAM_TYPES:
+        _report_diagnostics(de.validate_grid_diagram(slide, t), i, t)
+        geo = dscale.layout_grid(slide, t, st["diagram"], [])
+        _report_diagnostics(geo["diagnostics"], i, t, geometry_only=True)
+
+    if t == "sequence":
+        diags = []
+        dscale.layout_seq(slide, st["diagram"], diags)
+        _report_diagnostics(diags, i, t)
+
+    if t == "schedule":
+        _report_diagnostics(se.validate_schedule(slide), i, t)
+        _report_diagnostics(se.layout_schedule(slide, st["chart"])["diagnostics"], i, t,
+                            geometry_only=True)
+
+    _check_overflow(slide, st, i, t)
 
 
 def fit_code_size(code: str, r: dict):
-    """コード領域に収まるフォントサイズを計算（HTML/PPTX 共通ロジック）。"""
-    lines = code.splitlines() or [""]
-    size = r["size"]
-    lh = r["line_height"]
-    avail = r["h"] - 2 * r["pad"]
-    avail_w = r["w"] - 2 * r["pad"]
-    # 等幅フォントの字幅（半角 0.58em・全角 1.1em）で最長行の幅も見て、横にはみ出さないサイズにする
-    longest = max(sum(1.1 if unicodedata.east_asian_width(ch) in ("W", "F") else 0.58 for ch in ln.expandtabs(4))
-                  for ln in lines)
-    while size > r.get("min_size", 12) and (len(lines) * size * lh > avail or longest * size > avail_w):
-        size -= 1
-    return size, lines
+    """コード領域に収まるフォントサイズを計算（HTML/PPTX 共通ロジック。計算本体は autofit.code_fit）。"""
+    res = autofit.code_fit(code, r)
+    return res["size"], res["lines"]
 
 
 # 表セルのリンク（HTML の href / PPTX の外部ハイパーリンク）に出力してよい URL スキームの
@@ -2206,7 +4112,7 @@ def fit_code_size(code: str, r: dict):
 # この許可リストに無いものはリンクにせず通常の文字列セルとして出力する。
 ALLOWED_LINK_SCHEMES = ("http", "https", "mailto")
 # セル全体が URL のときに自動リンク化するスキーム（明示指定の url より狭い＝
-# deck-schema.md の「セル全体が http:// または https:// のURLなら自動リンク」に対応）。
+# references/schema/basic.md の table 節「セル全体が http:// または https:// のURLなら自動リンク」に対応）。
 AUTOLINK_SCHEMES = ("http", "https")
 
 
@@ -2253,6 +4159,59 @@ def table_cell_parts(value):
     return text, text if is_http_url(text) else None
 
 
+def _cell_tone_color(theme, tr, cell, bg=None):
+    """セルの tone（意味の色）に対応する文字色。tone が無ければ None。
+    bg（セルの地の色 hex）が分かるときは、地の上で 4.5:1 に満たない tone 色を同じ色味のまま濃い側へ寄せる
+    （強調行の塗り・縞の行の上で good / warn / accent が読めなくなるのを避ける。color_pick.readable_on）。"""
+    tone = cell.get("tone") if isinstance(cell, dict) else None
+    if tone not in autofit.TONES:
+        return None
+    c = col(theme, (tr.get("tone_colors") or {}).get(tone, tone))
+    return cp.readable_on(c, bg) if bg else c
+
+
+def table_auto_widths(cols, rows, tr, data=None) -> list:
+    """table の col_widths が無いときの列幅（px の配列。合計 = tr["w"]）。
+    ブラウザの <table width:100%>（自動レイアウト）が決める幅を模擬する: 各列の最小幅（それ以上縮められない最長の
+    単位。和文は 1 文字・英数字は 1 語）と最大幅（折り返さない 1 行の幅）を文字幅の実測で出し、
+    最大幅の合計が入れば余りを最大幅に比例して配り、入らなければ最小幅に「最大 − 最小」の比で上乗せする。
+    PPTX は列幅を明示するしかない（以前は等分で、HTML と食い違っていた）。"""
+    data = data or {}
+    ncols = len(cols)
+    if ncols == 0:
+        return []
+    pad = 2 * tr.get("pad_x", 16)
+    mins = [0.0] * ncols
+    maxs = [0.0] * ncols
+
+    def measure(j, text, size, bold):
+        lines = str(text).split("\n") or [""]
+        wmax = max((sum(ja_text.char_em(c, None, bold) for c in ln) * size for ln in lines), default=0.0)
+        wmin = 0.0
+        for ln in lines:
+            for tok in ja_text._tokens(ln, marker_atomic=False):
+                wmin = max(wmin, sum(ja_text.char_em(c, None, bold) for c in tok) * size)
+        mins[j] = max(mins[j], wmin + pad)
+        maxs[j] = max(maxs[j], wmax + pad)
+
+    for j, name in enumerate(cols):
+        measure(j, name, tr["header_size"], True)
+    for i, row in enumerate(rows):
+        strong_row = bool(data.get("total_row")) and i == len(rows) - 1
+        for j, val in enumerate(row[:ncols]):
+            measure(j, table_cell_parts(val)[0], tr["cell_size"], strong_row or (bool(data.get("row_header")) and j == 0))
+    total = float(tr["w"])
+    smin, smax = sum(mins), sum(maxs)
+    if smax <= 0:
+        return [total / ncols] * ncols
+    if smax <= total:
+        return [m + (total - smax) * m / smax for m in maxs]
+    if smin >= total:
+        return [m * total / smin for m in mins]
+    k = (total - smin) / (smax - smin)
+    return [lo + (hi - lo) * k for lo, hi in zip(mins, maxs)]
+
+
 def svg_size(svg_text: str):
     """SVG の描画サイズを viewBox / width / height 属性から取得する。"""
     m = re.search(
@@ -2295,13 +4254,28 @@ def svg_to_png(svg_path: Path, out_png: Path, browser=None):
     if browser is not None:
         _render(browser)
         return
-    from playwright.sync_api import sync_playwright
+    sync_playwright = _import_sync_playwright()
     with sync_playwright() as pw:
-        b = pw.chromium.launch()
+        b = _launch_chromium(pw)
         try:
             _render(b)
         finally:
             b.close()
+
+
+def flip_image_text(st: dict, bleed: bool) -> dict:
+    """image_side: "left" の image_text。画像側と文字側の領域を左右反転する。bleed（画像を端まで）のときはタイトル・パネルも反転し、
+    フッターは反転せずに文字の列の左端・右端にそろえる。"""
+    keys = ("body", "img", "caption") + (("panel", "eyebrow", "title", "rule", "punch") if bleed else ())
+    out = flip_regions(st, keys)
+    if bleed:
+        if isinstance(out.get("rule"), dict) and isinstance(out.get("title"), dict) and isinstance(st.get("rule"), dict):
+            out["rule"]["x"] = out["title"]["x"] + (st["rule"]["x"] - st["title"]["x"])      # 罫線（縦帯・短い帯も）はタイトルの相対位置のまま
+        if isinstance(out.get("footer_l"), dict) and isinstance(out.get("title"), dict):
+            out["footer_l"]["x"] = out["title"]["x"]
+        if isinstance(out.get("footer_r"), dict):
+            out["footer_r"]["x"] = CANVAS_W - 72 - out["footer_r"]["w"]
+    return out
 
 
 def flip_regions(st: dict, keys) -> dict:
@@ -2423,6 +4397,24 @@ def esc(s):
     return html_mod.escape(str(s), quote=True)
 
 
+_ID_TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.]*(?:-[A-Za-z0-9_.]+)+")
+
+
+def esc_ids_nowrap(s):
+    """esc() と同じだが、「D-04」「I-01」のような ID 風の語（英数字がハイフンでつながる 20 字以内）を折らない。
+    ブラウザはハイフンの後ろで折り返すため（「D-／04」）、幅の見積もり（ja_text は 1 語として扱う）と食い違う（core-A-01）。"""
+    s = str(s)
+    out, pos_ = [], 0
+    for m in _ID_TOKEN.finditer(s):
+        if len(m.group(0)) > 20:
+            continue
+        out.append(esc(s[pos_:m.start()]))
+        out.append(f'<span style="white-space:nowrap">{esc(m.group(0))}</span>')
+        pos_ = m.end()
+    out.append(esc(s[pos_:]))
+    return "".join(out)
+
+
 def pos(r, extra=""):
     s = (f"position:absolute;left:{r['x']}px;top:{r['y']}px;width:{r['w']}px;")
     if "h" in r:
@@ -2432,16 +4424,32 @@ def pos(r, extra=""):
 
 def text_style(r, theme):
     s = f"font-size:{r['size']}px;color:{col(theme, r.get('color', 'text'))};"
-    if r.get("bold"):
+    if r.get("weight") is not None:
+        w = shp.weight_of(r)
+        if w != 400 or r.get("bold"):
+            s += f"font-weight:{w};"      # weight（形トークン）があればそれ。無ければ従来どおり bold → 700
+    elif r.get("bold"):
         s += "font-weight:700;"
+    tr = shp.tracking_of(r)
+    if tr:
+        s += f"letter-spacing:{tr:g}em;"
+    if r.get("case") == "upper":
+        s += "text-transform:uppercase;"
     if r.get("align"):
-        s += f"text-align:{r['align']};"
+        s += f"text-align:{esc(r['align'])};"
     if r.get("line_height"):
         s += f"line-height:{r['line_height']};"
     return s
 
 
-def div(r, theme, inner, extra="", font_family=None, heading=False):
+def fit_lines(st, region):
+    """自動フィット（autofit）が「この領域は最大 N 行に収まる」と見積もったときの N（check_layout の data-max-lines 用）。無ければ None。"""
+    info = ((st.get("_fit") or {}).get("info") or {}).get(region) if isinstance(st, dict) else None
+    n = info.get("max_lines") if isinstance(info, dict) else None
+    return n if isinstance(n, int) and n >= 1 else None
+
+
+def div(r, theme, inner, extra="", font_family=None, heading=False, max_lines=None):
     """テキストの絶対配置 div を1つ作る。
     font_family: font_css() 済みの CSS 値を渡すと font-family を明示する（M-21/M-64/M-83: 見出し系に
     fonts.heading を適用する際に使う。未指定なら .slide の既定フォント（fonts.body）を継承する）。
@@ -2458,9 +4466,59 @@ def div(r, theme, inner, extra="", font_family=None, heading=False):
     HTMLタグを誤って壊す心配はない）。"""
     ff = f"font-family:{esc(font_family)};" if font_family else ""
     attrs = ' role="heading" aria-level="1"' if heading else ""
+    if max_lines:
+        attrs += f' data-max-lines="{int(max_lines)}"'     # 自動フィットが保証した最大行数。check_layout の lines 検査が実測する
     if isinstance(inner, str) and "\n" in inner:
         inner = inner.replace("\n", "<br>")
     return f'<div{attrs} style="{pos(r)}{text_style(r, theme)}{ff}{extra}">{inner}</div>'
+
+
+def _rule_drawable(r) -> bool:
+    """罫線として描ける形か（x / y / w / h が揃っている。style.rule だけが残った断片は描かない）。"""
+    return isinstance(r, dict) and all(isinstance(r.get(k), (int, float)) for k in ("x", "y", "w", "h"))
+
+
+def rule_html(st, theme):
+    """見出し骨格の罫線（rule.style = none のときは st に rule が無い）。"""
+    return rect(st["rule"], theme) if _rule_drawable(st.get("rule")) else ""
+
+
+def box_border_css(r, theme, key="border_color", default_w=1):
+    """箱の枠線。r[key] があれば border_w（既定 1px。0 で枠なし）の実線。"""
+    if not r.get(key):
+        return ""
+    w = r.get("border_w", default_w)
+    if not w:
+        return ""
+    return f'border:{w:g}px solid {col(theme, r[key])};box-sizing:border-box;'
+
+
+SHADOW_COLOR = shp.SHADOW_COLOR
+
+
+def shadow_spec(r, theme):
+    """箱の影（領域の shadow: "soft" のとき。パラメーターは theme.tokens.shadow）→ canvas の shadow 形式 {dx, dy, blur, color}。無ければ None。"""
+    p = shp.shadow_params(theme.get("tokens"), r.get("shadow") if isinstance(r, dict) else None)
+    if not p:
+        return None
+    return {"dx": p["dx"], "dy": p["dy"], "blur": p["blur"], "color": {"color": SHADOW_COLOR, "alpha": p["alpha"]}}
+
+
+def box_shadow_css(r, theme):
+    sh = shadow_spec(r, theme)
+    if not sh:
+        return ""
+    return f'box-shadow:0 {sh["dy"]:g}px {sh["blur"]:g}px {ce.css_color(sh["color"])};'
+
+
+def rtok(theme, name, default):
+    """形トークン radius.<name>（px）。テーマに tokens が無い（単体テスト等）ときは default。"""
+    return shp.tok((theme or {}).get("tokens"), "radius", name, default)
+
+
+def label_weight(theme):
+    """見出し・ラベル（カード見出し・STEP など）の太さ。classic は 700。"""
+    return shp.tok(theme.get("tokens"), "weight", "label", 700)
 
 
 def rect(r, theme, extra=""):
@@ -2506,8 +4564,154 @@ def footer_html(st, deck, theme, page, total):
     return out
 
 
-def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
+def img_box_html(r, mime, data, alt, src):
+    """image / image_text の画像の HTML。radius.image が 0 なら従来どおり（枠いっぱいに contain）。
+    角丸のときは、等比フィットした実際の画像の大きさに角丸をかける（枠に対する余白に丸みが付かないように）。"""
+    rad = r.get("radius")
+    if not rad:
+        return (f'<div style="{pos(r)}"><img src="data:{mime};base64,{data}" alt="{alt}" '
+                f'style="width:100%;height:100%;object-fit:contain;"></div>')
+    fw, fh = fit_size_in(r, src)
+    return (f'<div style="{pos(r)}display:flex;align-items:center;justify-content:center;">'
+            f'<img src="data:{mime};base64,{data}" alt="{alt}" '
+            f'style="width:{fw:.1f}px;height:{fh:.1f}px;border-radius:{rad:g}px;object-fit:contain;"></div>')
+
+
+def fit_size_in(r, src):
+    """枠 r（w, h）に画像 src を等比で収めたときの (幅, 高さ) px。読めなければ枠いっぱい。"""
+    try:
+        from PIL import Image
+        with Image.open(src) as im:
+            iw, ih = im.size
+        k = min(r["w"] / iw, r["h"] / ih)
+        return iw * k, ih * k
+    except Exception:
+        return float(r["w"]), float(r["h"])
+
+
+def canvas_image_source(deck_dir: Path, browser=None):
+    """canvas の kind:"image"（手書き canvas とパターンの画像スロット）が使う画像読み込み関数。
+    build_deck.image_source（縮小・キャッシュ・webp 等の変換・SVG の PNG 化）を、canvas_engine の呼び方
+    source(rel_path, for_pptx, w, h, fit) に合わせて包む。fit="cover" は枠を埋めるのに必要な倍率から縮小の上限を決める
+    （細長い画像を枠の高さに合わせて縮めすぎて、拡大で荒れないように）。"""
+    probed: dict = {}       # rel -> (幅, 高さ) / None（壊れている）/ "svg"。同じ画像を HTML と PPTX で何度も調べない
+
+    def probe(rel):
+        if rel in probed:
+            return probed[rel]
+        res = "svg"
+        if not str(rel).lower().endswith(".svg"):
+            try:
+                from PIL import Image as PILImage
+                with PILImage.open(Path(deck_dir) / rel) as im:
+                    res = im.size
+                    im.verify()           # 壊れた PNG / 途中で切れた JPEG をここで見つける
+            except ImportError:
+                res = "svg"               # Pillow が無ければ調べない（原本をそのまま使う）
+            except Exception as e:      # noqa: BLE001  （UnidentifiedImageError・破損・読み取り失敗）
+                warn(f"画像 '{rel}' を読み込めません（{type(e).__name__}）。ファイルが壊れているか、画像ではない可能性があります"
+                     " → 画像ファイルを確かめて入れ直してください。灰色の枠で代用します")
+                res = None
+        probed[rel] = res
+        return res
+
+    def source(rel, for_pptx, w=None, h=None, fit="contain"):
+        try:
+            size = probe(rel)
+            if size is None:
+                return None           # canvas_engine が灰色の枠（alt つき）で代用する
+            tw, th = w, h
+            if fit == "cover" and w and h and isinstance(size, tuple):
+                iw, ih = size
+                k = max(w / iw, h / ih)       # 枠を埋める倍率
+                tw, th = iw * k, ih * k
+            return image_source(deck_dir, rel, for_pptx, browser, tw, th)
+        except Exception as e:      # noqa: BLE001  （画像 1 枚の失敗でビルド全体を止めない。canvas_engine が灰色の枠で代用する）
+            warn(f"画像 '{rel}' を読み込めませんでした（{type(e).__name__}: {e}）。灰色の枠で代用します")
+            return None
+    source.accepts_fit = True
+    return source
+
+
+def _pattern_needs_svg(slide, deck_dir) -> bool:
+    """pattern スライドの PPTX 描画で SVG の PNG 化（共有ブラウザ）が要るか: 画像スロットの値が .svg、または型の要素に kind:"svg" がある"""
+    try:
+        pat = pat_e.load_pattern(slide.get("pattern"), deck_dir)
+    except pat_e.PatternError:
+        return False
+    if pat is None:
+        return False
+    slots = slide.get("slots") if isinstance(slide.get("slots"), dict) else {}
+    for name, d in (pat.get("slots") or {}).items():
+        if isinstance(d, dict) and d.get("kind") == "image" and str(slots.get(name) or "").lower().endswith(".svg"):
+            return True
+        if isinstance(d, dict) and d.get("kind") == "image" and not slots.get(name) and str(d.get("default") or "").lower().endswith(".svg"):
+            return True
+    return '"kind": "svg"' in json.dumps(pat.get("elements") or [], ensure_ascii=False)
+
+
+def resolve_pattern_slide(slide, st, deck, theme, deck_dir, page, total) -> dict:
+    """type:"pattern" のスライドを描画用に展開する。戻り値 {"frame", "elements", "background", "pattern"}。
+    - frame "full"（既定）: 型が 1280x720 全面を描く。見出し・フッターも型の中にある。
+    - frame "body": 見出し骨格（eyebrow / title / rule / lead / フッター）は呼び出し側（chrome）が描く。
+      ここでは本文領域（lead / 結論帯 / 出典の有無で変わる）に型を写し、結論帯・出典（common_parts）も足して返す。
+    展開の警告は validate_deck（pattern_engine.validate）が出し済みなので、ここでは warn を渡さない（二重に出さない）。"""
+    pat = pat_e.load_pattern(slide.get("pattern"), deck_dir)
+    if pat is None:
+        fail(f"{page}枚目（type=pattern）: パターン '{slide.get('pattern')}' が見つかりません"
+             f" → 使えるパターン: {', '.join(pat_e.available_names(deck_dir))}")
+    if pat_e.frame_of(pat) == "body":
+        body = pe.body_region(slide, st)
+        els = pat_e.pattern_block_elements(slide, pat, (body["x"], body["y"], body["w"], body["h"]), theme, deck, page, total)
+        els += pe.common_parts(slide, st, pe.Ctx(theme), body)
+        return {"frame": "body", "elements": els, "background": None, "pattern": pat.get("name", "")}
+    els, bg = pat_e.expand(slide, pat, theme, deck, page, total)
+    return {"frame": "full", "elements": els, "background": bg, "pattern": pat.get("name", "")}
+
+
+def composite_block_elements(rb, theme, bk):
+    """合成スライドの 1 ブロックの canvas 要素: (枠と小見出し, 合成専用ブロック[text / callout / image]の本文)。
+    HTML と PPTX が同じものを描く。既存タイプのブロックの本文は、ここではなく html_slide_body(bare=True) / builders が描く。"""
+    tc = pe.Ctx(theme)
+    block = dict(rb["block"])
+    block["_index"] = rb["index"]
+    block["emphasis"] = rb["emph"]
+    frame = comp.frame_elements(tc, rb["geo"], block, bk, shadow=shadow_spec(bk, theme), radius=bk.get("radius", 0) or 0)
+    content = []
+    if rb["native"]:
+        bt, geo, reg = rb["type"], rb["geo"], rb.get("region") or {}
+        if bt == "text":
+            content = comp.text_elements(tc, geo["content"], block, reg, rb["fit"], rb["emph"])
+        elif bt == "callout":
+            content = comp.callout_elements(tc, geo["content"], block, reg, rb["fit"], rb["emph"])
+        else:
+            content = comp.image_elements(tc, block, geo["content"], reg, rtok(theme, "image", 0))
+    return frame, content
+
+
+def composite_block_html(rb, bk, deck, theme, deck_dir, page, total, img_src=None):
+    """合成ブロック 1 つの HTML（data-block / data-block-type つきの display:contents の枠で包む。配置には影響しない）。
+    rb は resolve_block の戻り値。S2d の split もこれでブロックを描ける（page / total は SVG の id の接頭辞とページ表示用）。"""
+    frame_els, content_els = composite_block_elements(rb, theme, bk)
+    inner = ce.canvas_html({"elements": frame_els + content_els}, image_source=img_src)
+    if not rb["native"]:
+        inner += html_slide_body(rb["bs"], rb["st"], deck, theme, deck_dir, page, total, bare=True,
+                                 uid=f"{page}b{rb['index'] + 1}")
+    return f'<div data-block="{rb["index"] + 1}" data-block-type="{esc(rb["type"])}" style="display:contents">{inner}</div>'
+
+
+def composite_html(slide, st, deck, theme, deck_dir, page, total):
+    """合成スライドの本文（ブロックごとの HTML をつなぐ）。"""
+    bk = st.get("block") or {}
+    img_src = canvas_image_source(deck_dir)
+    return "".join(composite_block_html(rb, bk, deck, theme, deck_dir, page, total, img_src) for rb in st["_composite"]["blocks"])
+
+
+def html_slide_body(slide, st, deck, theme, deck_dir, page, total, pattern_resolved=None, bare=False, uid=None):
+    """スライド 1 枚の本文 HTML。bare=True は合成スライドのブロック用: 見出し骨格（eyebrow / title / rule / lead / フッター）を描かない。
+    uid は SVG の id の接頭辞（同じ枚に図解が複数あるとき、矢じりの id が衝突しないよう呼び出し側が変える）。"""
     t = slide["type"]
+    uid = uid if uid is not None else page
     fonts = theme["fonts"]
     parts = []
     # M-21/M-64/M-83: 見出し系要素（title/eyebrow/section.number/quote.text/col_heading/
@@ -2516,37 +4720,69 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
     HEADING_FONT_CSS = font_css(fonts.get("heading") or fonts["body"])
 
     def chrome():
+        if bare:
+            return
         if slide.get("eyebrow") and "eyebrow" in st:
             parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"]), font_family=HEADING_FONT_CSS))
-        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True))
-        parts.append(rect(st["rule"], theme))
+        if "title" in st:       # split でタイトルが無いときは領域ごと無い
+            parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True,
+                              max_lines=fit_lines(st, "title")))
+        parts.append(rule_html(st, theme))
         if slide.get("lead") and "lead" in st:
-            parts.append(div(st["lead"], theme, esc(slide["lead"])))
+            parts.append(div(st["lead"], theme, esc(slide["lead"]), max_lines=fit_lines(st, "lead")))
         parts.append(footer_html(st, deck, theme, page, total))
+
+    def hero_html(extra=None):
+        """主役系の下地（背景の画像・覆い・色面 → variant の panel → 飾り）。HTML と PPTX が同じ canvas 要素から描く。"""
+        els = hero.hero_layers(st, slide.get("_bg"), theme.get("colors", {})) + (extra or [])
+        if els:
+            parts.append(ce.canvas_html({"elements": els}, image_source=canvas_image_source(deck_dir)))
 
     if t == "canvas":
         # 座標指定の自由配置。テーマのクロム（タイトル・罫線・フッター）は付けない
-        parts.append(ce.canvas_html(slide))
+        parts.append(ce.canvas_html(slide, image_source=canvas_image_source(deck_dir)))
 
-    elif t in pe.PROPOSAL_TYPES:
-        # 提案書向けタイプ: レイアウトは proposal_engine が canvas 要素として計算する（statement はクロムなし）
-        if t != "statement":
+    elif t == "pattern":
+        # 登録した構図（パターン）。frame:"body" は見出し骨格をプラグインが描き、本文だけ型が描く。frame:"full" は型が全面を描く
+        r = pattern_resolved or resolve_pattern_slide(slide, st, deck, theme, deck_dir, page, total)
+        if r["frame"] == "body":
             chrome()
-        parts.append(ce.canvas_html({"elements": pe.layout(slide, st, theme)}))
+        parts.append(ce.canvas_html({"elements": r["elements"]}, image_source=canvas_image_source(deck_dir)))
+
+    elif t == "composite":
+        # 合成スライド: 見出し骨格は 1 回だけ。ブロックごとに枠・小見出し・本文を、格子の矩形に描く
+        chrome()
+        parts.append(composite_html(slide, st, deck, theme, deck_dir, page, total))
+
+    elif t == "split":
+        # 非対称分割: 端まで届くパネル（色面か画像＋文字）と、残りの領域の見出し骨格・ブロック
+        hero_html(hero.panel_plan(slide, st, pe.Ctx(theme))["els"])
+        chrome()
+        parts.append(composite_html(slide, st, deck, theme, deck_dir, page, total))
+
+    elif engine_registry.has(t):
+        # A 型タイプ（提案書系・kpi・chart）: レイアウトは各エンジンが canvas 要素として計算する（登録表。statement はクロムなし）
+        if engine_registry.get(t).chrome:
+            chrome()
+        parts.append(ce.canvas_html({"elements": pe.layout(slide, st, theme)}, image_source=canvas_image_source(deck_dir)))
 
     elif t == "title":
+        hero_html()
         parts.append(rect(st["bar"], theme))
-        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True))
+        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True,
+                          max_lines=fit_lines(st, "title")))
         if slide.get("subtitle"):
             parts.append(div(st["subtitle"], theme, esc(slide["subtitle"])))
         if slide.get("meta"):
             parts.append(div(st["meta"], theme, esc(slide["meta"])))
 
     elif t == "section":
+        hero_html()
         if slide.get("number"):
             parts.append(div(st["number"], theme, esc(slide["number"]), font_family=HEADING_FONT_CSS))
-        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True))
-        parts.append(rect(st["rule"], theme))
+        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True,
+                          max_lines=fit_lines(st, "title")))
+        parts.append(rule_html(st, theme))
         if slide.get("subtitle"):
             parts.append(div(st["subtitle"], theme, esc(slide["subtitle"])))
 
@@ -2582,12 +4818,12 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                     f'font-weight:700;margin-bottom:{hd["gap_below"]}px;">{esc(colc["heading"])}</div>'
                 )
             inner += bullets_html(norm_items(colc.get("bullets")), st["col_body"], theme)
-            # style.left.valign / style.right.valign（deck-schema.md 記載）: "middle" で
+            # style.left.valign / style.right.valign（references/schema/basic.md の two_column 節）: "middle" で
             # heading+bullets をまとめて箱の縦中央に寄せる。flex column なら実際に描画された
             # 高さで自動的に中央寄せされるため、estimate_lines() 等の見積もりが不要。
             valign = box.get("valign", "top")
             justify = "justify-content:center;" if valign == "middle" else ""
-            border = f'border:1px solid {col(theme, box["border_color"])};' if box.get("border_color") else ""
+            border = box_border_css(box, theme).replace("box-sizing:border-box;", "") + box_shadow_css(box, theme)
             parts.append(
                 f'<div style="{pos(box)}background:{col(theme, box["fill"])};{radius}{border}'
                 f'padding:{box["pad"]}px;box-sizing:border-box;overflow:hidden;'
@@ -2608,6 +4844,7 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
         cells_pad = f"padding:{tr['pad_y']}px {tr['pad_x']}px;"
         html = [
             f'<div style="{pos(tr)}"><table style="width:100%;border-collapse:collapse;'
+            f'{"table-layout:fixed;" if tr.get("_auto_widths") else ""}'      # 自動フィットが決めた列幅は固定レイアウトで（PPTX と同じ幅）
             f'line-height:{tr["line_height"]};">{colgroup}<thead><tr>'
         ]
         for c in cols:
@@ -2615,12 +4852,15 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                 f'<th style="background:{col(theme, tr["header_fill"])};'
                 f'color:{col(theme, tr["header_color"])};font-size:{tr["header_size"]}px;'
                 f'text-align:left;font-weight:600;height:{tr["header_h"]}px;'
-                f'{cells_pad}box-sizing:border-box;">{esc(c)}</th>'
+                f'{cells_pad}box-sizing:border-box;">{esc(c).replace(chr(10), "<br>")}</th>'
             )
         html.append("</tr></thead><tbody>")
         row_fills = tr.get("row_fills", {})
         for i, row in enumerate(slide.get("rows", [])):
-            if str(i) in row_fills:
+            emph_row = i in set(slide.get("_row_emphasis") or [])
+            if emph_row:
+                bg = col(theme, tr.get("emphasis_fill", "highlight_fill"))
+            elif str(i) in row_fills:
                 bg = col(theme, row_fills[str(i)])
             else:
                 bg = col(theme, tr["row_alt_fill"]) if i % 2 else col(theme, "background")
@@ -2630,10 +4870,13 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                 is_label = bool(slide.get("row_header")) and j == 0
                 cbg = (col(theme, tr.get("total_fill", "surface")) if is_total
                        else col(theme, tr.get("label_fill", "highlight_fill")) if is_label else bg)
-                cweight = "font-weight:700;" if (is_total or is_label) else ""
+                tone = _cell_tone_color(theme, tr, cell, cbg)
+                cweight = "font-weight:700;" if (is_total or is_label or emph_row or tone) else ""
                 ccolor = col(theme, tr.get("label_color", "heading_text")) if (is_total or is_label) else col(theme, tr["cell_color"])
+                if tone and not (is_total or is_label):
+                    ccolor = tone
                 visible_text, cell_url = table_cell_parts(cell)
-                cell_text = esc(visible_text)
+                cell_text = esc_ids_nowrap(visible_text).replace("\n", "<br>")   # セル内の改行は PPTX（a:br）と同じく改行にする
                 if cell_url:
                     cell_text = (
                         f'<a href="{esc(cell_url)}" target="_blank" rel="noopener noreferrer" '
@@ -2742,61 +4985,67 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
         )
 
     elif t == "quote":
-        parts.append(div(st["mark"], theme, "“"))
+        hero_html()
+        if st["mark"].get("w") and st["mark"].get("h") and not hero.mark_is_vector(st):
+            parts.append(div(st["mark"], theme, "“"))
         parts.append(div(st["text"], theme, esc(slide.get("text", "")), font_family=HEADING_FONT_CSS))
         if slide.get("attribution"):
             parts.append(div(st["attribution"], theme, "— " + esc(slide["attribution"])))
 
     elif t == "image":
+        bleed = slide.get("fit") == "bleed"
+        hero_html()         # fit: bleed は全面の画像＋覆い、caption_position: band は下帯（variant の飾り）
         if slide.get("eyebrow") and "eyebrow" in st:
             parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"]), font_family=HEADING_FONT_CSS))
         if slide.get("title"):
-            parts.append(div(st["title"], theme, esc(slide["title"]), font_family=HEADING_FONT_CSS, heading=True))
-            parts.append(rect(st["rule"], theme))
+            parts.append(div(st["title"], theme, esc(slide["title"]), font_family=HEADING_FONT_CSS, heading=True,
+                          max_lines=fit_lines(st, "title")))
+            parts.append(rule_html(st, theme))
         r = st["img"]
-        # X-4/M-72: image_source() を通す（HTML/PPTX 共通のリサイズ・再圧縮キャッシュ）。
-        src = image_source(deck_dir, slide["path"], False, target_w=r.get("w"), target_h=r.get("h"))
-        mime = mimetypes.guess_type(src.name)[0] or "image/png"
-        data = base64.b64encode(src.read_bytes()).decode()
-        alt = esc(slide.get("caption") or slide.get("title") or "")  # X-3
-        parts.append(
-            f'<div style="{pos(r)}"><img src="data:{mime};base64,{data}" alt="{alt}" '
-            f'style="width:100%;height:100%;object-fit:contain;"></div>'
-        )
+        if not bleed:
+            # X-4/M-72: image_source() を通す（HTML/PPTX 共通のリサイズ・再圧縮キャッシュ）。
+            src = image_source(deck_dir, slide["path"], False, target_w=r.get("w"), target_h=r.get("h"))
+            mime = mimetypes.guess_type(src.name)[0] or "image/png"
+            data = base64.b64encode(src.read_bytes()).decode()
+            alt = esc(slide.get("caption") or slide.get("title") or "")  # X-3
+            parts.append(img_box_html(r, mime, data, alt, src))
         if slide.get("caption"):
             parts.append(div(st["caption"], theme, esc(slide["caption"])))
         parts.append(footer_html(st, deck, theme, page, total))
 
     elif t == "image_text":
+        bleed = slide.get("bleed") is True
         if slide.get("image_side") == "left":
-            st = flip_regions(st, ("body", "img", "caption"))
+            st = flip_image_text(st, bleed)
+        hero_html()         # bleed: true は画像を端まで届かせる（canvas の画像要素。cover）
         if slide.get("eyebrow") and "eyebrow" in st:
             parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"]), font_family=HEADING_FONT_CSS))
-        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True))
-        parts.append(rect(st["rule"], theme))
+        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True,
+                          max_lines=fit_lines(st, "title")))
+        parts.append(rule_html(st, theme))
         if slide.get("punch"):
-            parts.append(div(st["punch"], theme, esc(slide["punch"]), font_family=HEADING_FONT_CSS))
+            parts.append(div(st["punch"], theme, esc(slide["punch"]), font_family=HEADING_FONT_CSS, max_lines=fit_lines(st, "punch")))
         parts.append(
             f'<div style="{pos(st["body"])}">'
             + bullets_html(norm_items(slide.get("bullets")), st["body"], theme)
             + "</div>"
         )
         r = st["img"]
-        src = image_source(deck_dir, slide["path"], False, target_w=r.get("w"), target_h=r.get("h"))
-        mime = mimetypes.guess_type(src.name)[0] or "image/png"
-        data = base64.b64encode(src.read_bytes()).decode()
-        alt = esc(slide.get("caption") or slide.get("title") or "")  # X-3
-        parts.append(
-            f'<div style="{pos(r)}"><img src="data:{mime};base64,{data}" alt="{alt}" '
-            f'style="width:100%;height:100%;object-fit:contain;"></div>'
-        )
+        if not bleed:
+            src = image_source(deck_dir, slide["path"], False, target_w=r.get("w"), target_h=r.get("h"))
+            mime = mimetypes.guess_type(src.name)[0] or "image/png"
+            data = base64.b64encode(src.read_bytes()).decode()
+            alt = esc(slide.get("caption") or slide.get("title") or "")  # X-3
+            parts.append(img_box_html(r, mime, data, alt, src))
         if slide.get("caption"):
             parts.append(div(st["caption"], theme, esc(slide["caption"])))
         parts.append(footer_html(st, deck, theme, page, total))
 
     elif t == "closing":
-        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True))
-        parts.append(rect(st["rule"], theme))
+        hero_html()
+        parts.append(div(st["title"], theme, esc(slide.get("title", "")), font_family=HEADING_FONT_CSS, heading=True,
+                          max_lines=fit_lines(st, "title")))
+        parts.append(rule_html(st, theme))
         if slide.get("bullets"):
             parts.append(
                 f'<div style="{pos(st["body"])}">'
@@ -2830,7 +5079,7 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                             if b.get("active_border") else "")
                 parts.append(f'<div style="{pos({"x": x-14, "y": y-3, "w": col_w+18, "h": row_h+6})}'
                              f'background:{col(theme, b.get("active_fill","surface"))};'
-                             f'border-radius:8px;{a_border}"></div>')
+                             f'border-radius:{rtok(theme, "node_sm", 8):g}px;{a_border}"></div>')
             parts.append(div({"x": x, "y": y+noff, "w": num_w, "h": row_h, "size": b.get("num_size", 24),
                               "color": b.get("num_color", "accent"), "bold": True, "line_height": 1.1},
                              theme, f"{num_start+i+1:02d}"))
@@ -2853,9 +5102,8 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
         header_h = b.get("header_h", 60); pad = b.get("pad", 16); radius = b.get("radius", 12)
         card_h = steps_card_height(b, steps, card_w)
         # fit="content" で縮めた分は行全体を少し上寄りの中央（40%）に置き、上下の余白を均す
-        row_y = b["y"] + (b["h"] - card_h) * 0.4
-        card_border = (f'border:1px solid {col(theme, b["card_border"])};box-sizing:border-box;'
-                       if b.get("card_border") else "")
+        row_y = b["y"] + (b["h"] - card_h) * b.get("content_y_ratio", 0.4)
+        card_border = box_border_css(b, theme, "card_border") + box_shadow_css(b, theme)
         for i, step in enumerate(steps):
             x = b["x"] + i * (card_w + gap)
             parts.append(f'<div style="{pos({"x": x, "y": row_y, "w": card_w, "h": card_h})}'
@@ -2868,15 +5116,16 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
                              f'background:{col(theme, b.get("header_fill","primary"))};'
                              f'border-radius:{radius}px {radius}px 0 0;"></div>')
             parts.append(div({"x": x+pad, "y": row_y+9, "w": card_w-2*pad, "h": 18, "size": 13,
-                              "color": b.get("num_color", "accent"), "bold": True}, theme, f"STEP {i+1}"))
+                              "color": b.get("num_color", "accent"), "bold": True, "weight": label_weight(theme)}, theme,
+                              f"{i+1}" if b.get("_num_short") else f"STEP {i+1}"))
             parts.append(div({"x": x+pad, "y": row_y+28, "w": card_w-2*pad, "h": header_h-26,
                               "size": b.get("label_size", 18), "color": b.get("header_color", "on_primary"),
-                              "bold": True, "line_height": 1.15}, theme, esc(step.get("label", "")),
+                              "bold": True, "weight": label_weight(theme), "line_height": 1.15}, theme, esc(step.get("label", "")),
                              font_family=HEADING_FONT_CSS))
             itemr = {"x": x+pad, "y": row_y+header_h+pad, "w": card_w-2*pad, "h": card_h-header_h-2*pad,
                      "size": b.get("item_size", 15), "gap": b.get("item_gap", 8), "color": b.get("item_color", "text"),
-                     "line_height": 1.4, "marker_color": "accent", "child_size": 13, "child_color": "muted",
-                     "indent": 16, "child_gap": 4}
+                     "line_height": 1.4, "marker_color": "accent", "child_size": b.get("child_size", 13),
+                     "child_color": "muted", "indent": 16, "child_gap": b.get("child_gap", 4)}
             # style.body.valign（既定 top）: "middle" で items をカードの残り高さの中で縦中央寄せにする
             # （ヘッダー帯は動かさない。items だけが可変コンテンツのため flex で十分）。
             items_extra = "display:flex;flex-direction:column;justify-content:center;" if b.get("valign", "top") == "middle" else ""
@@ -2896,8 +5145,7 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
         cw = (gw - gap) / 2; ch = (gh - gap) / 2
         quads = slide.get("quadrants", [])
         positions = [(gx, gy), (gx+cw+gap, gy), (gx, gy+ch+gap), (gx+cw+gap, gy+ch+gap)]
-        g_border = (f'border:1px solid {col(theme, g["border_color"])};box-sizing:border-box;'
-                    if g.get("border_color") else "")
+        g_border = box_border_css(g, theme) + box_shadow_css(g, theme)
         for qi, (qx, qy) in enumerate(positions):
             q = quads[qi] if qi < len(quads) else {}
             hi = q.get("highlight")
@@ -2911,55 +5159,51 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             parts.append(div({"x": qx+pad, "y": qy+lay["head_y"], "w": cw-2*pad, "h": lay["head_h"],
                               "size": g.get("heading_size", 18),
                               "color": (g.get("hi_heading_color", "accent") if hi else g.get("heading_color", "primary")),
-                              "bold": True, "line_height": 1.2}, theme, esc(q.get("heading", "")),
+                              "bold": True, "weight": label_weight(theme), "line_height": 1.2}, theme, esc(q.get("heading", "")),
                              font_family=HEADING_FONT_CSS))
             parts.append(div({"x": qx+pad, "y": qy+lay["body_y"], "w": cw-2*pad, "h": lay["body_h"],
                               "size": g.get("body_size", 14), "color": g.get("body_color", "muted"),
                               "line_height": 1.4}, theme, esc(q.get("body", "")).replace("\n", "<br>")))
         xa = slide.get("x_axis", {}); ya = slide.get("y_axis", {})
-        asize = ax.get("size", 15); acol = ax.get("color", "muted"); ncol = ax.get("name_color", "text")
-        parts.append(div({"x": 72, "y": gy-30, "w": 360, "h": 22, "size": asize, "color": ncol, "bold": True},
-                         theme, "▲ " + esc(ya.get("label", ""))))
-        parts.append(div({"x": gx-96, "y": gy+6, "w": 88, "h": 22, "size": asize, "color": acol, "align": "right"}, theme, esc(ya.get("high", ""))))
-        parts.append(div({"x": gx-96, "y": gy+gh-28, "w": 88, "h": 22, "size": asize, "color": acol, "align": "right"}, theme, esc(ya.get("low", ""))))
-        parts.append(div({"x": gx, "y": gy+gh+30, "w": gw, "h": 22, "size": asize, "color": ncol, "align": "center", "bold": True},
-                         theme, esc(xa.get("label", "")) + " ▶"))
-        parts.append(div({"x": gx, "y": gy+gh+6, "w": 160, "h": 22, "size": asize, "color": acol}, theme, esc(xa.get("low", ""))))
-        parts.append(div({"x": gx+gw-160, "y": gy+gh+6, "w": 160, "h": 22, "size": asize, "color": acol, "align": "right"}, theme, esc(xa.get("high", ""))))
+        for ab in _matrix_axis_boxes(ax, gx, gy, gw, gh, xa, ya):
+            parts.append(div(ab["region"], theme, esc(ab["text"])))
 
     elif t == "cards":
         chrome()
         g = st["grid"]; cards = slide.get("cards", [])
-        cols = max(1, slide.get("columns", g.get("cols", 3)))
-        n = len(cards); rows = max(1, (n + cols - 1) // cols)
-        gap = g.get("gap", 16); pad = g.get("pad", 18); radius = g.get("radius", 12)
+        geo = pe.cards_cells(len(cards), slide.get("columns"), g, hero.card_spans(slide))   # 配置は 1 か所（アイコン・PPTX・自動フィットと共通）
+        pad = g.get("pad", 18); radius = g.get("radius", 12)
         valign = g.get("valign", "top")  # M-37
-        cw = (g["w"] - (cols-1)*gap) / cols; chh = (g["h"] - (rows-1)*gap) / rows
-        g_border = (f'border:1px solid {col(theme, g["border_color"])};box-sizing:border-box;'
-                    if g.get("border_color") else "")
         for idx, card in enumerate(cards):
-            rr = idx // cols; cc = idx % cols
-            x = g["x"] + cc * (cw + gap); y = g["y"] + rr * (chh + gap)
+            x, y, cw, chh = geo["cells"][idx]
+            cs = hero.card_style(g, hero.card_emphasis(card))          # 強調（emphasis）のカードは塗りと文字色が違う
+            gc = hero.emph_grid(g, hero.card_emphasis(card))           # 強調のカードは文字も大きい（emph_scale）
+            g_card = dict(g)
+            g_card["border_color"] = cs["border_color"]
+            if cs.get("border_w") is not None:
+                g_card["border_w"] = cs["border_w"]
+            g_border = box_border_css(g_card, theme) + box_shadow_css(g, theme)
             parts.append(f'<div style="{pos({"x": x, "y": y, "w": cw, "h": chh})}'
-                         f'background:{col(theme, g.get("fill","surface"))};border-radius:{radius}px;{g_border}"></div>')
+                         f'background:{col(theme, cs["fill"])};border-radius:{radius}px;{g_border}"></div>')
             # M-37: heading を含めたコンテンツ全体（実際に描画される段だけ）をカード中央に配置する
             # （heading の y も valign に応じて計算し直す。見出し固定＋本文/itemsだけセンタリング
             # だと見出し直下に不自然な空白ができるため）。
-            lay = _cards_content_layout(card, g, cw, chh, pad, valign)
+            lay = _cards_content_layout(card, gc, cw, chh, pad, valign)
             has_items = bool(card.get("items"))
-            parts.append(div({"x": x+pad, "y": y+lay["head_y"], "w": cw-2*pad, "h": lay["head_h"],
-                              "size": g.get("heading_size", 19),
-                              "color": g.get("heading_color", "primary"), "bold": True, "line_height": 1.2},
-                             theme, esc(card.get("heading", "")), font_family=HEADING_FONT_CSS))
+            parts.append(div({"x": x+pad, "y": y+lay["head_y"], "w": cw-2*pad-autofit.card_icon_reserve(card, gc), "h": lay["head_h"],
+                              "size": gc.get("heading_size", 19),
+                              "color": cs["heading_color"], "bold": True, "weight": label_weight(theme), "line_height": 1.2},
+                             theme, esc(card.get("heading", "")).replace("\n", "<br>"), font_family=HEADING_FONT_CSS))
             if card.get("body"):
                 body_r = {"x": x+pad, "y": y+lay["body_y"], "w": cw-2*pad, "h": lay["body_h"],
-                          "size": g.get("body_size", 15), "color": g.get("body_color", "text"), "line_height": 1.4}
+                          "size": gc.get("body_size", 15), "color": cs["body_color"], "line_height": 1.4}
                 parts.append(div(body_r, theme, esc(card["body"]).replace("\n", "<br>")))
             if has_items:
                 itemr = {"x": x+pad, "y": y+lay["items_y"], "w": cw-2*pad, "h": lay["items_h"],
-                         "size": g.get("item_size", 14),
-                         "gap": g.get("item_gap", 6), "color": g.get("item_color", "muted"), "line_height": 1.35,
-                         "marker_color": "accent", "child_size": 12, "child_color": "muted", "indent": 14, "child_gap": 4}
+                         "size": gc.get("item_size", 14),
+                         "gap": g.get("item_gap", 6), "color": cs["item_color"], "line_height": 1.35,
+                         "marker_color": cs["marker_color"], "child_size": 12, "child_color": cs["item_color"] if cs.get("emphasized") else "muted",
+                         "indent": 14, "child_gap": 4}
                 parts.append(f'<div style="{pos(itemr)}">'
                              + bullets_html(norm_items(card["items"]), itemr, theme) + "</div>")
 
@@ -3001,19 +5245,19 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
         ed = dict(f)
         ed.setdefault("edge_dashed_color", f.get("edge_color", "text"))
         ed.setdefault("label_fill", "background")
-        parts.append(_edges_svg_html(geo["edges"], ed, theme, f"sw{page}", HEADING_FONT_CSS, layer="lines"))
+        parts.append(_edges_svg_html(geo["edges"], ed, theme, f"sw{uid}", HEADING_FONT_CSS, layer="lines"))
         # nodes
         for nid, nd in geo["nodes"].items():
             parts.append(_sw_node_html(nd, theme, f))
-        parts.append(_edges_svg_html(geo["edges"], ed, theme, f"sw{page}", HEADING_FONT_CSS, layer="labels"))
+        parts.append(_edges_svg_html(geo["edges"], ed, theme, f"sw{uid}", HEADING_FONT_CSS, layer="labels"))
 
     elif t in GRID_DIAGRAM_TYPES:
         chrome()
-        parts.append(grid_diagram_html(slide, st, theme, t, page, HEADING_FONT_CSS))
+        parts.append(grid_diagram_html(slide, st, theme, t, uid, HEADING_FONT_CSS))
 
     elif t == "sequence":
         chrome()
-        parts.append(sequence_html(slide, st, theme, page, HEADING_FONT_CSS))
+        parts.append(sequence_html(slide, st, theme, uid, HEADING_FONT_CSS))
 
     elif t == "schedule":
         chrome()
@@ -3022,10 +5266,11 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
     elif t == "swimlane_legend":
         if slide.get("eyebrow") and "eyebrow" in st:
             parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"]), font_family=HEADING_FONT_CSS))
-        parts.append(div(st["title"], theme, esc(slide.get("title", "凡例")), font_family=HEADING_FONT_CSS, heading=True))
-        parts.append(rect(st["rule"], theme))
+        parts.append(div(st["title"], theme, esc(slide.get("title", "凡例")), font_family=HEADING_FONT_CSS, heading=True,
+                          max_lines=fit_lines(st, "title")))
+        parts.append(rule_html(st, theme))
         if slide.get("lead") and "lead" in st:
-            parts.append(div(st["lead"], theme, esc(slide["lead"])))
+            parts.append(div(st["lead"], theme, esc(slide["lead"]), max_lines=fit_lines(st, "lead")))
         a = st["area"]; sym = st.get("sym", {})
         entries = slide.get("items") or SWIMLANE_LEGEND
         cols = a.get("cols", 2); rows = -(-len(entries) // cols)
@@ -3046,10 +5291,11 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
     elif t == "diagram_legend":
         if slide.get("eyebrow") and "eyebrow" in st:
             parts.append(div(st["eyebrow"], theme, esc(slide["eyebrow"]), font_family=HEADING_FONT_CSS))
-        parts.append(div(st["title"], theme, esc(slide.get("title", "凡例")), font_family=HEADING_FONT_CSS, heading=True))
-        parts.append(rect(st["rule"], theme))
+        parts.append(div(st["title"], theme, esc(slide.get("title", "凡例")), font_family=HEADING_FONT_CSS, heading=True,
+                          max_lines=fit_lines(st, "title")))
+        parts.append(rule_html(st, theme))
         if slide.get("lead") and "lead" in st:
-            parts.append(div(st["lead"], theme, esc(slide["lead"])))
+            parts.append(div(st["lead"], theme, esc(slide["lead"]), max_lines=fit_lines(st, "lead")))
         a = st["area"]; d = st["diagram"]
         entries = slide.get("items") or []
         cols = a.get("cols", 2); rows = -(-len(entries) // cols)
@@ -3068,6 +5314,10 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total):
             parts.append(div({"x": tx, "y": y + 29, "w": col_w - sym_w - 8, "h": 20,
                               "size": a.get("desc_size", 13), "color": "muted"}, theme, esc(desc)))
         parts.append(footer_html(st, deck, theme, page, total))
+
+    else:
+        # 検証（validate_deck）で止まるので通常は来ない。描画器の無いタイプを空スライドにしないための防波堤
+        fail(f"{page}枚目（type={t}）: このタイプの描画が登録されていません → build_deck.py の RENDERED_TYPES と描画の分岐に足す")
 
     over = pe.extras(slide, st, theme)
     if over:
@@ -3089,6 +5339,7 @@ html, body { height: 100%; background: #101014; overflow: hidden; }
   position: absolute; inset: 0; width: ${W}px; height: ${H}px;
   font-family: $F_BODY;
   display: none; overflow: hidden;
+  overflow-wrap: break-word;   /* URL・長い英単語は枠で折る（PPTX と同じ。はみ出し・スライド外への漏れを防ぐ） */
 }
 .slide.active { display: block; }
 .slide li::marker { color: var(--mk, inherit); }
@@ -3251,9 +5502,11 @@ show(isNaN(start) ? 0 : start - 1);
 """)
 
 
-def slide_bg(slide, st, theme):
+def slide_bg(slide, st, theme, pattern_resolved=None):
     if slide.get("type") == "canvas":
         return slide.get("background", "#FFFFFF")
+    if pattern_resolved and pattern_resolved.get("background"):
+        return pattern_resolved["background"]       # frame:"full" のパターンは型が背景色を持つ
     if "bg" in st:
         return col(theme, st["bg"].get("fill", "primary"))
     return col(theme, "background")
@@ -3263,29 +5516,36 @@ def build_html(deck, theme, layout, deck_dir: Path, out_path: Path):
     slides = deck.get("slides", [])
     total = len(slides)
     rendered = []
+    marks_on = todo_marks.enabled(deck)
     for i, slide in enumerate(slides):
-        st = resolve_style(layout, deck, slide)
-        body = html_slide_body(slide, st, deck, theme, deck_dir, i + 1, total)
-        if deck.get("meta", {}).get("brand") and "brand" in st:
-            body += div(st["brand"], theme, esc(deck.get("meta", {}).get("brand", "")))
-        notes_attr = f' data-notes="{esc(slide["notes"])}"' if slide.get("notes") else ""
-        bg = slide_bg(slide, st, theme)
-        # X-3: スクリーンリーダー向けにスライド番号とタイトルを aria-label で伝える
-        title_txt = slide.get("title", "")
-        aria_label = f"{i + 1} / {total}: {title_txt}" if title_txt else f"{i + 1} / {total}"
-        rendered.append(
-            f'<section class="slide" aria-label="{esc(aria_label)}" '
-            f'style="background:{bg};color:{col(theme, "text")};" data-page="{i + 1}" data-type="{esc(slide.get("type", ""))}"'
-            f"{notes_attr}>{body}</section>"
-        )
+        with slide_guard(f"出力{i + 1}ページ目（type={slide.get('type')}）", "HTML描画"):
+            st = resolve_style(layout, deck, slide)
+            resolved = (resolve_pattern_slide(slide, st, deck, theme, deck_dir, i + 1, total)
+                        if slide.get("type") == "pattern" else None)
+            body = html_slide_body(slide, st, deck, theme, deck_dir, i + 1, total, resolved)
+            if deck.get("meta", {}).get("brand") and "brand" in st:
+                body += div(st["brand"], theme, esc(deck.get("meta", {}).get("brand", "")))
+            if marks_on:
+                body = todo_marks.html_mark(body, layout)
+            notes_attr = f' data-notes="{esc(slide["notes"])}"' if slide.get("notes") else ""
+            bg = slide_bg(slide, st, theme, resolved)
+            # X-3: スクリーンリーダー向けにスライド番号とタイトルを aria-label で伝える
+            title_txt = slide.get("title", "")
+            aria_label = f"{i + 1} / {total}: {title_txt}" if title_txt else f"{i + 1} / {total}"
+            rendered.append(
+                f'<section class="slide" aria-label="{esc(aria_label)}" '
+                f'style="background:{bg};color:{col(theme, "text")};" data-page="{i + 1}" data-type="{esc(slide.get("type", ""))}"'
+                + (f' data-pattern="{esc(resolved["pattern"])}"' if resolved else "")
+                + f"{notes_attr}>{body}</section>"
+            )
     doc = HTML_TEMPLATE.safe_substitute(
-        TITLE=esc(deck.get("meta", {}).get("title", deck.get("meta", {}).get("id", ""))),
+        TITLE=esc(deck_title(deck, deck_dir)),
         SLIDES="\n".join(rendered),
         W=str(CANVAS_W), H=str(CANVAS_H),
         C_ACCENT=col(theme, "accent"),
         F_BODY=font_css(theme["fonts"]["body"]),
         TOTAL=str(total),
-        CANVAS_CSS=ce.CANVAS_CSS,
+        CANVAS_CSS=ce.CANVAS_CSS + ("\n" + todo_marks.html_css(layout) if marks_on else ""),
     )
     try:
         out_path.write_text(doc, encoding="utf-8")
@@ -3340,11 +5600,132 @@ def _apply_ooxml_theme(prs, theme, fonts):
                     if el is not None:
                         el.set("typeface", name)
 
+        # 効果スタイル（影・光彩）を全部空にする。python-pptx の既定テーマは 2 番目の効果スタイルが外側の影で、
+        # 図形の p:style の effectRef がそれを参照している。図形側の空の effectLst を LibreOffice は無視して
+        # 影を描く（PDF に出る影の原因。A3-02）。テーマ側を空にすれば、どのビューアでも影が付かない。
+        est = root.find(".//" + _qn("a:effectStyleLst"))
+        if est is not None:
+            for child in list(est):
+                est.remove(child)
+            for _ in range(3):
+                style = est.makeelement(_qn("a:effectStyle"), {})
+                style.append(style.makeelement(_qn("a:effectLst"), {}))
+                est.append(style)
+
         theme_part.blob = etree.tostring(
             root, xml_declaration=True, encoding="UTF-8", standalone=True
         )
+    except Exception as e:   # 見た目は RGB 直書きなので続行できるが、黙って握りつぶさず知らせる
+        warn(f"PPTX のテーマ（色・フォント・効果）の書き換えに失敗しました（{type(e).__name__}: {e}）。"
+             "図形の色は個別に指定されているので見た目は変わりませんが、PowerPoint の「テーマ」表示と影の抑止が効かないことがあります")
+
+
+_XML_BAD_CHARS_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\ufffe\uffff]")
+
+
+def xml_safe(s) -> str:
+    """XML 1.0 で使えない制御文字を取り除く（文書プロパティは python-pptx / lxml が ValueError にするため）。"""
+    return _XML_BAD_CHARS_RE.sub("", str(s))
+
+
+def deck_title(deck: dict, deck_dir=None) -> str:
+    """デッキの表題。meta.title → meta.id → 先頭スライドの title → フォルダ名の順で補う（HTML の <title> と PPTX の文書プロパティ共通）。"""
+    meta = deck.get("meta") if isinstance(deck.get("meta"), dict) else {}
+    cands = [meta.get("title"), meta.get("id")]
+    slides = deck.get("slides")
+    if isinstance(slides, list) and slides and isinstance(slides[0], dict):
+        cands.append(slides[0].get("title"))
+    if deck_dir is not None:
+        cands.append(Path(deck_dir).name)
+    for c in cands:
+        if isinstance(c, (str, int, float)) and not isinstance(c, bool):
+            c = xml_safe(c).strip()
+            if c:
+                return c
+    return ""
+
+
+def _finalize_pptx(prs, deck, deck_dir=None):
+    """PPTX を保存する直前の仕上げ（全経路の図形に一括で効かせる）。
+    - 影: 全図形の p:style/effectRef を idx=0（効果なし）にする（テーマ側を空にできなかった場合の保険。A3-02）
+    - 自動調整: 残っている spAutoFit（図形が文章に合わせて伸縮）を noAutofit にする（A3-08）
+    - 文書プロパティ: タイトル・作成者などを meta から入れる（python-pptx 既定の "Steve Canny" 等を残さない）"""
+    import datetime
+    from pptx.oxml.ns import qn
+    for slide in prs.slides:
+        root = slide._element
+        for ref in root.iter(qn("a:effectRef")):
+            ref.set("idx", "0")
+        for sp_auto in list(root.iter(qn("a:spAutoFit"))):
+            parent = sp_auto.getparent()
+            idx = parent.index(sp_auto)
+            parent.remove(sp_auto)
+            parent.insert(idx, parent.makeelement(qn("a:noAutofit"), {}))
+    meta = deck.get("meta", {}) if isinstance(deck.get("meta"), dict) else {}
+    cp = prs.core_properties
+    author = xml_safe(meta.get("author") or "")
+    now = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0, tzinfo=None)
+    cp.title = deck_title(deck, deck_dir)
+    cp.subject = xml_safe(meta.get("subtitle") or "")
+    cp.author = author
+    cp.last_modified_by = author
+    cp.comments = ""
+    cp.keywords = ""
+    cp.category = ""
+    cp.language = "ja-JP"
+    cp.revision = 1
+    cp.created = now
+    cp.modified = now
+    # 既定テンプレートの白紙スライドのサムネイル（docProps/thumbnail.jpeg）は、中身と無関係なので外す
+    try:
+        pkg = prs.part.package
+        for rid, rel in list(pkg._rels.items()):
+            if rel.reltype.endswith("/thumbnail"):
+                pkg._rels.pop(rid)
     except Exception:
         pass
+
+
+def _verify_saved_pptx(path: Path, expect_slides=None):
+    """保存した PPTX の機械検証（zip 整合・再パース・ノート無し・文書プロパティ）。失敗は fail。
+    qa 担当の verify_pptx があればそれを使い、無い・読み込めないときは同等の最小検査を内蔵のもので行う。"""
+    problems = None
+    try:
+        import verify_pptx
+        problems = list(verify_pptx.verify(str(path)))
+    except Exception:
+        problems = None
+    if problems is None:
+        problems = []
+        import zipfile
+        try:
+            with zipfile.ZipFile(path) as z:
+                bad = z.testzip()
+                if bad:
+                    problems.append(f"zip の部品 {bad} が壊れています")
+                names = z.namelist()
+            if any(n.startswith("ppt/notesSlides/") or n.startswith("ppt/notesMasters/") for n in names):
+                problems.append("スピーカーノートの部品が入っています（Keynote 互換のため出力しない決まりです）")
+            from pptx import Presentation
+            prs = Presentation(str(path))
+            if len(prs.slides) == 0:
+                problems.append("スライドが 0 枚です")
+            if any(sl.has_notes_slide for sl in prs.slides):
+                problems.append("スピーカーノートが入っています")
+        except Exception as e:
+            problems.append(f"PPTX を開き直せません（{type(e).__name__}: {e}）")
+    if expect_slides == 0:
+        # slides が空のデッキは validate_deck が警告済み（入力の問題）。0 枚であること自体は検証の不合格にしない
+        problems = [p for p in problems if "スライドが 0 枚" not in p]
+    if problems:
+        # 入力（deck.json）に原因がありうるものと、ツールの不具合を見分けて案内する
+        from_input = [p for p in problems if "title が空" in p or "スライドが 0 枚" in p]
+        if from_input and len(from_input) == len(problems):
+            hint = "\n  → deck.json の meta.title と slides を確認してください（meta.title が無くても meta.id かフォルダ名で補います）"
+        else:
+            hint = ("\n  → build_deck.py の不具合の可能性があります（zip の破損・再パース不能など、入力の誤りでは起きないもの）。"
+                    "--debug を付けて再実行し、出力を添えて報告してください")
+        fail(f"{path.name} の検証に失敗しました:\n  - " + "\n  - ".join(problems) + hint)
 
 
 def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
@@ -3352,7 +5733,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         from pptx import Presentation
         from pptx.dml.color import RGBColor
         from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
-        from pptx.enum.text import PP_ALIGN
+        from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
         from pptx.oxml.ns import qn
         from pptx.util import Emu, Inches, Pt
     except ImportError:
@@ -3372,6 +5753,14 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
     def PTS(px):
         return Pt(px * 0.75)
 
+    def set_row_heights(table, heights_px):
+        """表の行の高さを一度に設定する。python-pptx の Row.height は 1 行ごとに全行の高さを合計し直す（行数の 2 乗の時間）ので、
+        a:tr の h を直接書き、枠（graphicFrame）の高さは最後に 1 回だけ合計する（結果の XML は 1 行ずつ設定したときと同じ）。"""
+        trs = table._tbl.tr_lst
+        for tr, h in zip(trs, heights_px):
+            tr.h = IN(h)
+        table._graphic_frame.height = Emu(sum(tr.h for tr in trs))
+
     def C(name):
         return RGBColor.from_string(col(theme, name).lstrip("#"))
 
@@ -3386,7 +5775,13 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
     _apply_ooxml_theme(prs, theme, fonts)
     blank = prs.slide_layouts[6]
 
-    def set_run(run, text, size_px, color, bold=False, name=None):
+    def set_lh(p, size_px, lh):
+        """行送りを固定値（pt）で指定する（A3-01）。倍率（spcPct）はフォント固有の行高さに掛かるので、
+        HTML の line-height（文字サイズ × 倍率）より 12〜21% 広がり、フォントによって幅も違う。
+        px × 倍率を pt にした固定値なら、どのフォント・どのビューアでも HTML と同じ行送りになる。"""
+        p.line_spacing = Pt(round(size_px * lh * 0.75, 2))
+
+    def set_run(run, text, size_px, color, bold=False, name=None, tracking=0, case=None):
         text = str(text)
         rest = []
         if "\n" in text:
@@ -3400,6 +5795,12 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         f.bold = bold
         f.color.rgb = color
         rPr = run._r.get_or_add_rPr()
+        rPr.set("lang", "ja-JP")    # 校正の言語・禁則の既定を日本語に（canvas の経路と同じ）
+        if tracking:
+            # 字間: em → 1/100 pt（px × 0.75 pt × 100）。ST_TextPoint の範囲（±400000）に収める
+            rPr.set("spc", str(max(-400000, min(400000, int(round(tracking * size_px * 75))))))
+        if case == "upper":
+            rPr.set("cap", "all")
         for tag in ("a:ea", "a:cs"):
             el = rPr.find(qn(tag))
             if el is None:
@@ -3420,6 +5821,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         box = slide.shapes.add_textbox(IN(r["x"]), IN(r["y"]), IN(r["w"]), IN(r.get("h", 40)))
         tf = box.text_frame
         tf.word_wrap = True
+        tf.auto_size = MSO_AUTO_SIZE.NONE   # python-pptx 既定の spAutoFit だと、PowerPoint で編集した瞬間に箱の高さが変わる（A3-08）
         for m in ("margin_left", "margin_right", "margin_top", "margin_bottom"):
             setattr(tf, m, Emu(0))
         return tf
@@ -3436,32 +5838,56 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         if r.get("align"):
             p.alignment = ALIGN[r["align"]]
         if r.get("line_height"):
-            p.line_spacing = r["line_height"]
+            set_lh(p, r["size"], r["line_height"])
         set_run(p.add_run(), text, r["size"], C(r.get("color", "text")),
-                bold=r.get("bold", False), name=font)
+                bold=shp.is_bold(r), name=font, tracking=shp.tracking_of(r), case=r.get("case"))
         return tf
 
-    def add_rect(slide, x, y, w, h, fill, radius=0, border=None):
-        shape = MSO_SHAPE.ROUNDED_RECTANGLE if radius else MSO_SHAPE.RECTANGLE
+    def _apply_shadow(sp, shadow):
+        """箱の影（canvas の shadow 形式）を effectLst に入れる。HTML の box-shadow と同じ向き・ぼかし。"""
+        from lxml import etree
+        spPr = sp._element.spPr
+        for old in spPr.findall(qn("a:effectLst")):
+            spPr.remove(old)
+        xml = ce._shadow_xml(shadow)
+        el = etree.fromstring(f'<r xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">{xml}</r>')[0]
+        # effectLst は ln の後ろ（schema 順: fill → ln → effectLst）
+        ln = spPr.find(qn("a:ln"))
+        if ln is not None:
+            ln.addnext(el)
+        else:
+            spPr.append(el)
+
+    def add_rect(slide, x, y, w, h, fill, radius=0, border=None, top_only=False, border_w=None, shadow=None):
+        """top_only=True なら上辺の 2 隅だけ丸める（HTML の border-radius:r r 0 0。steps のヘッダ帯）。"""
+        shape = (MSO_SHAPE.ROUND_2_SAME_RECTANGLE if top_only else MSO_SHAPE.ROUNDED_RECTANGLE) if radius else MSO_SHAPE.RECTANGLE
         sp = slide.shapes.add_shape(shape, IN(x), IN(y), IN(w), IN(h))
         sp.fill.solid()
         sp.fill.fore_color.rgb = fill
-        if border is not None:
-            # 面の視認性: surface 系の淡い塗りだけに頼らず 1px の枠線で輪郭を出す。
+        if border is not None and (border_w is None or border_w > 0):
+            # 面の視認性: surface 系の淡い塗りだけに頼らず 1px の枠線で輪郭を出す（border_w は px。0 で枠なし）。
             sp.line.color.rgb = border
-            sp.line.width = Pt(0.75)
+            sp.line.width = Pt(0.75 if border_w is None else border_w * 0.75)
         else:
             sp.line.fill.background()
         sp.shadow.inherit = False
+        if shadow:
+            _apply_shadow(sp, shadow)
         if radius:
             # M-46: 角丸半径（px）を短辺に対する比率に変換して明示指定する
             # （px と EMU は単位変換の一次比例なので px のまま比を取ってよい）。
             sp.adjustments[0] = min(0.5, radius / max(1, min(w, h)))
+            if top_only:
+                sp.adjustments[1] = 0.0
         return sp
 
     def rect_region(slide, r):
         add_rect(slide, r["x"], r["y"], r["w"], r["h"], C(r.get("fill", "accent")),
                  radius=r.get("radius", 0))
+
+    def rule_region(slide, st):
+        if _rule_drawable(st.get("rule")):
+            rect_region(slide, st["rule"])
 
     def _set_bullet(p, char, color, marL_px, hang_px, size_pct=100):
         """段落をネイティブの PowerPoint 箇条書きにする（M-47）。
@@ -3482,19 +5908,23 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         used = [False]
         marL = r["indent"]
         child_hang = 28  # marker（○）と本文の間に十分な余白を確保する
+        gap, cgap = r["gap"], r["child_gap"]
         for it in items:
             p = para(tf, used)
-            p.space_after = PTS(r["gap"])
-            p.line_spacing = r["line_height"]
+            # HTML は親 li の下に margin-bottom: gap、子 ul の上に margin-top: child_gap、最後の子の下は gap と child_gap の
+            # 大きいほう（余白の相殺）。子のある親は下の余白を child_gap にして揃える。
+            kids = it["children"]
+            p.space_after = PTS(cgap if kids else gap)
             size = it.get("size", r["size"])
+            set_lh(p, size, r["line_height"])
             color = C(it["color"]) if it.get("color") else C(r["color"])
             _set_bullet(p, "•", C(r["marker_color"]), marL, marL)
             set_run(p.add_run(), it["text"], size, color, bold=it.get("bold", False))
-            for c in it["children"]:
+            for ci, c in enumerate(kids):
                 p = para(tf, used)
-                p.space_after = PTS(r["child_gap"])
-                p.line_spacing = max(1.0, r["line_height"] - 0.15)
+                p.space_after = PTS(max(gap, cgap) if ci == len(kids) - 1 else cgap)
                 csize = c.get("size", r["child_size"])
+                set_lh(p, csize, r["line_height"])   # HTML の子 ul は親の line-height を継承する（以前は PPTX だけ -0.15）
                 ccolor = C(c["color"]) if c.get("color") else C(r["child_color"])
                 _set_bullet(p, "○", C(r["marker_color"]), marL + child_hang, child_hang)
                 set_run(p.add_run(), c["text"], csize, ccolor)
@@ -3507,15 +5937,26 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             text_region(slide, st["footer_r"], st["footer_r"].get("text") or f"{page} / {total}")
 
     def chrome(slide, data, st, page, total):
+        if data.get("_bare"):
+            return          # 合成スライドのブロック: 見出し骨格は合成スライド側が 1 回だけ描く
         if data.get("eyebrow") and "eyebrow" in st:
             text_region(slide, st["eyebrow"], data["eyebrow"], font=HEADING_FONT)
-        text_region(slide, st["title"], data.get("title", ""), font=HEADING_FONT)
-        rect_region(slide, st["rule"])
+        if "title" in st:
+            text_region(slide, st["title"], data.get("title", ""), font=HEADING_FONT)
+        rule_region(slide, st)
         if data.get("lead") and "lead" in st:
             text_region(slide, st["lead"], data["lead"])
         footer(slide, st, page, total)
 
+    def hero_pptx(slide, data, st, extra=None):
+        """主役系の下地（背景の画像・覆い・色面 → variant の panel → 飾り）。HTML と同じ canvas 要素。"""
+        els = hero.hero_layers(st, data.get("_bg"), theme.get("colors", {})) + (extra or [])
+        if els:
+            ce.add_canvas_to_pptx(slide, els, _canvas_svg_png, _canvas_backdrop_png,
+                                  image_source=canvas_image_source(deck_dir, browser))
+
     def s_title(slide, data, st, page, total):
+        hero_pptx(slide, data, st)
         rect_region(slide, st["bar"])
         text_region(slide, st["title"], data.get("title", ""), font=HEADING_FONT)
         if data.get("subtitle"):
@@ -3525,10 +5966,11 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
 
     def s_section(slide, data, st, page, total):
         add_rect(slide, 0, 0, CANVAS_W, CANVAS_H, C(st["bg"]["fill"]))
+        hero_pptx(slide, data, st)
         if data.get("number"):
             text_region(slide, st["number"], data["number"], font=HEADING_FONT)
         text_region(slide, st["title"], data.get("title", ""), font=HEADING_FONT)
-        rect_region(slide, st["rule"])
+        rule_region(slide, st)
         if data.get("subtitle"):
             text_region(slide, st["subtitle"], data["subtitle"])
 
@@ -3547,7 +5989,8 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             colc = data.get(side, {})
             add_rect(slide, box["x"], box["y"], box["w"], box["h"],
                      C(box["fill"]), radius=box.get("radius", 0),
-                     border=C(box["border_color"]) if box.get("border_color") else None)
+                     border=C(box["border_color"]) if box.get("border_color") else None,
+                     border_w=box.get("border_w"), shadow=shadow_spec(box, theme))
             pad = box["pad"]
             # style.left.valign / style.right.valign: "middle" で heading+bullets をまとめて
             # 箱の縦中央に寄せる（HTML と同じ考え方。PPTX は実描画高さを取れないため見積もる）。
@@ -3564,18 +6007,37 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                          "h": max(1.0, lay["body_h"])})
             add_bullets(slide, norm_items(colc.get("bullets")), body)
 
-    def _cell_border_bottom(cell, hex_color, width_pt=1.0):
-        """セルの下罫線を tr.border_color トークンで設定する（M-85）。
-        既存の lnB を消してから schema 順（lnL/lnR/lnT/lnB → 塗り）を守るため先頭に挿入する。"""
+    # 表のスタイルは「スタイルなし・グリッドなし」にする。python-pptx 既定の Medium Style 2 だと、
+    # スタイル由来の白い内側罫線が行間の線に勝って線が消え、ヘッダーに白い縦線が入る（A3-04）。
+    NO_GRID_TABLE_STYLE = "{2D5ABB26-0587-4C30-8999-92F81FD0307C}"
+
+    def _no_grid_style(gfx):
+        tblPr = gfx._element.graphic.graphicData.tbl.tblPr
+        sid = tblPr.find(qn("a:tableStyleId"))
+        if sid is None:
+            sid = tblPr.makeelement(qn("a:tableStyleId"), {})
+            tblPr.append(sid)
+        sid.text = NO_GRID_TABLE_STYLE
+
+    def _set_cell_lines(cell, lines):
+        """セルの 4 辺の罫線を明示する。lines = {"L"|"R"|"T"|"B": (hex, pt) | None}。None は線なし（noFill）。
+        schema 順（lnL, lnR, lnT, lnB → 塗り）を守るため tcPr の先頭に並べる。"""
         tcPr = cell._tc.get_or_add_tcPr()
-        old = tcPr.find(qn("a:lnB"))
-        if old is not None:
-            tcPr.remove(old)
-        lnB = tcPr.makeelement(qn("a:lnB"), {"w": str(int(Pt(width_pt))), "cap": "flat"})
-        fill = lnB.makeelement(qn("a:solidFill"), {})
-        fill.append(fill.makeelement(qn("a:srgbClr"), {"val": hex_color}))
-        lnB.append(fill)
-        tcPr.insert(0, lnB)
+        for tag in ("a:lnL", "a:lnR", "a:lnT", "a:lnB"):
+            old = tcPr.find(qn(tag))
+            if old is not None:
+                tcPr.remove(old)
+        for idx, side in enumerate(("L", "R", "T", "B")):
+            spec = lines.get(side)
+            if spec:
+                ln = tcPr.makeelement(qn(f"a:ln{side}"), {"w": str(int(Pt(spec[1]))), "cap": "flat"})
+                fill = ln.makeelement(qn("a:solidFill"), {})
+                fill.append(fill.makeelement(qn("a:srgbClr"), {"val": spec[0]}))
+                ln.append(fill)
+            else:
+                ln = tcPr.makeelement(qn(f"a:ln{side}"), {"w": "0"})
+                ln.append(ln.makeelement(qn("a:noFill"), {}))
+            tcPr.insert(idx, ln)
 
     def s_table(slide, data, st, page, total):
         from pptx.enum.text import MSO_ANCHOR
@@ -3586,19 +6048,37 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         rows = data.get("rows", [])
         n_rows, n_cols = len(rows) + 1, len(cols)
         total_h = tr["header_h"] + tr["row_h"] * len(rows)
+        fit_total = ((st.get("_fit") or {}).get("info", {}).get("table") or {}).get("total_h")
+        if fit_total and fit_total > total_h and ((st.get("_fit") or {}).get("info", {}).get("table") or {}).get("adjusted"):
+            total_h = fit_total      # 折り返して高くなる行を含めた見積もり（枠の高さの目安。行は内容に合わせて伸びる）
         gfx = slide.shapes.add_table(n_rows, n_cols, IN(tr["x"]), IN(tr["y"]),
                                      IN(tr["w"]), IN(total_h))
+        _no_grid_style(gfx)
         table = gfx.table
         table.first_row = False
         table.horz_banding = False
+        # 列幅: col_widths（比率）があればそれ、無ければ HTML の自動幅（table レイアウト）を模擬した幅（等分ではない）
         widths = tr.get("col_widths")
         if widths:
             unit = tr["w"] / sum(widths)
-            for j, w in enumerate(widths):
-                table.columns[j].width = IN(w * unit)
-        table.rows[0].height = IN(tr["header_h"])
+            px_widths = [w * unit for w in widths]
+        else:
+            px_widths = table_auto_widths(cols, rows, tr, data)
+        for j, w in enumerate(px_widths):
+            table.columns[j].width = IN(w)
+        fit_info = (st.get("_fit") or {}).get("info", {}).get("table") or {}
+        fit_lines = (fit_info.get("lines") or []) if fit_info.get("adjusted") else []
+        row_hs = [tr["header_h"]]
         for i in range(len(rows)):
-            table.rows[i + 1].height = IN(tr["row_h"])
+            h = tr["row_h"]
+            if i < len(fit_lines):
+                # 折り返して高くなる行は、HTML と同じく内容の高さ（行数 × 文字 × 行高 + 上下余白）まで広げて持つ
+                h = max(h, fit_lines[i] * tr["cell_size"] * tr["line_height"] + 2 * tr["pad_y"])
+            row_hs.append(h)
+        set_row_heights(table, row_hs)
+        # 罫線は HTML と同じ: ヘッダーは線なし、本文は各行の下に 1px。行の境目は上の行の下罫線と同じ線を上辺にも置く
+        # （LibreOffice / PowerPoint のどちらで描いても線が消えない・二重にならない）
+        line = (border_hex, 0.75)
         for j, name in enumerate(cols):
             cell = table.cell(0, j)
             cell.fill.solid()
@@ -3606,8 +6086,11 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             cell.vertical_anchor = MSO_ANCHOR.MIDDLE
             cell.margin_left = IN(tr["pad_x"])
             cell.margin_right = IN(tr["pad_x"])
-            _cell_border_bottom(cell, border_hex, width_pt=1.5)
+            cell.margin_top = IN(tr["pad_y"])
+            cell.margin_bottom = IN(tr["pad_y"])
+            _set_cell_lines(cell, {})
             p = cell.text_frame.paragraphs[0]
+            set_lh(p, tr["header_size"], tr["line_height"])
             set_run(p.add_run(), str(name), tr["header_size"], C(tr["header_color"]), bold=True)
         row_fills = tr.get("row_fills", {})
         for i, row in enumerate(rows):
@@ -3616,25 +6099,33 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 is_label = bool(data.get("row_header")) and j == 0
                 cell = table.cell(i + 1, j)
                 cell.fill.solid()
+                emph_row = i in set(data.get("_row_emphasis") or [])
                 if is_total:
-                    cell.fill.fore_color.rgb = C(tr.get("total_fill", "surface"))
+                    cell_bg = tr.get("total_fill", "surface")
                 elif is_label:
-                    cell.fill.fore_color.rgb = C(tr.get("label_fill", "highlight_fill"))
+                    cell_bg = tr.get("label_fill", "highlight_fill")
+                elif emph_row:
+                    cell_bg = tr.get("emphasis_fill", "highlight_fill")
                 elif str(i) in row_fills:
-                    cell.fill.fore_color.rgb = C(row_fills[str(i)])
+                    cell_bg = row_fills[str(i)]
                 else:
-                    cell.fill.fore_color.rgb = C(tr["row_alt_fill"]) if i % 2 else C("background")
+                    cell_bg = tr["row_alt_fill"] if i % 2 else "background"
+                cell.fill.fore_color.rgb = C(cell_bg)
                 cell.vertical_anchor = MSO_ANCHOR.MIDDLE
                 cell.margin_left = IN(tr["pad_x"])
                 cell.margin_right = IN(tr["pad_x"])
-                _cell_border_bottom(cell, border_hex, width_pt=0.75)
+                cell.margin_top = IN(tr["pad_y"])       # HTML の td の padding と同じ（以前は既定の 4.8px）
+                cell.margin_bottom = IN(tr["pad_y"])
+                _set_cell_lines(cell, {"T": line if i > 0 else None, "B": line})
                 p = cell.text_frame.paragraphs[0]
-                p.line_spacing = tr["line_height"]
+                set_lh(p, tr["cell_size"], tr["line_height"])
                 visible_text, cell_url = table_cell_parts(val)
                 run = p.add_run()
                 strong = is_total or is_label
+                tone = None if strong else _cell_tone_color(theme, tr, val, col(theme, cell_bg))
                 set_run(run, visible_text, tr["cell_size"],
-                        C(tr.get("label_color", "heading_text")) if strong else C(tr["cell_color"]), bold=strong)
+                        C(tr.get("label_color", "heading_text")) if strong else (C(tone) if tone else C(tr["cell_color"])),
+                        bold=strong or emph_row or bool(tone))
                 if cell_url:
                     run.hyperlink.address = cell_url
 
@@ -3654,13 +6145,13 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
 
     def _plain_table(slide, n_rows, n_cols, x, y, widths, heights):
         gfx = slide.shapes.add_table(n_rows, n_cols, IN(x), IN(y), IN(sum(widths)), IN(sum(heights)))
+        _no_grid_style(gfx)
         table = gfx.table
         table.first_row = False
         table.horz_banding = False
         for j, w in enumerate(widths):
             table.columns[j].width = IN(w)
-        for i, h in enumerate(heights):
-            table.rows[i].height = IN(h)
+        set_row_heights(table, heights)
         return table
 
     def _fill_cell(cell, fill, border_hex, pad_x=4, pad_y=2, anchor="middle"):
@@ -3674,33 +6165,38 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         _cell_borders(cell, border_hex)
 
     def s_status_table(slide, data, st, page, total):
+        from pptx.enum.text import MSO_ANCHOR
         chrome(slide, data, st, page, total)
         lg = st["legend"]
         legend = status_legend(data)
         if legend:
             lbc = str(C(lg["border_color"]))
             row_h = lg["h"] / len(legend)
-            lt = _plain_table(slide, len(legend), 3, lg["x"], lg["y"],
-                              [lg["title_w"], lg["symbol_w"], lg["w"] - lg["title_w"] - lg["symbol_w"]],
-                              [row_h] * len(legend))
-            for k, it in enumerate(legend):
-                for j in range(3):
-                    _fill_cell(lt.cell(k, j), lg["title_fill"] if j == 0 else lg["fill"], lbc, pad_x=lg["pad_x"], pad_y=1)
-                p = lt.cell(k, 1).text_frame.paragraphs[0]
-                p.alignment = ALIGN["center"]
-                set_run(p.add_run(), "●", lg["symbol_size"], C(it.get("color", "text")))
-                p = lt.cell(k, 2).text_frame.paragraphs[0]
-                p.line_spacing = lg["line_height"]
-                set_run(p.add_run(), str(it.get("label", "")), lg["size"], C(lg["color"]))
-            title_cell = lt.cell(0, 0)
-            if len(legend) > 1:
-                title_cell.merge(lt.cell(len(legend) - 1, 0))
-            tf = title_cell.text_frame
+            # 凡例の見出し（左の濃い帯）は表の結合セルにせず、図形で描く（LibreOffice は結合セルの文字の高さを最後の行に足して、凡例が高くなり見出しの罫線に重なる・S5a）
+            ts = add_rect(slide, lg["x"], lg["y"], lg["title_w"], lg["h"], C(lg["title_fill"]), border=C(lg["border_color"]), border_w=1)
+            tf = ts.text_frame
+            tf.word_wrap = True
+            tf.margin_left = tf.margin_right = IN(lg["pad_x"])
+            tf.margin_top = tf.margin_bottom = IN(1)
+            tf.vertical_anchor = MSO_ANCHOR.MIDDLE
             for n, line in enumerate(str(data.get("legend_title", STATUS_LEGEND_TITLE)).split("\n")):
                 p = tf.paragraphs[0] if n == 0 else tf.add_paragraph()
                 p.alignment = ALIGN["center"]
-                p.line_spacing = lg["line_height"]
+                set_lh(p, lg["size"] + 1, lg["line_height"])
                 set_run(p.add_run(), line, lg["size"] + 1, C(lg["title_color"]), bold=True, name=HEADING_FONT)
+            lt = _plain_table(slide, len(legend), 2, lg["x"] + lg["title_w"], lg["y"],
+                              [lg["symbol_w"], lg["w"] - lg["title_w"] - lg["symbol_w"]],
+                              [row_h] * len(legend))
+            for k, it in enumerate(legend):
+                for j in range(2):
+                    _fill_cell(lt.cell(k, j), lg["fill"], lbc, pad_x=lg["pad_x"], pad_y=1)
+                p = lt.cell(k, 0).text_frame.paragraphs[0]
+                p.alignment = ALIGN["center"]
+                set_lh(p, lg["symbol_size"], 1.0)      # 「●」の行の高さを固定する
+                set_run(p.add_run(), "●", lg["symbol_size"], C(it.get("color", "text")))
+                p = lt.cell(k, 1).text_frame.paragraphs[0]
+                set_lh(p, lg["size"], lg["line_height"])
+                set_run(p.add_run(), str(it.get("label", "")), lg["size"], C(lg["color"]))
 
         tr = st["table"]
         geo = status_table_geometry(data, st)
@@ -3732,7 +6228,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 tf = cell.text_frame
                 for n, (lv, text) in enumerate(paras):
                     p = tf.paragraphs[0] if n == 0 else tf.add_paragraph()
-                    p.line_spacing = tr["line_height"]
+                    set_lh(p, tr["cell_size"], tr["line_height"])
                     p.space_after = PTS(tr["item_gap"])
                     marker = tr["check_char"] if lv == 0 else tr["bullet_char"]
                     _set_bullet(p, marker, C(tr["marker_color"]), tr["indent"] * (lv + 1), tr["indent"])
@@ -3754,12 +6250,14 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             p = para(tf, used)
             # M-24: spcPct（倍率）ではなく spcPts（px 起源の実寸 pt）で行送りを指定し、
             # HTML の line-height と同じ実測値に揃える。
-            p.line_spacing = Pt(size * r["line_height"] * 0.75)
+            set_lh(p, size, r["line_height"])
             set_run(p.add_run(), line if line else " ", size, C(r["color"]),
                     name=fonts["code"])
 
     def s_quote(slide, data, st, page, total):
-        text_region(slide, st["mark"], "“")
+        hero_pptx(slide, data, st)
+        if st["mark"].get("w") and st["mark"].get("h") and not hero.mark_is_vector(st):
+            text_region(slide, st["mark"], "“")
         text_region(slide, st["text"], data.get("text", ""), font=HEADING_FONT)
         if data.get("attribution"):
             text_region(slide, st["attribution"], "— " + data["attribution"])
@@ -3786,40 +6284,54 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         pic.height = int(pic.height * ratio)
         pic.left = int(IN(r["x"]) + (IN(r["w"]) - pic.width) / 2)
         pic.top = int(IN(r["y"]) + (IN(r["h"]) - pic.height) / 2)
+        if r.get("radius"):
+            # radius.image（px）: 画像の形を角丸四角にして、角丸の半径を短辺に対する比率で指定
+            pic.auto_shape_type = MSO_SHAPE.ROUNDED_RECTANGLE
+            av = pic._element.spPr.find(qn("a:prstGeom")).find(qn("a:avLst"))
+            for gd in list(av):
+                av.remove(gd)
+            gd = av.makeelement(qn("a:gd"), {"name": "adj", "fmla": f"val {int(min(0.5, r['radius'] / max(1, min(pic.width, pic.height) / 9525)) * 100000)}"})
+            av.append(gd)
         return pic
 
     def s_image(slide, data, st, page, total):
+        hero_pptx(slide, data, st)
         if data.get("eyebrow") and "eyebrow" in st:
             text_region(slide, st["eyebrow"], data["eyebrow"], font=HEADING_FONT)
         if data.get("title"):
             text_region(slide, st["title"], data["title"], font=HEADING_FONT)
-            rect_region(slide, st["rule"])
+            rule_region(slide, st)
         r = st["img"]
-        _place_picture(slide, _load_pptx_picture(deck_dir, data["path"], r, page, "image"), r, page, "image")
+        if data.get("fit") != "bleed":
+            _place_picture(slide, _load_pptx_picture(deck_dir, data["path"], r, page, "image"), r, page, "image")
         if data.get("caption"):
             text_region(slide, st["caption"], data["caption"])
         footer(slide, st, page, total)
 
     def s_image_text(slide, data, st, page, total):
+        bleed = data.get("bleed") is True
         if data.get("image_side") == "left":
-            st = flip_regions(st, ("body", "img", "caption"))
+            st = flip_image_text(st, bleed)
+        hero_pptx(slide, data, st)
         if data.get("eyebrow") and "eyebrow" in st:
             text_region(slide, st["eyebrow"], data["eyebrow"], font=HEADING_FONT)
         text_region(slide, st["title"], data.get("title", ""), font=HEADING_FONT)
-        rect_region(slide, st["rule"])
+        rule_region(slide, st)
         if data.get("punch"):
             text_region(slide, st["punch"], data["punch"], font=HEADING_FONT)
         add_bullets(slide, norm_items(data.get("bullets")), st["body"])
         r = st["img"]
-        _place_picture(slide, _load_pptx_picture(deck_dir, data["path"], r, page, "image_text"), r, page, "image_text")
+        if not bleed:
+            _place_picture(slide, _load_pptx_picture(deck_dir, data["path"], r, page, "image_text"), r, page, "image_text")
         if data.get("caption"):
             text_region(slide, st["caption"], data["caption"])
         footer(slide, st, page, total)
 
     def s_closing(slide, data, st, page, total):
         add_rect(slide, 0, 0, CANVAS_W, CANVAS_H, C(st["bg"]["fill"]))
+        hero_pptx(slide, data, st)
         text_region(slide, st["title"], data.get("title", ""), font=HEADING_FONT)
-        rect_region(slide, st["rule"])
+        rule_region(slide, st)
         if data.get("bullets"):
             add_bullets(slide, norm_items(data.get("bullets")), st["body"])
         if data.get("message"):
@@ -3846,7 +6358,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             x = b["x"] + c * (col_w + col_gap); y = b["y"] + r * pitch
             active = it.get("active")
             if active:
-                add_rect(slide, x-14, y-3, col_w+18, row_h+6, C(b.get("active_fill", "surface")), radius=8,
+                add_rect(slide, x-14, y-3, col_w+18, row_h+6, C(b.get("active_fill", "surface")), radius=rtok(theme, "node_sm", 8),
                          border=C(b["active_border"]) if b.get("active_border") else None)
             text_region(slide, {"x": x, "y": y+noff, "w": num_w, "h": row_h, "size": b.get("num_size", 24),
                                 "color": b.get("num_color", "accent"), "bold": True, "line_height": 1.1}, f"{num_start+i+1:02d}")
@@ -3868,24 +6380,27 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         card_w = (b["w"] - (n-1)*gap) / n
         header_h = b.get("header_h", 60); pad = b.get("pad", 16); radius = b.get("radius", 12)
         card_h = steps_card_height(b, steps, card_w)
-        row_y = b["y"] + (b["h"] - card_h) * 0.4
+        row_y = b["y"] + (b["h"] - card_h) * b.get("content_y_ratio", 0.4)
         for i, step in enumerate(steps):
             x = b["x"] + i * (card_w + gap)
             add_rect(slide, x, row_y, card_w, card_h, C(b.get("card_fill", "surface")), radius=radius,
-                     border=C(b["card_border"]) if b.get("card_border") else None)
+                     border=C(b["card_border"]) if b.get("card_border") else None,
+                     border_w=b.get("border_w"), shadow=shadow_spec(b, theme))
             if data.get("header_style") == "arrow":
                 ce.add_canvas_to_pptx(slide, [steps_arrow_header(i, n, x, row_y, card_w, gap, header_h, b, theme)])
             else:
-                add_rect(slide, x, row_y, card_w, header_h, C(b.get("header_fill", "primary")), radius=radius)
+                add_rect(slide, x, row_y, card_w, header_h, C(b.get("header_fill", "primary")), radius=radius,
+                         top_only=True)   # HTML は上辺の 2 隅だけ丸い
             text_region(slide, {"x": x+pad, "y": row_y+9, "w": card_w-2*pad, "h": 18, "size": 13,
-                                "color": b.get("num_color", "accent"), "bold": True}, f"STEP {i+1}")
+                                "color": b.get("num_color", "accent"), "bold": True, "weight": label_weight(theme)},
+                        f"{i+1}" if b.get("_num_short") else f"STEP {i+1}")
             text_region(slide, {"x": x+pad, "y": row_y+28, "w": card_w-2*pad, "h": header_h-26,
                                 "size": b.get("label_size", 18), "color": b.get("header_color", "on_primary"),
-                                "bold": True, "line_height": 1.15}, step.get("label", ""), font=HEADING_FONT)
+                                "bold": True, "weight": label_weight(theme), "line_height": 1.15}, step.get("label", ""), font=HEADING_FONT)
             itemr = {"x": x+pad, "y": row_y+header_h+pad, "w": card_w-2*pad, "h": card_h-header_h-2*pad,
                      "size": b.get("item_size", 15), "gap": b.get("item_gap", 8), "color": b.get("item_color", "text"),
-                     "line_height": 1.4, "marker_color": "accent", "child_size": 13, "child_color": "muted",
-                     "indent": 16, "child_gap": 4}
+                     "line_height": 1.4, "marker_color": "accent", "child_size": b.get("child_size", 13),
+                     "child_color": "muted", "indent": 16, "child_gap": b.get("child_gap", 4)}
             tf_items = add_bullets(slide, norm_items(step.get("items", [])), itemr)
             # style.body.valign（既定 top）: "middle" で items をカードの残り高さの中で縦中央寄せにする
             # （HTML と同じ考え方。ヘッダー帯は動かさない）。
@@ -3911,63 +6426,58 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             hi = q.get("highlight")
             fill = C(g.get("hi_fill", "on_primary_soft")) if hi else C(g.get("fill", "surface"))
             add_rect(slide, qx, qy, cw, ch, fill, radius=radius,
-                     border=C(g["border_color"]) if g.get("border_color") else None)
+                     border=C(g["border_color"]) if g.get("border_color") else None,
+                     border_w=g.get("border_w"), shadow=shadow_spec(g, theme))
             # M-37: heading を含めたコンテンツ全体を象限中央に配置する（HTML と同じ計算式）。
             lay = _matrix_content_layout(q.get("body", ""), g, cw, ch, pad, valign)
             text_region(slide, {"x": qx+pad, "y": qy+lay["head_y"], "w": cw-2*pad, "h": lay["head_h"],
                                 "size": g.get("heading_size", 18),
                                 "color": (g.get("hi_heading_color", "accent") if hi else g.get("heading_color", "primary")),
-                                "bold": True, "line_height": 1.2}, q.get("heading", ""), font=HEADING_FONT)
+                                "bold": True, "weight": label_weight(theme), "line_height": 1.2}, q.get("heading", ""), font=HEADING_FONT)
             tf_body = text_region(slide, {"x": qx+pad, "y": qy+lay["body_y"], "w": cw-2*pad, "h": lay["body_h"],
                                 "size": g.get("body_size", 14), "color": g.get("body_color", "muted"),
                                 "line_height": 1.4}, q.get("body", ""))
             if valign == "middle":
                 tf_body.vertical_anchor = MSO_ANCHOR.MIDDLE
         xa = data.get("x_axis", {}); ya = data.get("y_axis", {})
-        asize = ax.get("size", 15); acol = ax.get("color", "muted"); ncol = ax.get("name_color", "text")
-        text_region(slide, {"x": 72, "y": gy-30, "w": 360, "h": 22, "size": asize, "color": ncol, "bold": True}, "▲ " + ya.get("label", ""))
-        text_region(slide, {"x": gx-96, "y": gy+6, "w": 88, "h": 22, "size": asize, "color": acol, "align": "right"}, ya.get("high", ""))
-        text_region(slide, {"x": gx-96, "y": gy+gh-28, "w": 88, "h": 22, "size": asize, "color": acol, "align": "right"}, ya.get("low", ""))
-        text_region(slide, {"x": gx, "y": gy+gh+30, "w": gw, "h": 22, "size": asize, "color": ncol, "align": "center", "bold": True}, xa.get("label", "") + " ▶")
-        text_region(slide, {"x": gx, "y": gy+gh+6, "w": 160, "h": 22, "size": asize, "color": acol}, xa.get("low", ""))
-        text_region(slide, {"x": gx+gw-160, "y": gy+gh+6, "w": 160, "h": 22, "size": asize, "color": acol, "align": "right"}, xa.get("high", ""))
+        for ab in _matrix_axis_boxes(ax, gx, gy, gw, gh, xa, ya):
+            text_region(slide, ab["region"], ab["text"])
 
     def s_cards(slide, data, st, page, total):
         from pptx.enum.text import MSO_ANCHOR
         chrome(slide, data, st, page, total)
         g = st["grid"]; cards = data.get("cards", [])
-        cols = max(1, data.get("columns", g.get("cols", 3)))
-        n = len(cards); rows = max(1, (n + cols - 1) // cols)
-        gap = g.get("gap", 16); pad = g.get("pad", 18); radius = g.get("radius", 12)
+        geo = pe.cards_cells(len(cards), data.get("columns"), g, hero.card_spans(data))
+        pad = g.get("pad", 18); radius = g.get("radius", 12)
         valign = g.get("valign", "top")
-        cw = (g["w"] - (cols-1)*gap) / cols; chh = (g["h"] - (rows-1)*gap) / rows
         for idx, card in enumerate(cards):
-            rr = idx // cols; cc = idx % cols
-            x = g["x"] + cc * (cw + gap); y = g["y"] + rr * (chh + gap)
-            add_rect(slide, x, y, cw, chh, C(g.get("fill", "surface")), radius=radius,
-                     border=C(g["border_color"]) if g.get("border_color") else None)
+            x, y, cw, chh = geo["cells"][idx]
+            cs = hero.card_style(g, hero.card_emphasis(card))
+            gc = hero.emph_grid(g, hero.card_emphasis(card))
+            add_rect(slide, x, y, cw, chh, C(cs["fill"]), radius=radius,
+                     border=C(cs["border_color"]) if cs.get("border_color") else None,
+                     border_w=cs.get("border_w"), shadow=shadow_spec(g, theme))
             # M-37: heading を含めたコンテンツ全体（実際に描画される段だけ）をカード中央に配置する
             # （HTML と同じ計算式）。
-            lay = _cards_content_layout(card, g, cw, chh, pad, valign)
+            lay = _cards_content_layout(card, gc, cw, chh, pad, valign)
             has_items = bool(card.get("items"))
-            text_region(slide, {"x": x+pad, "y": y+lay["head_y"], "w": cw-2*pad, "h": lay["head_h"],
-                                "size": g.get("heading_size", 19),
-                                "color": g.get("heading_color", "primary"), "bold": True, "line_height": 1.2},
+            text_region(slide, {"x": x+pad, "y": y+lay["head_y"], "w": cw-2*pad-autofit.card_icon_reserve(card, gc), "h": lay["head_h"],
+                                "size": gc.get("heading_size", 19),
+                                "color": cs["heading_color"], "bold": True, "weight": label_weight(theme), "line_height": 1.2},
                         card.get("heading", ""), font=HEADING_FONT)
             if card.get("body"):
                 body_r = {"x": x+pad, "y": y+lay["body_y"], "w": cw-2*pad, "h": lay["body_h"],
-                          "size": g.get("body_size", 15), "color": g.get("body_color", "text"), "line_height": 1.4}
-                tf_body = text_region(slide, body_r, card["body"])
-                if valign == "middle":
-                    tf_body.vertical_anchor = MSO_ANCHOR.MIDDLE
+                          "size": gc.get("body_size", 15), "color": cs["body_color"], "line_height": 1.4}
+                # 本文は固定高（44px）の箱の上詰め（HTML と同じ）。valign:middle は段全体の位置の計算（_cards_content_layout）
+                # で効いており、箱の中で中央寄せにすると HTML より約 13px 下がる（A-02）
+                text_region(slide, body_r, card["body"])
             if has_items:
                 itemr = {"x": x+pad, "y": y+lay["items_y"], "w": cw-2*pad, "h": lay["items_h"],
-                         "size": g.get("item_size", 14),
-                         "gap": g.get("item_gap", 6), "color": g.get("item_color", "muted"), "line_height": 1.35,
-                         "marker_color": "accent", "child_size": 12, "child_color": "muted", "indent": 14, "child_gap": 4}
-                tf_items = add_bullets(slide, norm_items(card["items"]), itemr)
-                if valign == "middle":
-                    tf_items.vertical_anchor = MSO_ANCHOR.MIDDLE
+                         "size": gc.get("item_size", 14),
+                         "gap": g.get("item_gap", 6), "color": cs["item_color"], "line_height": 1.35,
+                         "marker_color": cs["marker_color"], "child_size": 12, "child_color": cs["item_color"] if cs.get("emphasized") else "muted",
+                         "indent": 14, "child_gap": 4}
+                add_bullets(slide, norm_items(card["items"]), itemr)   # 上詰め（HTML と同じ。箱は内容の高さの見積もり）
 
     def _shape_text(sp, text, size, color, bold=False):
         """図形の中央にテキストを置く。改行（\\n）は段落に分ける（レンダラ差で崩れにくい）。"""
@@ -3977,7 +6487,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             setattr(tf, m, Emu(0))
         used = [False]
         for line in str(text).split("\n"):
-            p = para(tf, used); p.alignment = PP_ALIGN.CENTER; p.line_spacing = 1.1
+            p = para(tf, used); p.alignment = PP_ALIGN.CENTER; set_lh(p, size, 1.15)   # HTML の swimlane ノードは 1.15
             set_run(p.add_run(), line, size, color, bold=bold)
 
     def _sw_node_pptx(slide, nd, f):
@@ -4004,7 +6514,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             # M-48: HTML のスタジアム型（border-radius:h/2）に合わせ、真円ではなく
             # 角丸長方形＋adjustments[0]=0.5 で描く。
             sp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, IN(x), IN(y), IN(w), IN(h))
-            sp.adjustments[0] = 0.5
+            sp.adjustments[0] = min(0.5, rtok(theme, "pill", 999) / max(1, min(w, h)))   # pill = 0 なら角丸なし
             sp.fill.solid(); sp.fill.fore_color.rgb = C(f.get("terminal_fill", "surface"))
             sp.line.color.rgb = C(f.get("terminal_border", "muted")); sp.line.width = Pt(1.25); sp.shadow.inherit = False
             if nd.get("text"):
@@ -4031,7 +6541,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 cn = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, IN(x1), IN(y1), IN(x2), IN(y2))
                 cn.line.color.rgb = C(f.get("edge_color", "text")); cn.line.width = Pt(1.25); cn.shadow.inherit = False
         elif shape == "io":
-            sp = add_rect(slide, x, y, w, h, C(f.get("io_fill", "on_primary_soft")), radius=8)
+            sp = add_rect(slide, x, y, w, h, C(f.get("io_fill", "on_primary_soft")), radius=rtok(theme, "node_sm", 8))
             sp.line.color.rgb = C(f.get("io_border", "accent")); sp.line.width = Pt(1)
             half = (w - 2) / 2
             for idx, (key, lbl) in enumerate((("input", "input"), ("output", "output"))):
@@ -4039,9 +6549,11 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 tf = add_box(slide, {"x": x + idx * half + 6, "y": y + 6, "w": half - 10, "h": h - 12})
                 p0 = tf.paragraphs[0]
                 set_run(p0.add_run(), lbl, io_font, C(f.get("io_head_color", "accent")), bold=True)
-                for v in vals:
-                    pp = tf.add_paragraph()
-                    set_run(pp.add_run(), v, io_font, C(f.get("io_color", "text")))
+                fitted_io = (nd.get("io_lines") or {}).get(key)
+                for it in (fitted_io or [[v] for v in vals]):
+                    for ln in it:
+                        pp = tf.add_paragraph()
+                        set_run(pp.add_run(), ln, io_font, C(f.get("io_color", "text")))
         elif shape == "system":
             sp = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, IN(x), IN(y), IN(w), IN(h))
             sp.fill.solid(); sp.fill.fore_color.rgb = C(f.get("system_fill", "surface"))
@@ -4055,6 +6567,9 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                     "offline": (f.get("task_offline_fill", "surface"), f.get("task_offline_border", "muted"), f.get("task_color", "text"))}
             fl, bd, cl = vmap.get(variant, vmap["onother"])
             sp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, IN(x), IN(y), IN(w), IN(h))
+            if (theme.get("tokens") or {}).get("radius") != shp.default_tokens().get("radius"):
+                # 角丸のトークンが既定（classic）のままなら PowerPoint 既定の角丸のまま（従来の PPTX を保つ）。shape などで変えたときだけ HTML と同じ半径にする
+                sp.adjustments[0] = min(0.5, f.get("node_radius", 8) / max(1, min(w, h)))
             sp.fill.solid(); sp.fill.fore_color.rgb = C(fl)
             sp.line.color.rgb = C(bd); sp.line.width = Pt(2); sp.shadow.inherit = False
             if nd.get("text"):
@@ -4118,7 +6633,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         if data.get("eyebrow") and "eyebrow" in st:
             text_region(slide, st["eyebrow"], data["eyebrow"], font=HEADING_FONT)
         text_region(slide, st["title"], data.get("title", "凡例"), font=HEADING_FONT)
-        rect_region(slide, st["rule"])
+        rule_region(slide, st)
         if data.get("lead") and "lead" in st:
             text_region(slide, st["lead"], data["lead"])
         a = st["area"]; sym = st.get("sym", {})
@@ -4184,7 +6699,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         if data.get("eyebrow") and "eyebrow" in st:
             text_region(slide, st["eyebrow"], data["eyebrow"], font=HEADING_FONT)
         text_region(slide, st["title"], data.get("title", "凡例"), font=HEADING_FONT)
-        rect_region(slide, st["rule"])
+        rule_region(slide, st)
         if data.get("lead") and "lead" in st:
             text_region(slide, st["lead"], data["lead"])
         a = st["area"]; d = st["diagram"]
@@ -4300,18 +6815,19 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         for ln in (lines or [""]):
             p = para(tf, used)
             p.alignment = PP_ALIGN.CENTER
-            p.line_spacing = 1.1
+            set_lh(p, size, 1.15)   # HTML の図解ノードのラベルは 1.15
             set_run(p.add_run(), ln, size, color, bold=True, name=font)
         for ln in (sub_lines or []):
             p = para(tf, used)
             p.alignment = PP_ALIGN.CENTER
-            p.line_spacing = 1.1
+            set_lh(p, sub_size, 1.2)   # HTML の sublabel は 1.2
             p.space_before = PTS(2)
             set_run(p.add_run(), ln, sub_size, sub_color if sub_color is not None else color)
         return tf
 
     def _diag_node_pptx(slide, b, fit, d, kind):
-        vis = _node_visual(b, d, kind)
+        vis = _node_visual(b, d, kind, rtok(theme, "pill", 999))
+        hx = _node_hexes(vis, d, theme, b)
         x, y, w, h = b["x"], b["y"], b["w"], b["h"]
         pad = d.get("node_pad", 8)
         radius = d.get("node_radius", 10)
@@ -4328,59 +6844,57 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             sp = add_rect(slide, x, y, w, h, fill, radius=radius, border=border)
             sp.line.width = Pt(vis["border_w"] * 0.75)
             _set_dash(sp, dash)
-            if vis["shape"] == "pill":
-                sp.adjustments[0] = 0.5
+            if vis["shape"] == "pill" and len(sp.adjustments):
+                sp.adjustments[0] = min(0.5, rtok(theme, "pill", 999) / max(1, min(w, h)))   # pill = 0 なら角丸なし
             icon_size = d.get("icon_size", 16)
             ntype = b.get("type") or "generic"
             if kind != "lifecycle" and ntype in ICON_PATHS:
                 if d.get("icon_style") == "aws":
                     tsz = d.get("icon_tile_size", 30)
-                    add_rect(slide, x + pad, y + h / 2 - tsz / 2, tsz, tsz, C(_icon_tile_color(d, ntype)), radius=6)
+                    add_rect(slide, x + pad, y + h / 2 - tsz / 2, tsz, tsz, C(_icon_tile_color(d, ntype)), radius=rtok(theme, "small", 6))
                     gs = tsz * 0.58
                     _icon_pptx(slide, ntype, x + pad + (tsz - gs) / 2, y + h / 2 - gs / 2, gs, C("#ffffff"))
                     icon_w = tsz + 8
                 else:
-                    icon_tok = d.get("muted_color", "muted") if (b.get("variant") == "muted") else d.get("icon_color", "accent")
-                    _icon_pptx(slide, ntype, x + pad, y + h / 2 - icon_size / 2, icon_size, C(icon_tok))
+                    _icon_pptx(slide, ntype, x + pad, y + h / 2 - icon_size / 2, icon_size, C(hx["icon"]))
                     icon_w = icon_size + 6
             tx = x + pad + icon_w
             tw = max(10.0, w - 2 * pad - icon_w)
         size = fit.get("size", d.get("node_size", 14)) if fit else d.get("node_size", 14)
         lines = (fit.get("lines") if fit else None) or [b.get("label", "")]
         sub_lines = (fit.get("sub_lines") if fit else None) or ([b["sublabel"]] if b.get("sublabel") else [])
-        _diag_text_pptx(slide, {"x": tx, "y": y + 2, "w": tw, "h": h - 4}, lines, size, C(vis["color"]),
-                        sub_lines, d.get("sub_size", 11), C(vis["sub_color"]), font=HEADING_FONT)
+        _diag_text_pptx(slide, {"x": tx, "y": y + 2, "w": tw, "h": h - 4}, lines, size, C(hx["color"]),
+                        sub_lines, d.get("sub_size", 11), C(hx["sub"]), font=HEADING_FONT)
         if b.get("tag"):
             ts = d.get("tag_size", 10)
             tw_ = de.text_width(b["tag"], ts) + 12
-            pill = add_rect(slide, x + w - tw_ - 8, y - ts * 0.8, tw_, ts * 1.6, C(d.get("tag_fill", "highlight_fill")), radius=ts)
-            pill.adjustments[0] = 0.5
-            _shape_text(pill, b["tag"], ts, C(d.get("tag_color", "text")), bold=True)
+            pill = add_rect(slide, x + w - tw_ - 8, y - ts * 0.8, tw_, ts * 1.6, C(d.get("tag_fill", "highlight_fill")),
+                            radius=min(ts * 0.8, rtok(theme, "pill", 999)))      # HTML のタグピルと同じ半径（高さ ts*1.6 の半分で頭打ち。pill = 0 は四角）
+            _shape_text(pill, b["tag"], ts, C(hx["tag"]), bold=True)
         if kind == "lifecycle":
             if b.get("step"):
-                ss = d.get("step_size", 11)
-                sx = (x + w / 2 - 20) if vis["shape"] == "diamond" else x + 8
-                text_region(slide, {"x": sx, "y": y + 3, "w": 40, "h": ss * 1.4, "size": ss,
-                                    "color": d.get("step_color", "accent"), "bold": True}, b["step"])
+                sp_ = _step_label_spec(b, vis, d, theme, hx)
+                text_region(slide, {"x": sp_["x"], "y": sp_["y"] - 1, "w": 40, "h": sp_["size"] * 1.4, "size": sp_["size"],
+                                    "color": sp_["color"], "bold": True}, b["step"])
             k = b.get("kind") or "active"
             if k in KIND_GLYPHS and vis["shape"] == "rect":
-                gc = C(vis["color"]) if k == "success" else C(d.get("icon_color", "accent"))
+                gc = C(hx["color"]) if k == "success" else C(hx["glyph"])
                 _glyph_pptx(slide, k, x + w - 21, y + 5, 13, gc)
 
     def _label_pill_pptx(slide, e, d, lsize):
-        lb = e.get("label_box")
-        if not lb or not e.get("label"):
-            return
-        pill = add_rect(slide, lb["x"], lb["y"], lb["w"], lb["h"], C(d.get("label_fill", "background")), radius=4)
-        classification = e.get("classification")
-        if classification:
-            cs = d.get("class_size", 11)
-            _diag_text_pptx(slide, {"x": lb["x"] - 20, "y": lb["y"], "w": lb["w"] + 40, "h": lb["h"]},
-                            [e["label"]], lsize, C(d.get("label_color", "accent")), [classification], cs,
-                            C(d.get("class_color", "muted")))
-        else:
-            _shape_text(pill, e["label"], lsize, C(d.get("label_color", "accent")), bold=True)
-            pill.text_frame.word_wrap = False
+        for lb, ltext, classification in ((e.get("label_box"), e.get("label"), e.get("classification")),
+                                          (e.get("label_back_box"), e.get("label_back"), None)):
+            if not lb or not ltext:
+                continue
+            pill = add_rect(slide, lb["x"], lb["y"], lb["w"], lb["h"], C(d.get("label_fill", "background")), radius=min(4, rtok(theme, "small", 6)))
+            if classification:
+                cs = d.get("class_size", 11)
+                _diag_text_pptx(slide, {"x": lb["x"] - 20, "y": lb["y"], "w": lb["w"] + 40, "h": lb["h"]},
+                                [ltext], lsize, C(d.get("label_color", "accent")), [classification], cs,
+                                C(d.get("class_color", "muted")))
+            else:
+                _shape_text(pill, ltext, lsize, C(d.get("label_color", "accent")), bold=True)
+                pill.text_frame.word_wrap = False
 
     def _edges_pptx(slide, edges, d):
         lsize = d.get("label_size", 13)
@@ -4422,8 +6936,8 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             cx += 19 + lw + 22
 
     def _grid_diagram_pptx(slide, data, st, kind):
-        d = st["diagram"]
-        geo = de.layout_grid_diagram(data, kind, d, [])
+        geo = dscale.layout_grid(data, kind, st["diagram"], [])
+        d = dscale.scaled_style(st["diagram"])
         start_idx = len(slide.shapes)
         for rh in geo["row_headers"]:
             if rh["alt"]:
@@ -4473,27 +6987,29 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
 
     def s_sequence(slide, data, st, page, total):
         chrome(slide, data, st, page, total)
-        d = st["diagram"]
-        geo = de.layout_sequence(data, d, [])
+        geo = dscale.layout_seq(data, st["diagram"], [])
+        d = dscale.scaled_style(st["diagram"])
         start_idx = len(slide.shapes)
         for sg in geo["segments"]:
             sp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, IN(sg["x"]), IN(sg["y"]), IN(sg["w"]), IN(sg["h"]))
-            sp.adjustments[0] = min(0.5, 6 / max(1, min(sg["w"], sg["h"])))
+            sp.adjustments[0] = min(0.5, min(6, rtok(theme, "small", 6)) / max(1, min(sg["w"], sg["h"])))
             _outline(sp, C(d.get("segment_border", "muted")), 1, "dash")
-            if sg.get("label"):
-                ss = d.get("segment_size", 12)
-                lw = de.text_width(sg["label"], ss) + 12
-                bg = add_rect(slide, sg["x"] + 8, sg["y"] - ss * 0.75, lw, ss * 1.5, C("background"))
-                _shape_text(bg, sg["label"], ss, C(d.get("segment_color", "muted")), bold=True)
-                bg.text_frame.word_wrap = False
         for pid in geo["order"]:
             pb = geo["participants"].get(pid)
             if not pb:
                 continue
             _poly_pptx(slide, [(pb["cx"], geo["lifeline_top"]), (pb["cx"], geo["lifeline_bottom"])],
                        C(d.get("lifeline_color", "muted")), d.get("lifeline_w", 1.5), "dash", arrow_end=False)
+        # 区間の見出しは生存線より上（背景つきの札で生存線を隠す。HTML と同じ重なり順）
+        for sg in geo["segments"]:
+            if sg.get("label"):
+                ss = d.get("segment_size", 12)
+                lw = de.text_width(sg["label"], ss) + 12
+                bg = add_rect(slide, sg["x"] + 8, sg["y"] - ss * 0.75, lw, ss * 1.5, C("background"))
+                _shape_text(bg, sg["label"], ss, C(d.get("segment_color", "muted")), bold=True)
+                bg.text_frame.word_wrap = False
         for a in geo["activations"]:
-            sp = add_rect(slide, a["x"], a["y"], a["w"], a["h"], C(d.get("activation_fill", "highlight_fill")), radius=3,
+            sp = add_rect(slide, a["x"], a["y"], a["w"], a["h"], C(d.get("activation_fill", "highlight_fill")), radius=rtok(theme, "tiny", 3),
                           border=C(d.get("activation_border", "accent")))
             sp.line.width = Pt(1.1)
         _edges_pptx(slide, geo["messages"], d)
@@ -4546,9 +7062,17 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             sp = add_rect(slide, g["x"], g["y"], g["w"], g["h"], C(c.get("group_fill", "primary")),
                           border=C("background"))
             sp.line.width = Pt(1.5)
-            _shape_text(sp, g["label"], c.get("group_size", 13), C(c.get("group_color", "on_primary")), bold=True)
-            sp.text_frame.word_wrap = False
-            sp.text_frame._txBody.bodyPr.set("vert", "vert270")
+            gsz = c.get("group_size", 13)
+            label = str(g["label"])
+            if label.isascii() or len(label) * gsz * 1.15 > g["h"] - 4:
+                _shape_text(sp, label, gsz, C(c.get("group_color", "on_primary")), bold=True)
+                sp.text_frame.word_wrap = False
+                sp.text_frame._txBody.bodyPr.set("vert", "vert270")
+            else:
+                # 和字の見出しは HTML（writing-mode: vertical-rl・和字は正立で縦に積む）と同じく、1 字 1 段落で積む。
+                # vert270 は文字が横倒しになり小さく見えた。縦書き（eaVert）は LibreOffice が上端に寄せるので使わない
+                _shape_text(sp, "\n".join(label), gsz, C(c.get("group_color", "on_primary")), bold=True)
+                sp.text_frame.word_wrap = False
         # 行見出し（label ＋ sub の2段落）
         pad = c.get("label_pad", 10)
         for r in geo["rows"]:
@@ -4556,11 +7080,11 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             tf.vertical_anchor = MSO_ANCHOR.MIDDLE
             tf.word_wrap = False
             p0 = tf.paragraphs[0]
-            p0.line_spacing = 1.1
+            set_lh(p0, r["size"], 1.3)   # HTML の schedule 行見出しは 1.3
             set_run(p0.add_run(), r["label"], r["size"], C(c.get("label_color", "text")))
             if r["sub"]:
                 p1 = tf.add_paragraph()
-                p1.line_spacing = 1.1
+                set_lh(p1, r["sub_size"], 1.3)
                 set_run(p1.add_run(), r["sub"], r["sub_size"], C(c.get("sub_color", "muted")))
         # 現在線（矢羽根より下のレイヤー）
         if geo["today"]:
@@ -4583,15 +7107,15 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             else:
                 sp.line.fill.background()
             sp.shadow.inherit = False
-            if b["label"] and b["label_pos"] != "after":
-                _shape_text(sp, b["label"], b["size"], C(vis["color"]), bold=True)
+            if b["label"] and b["label_pos"] not in ("after", "before"):
+                _shape_text(sp, b["label"], b["size"], C(cp.readable_on(col(theme, vis["color"]), col(theme, vis["fill"]))), bold=True)
                 sp.text_frame.word_wrap = False
             elif b["label"]:
-                tf = add_box(slide, {"x": b["x"] + b["w"] + 6, "y": b["y"],
-                                     "w": de.text_width(b["label"], b["size"]) + 8, "h": b["h"]})
-                tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-                tf.word_wrap = False
-                set_run(tf.paragraphs[0].add_run(), b["label"], b["size"], C(c.get("label_color", "text")), bold=True)
+                # 矢羽根の外のラベルは、行の地の色の座布団を敷く（HTML と同じ。背後の月の縦線が文字を貫通しない）
+                bg = add_rect(slide, b["lbl_x"], b["y"], b["lbl_w"], b["h"],
+                              C(c.get("row_alt_fill", "on_primary_soft")) if b.get("alt") else C("background"))
+                _shape_text(bg, b["label"], b["size"], C(c.get("label_color", "text")), bold=True)
+                bg.text_frame.word_wrap = False
         # 節目（ひし形＋ラベル）
         for m in geo["milestones"]:
             d = m["d"]
@@ -4602,11 +7126,10 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
             sp.line.width = Pt(0.75)
             sp.shadow.inherit = False
             if m["label"]:
-                tf = add_box(slide, {"x": m["lx"] - 10, "y": m["ly"], "w": m["lw"] + 20, "h": m["lh"]})
-                tf.word_wrap = False
-                p = tf.paragraphs[0]
-                p.alignment = PP_ALIGN.CENTER
-                set_run(p.add_run(), m["label"], m["size"], C(c.get("milestone_color", "text")), bold=True)
+                bg = add_rect(slide, m["lx"] - 2, m["ly"], m["lw"] + 4, m["lh"],
+                              C(c.get("row_alt_fill", "on_primary_soft")) if m.get("alt") else C("background"))
+                _shape_text(bg, m["label"], m["size"], C(c.get("milestone_color", "text")), bold=True)
+                bg.text_frame.word_wrap = False
         # 凡例と注記
         lg = geo["legend"]
         if lg:
@@ -4689,16 +7212,91 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
     def s_canvas(slide, d, st, page, total):
         bg = d.get("background", "#FFFFFF")
         els = [{"kind": "shape", "x": 0, "y": 0, "w": CANVAS_W, "h": CANVAS_H, "fill": bg, "name": "背景"}]
-        ce.add_canvas_to_pptx(slide, els + d.get("elements", []), _canvas_svg_png, _canvas_backdrop_png)
+        ce.add_canvas_to_pptx(slide, els + d.get("elements", []), _canvas_svg_png, _canvas_backdrop_png,
+                              image_source=canvas_image_source(deck_dir, browser))
+
+    def s_pattern(slide, d, st, page, total):
+        r = d["_resolved"]
+        if r["frame"] == "body":
+            chrome(slide, d, st, page, total)
+            els = r["elements"]
+        else:
+            els = [{"kind": "shape", "x": 0, "y": 0, "w": CANVAS_W, "h": CANVAS_H, "fill": r["background"], "name": "背景"}] + r["elements"]
+        ce.add_canvas_to_pptx(slide, els, _canvas_svg_png, _canvas_backdrop_png,
+                              image_source=canvas_image_source(deck_dir, browser))
+
+    def place_composite_block(slide, rb, bk, img_src, page, total):
+        """合成ブロック 1 つを PPTX に置く（枠・小見出し → 本文。ブロックごとに 1 グループ）。rb は resolve_block の戻り値。
+        S2d の split もこれでブロックを置ける。"""
+        start = len(slide.shapes)
+        frame_els, content_els = composite_block_elements(rb, theme, bk)
+        if frame_els or content_els:
+            ce.add_canvas_to_pptx(slide, frame_els + content_els, _canvas_svg_png, _canvas_backdrop_png, image_source=img_src)
+        if not rb["native"]:
+            bs = rb["bs"]
+            if bs["type"] == "pattern":
+                bs = {**bs, "_resolved": resolve_pattern_slide(bs, rb["st"], deck, theme, deck_dir, page, total)}
+            builders[bs["type"]](slide, bs, rb["st"], page, total)
+            over = pe.extras(bs, rb["st"], theme)
+            if over:
+                ce.add_canvas_to_pptx(slide, over)
+        members = list(slide.shapes)[start:]
+        # 表（p:graphicFrame）はグループに入れない。PowerPoint の UI は表をグループ化できず、グループの中の表を開けるか実機で未確認のため。
+        # 表より前の図形・後の図形をそれぞれグループにし、表は元の重なり順のまま外に置く（枠 < 表 < 表より後の図形 を保つ）
+        def is_frame(sh):
+            return sh._element.tag.endswith("}graphicFrame")
+
+        def group_run(run, part):
+            if run:
+                grp = slide.shapes.add_group_shape(run)
+                grp.name = f"ブロック{rb['index'] + 1}（{rb['type']}）" + (f" {part}" if part else "")
+
+        if any(is_frame(sh) for sh in members):
+            run, part = [], 0
+            for sh in members:
+                if is_frame(sh):
+                    if run:
+                        part += 1
+                        group_run(run, part)
+                        run = []
+                    sh.name = f"ブロック{rb['index'] + 1}（{rb['type']}）の表"
+                    el = sh._element
+                    el.getparent().remove(el)
+                    slide.shapes._spTree.append(el)      # 作ったグループの後ろ（= 元の重なり順の位置）に戻す
+                else:
+                    run.append(sh)
+            if run:
+                part += 1
+                group_run(run, part)
+        else:
+            group_run(members, 0)
+
+    def s_composite(slide, d, st, page, total):
+        chrome(slide, d, st, page, total)
+        bk = st.get("block") or {}
+        img_src = canvas_image_source(deck_dir, browser)
+        for rb in st["_composite"]["blocks"]:
+            place_composite_block(slide, rb, bk, img_src, page, total)
 
     def s_proposal(slide, d, st, page, total):
-        if d["type"] != "statement":
+        if engine_registry.get(d["type"]).chrome:
             chrome(slide, d, st, page, total)
-        ce.add_canvas_to_pptx(slide, pe.layout(d, st, theme))
+        ce.add_canvas_to_pptx(slide, pe.layout(d, st, theme), image_source=canvas_image_source(deck_dir, browser))
+
+    def s_split(slide, d, st, page, total):
+        hero_pptx(slide, d, st, hero.panel_plan(d, st, pe.Ctx(theme))["els"])
+        chrome(slide, d, st, page, total)
+        bk = st.get("block") or {}
+        img_src = canvas_image_source(deck_dir, browser)
+        for rb in st["_composite"]["blocks"]:
+            place_composite_block(slide, rb, bk, img_src, page, total)
 
     builders = {
         "canvas": s_canvas,
-        **{t: s_proposal for t in pe.PROPOSAL_TYPES},
+        "pattern": s_pattern,
+        "composite": s_composite,
+        "split": s_split,
+        **{t: s_proposal for t in engine_registry.names()},
         "title": s_title, "section": s_section, "bullets": s_bullets,
         "two_column": s_two_column, "table": s_table, "status_table": s_status_table, "code": s_code,
         "quote": s_quote, "image": s_image, "image_text": s_image_text,
@@ -4710,6 +7308,11 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
         "schedule": s_schedule,
     }
 
+    missing = sorted({d.get("type") for d in deck.get("slides", [])} - set(builders))
+    if missing:
+        fail(f"スライドタイプ {', '.join(map(str, missing))} の PPTX 描画が登録されていません"
+             f" → build_deck.py の builders に足す")
+
     slides = deck.get("slides", [])
     total = len(slides)
 
@@ -4718,45 +7321,73 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
     needs_svg = any(
         (d.get("type") in ("image", "image_text")
          and str(d.get("path", "")).lower().endswith(".svg"))
-        or (d.get("type") == "canvas" and any(e.get("kind") == "svg" for e in ce.flatten(d.get("elements", []))))
+        or (d.get("type") == "canvas" and any(e.get("kind") == "svg" or (e.get("kind") == "image" and str(e.get("path", "")).lower().endswith(".svg"))
+                                               for e in ce.flatten(d.get("elements", []))))
+        or (d.get("type") == "pattern" and _pattern_needs_svg(d, deck_dir))
+        or (d.get("type") == "composite" and any(
+            isinstance(bk, dict) and ((bk.get("type") == "image" and str(bk.get("path", "")).lower().endswith(".svg"))
+                                      or (bk.get("type") == "pattern" and _pattern_needs_svg(bk, deck_dir)))
+            for bk in (d.get("blocks") or [])))
         for d in slides
     )
     browser = None
     _pw_cm = None
     if needs_svg:
-        from playwright.sync_api import sync_playwright
+        sync_playwright = _import_sync_playwright()
         _pw_cm = sync_playwright()
         pw = _pw_cm.__enter__()
-        browser = pw.chromium.launch()
+        browser = _launch_chromium(pw)
 
     try:
         for i, data in enumerate(slides):
-            st = resolve_style(layout, deck, data)
-            slide = prs.slides.add_slide(blank)
-            if "bg" not in st and data["type"] != "canvas":
-                add_rect(slide, 0, 0, CANVAS_W, CANVAS_H, C("background"))
-            builders[data["type"]](slide, data, st, i + 1, total)
-            over = pe.extras(data, st, theme)
-            if over:
-                ce.add_canvas_to_pptx(slide, over)
-            if deck.get("meta", {}).get("brand") and "brand" in st:
-                text_region(slide, st["brand"], deck.get("meta", {}).get("brand", ""))
-            # 注意: notes は意図的に PPTX へ出力しない（Keynote 互換性問題のため）
+            with slide_guard(f"出力{i + 1}ページ目（type={data.get('type')}）", "PPTX描画"):
+                st = resolve_style(layout, deck, data)
+                slide = prs.slides.add_slide(blank)
+                if data["type"] == "pattern":
+                    data = {**data, "_resolved": resolve_pattern_slide(data, st, deck, theme, deck_dir, i + 1, total)}
+                if "bg" not in st and data["type"] != "canvas" and not (data["type"] == "pattern" and data["_resolved"]["frame"] == "full"):
+                    add_rect(slide, 0, 0, CANVAS_W, CANVAS_H, C("background"))
+                builders[data["type"]](slide, data, st, i + 1, total)
+                over = pe.extras(data, st, theme)
+                if over:
+                    ce.add_canvas_to_pptx(slide, over)
+                if deck.get("meta", {}).get("brand") and "brand" in st:
+                    text_region(slide, st["brand"], deck.get("meta", {}).get("brand", ""))
+                # 注意: notes は意図的に PPTX へ出力しない（Keynote 互換性問題のため）
     finally:
         if browser is not None:
             browser.close()
         if _pw_cm is not None:
             _pw_cm.__exit__(None, None, None)
 
+    with slide_guard("PPTX", "仕上げ"):
+        _finalize_pptx(prs, deck, deck_dir)
+        if todo_marks.enabled(deck):
+            todo_marks.pptx_mark(prs, layout, code_font=font_pptx(theme["fonts"].get("code")))
     try:
         prs.save(str(out_path))
     except PermissionError:
-        fail(f"{out_path} に書き込めません。PowerPoint 等で開いている場合は閉じてから再実行してください")
+        raise OutputLockedError(f"error: {out_path} に書き込めません。PowerPoint 等で開いている場合は閉じてから再実行してください")
+    _verify_saved_pptx(out_path, expect_slides=len(deck.get("slides") or []))
 
 
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
+
+def _note_measure_source():
+    """字幅の見積もり（折り返し位置・あふれ警告・泣き別れ対策）に何のフォントを使っているかを 1 回知らせる。
+    テーマのフォントがこの機械に無いのに黙って近似に落ちると、利用者は見積もりの精度を知る手がかりが無い（R2）。"""
+    wanted, used = ja_text.measure_source()
+    if not wanted or wanted == used:
+        return
+    if used:
+        note(f"フォント '{wanted}' がこの環境に無いため、字幅は代替の '{used}'（ブラウザが代わりに使うフォント）で測っています"
+             "（実機の PowerPoint では折り返し位置が数文字ずれることがあります）")
+    else:
+        note(f"フォント '{wanted}' も代替フォントもこの環境に無いため、字幅は近似（全角 1.0 / 半角 0.55）で測っています"
+             "（英数字の多い文では折り返し位置が実際とずれることがあります）")
+
 
 def main():
     setup_console()
@@ -4764,28 +7395,47 @@ def main():
     ap.add_argument("deck_dir", help="デッキのディレクトリ（deck.json を含む）")
     ap.add_argument("--html", action="store_true", help="HTML のみ生成")
     ap.add_argument("--pptx", action="store_true", help="PPTX のみ生成")
+    ap.add_argument("--debug", action="store_true", help="想定外の例外を握りつぶさず、トレースバックをそのまま出す")
     args = ap.parse_args()
+    global DEBUG
+    DEBUG = args.debug
 
     deck_dir = Path(args.deck_dir).resolve()
     if not deck_dir.is_dir():
         fail(f"{deck_dir} はディレクトリではありません")
     deck, theme, layout = load_deck(deck_dir)
+    _note_measure_source()
     validate_deck(deck, layout, theme, deck_dir)
     deck = expand_slides(deck, layout)
     deck = apply_line_balance(deck, layout)
+    deck = apply_wrap_fix(deck, layout)
     deck_id = deck.get("meta", {}).get("id") or deck_dir.name
 
     out_dir = deck_dir / "build"
     out_dir.mkdir(exist_ok=True)
 
+    # 失敗しやすい PPTX を先に作る（PPTX で落ちたとき HTML だけ新しくなる中途半端な状態を作らない）。表示は HTML → PPTX の順
+    made = []
+    pptx_locked = None
+    if args.pptx or not args.html:
+        out = out_dir / f"{deck_id}.pptx"
+        try:
+            build_pptx(deck, theme, layout, deck_dir, out)
+            made.append(("PPTX", out))
+        except OutputLockedError as e:
+            # 書き込み先が開かれているだけ（内容の失敗ではない）ので、HTML は更新してから失敗で終わる
+            pptx_locked = e
     if args.html or not args.pptx:
         out = out_dir / f"{deck_id}.html"
         build_html(deck, theme, layout, deck_dir, out)
-        print(f"HTML: {out}")
-    if args.pptx or not args.html:
-        out = out_dir / f"{deck_id}.pptx"
-        build_pptx(deck, theme, layout, deck_dir, out)
-        print(f"PPTX: {out}")
+        made.append(("HTML", out))
+    msg = todo_marks.summary_note(todo_marks.scan_deck(deck))
+    if msg:
+        note(msg + ("" if todo_marks.enabled(deck) else "（meta.todo_marks が false なので強調表示はしていません）"))
+    for label, out in sorted(made, key=lambda m: m[0] != "HTML"):
+        print(f"{label}: {out}")
+    if pptx_locked is not None:
+        raise pptx_locked
 
 
 if __name__ == "__main__":

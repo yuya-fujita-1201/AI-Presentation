@@ -26,5 +26,17 @@
     "heading": "Meiryo UI",
     "body": "Meiryo UI",
     "code": "Consolas"
+  },
+  "layout": {
+    "types": {
+      "cards": {
+        "grid": {
+          "emph_body_color": "on_primary",
+          "emph_item_color": "on_primary",
+          "emph_soft_heading_color": "heading_text",
+          "emph_soft_icon_color": "heading_text"
+        }
+      }
+    }
   }
 }

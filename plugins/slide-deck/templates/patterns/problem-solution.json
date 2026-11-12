@@ -1,0 +1,1952 @@
+{
+ "name": "problem-solution",
+ "label": "課題 → 打ち手 → 効果（3 段）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "課題 → 打ち手 → 効果の筋道を、3 つの列と矢印で言い切る",
+ "description": "課題・打ち手・効果の 3 つの列を、矢印でつないで見せる。「何が困りごとで、何をして、どうなるか」の筋道を 1 枚で言い切りたい提案・改善報告向け。各列に 2〜3 点。打ち手と効果の列は色つきの見出しで強調される（見出し・リード・フッターはスライド側の title / lead が描く）。各点は 2 行に収まる長さ（22 字まで）で書く。3 列とも上から書き始めるので、1 行目の高さがそろう。3 列の全部の点が同じ文字の大きさにそろう（文が短いほど大きい。目安を超えると収まらない警告が出る）。幅 700px 未満の矩形（合成スライドの半幅など）では、3 段を縦に積み（見出しの帯の下に点の面、段の間に下向きの矢印）、700〜1000px 未満では、左に見出しの札・右に点の面の 3 段に組み替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。高さ 340px 未満の矩形（上下 2 段のブロックなど）では、行や列の詰め方を変えた短い構図に切り替わる。shape: soft のとき面に影が付く。（本文の領域の縦中央に置く）",
+ "block_alt": "代わりに numbered-list（縦の番号つき）か箇条書きを使う",
+ "background": "background",
+ "slots": {
+  "problem_label": {
+   "kind": "text",
+   "label": "左の見出し",
+   "max_chars": 6,
+   "default": "課題",
+   "example": "課題"
+  },
+  "action_label": {
+   "kind": "text",
+   "label": "中央の見出し",
+   "max_chars": 6,
+   "default": "打ち手",
+   "example": "打ち手"
+  },
+  "effect_label": {
+   "kind": "text",
+   "label": "右の見出し",
+   "max_chars": 6,
+   "default": "効果",
+   "example": "効果"
+  },
+  "problems": {
+   "kind": "list",
+   "label": "課題の点",
+   "min": 2,
+   "max": 3,
+   "max_chars": 22,
+   "example": [
+    "電話が昼に集中して取れない",
+    "予約表が紙とアプリで二重",
+    "キャンセルの連絡が遅れがち"
+   ],
+   "required": true,
+   "description": "左の列。いま困っていること"
+  },
+  "actions": {
+   "kind": "list",
+   "label": "打ち手の点",
+   "min": 2,
+   "max": 3,
+   "max_chars": 22,
+   "example": [
+    "予約フォームを開設する",
+    "予約表をアプリに一本化する",
+    "前日に自動で確認を送る"
+   ],
+   "required": true,
+   "description": "中央の列（強調）。課題に対してやること"
+  },
+  "effects": {
+   "kind": "list",
+   "label": "効果の点",
+   "min": 2,
+   "max": 3,
+   "max_chars": 22,
+   "example": [
+    "電話の件数が半分になる",
+    "転記ミスがなくなる",
+    "無断キャンセルを減らせる"
+   ],
+   "required": true,
+   "description": "右の列（強調）。やった結果どうなるか"
+  }
+ },
+ "elements": [
+  {
+   "name": "1列目の見出し面",
+   "x": 0.0,
+   "y": 0,
+   "w": 346.67,
+   "h": 72,
+   "fill": "muted",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "1列目の見出し",
+   "x": 0.0,
+   "y": 0,
+   "w": 346.67,
+   "h": 72,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{problem_label}}",
+        "size": 34,
+        "color": "on_primary",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "align": "ctr"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     34,
+     32,
+     30,
+     28,
+     26
+    ],
+    "group": "head"
+   }
+  },
+  {
+   "name": "1列目の面",
+   "x": 0.0,
+   "y": 84,
+   "w": 346.67,
+   "h": 316,
+   "fill": "surface",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "1列目の点",
+   "x": 24.0,
+   "y": 112,
+   "w": 298.67,
+   "h": 272,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "t",
+    "paragraphs": [
+     {
+      "repeat": "problems",
+      "spaceAfter": 20,
+      "lineHeight": 1.35,
+      "marL": 30,
+      "indent": -30,
+      "bullet": {
+       "char": "●",
+       "color": "muted",
+       "size": "$type.caption"
+      },
+      "runs": [
+       {
+        "text": "{{.}}",
+        "size": 32,
+        "color": "text"
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     32,
+     30,
+     28,
+     26,
+     25,
+     24,
+     22,
+     21,
+     20,
+     19,
+     18,
+     17
+    ],
+    "group": "points"
+   }
+  },
+  {
+   "name": "1列目から次への矢印",
+   "x": 356.67,
+   "y": 214.0,
+   "w": 28,
+   "h": 56,
+   "fill": "accent",
+   "geom": "chevron",
+   "adj": {
+    "adj": 60000
+   }
+  },
+  {
+   "name": "2列目の見出し面",
+   "x": 394.67,
+   "y": 0,
+   "w": 346.67,
+   "h": 72,
+   "fill": "primary",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "2列目の見出し",
+   "x": 394.67,
+   "y": 0,
+   "w": 346.67,
+   "h": 72,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{action_label}}",
+        "size": 34,
+        "color": "on_primary",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "align": "ctr"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     34,
+     32,
+     30,
+     28,
+     26
+    ],
+    "group": "head"
+   }
+  },
+  {
+   "name": "2列目の面",
+   "x": 394.67,
+   "y": 84,
+   "w": 346.67,
+   "h": 316,
+   "fill": "surface",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "2列目の点",
+   "x": 418.67,
+   "y": 112,
+   "w": 298.67,
+   "h": 272,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "t",
+    "paragraphs": [
+     {
+      "repeat": "actions",
+      "spaceAfter": 20,
+      "lineHeight": 1.35,
+      "marL": 30,
+      "indent": -30,
+      "bullet": {
+       "char": "●",
+       "color": "primary",
+       "size": "$type.caption"
+      },
+      "runs": [
+       {
+        "text": "{{.}}",
+        "size": 32,
+        "color": "text"
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     32,
+     30,
+     28,
+     26,
+     25,
+     24,
+     22,
+     21,
+     20,
+     19,
+     18,
+     17
+    ],
+    "group": "points"
+   }
+  },
+  {
+   "name": "2列目から次への矢印",
+   "x": 751.34,
+   "y": 214.0,
+   "w": 28,
+   "h": 56,
+   "fill": "accent",
+   "geom": "chevron",
+   "adj": {
+    "adj": 60000
+   }
+  },
+  {
+   "name": "3列目の見出し面",
+   "x": 789.34,
+   "y": 0,
+   "w": 346.67,
+   "h": 72,
+   "fill": "accent",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "3列目の見出し",
+   "x": 789.34,
+   "y": 0,
+   "w": 346.67,
+   "h": 72,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{effect_label}}",
+        "size": 34,
+        "color": "on_primary",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "align": "ctr"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     34,
+     32,
+     30,
+     28,
+     26
+    ],
+    "group": "head"
+   }
+  },
+  {
+   "name": "3列目の面",
+   "x": 789.34,
+   "y": 84,
+   "w": 346.67,
+   "h": 316,
+   "fill": "surface",
+   "radius": "$radius.card",
+   "shadow": "$shadow.card"
+  },
+  {
+   "name": "3列目の点",
+   "x": 813.34,
+   "y": 112,
+   "w": 298.67,
+   "h": 272,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "t",
+    "paragraphs": [
+     {
+      "repeat": "effects",
+      "spaceAfter": 20,
+      "lineHeight": 1.35,
+      "marL": 30,
+      "indent": -30,
+      "bullet": {
+       "char": "●",
+       "color": "accent",
+       "size": "$type.caption"
+      },
+      "runs": [
+       {
+        "text": "{{.}}",
+        "size": 32,
+        "color": "text"
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     32,
+     30,
+     28,
+     26,
+     25,
+     24,
+     22,
+     21,
+     20,
+     19,
+     18,
+     17
+    ],
+    "group": "points"
+   }
+  }
+ ],
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    440
+   ],
+   "elements": [
+    {
+     "name": "1段目の見出し面",
+     "x": 0,
+     "y": 0.0,
+     "w": 540,
+     "h": 32,
+     "fill": "muted",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の見出し",
+     "x": 18,
+     "y": 0.0,
+     "w": 504,
+     "h": 32,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{problem_label}}",
+          "size": 24,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       22,
+       20,
+       18
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "1段目の面",
+     "x": 0,
+     "y": 36.0,
+     "w": 540,
+     "h": 97.33333333333334,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の点",
+     "x": 20,
+     "y": 39.0,
+     "w": 500,
+     "h": 91.33333333333334,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "problems",
+        "spaceAfter": 5,
+        "lineHeight": 1.3,
+        "marL": 24,
+        "indent": -24,
+        "bullet": {
+         "char": "●",
+         "color": "muted",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 22,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15
+      ],
+      "group": "points"
+     }
+    },
+    {
+     "name": "1段目から次への矢印",
+     "x": 252.0,
+     "y": 136.33333333333334,
+     "w": 36,
+     "h": 14,
+     "fill": "accent",
+     "geom": "triangle",
+     "flipV": true
+    },
+    {
+     "name": "2段目の見出し面",
+     "x": 0,
+     "y": 153.33,
+     "w": 540,
+     "h": 32,
+     "fill": "primary",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の見出し",
+     "x": 18,
+     "y": 153.33,
+     "w": 504,
+     "h": 32,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{action_label}}",
+          "size": 24,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       22,
+       20,
+       18
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "2段目の面",
+     "x": 0,
+     "y": 189.33,
+     "w": 540,
+     "h": 97.33333333333334,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の点",
+     "x": 20,
+     "y": 192.33,
+     "w": 500,
+     "h": 91.33333333333334,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "actions",
+        "spaceAfter": 5,
+        "lineHeight": 1.3,
+        "marL": 24,
+        "indent": -24,
+        "bullet": {
+         "char": "●",
+         "color": "primary",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 22,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15
+      ],
+      "group": "points"
+     }
+    },
+    {
+     "name": "2段目から次への矢印",
+     "x": 252.0,
+     "y": 289.66333333333336,
+     "w": 36,
+     "h": 14,
+     "fill": "accent",
+     "geom": "triangle",
+     "flipV": true
+    },
+    {
+     "name": "3段目の見出し面",
+     "x": 0,
+     "y": 306.67,
+     "w": 540,
+     "h": 32,
+     "fill": "accent",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の見出し",
+     "x": 18,
+     "y": 306.67,
+     "w": 504,
+     "h": 32,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{effect_label}}",
+          "size": 24,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       22,
+       20,
+       18
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "3段目の面",
+     "x": 0,
+     "y": 342.67,
+     "w": 540,
+     "h": 97.33333333333334,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の点",
+     "x": 20,
+     "y": 345.67,
+     "w": 500,
+     "h": 91.33333333333334,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "effects",
+        "spaceAfter": 5,
+        "lineHeight": 1.3,
+        "marL": 24,
+        "indent": -24,
+        "bullet": {
+         "char": "●",
+         "color": "accent",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 22,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15
+      ],
+      "group": "points"
+     }
+    }
+   ],
+   "min_width": 380
+  },
+  {
+   "below": 700,
+   "below_h": 340,
+   "size": [
+    540,
+    300
+   ],
+   "elements": [
+    {
+     "name": "1段目の見出し面",
+     "x": 0,
+     "y": 0.0,
+     "w": 104,
+     "h": 92.0,
+     "fill": "muted",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の見出し",
+     "x": 4,
+     "y": 0.0,
+     "w": 96,
+     "h": 92.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{problem_label}}",
+          "size": 24,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       22,
+       20,
+       19,
+       18
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "1段目の面",
+     "x": 116,
+     "y": 0.0,
+     "w": 424,
+     "h": 92.0,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の点",
+     "x": 134,
+     "y": 6.0,
+     "w": 392,
+     "h": 80.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "problems",
+        "spaceAfter": 3,
+        "lineHeight": 1.3,
+        "marL": 22,
+        "indent": -22,
+        "bullet": {
+         "char": "●",
+         "color": "muted",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 22,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15
+      ],
+      "group": "points"
+     }
+    },
+    {
+     "name": "1段目から次への矢印",
+     "x": 32.0,
+     "y": 90.0,
+     "w": 40,
+     "h": 16,
+     "fill": "accent",
+     "geom": "triangle",
+     "flipV": true
+    },
+    {
+     "name": "2段目の見出し面",
+     "x": 0,
+     "y": 104.0,
+     "w": 104,
+     "h": 92.0,
+     "fill": "primary",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の見出し",
+     "x": 4,
+     "y": 104.0,
+     "w": 96,
+     "h": 92.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{action_label}}",
+          "size": 24,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       22,
+       20,
+       19,
+       18
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "2段目の面",
+     "x": 116,
+     "y": 104.0,
+     "w": 424,
+     "h": 92.0,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の点",
+     "x": 134,
+     "y": 110.0,
+     "w": 392,
+     "h": 80.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "actions",
+        "spaceAfter": 3,
+        "lineHeight": 1.3,
+        "marL": 22,
+        "indent": -22,
+        "bullet": {
+         "char": "●",
+         "color": "primary",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 22,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15
+      ],
+      "group": "points"
+     }
+    },
+    {
+     "name": "2段目から次への矢印",
+     "x": 32.0,
+     "y": 194.0,
+     "w": 40,
+     "h": 16,
+     "fill": "accent",
+     "geom": "triangle",
+     "flipV": true
+    },
+    {
+     "name": "3段目の見出し面",
+     "x": 0,
+     "y": 208.0,
+     "w": 104,
+     "h": 92.0,
+     "fill": "accent",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の見出し",
+     "x": 4,
+     "y": 208.0,
+     "w": 96,
+     "h": 92.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{effect_label}}",
+          "size": 24,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       22,
+       20,
+       19,
+       18
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "3段目の面",
+     "x": 116,
+     "y": 208.0,
+     "w": 424,
+     "h": 92.0,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の点",
+     "x": 134,
+     "y": 214.0,
+     "w": 392,
+     "h": 80.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "effects",
+        "spaceAfter": 3,
+        "lineHeight": 1.3,
+        "marL": 22,
+        "indent": -22,
+        "bullet": {
+         "char": "●",
+         "color": "accent",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 22,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15
+      ],
+      "group": "points"
+     }
+    }
+   ]
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [
+    {
+     "name": "1段目の見出し面",
+     "x": 0,
+     "y": 0.0,
+     "w": 150,
+     "h": 118.66666666666667,
+     "fill": "muted",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の見出し",
+     "x": 8,
+     "y": 0.0,
+     "w": 134,
+     "h": 118.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{problem_label}}",
+          "size": 32,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       32,
+       30,
+       28,
+       26,
+       24,
+       22
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "1段目の面",
+     "x": 162,
+     "y": 0.0,
+     "w": 638,
+     "h": 118.66666666666667,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の点",
+     "x": 190,
+     "y": 6.0,
+     "w": 586,
+     "h": 106.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "problems",
+        "spaceAfter": 8,
+        "lineHeight": 1.3,
+        "marL": 28,
+        "indent": -28,
+        "bullet": {
+         "char": "●",
+         "color": "muted",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 26,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       25,
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16
+      ],
+      "group": "points"
+     }
+    },
+    {
+     "name": "1段目から次への矢印",
+     "x": 55.0,
+     "y": 121.66666666666667,
+     "w": 40,
+     "h": 16,
+     "fill": "accent",
+     "geom": "triangle",
+     "flipV": true
+    },
+    {
+     "name": "2段目の見出し面",
+     "x": 0,
+     "y": 140.67,
+     "w": 150,
+     "h": 118.66666666666667,
+     "fill": "primary",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の見出し",
+     "x": 8,
+     "y": 140.67,
+     "w": 134,
+     "h": 118.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{action_label}}",
+          "size": 32,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       32,
+       30,
+       28,
+       26,
+       24,
+       22
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "2段目の面",
+     "x": 162,
+     "y": 140.67,
+     "w": 638,
+     "h": 118.66666666666667,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の点",
+     "x": 190,
+     "y": 146.67,
+     "w": 586,
+     "h": 106.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "actions",
+        "spaceAfter": 8,
+        "lineHeight": 1.3,
+        "marL": 28,
+        "indent": -28,
+        "bullet": {
+         "char": "●",
+         "color": "primary",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 26,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       25,
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16
+      ],
+      "group": "points"
+     }
+    },
+    {
+     "name": "2段目から次への矢印",
+     "x": 55.0,
+     "y": 262.33666666666664,
+     "w": 40,
+     "h": 16,
+     "fill": "accent",
+     "geom": "triangle",
+     "flipV": true
+    },
+    {
+     "name": "3段目の見出し面",
+     "x": 0,
+     "y": 281.33,
+     "w": 150,
+     "h": 118.66666666666667,
+     "fill": "accent",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の見出し",
+     "x": 8,
+     "y": 281.33,
+     "w": 134,
+     "h": 118.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{effect_label}}",
+          "size": 32,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       32,
+       30,
+       28,
+       26,
+       24,
+       22
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "3段目の面",
+     "x": 162,
+     "y": 281.33,
+     "w": 638,
+     "h": 118.66666666666667,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の点",
+     "x": 190,
+     "y": 287.33,
+     "w": 586,
+     "h": 106.66666666666667,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "effects",
+        "spaceAfter": 8,
+        "lineHeight": 1.3,
+        "marL": 28,
+        "indent": -28,
+        "bullet": {
+         "char": "●",
+         "color": "accent",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 26,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       25,
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16
+      ],
+      "group": "points"
+     }
+    }
+   ]
+  },
+  {
+   "below": 1000,
+   "below_h": 340,
+   "size": [
+    800,
+    300
+   ],
+   "elements": [
+    {
+     "name": "1段目の見出し面",
+     "x": 0,
+     "y": 0.0,
+     "w": 140,
+     "h": 89.33333333333333,
+     "fill": "muted",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の見出し",
+     "x": 8,
+     "y": 0.0,
+     "w": 124,
+     "h": 89.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{problem_label}}",
+          "size": 30,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "1段目の面",
+     "x": 152,
+     "y": 0.0,
+     "w": 648,
+     "h": 89.33333333333333,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "1段目の点",
+     "x": 174,
+     "y": 6.0,
+     "w": 608,
+     "h": 77.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "problems",
+        "spaceAfter": 5,
+        "lineHeight": 1.3,
+        "marL": 28,
+        "indent": -28,
+        "bullet": {
+         "char": "●",
+         "color": "muted",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 24,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15,
+       14
+      ],
+      "group": "points"
+     }
+    },
+    {
+     "name": "1段目から次への矢印",
+     "x": 50.0,
+     "y": 89.33333333333333,
+     "w": 40,
+     "h": 16,
+     "fill": "accent",
+     "geom": "triangle",
+     "flipV": true
+    },
+    {
+     "name": "2段目の見出し面",
+     "x": 0,
+     "y": 105.33,
+     "w": 140,
+     "h": 89.33333333333333,
+     "fill": "primary",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の見出し",
+     "x": 8,
+     "y": 105.33,
+     "w": 124,
+     "h": 89.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{action_label}}",
+          "size": 30,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "2段目の面",
+     "x": 152,
+     "y": 105.33,
+     "w": 648,
+     "h": 89.33333333333333,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "2段目の点",
+     "x": 174,
+     "y": 111.33,
+     "w": 608,
+     "h": 77.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "actions",
+        "spaceAfter": 5,
+        "lineHeight": 1.3,
+        "marL": 28,
+        "indent": -28,
+        "bullet": {
+         "char": "●",
+         "color": "primary",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 24,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15,
+       14
+      ],
+      "group": "points"
+     }
+    },
+    {
+     "name": "2段目から次への矢印",
+     "x": 50.0,
+     "y": 194.66333333333333,
+     "w": 40,
+     "h": 16,
+     "fill": "accent",
+     "geom": "triangle",
+     "flipV": true
+    },
+    {
+     "name": "3段目の見出し面",
+     "x": 0,
+     "y": 210.67,
+     "w": 140,
+     "h": 89.33333333333333,
+     "fill": "accent",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の見出し",
+     "x": 8,
+     "y": 210.67,
+     "w": 124,
+     "h": 89.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{effect_label}}",
+          "size": 30,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": "head"
+     }
+    },
+    {
+     "name": "3段目の面",
+     "x": 152,
+     "y": 210.67,
+     "w": 648,
+     "h": 89.33333333333333,
+     "fill": "surface",
+     "radius": "$radius.card",
+     "shadow": "$shadow.card"
+    },
+    {
+     "name": "3段目の点",
+     "x": 174,
+     "y": 216.67,
+     "w": 608,
+     "h": 77.33333333333333,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "repeat": "effects",
+        "spaceAfter": 5,
+        "lineHeight": 1.3,
+        "marL": 28,
+        "indent": -28,
+        "bullet": {
+         "char": "●",
+         "color": "accent",
+         "size": "$type.caption"
+        },
+        "runs": [
+         {
+          "text": "{{.}}",
+          "size": 24,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       23,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15,
+       14
+      ],
+      "group": "points"
+     }
+    }
+   ]
+  }
+ ]
+}

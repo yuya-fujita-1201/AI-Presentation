@@ -1,506 +1,985 @@
 {
   "meta": {
     "id": "template-sample",
-    "title": "テンプレート タイプ ギャラリー",
-    "subtitle": "29スライドタイプの見た目サンプル（acn-slide-master テーマ）",
-    "author": "yuya.fujita",
-    "date": "2026-10-26",
+    "title": "問い合わせ対応の改善提案（slide-deck 見本）",
+    "subtitle": "AI 一次回答で問い合わせ対応を半分にする、社内ヘルプデスクの改善提案（架空の事例）",
+    "author": "slide-deck 見本",
+    "date": "2026-11-12",
     "theme": "acn-slide-master",
-    "layout_overrides": {
-      "bullets": {
-        "lead": {
-          "line_height": 1.5,
-          "h": 56
-        },
-        "body": {
-          "y": 208,
-          "gap": 18,
-          "line_height": 1.6,
-          "child_gap": 8,
-          "indent": 30
-        }
-      }
+    "section_numbers": true,
+    "density": "talk",
+    "variants": {
+      "title": "split",
+      "section": "number",
+      "statement": "left-bar",
+      "quote": "mark",
+      "closing": "contact"
     }
   },
   "slides": [
     {
       "type": "title",
-      "title": "テンプレート タイプ ギャラリー",
-      "subtitle": "29スライドタイプを1枚ずつ並べた見本。各ページのイメージを確認し、チューニングの起点にします。",
-      "meta": "TYPE 01 / title ・ テンプレートサンプル / 2026-09 / acn-slide-master テーマ",
-      "notes": "表紙（title）— 左帯(bar)＋タイトル＋サブタイトル＋meta。"
+      "title": "問い合わせ対応を、AI の一次回答で半分にする",
+      "subtitle": "社内ヘルプデスクの改善提案",
+      "meta": "2026-11-11 ／ 情報システム部 ／ slide-deck 見本（内容は架空）",
+      "background": {
+        "image": "assets/cover-panel.jpg"
+      },
+      "notes": "type: title（variant: split）。左に画像、右にタイトル。variant は center / left-band / bottom も選べる。meta.variants で表紙・章扉・言い切り・引用・結びの variant をデッキ全体で決めている。"
+    },
+    {
+      "type": "summary",
+      "eyebrow": "要旨",
+      "title": "定型の質問は AI が答え、人は難しい相談に集中する",
+      "lead": "予備検証では、1 件あたりの人の対応時間が 18 分から 8 分に減った",
+      "items": [
+        {
+          "lead": "背景｜問い合わせが 3 年で 1.7 倍に",
+          "text": "担当は 8 名のまま。返事まで平均 95 分",
+          "icon": "headset"
+        },
+        {
+          "lead": "課題｜質問の 6 割は手順書で答えられる",
+          "text": "同じ質問に、毎月約 780 時間を使っている",
+          "icon": "alert-triangle"
+        },
+        {
+          "lead": "提案｜AI の一次回答と、担当者への引き継ぎ",
+          "text": "確信度が低い質問だけを人に回す",
+          "icon": "bulb"
+        },
+        {
+          "lead": "ご判断｜3 か月の試験運用のご承認",
+          "text": "3 月末の判断会議で、全社展開を決める",
+          "icon": "user-check"
+        }
+      ],
+      "source": "出典：受付ログと予備検証の実測（数字はすべて架空）",
+      "notes": "type: summary — 結論を先に見せる要旨。items は {lead, text, icon} の 3〜6 行。"
     },
     {
       "type": "agenda",
-      "eyebrow": "TYPE 02 / agenda",
-      "title": "アジェンダ ─ 利用できるテンプレート",
-      "lead": "全29タイプを掲載順に並べた目次。番号は各ページの TYPE 番号と一致する（行の高さを詰めて1枚に収めている）。",
+      "eyebrow": "目次",
+      "title": "結論から先に、根拠・実現方法・進め方の順に説明する",
       "items": [
-        "title（表紙）",
         {
-          "text": "agenda（目次）※本ページ",
-          "active": true
+          "text": "現状と課題",
+          "desc": "問い合わせの 6 割は、手順書で答えられる定型の質問"
         },
-        "section（章扉）",
-        "bullets（箇条書き）",
-        "two_column（2カラム比較）",
-        "table（表）",
-        "code（コード・設定例）",
-        "quote（引用）",
-        "image（画像）",
-        "image_text（画像＋本文）",
-        "steps（ステップチャート）",
-        "matrix（2×2マトリクス）",
-        "cards（ボックスチャート）",
-        "swimlane（スイムレーン業務フロー）",
-        "architecture（システム構成図）",
-        "dataflow（データフロー）",
-        "lifecycle（ライフサイクル）",
-        "sequence（シーケンス図）",
-        "schedule（矢羽根スケジュール）",
-        "status_table（進捗ステータス表）",
-        "summary（要旨）",
-        "reasons（選ばれる理由）",
-        "statement（言い切り）",
-        "row_matrix（行見出し×列の整理表）",
-        "org（体制図）",
-        "house（全体像）",
-        "cycle（循環）",
-        "kpi_tree（KPI ツリー）",
-        "closing（まとめ）"
-      ],
-      "notes": "TYPE 02 / agenda — 全29タイプを掲載順に列挙。番号＝TYPE 番号。既定（row_h 44・gap 10）だと8行超で2段・16項目超で次ページになるため、style.body で行を詰めて3段×10行（max_cols: 3）に収めている。",
-      "style": {
-        "body": {
-          "row_h": 31,
-          "gap": 6,
-          "text_size": 15,
-          "num_size": 17,
-          "num_w": 40,
-          "col_gap": 24,
-          "max_cols": 3
+        {
+          "text": "解決策と予備検証",
+          "desc": "AI の一次回答で、人の対応時間が 56% 減った"
+        },
+        {
+          "text": "実現方法",
+          "desc": "構成・業務フロー・データの扱い"
+        },
+        {
+          "text": "進め方と効果",
+          "desc": "3 か月の試験運用で、拡大の可否を判断する"
         }
-      }
+      ],
+      "notes": "type: agenda — 章の一覧。項目が 4 つと少ないので、style.body で行の高さと文字を大きくしている（項目が多いときは既定のままでよい）。例外的な手書きで、項目が 4 つ以下のときだけ許される（references/schema/basic.md の agenda）。"
     },
     {
       "type": "section",
-      "number": "03",
-      "title": "章扉（section）",
-      "subtitle": "TYPE 03 / section ─ 章の区切りに使う全面カラーのタイトル。番号(number)＋タイトル＋罫線＋サブタイトル。",
-      "notes": "章扉（section）— primary 塗り。eyebrow は無し。"
+      "title": "現状と課題",
+      "subtitle": "問い合わせは増え続け、その大半は定型の質問だった",
+      "notes": "type: section（variant: number）。章番号は meta.section_numbers で自動採番。"
     },
     {
-      "type": "bullets",
-      "eyebrow": "TYPE 04 / bullets",
-      "title": "箇条書き（bullets）",
-      "lead": "最も汎用のタイプ。eyebrow / title / rule / lead / body（親・子・強調）/ footer の既定表示をまとめて可視化しています。",
-      "bullets": [
-        "親項目：本文は 24px・text 色、行頭マーカーはアクセント色で表示される",
+      "type": "kpi",
+      "eyebrow": "1 現状と課題",
+      "title": "問い合わせは月 4,200 件。その 6 割が定型の質問だ",
+      "items": [
         {
-          "text": "子項目つきの親項目（children）",
-          "children": [
-            "子項目：19px・muted 色・インデントで描画される",
-            "子項目：親との間隔は child_gap、行間は line_height で決まる"
-          ]
+          "value": "4,200",
+          "unit": "件",
+          "label": "月間の問い合わせ",
+          "from": "3,100",
+          "delta": "+35%",
+          "good": "down",
+          "note": "前年同期は月 3,100 件"
         },
         {
-          "text": "強調行：size・color・bold を項目単位で上書きできる",
-          "bold": true,
-          "size": 26,
-          "color": "accent"
+          "value": "18",
+          "unit": "分",
+          "label": "1 件あたりの対応時間",
+          "note": "受付から解決までの作業時間"
         },
-        "通常項目に戻る（項目間は gap、行間は line_height）",
         {
-          "text": "primary 色で見出し的に使う行",
-          "bold": true,
-          "color": "primary"
+          "value": "62",
+          "unit": "%",
+          "label": "手順書で答えられる質問",
+          "note": "上位 3 分類の合計"
         }
       ],
-      "notes": "TYPE 04 / bullets — 罫線フル幅・余白・色階層のチューニング適用済み。"
+      "conclusion": "定型の質問だけで、毎月約 780 時間を使っている",
+      "source": "出典：ヘルプデスク受付ログ（2026 年 4〜9 月の月平均）",
+      "notes": "type: kpi — 大きな数字。from / delta / good で変化を、note で補足を付ける。conclusion は結論の帯。"
     },
     {
-      "type": "two_column",
-      "eyebrow": "TYPE 05 / two_column",
-      "title": "修正は deck.json の差分だけで再現できる（two_column）",
-      "lead": "左右の surface ボックスで対比を見せる。見出し＋箇条書きを2枚並べる。",
-      "left": {
-        "heading": "Before",
-        "bullets": [
-          { "text": "修正場所：生成物(build/)を直接手直し", "children": ["PPTX を開いて手で位置を動かす"] },
-          { "text": "再現性：再ビルドで手直しが消える", "children": ["次のビルドで手直しが上書きされる"] },
-          { "text": "色：スライドごとに hex を直書き", "children": ["同じ色が何十か所にも散らばる"] },
-          { "text": "テーマ切替：全スライドを塗り直す", "children": ["ブランド変更のたびに全ページを直す"] }
-        ]
+      "type": "chart",
+      "eyebrow": "1 現状と課題",
+      "title": "問い合わせは、システム統合を機に 3 年で 1.7 倍になった",
+      "chart": "bar",
+      "unit": "件",
+      "categories": [
+        "FY23",
+        "FY24",
+        "FY25",
+        "FY26 上期"
+      ],
+      "series": [
+        {
+          "name": "月平均の問い合わせ",
+          "values": [
+            2500,
+            2800,
+            3100,
+            4200
+          ]
+        }
+      ],
+      "highlight": [
+        "FY26 上期"
+      ],
+      "annotations": [
+        {
+          "at": "FY26 上期",
+          "text": "社内システムを統合"
+        }
+      ],
+      "y": {
+        "min": 0,
+        "max": 5000,
+        "label": "件／月"
       },
-      "right": {
-        "heading": "After",
-        "bullets": [
-          { "text": "修正場所：deck.json の style に差分だけ書く", "children": ["例：\"style\": { \"title\": { \"size\": 32 } }"] },
-          { "text": "再現性：何度ビルドしても同じ結果", "children": ["差分がレビュー・履歴に残る"] },
-          { "text": "色：テーマトークン（primary 等）で指定", "children": ["色の定義はテーマの1ファイルだけ"] },
-          { "text": "テーマ切替：meta.theme を1か所変えるだけ", "children": ["default / accenture / acn-slide-master / acn-technology-graphik を切り替えられる"] }
-        ]
-      },
-      "style": {
-        "left": { "valign": "middle" },
-        "right": { "valign": "middle" }
-      },
-      "notes": "TYPE 05 / two_column — Before/After や対比に。"
+      "values": true,
+      "note": "担当は 8 名のまま。1 人あたりの件数も 1.7 倍に",
+      "source": "出典：ヘルプデスク受付ログ（FY は 4 月始まり）",
+      "notes": "type: chart（chart: bar）。highlight は結論に関わる項目だけ accent 色にする。annotations で一言の吹き出し。"
+    },
+    {
+      "type": "chart",
+      "eyebrow": "1 現状と課題",
+      "title": "件数の多い上位 3 分類が、問い合わせの 62% を占める",
+      "chart": "hbar",
+      "unit": "%",
+      "categories": [
+        "パスワード・ログイン",
+        "申請方法の案内",
+        "機器・ソフトの不具合",
+        "アクセス権の付与",
+        "個別の相談",
+        "契約・請求の確認"
+      ],
+      "series": [
+        {
+          "name": "問い合わせの割合",
+          "values": [
+            27,
+            19,
+            17,
+            16,
+            12,
+            9
+          ]
+        }
+      ],
+      "highlight": [
+        "パスワード・ログイン",
+        "申請方法の案内",
+        "アクセス権の付与"
+      ],
+      "values": true,
+      "note": "3 分類とも、答えは手順書に書いてある",
+      "source": "出典：ヘルプデスク受付ログ（2026 年 4〜9 月）",
+      "notes": "type: chart（chart: hbar）。順位・長い項目名は横棒。ほかに stacked / line / waterfall / donut がある。"
     },
     {
       "type": "table",
-      "eyebrow": "TYPE 06 / table",
-      "title": "表（table）",
-      "lead": "数値・比較の一覧に。ヘッダ色・交互行の背景はテーマトークンで決まる。",
+      "eyebrow": "1 現状と課題",
+      "title": "電話は時間がかかり、チャットは速く解決できている",
+      "lead": "一次解決率は、1 回の対応で解決できた件数の割合で測っている",
       "columns": [
-        "タイプ",
-        "主な用途",
-        "描画方式"
+        "チャネル",
+        "月間の件数",
+        "平均の対応時間",
+        "一次解決率"
       ],
       "rows": [
         [
-          "table",
-          "数値・項目の一覧比較",
-          "ネイティブ"
+          "電話",
+          "1,500 件",
+          {
+            "text": "24 分",
+            "tone": "bad"
+          },
+          {
+            "text": "71%",
+            "tone": "warn"
+          }
         ],
         [
-          "bullets",
-          "論点・手順の列挙",
-          "ネイティブ"
+          "メール",
+          "1,400 件",
+          {
+            "text": "19 分",
+            "tone": "warn"
+          },
+          {
+            "text": "64%",
+            "tone": "bad"
+          }
         ],
         [
-          "image",
-          "フロー図・ポンチ絵",
-          "画像(SVG/PNG)"
+          "チャット",
+          "1,300 件",
+          {
+            "text": "11 分",
+            "tone": "good"
+          },
+          {
+            "text": "83%",
+            "tone": "good"
+          }
         ],
-        [
-          "swimlane",
-          "業務・運用フロー",
-          "ネイティブ"
-        ],
-        [
-          "architecture",
-          "システム構成・関係図",
-          "ネイティブ"
-        ]
-      ],
-      "style": {
-        "table": {
-          "col_widths": [
-            2,
-            4,
-            2.4
-          ]
+        {
+          "cells": [
+            "全体",
+            "4,200 件",
+            "18 分",
+            "72%"
+          ],
+          "emphasis": true
         }
-      },
-      "notes": "TYPE 06 / table — columns/rows を書くだけで描画。"
+      ],
+      "source": "出典：ヘルプデスク受付ログ（2026 年 4〜9 月の月平均）",
+      "notes": "type: table — セルの tone（good / warn / bad）で文字を色分け、行の emphasis で合計行を強調。強調行と tone は併用しない（対比が落ちる）。"
     },
     {
-      "type": "code",
-      "eyebrow": "TYPE 07 / code",
-      "title": "コード・設定例（code）",
-      "lead": "コードや JSON/YAML を等幅フォントで。行数が多いと自動で縮小する。",
-      "language": "json",
-      "code": "{\n  \"type\": \"table\",\n  \"title\": \"見出し\",\n  \"columns\": [\"列1\", \"列2\"],\n  \"rows\": [\n    [\"a\", \"b\"],\n    [\"c\", \"d\"]\n  ]\n}",
-      "notes": "TYPE 07 / code — code フォントは Consolas。"
+      "type": "bullets",
+      "eyebrow": "1 現状と課題",
+      "title": "同じ質問が減らないのは、答えの置き場が散らばっているからだ",
+      "bullets": [
+        "手順書が 3 か所に分かれ、担当者でも探すのに時間がかかる",
+        {
+          "text": "担当者によって、案内の内容が違う",
+          "children": [
+            "回答の差は【要確認: ばらつきを測った調査の有無】"
+          ]
+        },
+        "更新の担当が決まっておらず、古い手順が残っている",
+        "利用者は、探すより電話で聞くほうが早いと感じている"
+      ],
+      "notes": "type: bullets — 材料に無い数字・出どころは「要確認」の印（隅付き括弧で囲む書き方）を付ける。HTML と PPTX の両方で強調され、lint_deck_text.py が件数を数える。"
+    },
+    {
+      "type": "statement",
+      "kicker": "転換点",
+      "message": "人が答えなくてよい質問に、毎月 780 時間を使っている",
+      "support": "この時間を、難しい相談に回せないか",
+      "background": {
+        "image": "assets/bg-dark.jpg"
+      },
+      "notes": "type: statement（variant: left-bar）。物語の転換点に置く 1 枚。背景は assets/bg-dark.jpg（自作の抽象画像）。"
+    },
+    {
+      "type": "section",
+      "title": "解決策と予備検証",
+      "subtitle": "定型は AI が一次回答し、難しい相談だけを人が受ける"
+    },
+    {
+      "type": "cards",
+      "eyebrow": "2 解決策と予備検証",
+      "title": "AI 受付は 5 つの機能で、一次回答を支える",
+      "columns": 3,
+      "cards": [
+        {
+          "heading": "手順書から一次回答",
+          "body": "質問の意味を読み取り、手順書の該当箇所から、根拠つきで答える",
+          "emphasis": true,
+          "span": 2,
+          "icon": "robot"
+        },
+        {
+          "heading": "担当者への引き継ぎ",
+          "body": "確信度が低い質問は、人に引き継ぐ",
+          "icon": "users"
+        },
+        {
+          "heading": "根拠の表示",
+          "body": "回答に、元の手順書と更新日を付ける"
+        },
+        {
+          "heading": "履歴からの改善",
+          "body": "誤回答の報告を、毎週の更新に反映する",
+          "emphasis": "soft"
+        },
+        {
+          "heading": "利用状況の見える化",
+          "body": "件数と解決率を、週次で確認できる"
+        }
+      ],
+      "notes": "type: cards — emphasis: true / \"soft\" / \"accent\" と span（占める列数）で強弱を付ける。強調は 1〜2 枚まで。"
+    },
+    {
+      "type": "two_column",
+      "eyebrow": "2 解決策と予備検証",
+      "title": "AI は定型を、人は判断を受け持つ",
+      "left": {
+        "heading": "AI が受け持つ",
+        "bullets": [
+          {
+            "text": "パスワード・ログインの案内",
+            "children": [
+              "再設定の手順を、その場で案内する"
+            ]
+          },
+          {
+            "text": "申請手順の説明",
+            "children": [
+              "申請先と必要な書類を示す"
+            ]
+          },
+          {
+            "text": "アクセス権の申請方法",
+            "children": [
+              "権限ごとの承認者を案内する"
+            ]
+          }
+        ]
+      },
+      "right": {
+        "heading": "人が受け持つ",
+        "bullets": [
+          {
+            "text": "本人確認が必要な対応",
+            "children": [
+              "アカウントの復旧・権限の付与"
+            ]
+          },
+          {
+            "text": "手順書にない新しい不具合",
+            "children": [
+              "原因を調べ、手順書に追加する"
+            ]
+          },
+          {
+            "text": "AI の回答の確認",
+            "children": [
+              "誤りを見つけたら、すぐ直す"
+            ]
+          }
+        ]
+      },
+      "notes": "type: two_column — 2 つの箱で対比する。"
+    },
+    {
+      "type": "pattern",
+      "pattern": "before-after",
+      "slots": {
+        "eyebrow": "2 解決策と予備検証",
+        "title": "問い合わせの対応が、待たせる形から即答する形に変わる",
+        "before_label": "導入前",
+        "after_label": "導入後",
+        "before": [
+          "電話とメールで受け付け、順番に対応",
+          "返事が届くまで平均 95 分",
+          "担当者ごとに案内の内容が違う",
+          "同じ質問に毎月 780 時間を使う"
+        ],
+        "after": [
+          "チャットで受け付け、AI がその場で回答",
+          "返事が届くまで平均 2 分",
+          "全員が同じ手順書から案内する",
+          "人は難しい相談に集中する"
+        ],
+        "message": "待たせる時間が、考える時間に変わる",
+        "note": "出典：予備検証の実測（2026 年 8〜9 月・架空）"
+      },
+      "notes": "type: pattern（before-after）。登録した構図に、中身だけ差し替えて 1 枚を作る。使える型は pattern_engine.py list で一覧できる。"
+    },
+    {
+      "type": "composite",
+      "eyebrow": "2 解決策と予備検証",
+      "title": "AI が手順書から答え、自信がない質問は人に回す",
+      "arrange": "main-side",
+      "blocks": [
+        {
+          "type": "architecture",
+          "heading": "AI 受付の構成",
+          "legend": false,
+          "nodes": [
+            {
+              "id": "chat",
+              "type": "frontend",
+              "label": "受付チャット",
+              "sublabel": "社員が質問する",
+              "row": 0,
+              "col": 0
+            },
+            {
+              "id": "ai",
+              "type": "backend",
+              "label": "AI 回答",
+              "sublabel": "確信度を計算",
+              "row": 0,
+              "col": 1,
+              "variant": "emphasis"
+            },
+            {
+              "id": "kb",
+              "type": "database",
+              "label": "手順書",
+              "sublabel": "220 件",
+              "row": 0,
+              "col": 2
+            },
+            {
+              "id": "desk",
+              "type": "external",
+              "label": "担当者",
+              "sublabel": "ヘルプデスク",
+              "row": 1,
+              "col": 1
+            }
+          ],
+          "edges": [
+            {
+              "from": "chat",
+              "to": "ai",
+              "variant": "emphasis"
+            },
+            {
+              "from": "ai",
+              "to": "kb",
+              "arrow": "both",
+              "label": "検索",
+              "label_back": "根拠"
+            },
+            {
+              "from": "ai",
+              "to": "desk",
+              "variant": "dashed",
+              "label": "80% 未満"
+            }
+          ]
+        },
+        {
+          "type": "bullets",
+          "heading": "ポイント",
+          "frame": "line",
+          "bullets": [
+            "質問は、社内ポータルで受ける",
+            "回答に、手順書と更新日を付ける",
+            "確信度が低い質問は、人に回す",
+            "担当者の回答を、手順書に追記する"
+          ]
+        }
+      ],
+      "conclusion": "返事が届くまでの時間は、平均 95 分から 2 分になる",
+      "source": "出典：予備検証の実測（2026 年 8〜9 月・架空）",
+      "notes": "type: composite（arrange: main-side）。左に図・右に要点・下に結論。座標は書かず、ブロックごとに自動で文字の大きさを合わせる。arrow: both の線に label_back で逆向きのラベルを付けている。"
+    },
+    {
+      "type": "composite",
+      "eyebrow": "2 解決策と予備検証",
+      "title": "回答は 3 つの手順で出し、確信度で振り分ける",
+      "arrange": "main-side",
+      "blocks": [
+        {
+          "type": "pattern",
+          "pattern": "numbered-list",
+          "slots": {
+            "items": [
+              {
+                "head": "質問の意味を読む",
+                "body": "言い換えや誤字があっても、同じ質問として扱う"
+              },
+              {
+                "head": "手順書から探す",
+                "body": "該当する手順を探し、答えの文面と根拠を作る"
+              },
+              {
+                "head": "確信度で分ける",
+                "body": "80% 以上は回答し、未満は担当者へ回す"
+              }
+            ]
+          }
+        },
+        {
+          "type": "callout",
+          "emphasis": true,
+          "text": "迷ったら、人が答える",
+          "note": "確信度 80% 未満の質問は、必ず担当者へ"
+        }
+      ],
+      "notes": "type: composite — ブロックに pattern（body 枠の型）と callout を置いた例。callout の emphasis は 1 枚に 1 つまで。"
+    },
+    {
+      "type": "split",
+      "side": "left",
+      "ratio": 0.36,
+      "panel": {
+        "fill": "primary",
+        "eyebrow": "予備検証の結果",
+        "kpi": {
+          "value": "−56%",
+          "label": "1 件あたりの対応時間"
+        }
+      },
+      "title": "内訳：削れたのは一次回答の手間だった",
+      "blocks": [
+        {
+          "type": "chart",
+          "chart": "waterfall",
+          "unit": "分",
+          "categories": [
+            "導入前",
+            "一次回答の自動化",
+            "回答案の下書き",
+            "再質問の減少",
+            "導入後"
+          ],
+          "series": [
+            {
+              "name": "1 件あたりの対応時間",
+              "values": [
+                18,
+                -7,
+                -2,
+                -1,
+                null
+              ]
+            }
+          ],
+          "good": "down"
+        }
+      ],
+      "conclusion": "削減の 7 割は、定型の質問への自動回答による",
+      "source": "出典：予備検証 2 か月の実測（1,100 件・架空）",
+      "notes": "type: split — 端まで届く色面（または画像）のパネルに主役の数字、残りに根拠のグラフ。結論・実績の 1 枚に使う。chart: waterfall は増減の内訳。",
+      "eyebrow": "2 解決策と予備検証"
+    },
+    {
+      "type": "pattern",
+      "pattern": "funnel",
+      "title": "月 4,200 件のうち、約 1,900 件を AI が解決する",
+      "slots": {
+        "stages": [
+          {
+            "name": "受付",
+            "value": "4,200",
+            "body": "受け付けた問い合わせの件数（月間）"
+          },
+          {
+            "name": "定型の質問",
+            "value": "2,600",
+            "body": "手順書で答えられる質問（62%）"
+          },
+          {
+            "name": "AI で解決",
+            "value": "1,930",
+            "body": "定型のうち、AI の回答で解決（74%）"
+          }
+        ]
+      },
+      "conclusion": "人が受ける件数は月 2,300 件に減り、1 件あたりの時間も短くなる",
+      "source": "試算の前提：予備検証の自動解決率 74% を月間件数に当てはめた",
+      "notes": "type: pattern（funnel）。lead / conclusion / source は型の外側に書ける。",
+      "eyebrow": "2 解決策と予備検証"
+    },
+    {
+      "type": "composite",
+      "eyebrow": "2 解決策と予備検証",
+      "title": "予備検証では、3 分類の 74% を AI が解決した",
+      "arrange": "top-bottom",
+      "rows": [
+        2,
+        3
+      ],
+      "blocks": [
+        {
+          "type": "kpi",
+          "items": [
+            {
+              "value": "74",
+              "unit": "%",
+              "label": "AI が解決した割合"
+            },
+            {
+              "value": "2",
+              "unit": "分",
+              "label": "返事が届くまでの時間",
+              "from": "95",
+              "delta": "−98%",
+              "good": "down"
+            },
+            {
+              "value": "4.4",
+              "unit": "/ 5",
+              "label": "回答後の満足度",
+              "from": "3.8",
+              "delta": "+0.6",
+              "good": "up"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "heading": "分類別の結果（予備検証 2 か月）",
+          "columns": [
+            "分類",
+            "件数",
+            "AI が解決",
+            "解決率"
+          ],
+          "rows": [
+            [
+              "パスワード・ログイン",
+              "310 件",
+              "267 件",
+              "86%"
+            ],
+            [
+              "申請方法の案内",
+              "220 件",
+              "163 件",
+              "74%"
+            ],
+            [
+              "アクセス権の付与",
+              "170 件",
+              "88 件",
+              "52%"
+            ]
+          ]
+        }
+      ],
+      "source": "出典：予備検証 2 か月・定型 700 件の実測（架空）",
+      "notes": "type: composite（rows: [2, 3]）。上に数字・下に表。"
+    },
+    {
+      "type": "composite",
+      "eyebrow": "2 解決策と予備検証",
+      "title": "自動解決率は 8 週で 74% まで上がり、残りの理由も分かった",
+      "arrange": "two",
+      "blocks": [
+        {
+          "type": "table",
+          "heading": "人に回った 26% の理由",
+          "columns": [
+            "理由",
+            "割合",
+            "対策"
+          ],
+          "rows": [
+            [
+              "手順書に答えが無い",
+              "11%",
+              "手順書を追加する"
+            ],
+            [
+              "本人確認が必要",
+              "8%",
+              "人が対応する"
+            ],
+            [
+              "質問が曖昧",
+              "7%",
+              "聞き返しを足す"
+            ],
+            {
+              "cells": [
+                "合計",
+                "26%",
+                "─"
+              ],
+              "emphasis": true
+            }
+          ]
+        },
+        {
+          "type": "chart",
+          "heading": "AI の自動解決率（週ごと）",
+          "chart": "line",
+          "unit": "%",
+          "categories": [
+            "1 週",
+            "2 週",
+            "3 週",
+            "4 週",
+            "5 週",
+            "6 週",
+            "7 週",
+            "8 週"
+          ],
+          "series": [
+            {
+              "name": "自動解決率",
+              "values": [
+                48,
+                56,
+                61,
+                66,
+                70,
+                72,
+                74,
+                74
+              ]
+            }
+          ],
+          "values": "ends"
+        }
+      ],
+      "notes": "type: composite（arrange: two）。左に表・右にグラフ。"
     },
     {
       "type": "quote",
-      "text": "内容とデザインを分離する。だから微修正は JSON の数値を変えるだけでいい。",
-      "attribution": "TYPE 08 / quote ─ deck-schema.md",
-      "notes": "引用（quote）— キーメッセージ。eyebrow は無し。"
-    },
-    {
-      "type": "image",
-      "eyebrow": "TYPE 09 / image",
-      "title": "画像（image）",
-      "path": "assets/cityscape-sample.svg",
-      "caption": "写真・イラストなどの画像を全幅で大きく配置（SVG/PNG/JPG対応、SVGはビルド時に自動PNG化）。",
-      "style": {
-        "img": { "x": 72, "y": 150, "w": 1136, "h": 492 }
+      "text": "質問を送ると、手順の根拠つきで答えが返ってくる。電話の待ち時間がなくなって助かった。",
+      "attribution": "予備検証に参加した社員（架空の声）",
+      "background": {
+        "image": "assets/bg-light.jpg",
+        "overlay": "none"
       },
-      "notes": "TYPE 09 / image — 画像を領域いっぱいに全幅表示。style.img で表示領域を調整。"
+      "notes": "type: quote（variant: mark）。背景の画像は覆いなしで敷き、文字色は自動で選ぶ。"
     },
     {
-      "type": "image_text",
-      "eyebrow": "TYPE 10 / image_text",
-      "title": "図と説明を1枚に並べて流れと要点を同時に伝える（image_text）",
-      "punch": "deck.json を1つ書けば HTML と PPTX が同時にできる",
-      "bullets": [
-        "deck.json: 内容と見た目の差分（style）を書くソース",
-        "build_deck.py: 29タイプを描画し、2つの形式に書き出す",
-        "HTML: ブラウザでその場で確認する",
-        "PPTX: PowerPoint で開いてそのまま配布する"
-      ],
-      "path": "assets/flow-sample.svg",
-      "caption": "図を本文の隣に配置した例（image_side で左右反転）。",
-      "image_side": "right",
-      "style": {
-        "img": { "y": 214, "h": 400 },
-        "caption": { "y": 524 },
-        "body": { "y": 290, "h": 280 }
-      },
-      "notes": "TYPE 10 / image_text — 図＋パンチライン＋本文の統合レイアウト。"
-    },
-    {
-      "type": "steps",
-      "eyebrow": "TYPE 11 / steps",
-      "title": "ステップチャート（steps）",
-      "lead": "手順・フロー・バリューチェーンを横並びで。ステップ間はシェブロンで接続する。",
-      "steps": [
-        {
-          "label": "研究開発",
-          "items": [
-            "基礎研究",
-            "実験・検証",
-            "試作と評価"
-          ]
-        },
-        {
-          "label": "社会実装",
-          "items": [
-            "インフラ整備",
-            "法規制対応",
-            "実証実験"
-          ]
-        },
-        {
-          "label": "市場展開",
-          "items": [
-            "製品開発",
-            "販売戦略",
-            "販路の開拓"
-          ]
-        },
-        {
-          "label": "普及拡大",
-          "items": [
-            "価格最適化",
-            "エコシステム",
-            "保守・サポート"
-          ]
-        }
-      ],
-      "notes": "TYPE 11 / steps — steps数は可変（3〜5推奨）。ヘッダは primary、番号は accent。"
+      "type": "section",
+      "title": "実現方法",
+      "subtitle": "構成・業務フロー・データの扱い"
     },
     {
       "type": "matrix",
-      "eyebrow": "TYPE 12 / matrix",
-      "title": "2×2マトリクス（matrix）",
-      "lead": "2軸4象限のポジショニング。highlight: true で推奨象限を強調する。",
+      "eyebrow": "3 実現方法",
+      "title": "最初に自動化するのは、件数が多く手順が決まっている質問",
       "x_axis": {
-        "label": "モデルの複雑さ",
+        "label": "手順の決まりやすさ",
         "low": "低",
         "high": "高"
       },
       "y_axis": {
-        "label": "データの量",
+        "label": "件数",
         "low": "少",
         "high": "多"
       },
       "quadrants": [
         {
-          "heading": "シンプル × 大量データ",
-          "body": "高効率かつ解釈性も高い。まず狙うべき象限",
+          "heading": "機器・ソフトの不具合",
+          "body": "原因がさまざまで、診断の手順が先に必要"
+        },
+        {
+          "heading": "パスワード・申請・権限",
+          "body": "件数が多く手順も決まっている。最初に自動化",
           "highlight": true
         },
         {
-          "heading": "複雑 × 大量データ",
-          "body": "高精度だが計算コストが大きく解釈が難しい"
+          "heading": "個別の相談",
+          "body": "件数が少なく手順も定まらない。人が対応"
         },
         {
-          "heading": "シンプル × 少量データ",
-          "body": "学習は容易だが表現力・精度は限定的"
-        },
-        {
-          "heading": "複雑 × 少量データ",
-          "body": "過学習のリスク。汎化性能の確保が課題"
+          "heading": "契約・請求の確認",
+          "body": "手順は決まっているが件数が少ない。余力で"
         }
       ],
-      "notes": "TYPE 12 / matrix — 象限順は左上→右上→左下→右下。y軸は上=high、x軸は右=high。"
+      "notes": "type: matrix — 象限の順は左上・右上・左下・右下。highlight: true で推奨象限を強調。"
     },
     {
-      "type": "cards",
-      "eyebrow": "TYPE 13 / cards",
-      "title": "ボックスチャート（cards）",
-      "lead": "整理軸に沿ってカードを並べる。columns で列数を変更（既定3）。",
-      "columns": 3,
-      "cards": [
+      "type": "pattern",
+      "pattern": "compare-options",
+      "title": "既製サービス＋手順書の連携が、費用と期間で最適だ",
+      "slots": {
+        "options": [
+          {
+            "name": "自社で開発",
+            "tag": ""
+          },
+          {
+            "name": "既製サービス",
+            "tag": ""
+          },
+          {
+            "name": "既製＋連携",
+            "tag": "おすすめ"
+          }
+        ],
+        "rows": [
+          {
+            "label": "初期費用",
+            "values": [
+              "約 4,000 万円",
+              "約 300 万円",
+              "約 600 万円"
+            ]
+          },
+          {
+            "label": "稼働まで",
+            "values": [
+              "約 10 か月",
+              "約 1 か月",
+              "約 3 か月"
+            ]
+          },
+          {
+            "label": "手順書の連携",
+            "values": [
+              "作り込める",
+              "限られる",
+              "設定で対応"
+            ]
+          },
+          {
+            "label": "運用の手間",
+            "values": [
+              "大きい",
+              "小さい",
+              "中程度"
+            ]
+          }
+        ]
+      },
+      "conclusion": "3 か月で稼働でき、費用は自社開発の 15% で済む",
+      "source": "出典：ベンダー 3 社の概算見積もり（架空）",
+      "notes": "type: pattern（compare-options）。おすすめの案だけ tag を書くと強調される。",
+      "eyebrow": "3 実現方法"
+    },
+    {
+      "type": "steps",
+      "eyebrow": "3 実現方法",
+      "title": "導入は 4 段階。段階ごとに続けるかを決める",
+      "steps": [
         {
-          "heading": "Python",
-          "body": "汎用・データ分析",
+          "label": "手順書の整理",
           "items": [
-            "初学者向け",
-            "AI/ML の定番"
+            "3 か所の文書を 1 つに",
+            "更新の担当を決める",
+            "古い手順を削除する",
+            "手順を 1 枚に整理する"
           ]
         },
         {
-          "heading": "JavaScript",
-          "body": "Web 標準",
+          "label": "試験運用",
           "items": [
-            "フロント必須",
-            "Node.js で全域"
+            "情報システム部で 3 か月",
+            "効果を数字で測る",
+            "誤回答を週次で直す",
+            "現場の声を毎週聞く"
           ]
         },
         {
-          "heading": "Go",
-          "body": "クラウド基盤",
+          "label": "範囲の拡大",
           "items": [
-            "高速・並行処理",
-            "運用が容易"
+            "総務部・人事部へ広げる",
+            "対象を 6 分類に増やす",
+            "担当者の研修",
+            "窓口の案内を替える"
           ]
         },
         {
-          "heading": "Rust",
-          "body": "システム・性能",
+          "label": "定着",
           "items": [
-            "メモリ安全",
-            "高パフォーマンス"
-          ]
-        },
-        {
-          "heading": "Java",
-          "body": "エンタープライズ",
-          "items": [
-            "大規模で安定",
-            "広い実績"
-          ]
-        },
-        {
-          "heading": "SQL",
-          "body": "データ操作",
-          "items": [
-            "集計・分析",
-            "全 DB の基礎"
+            "全社の窓口を切り替える",
+            "改善サイクルを回す",
+            "効果を月次で報告",
+            "更新を当番制にする"
           ]
         }
       ],
-      "notes": "TYPE 13 / cards — columns で列数可変。3列×2行など。カードは surface 角丸。"
+      "notes": "type: steps — 3〜5 段の工程。"
     },
     {
       "type": "swimlane",
-      "eyebrow": "TYPE 14 / swimlane",
-      "title": "スイムレーン業務フロー（swimlane）",
-      "lead": "作業3種（PF／PF以外／オフライン）・システム・分岐・開始/終了・遷移先・メール・実線/破線に対応。凡例は前ページ参照。",
-      "style": {
-        "lead": {
-          "size": 16,
-          "line_height": 1.3
-        }
-      },
+      "eyebrow": "3 実現方法",
+      "title": "受付から解決まで、役割ごとの作業を切り分ける",
       "phases": [
         "",
-        "作成",
-        "精緻化",
-        "自己レビュー",
+        "質問",
+        "一次回答",
         "判定",
-        "次工程"
-      ],
-      "lanes": [
-        {
-          "group": "Client",
-          "name": "システム担当者"
-        },
-        {
-          "group": "Japan",
-          "name": "開発T(Lead)"
-        },
-        {
-          "group": "Japan",
-          "name": "開発T(Member)"
-        },
-        {
-          "name": "AI（Claude Code等）"
-        }
+        "対応",
+        "改善"
       ],
       "cols": 6,
+      "lanes": [
+        {
+          "group": "利用側",
+          "name": "利用者"
+        },
+        {
+          "group": "ヘルプデスク",
+          "name": "AI 受付"
+        },
+        {
+          "group": "ヘルプデスク",
+          "name": "担当者"
+        },
+        {
+          "group": "ヘルプデスク",
+          "name": "手順書の管理者"
+        }
+      ],
       "nodes": [
         {
           "id": "m0",
-          "lane": 2,
+          "lane": 0,
           "col": 0,
           "shape": "marker",
           "kind": "start"
         },
         {
           "id": "t1",
-          "lane": 2,
+          "lane": 0,
           "col": 1,
           "shape": "task",
           "variant": "onpf",
-          "text": "論点ドラフト作成",
-          "loop": true
+          "text": "質問を送る"
         },
         {
-          "id": "sys",
-          "lane": 3,
-          "col": 1,
-          "shape": "system",
-          "text": "Claude Code"
-        },
-        {
-          "id": "t2",
-          "lane": 2,
+          "id": "s1",
+          "lane": 1,
           "col": 2,
-          "shape": "task",
-          "variant": "onother",
-          "text": "ドラフト精緻化"
-        },
-        {
-          "id": "t3",
-          "lane": 2,
-          "col": 3,
-          "shape": "task",
-          "variant": "offline",
-          "text": "セルフレビュー"
+          "shape": "system",
+          "text": "AI 回答エンジン"
         },
         {
           "id": "d1",
-          "lane": 2,
-          "col": 4,
+          "lane": 1,
+          "col": 3,
           "shape": "decision",
-          "text": "指摘有無"
+          "text": "確信度 80%"
         },
         {
-          "id": "t4",
-          "lane": 1,
+          "id": "t3",
+          "lane": 0,
           "col": 4,
           "shape": "task",
           "variant": "onpf",
-          "text": "Leadレビュー"
+          "text": "回答を確認"
         },
         {
-          "id": "mail",
-          "lane": 0,
-          "col": 5,
-          "shape": "mail"
+          "id": "t4",
+          "lane": 2,
+          "col": 4,
+          "shape": "task",
+          "variant": "onpf",
+          "text": "経緯を見て回答"
         },
         {
-          "id": "conn",
-          "lane": 1,
+          "id": "t5",
+          "lane": 3,
           "col": 5,
-          "shape": "connector",
-          "text": "次工程へ"
+          "shape": "task",
+          "variant": "onother",
+          "text": "手順書に追記"
         },
         {
           "id": "mend",
-          "lane": 2,
+          "lane": 0,
           "col": 5,
           "shape": "marker",
           "kind": "end"
-        },
-        {
-          "id": "io1",
-          "lane": 3,
-          "col": 3,
-          "shape": "io",
-          "input": [
-            "論点一覧",
-            "機能一覧"
-          ],
-          "output": [
-            "論点検討資料"
-          ]
         }
       ],
       "edges": [
@@ -510,362 +989,297 @@
         },
         {
           "from": "t1",
-          "to": "t2"
+          "to": "s1"
         },
         {
-          "from": "t1",
-          "to": "sys",
-          "style": "dashed"
-        },
-        {
-          "from": "t2",
-          "to": "t3"
-        },
-        {
-          "from": "t3",
+          "from": "s1",
           "to": "d1"
         },
         {
           "from": "d1",
-          "to": "t4",
+          "to": "t3",
           "label": "Y"
         },
         {
           "from": "d1",
-          "to": "mend",
+          "to": "t4",
           "label": "N"
         },
         {
-          "from": "t4",
-          "to": "conn"
+          "from": "t3",
+          "to": "mend"
         },
         {
           "from": "t4",
-          "to": "mail",
-          "label": "通知",
+          "to": "t3",
+          "style": "dashed"
+        },
+        {
+          "from": "t4",
+          "to": "t5",
           "style": "dashed"
         }
       ],
-      "notes": "TYPE 14 / swimlane — 拡張語彙（作業3種/system/marker/connector/mail）＋実線破線。凡例は別ページ自動挿入（legend:false で省略）。"
+      "notes": "type: swimlane — 業務フロー。凡例ページが直前に 1 枚自動で入る（legend: false で止める）。"
     },
     {
       "type": "architecture",
-      "eyebrow": "TYPE 15 / architecture",
-      "title": "システム構成図（architecture）",
-      "lead": "type を AWS 風タイルアイコンで表示（style.diagram.icon_style: \"aws\"）。線は自動配線、境界は groups。",
+      "eyebrow": "3 実現方法",
+      "title": "AI は社内の閉じた環境で、手順書だけを参照する",
       "legend_page": true,
-      "legend_lead": "タイルの色は役割、variant は強調、矢印の線種は接続の性質を表す。",
+      "legend_lead": "アイコンの形は役割、矢印の線種は接続の性質を表す。",
       "legend": false,
-      "style": { "diagram": { "icon_style": "aws" } },
       "nodes": [
         {
-          "id": "users",
+          "id": "user",
           "type": "external",
-          "label": "利用者",
-          "sublabel": "ブラウザ / モバイル",
+          "label": "社員",
+          "sublabel": "ブラウザ・モバイル",
           "row": 1,
           "col": 0
         },
         {
-          "id": "auth",
+          "id": "sso",
           "type": "security",
           "label": "認証基盤",
-          "sublabel": "OAuth 2.0",
+          "sublabel": "SSO",
           "row": 0,
           "col": 0,
-          "tag": "JWT"
+          "tag": "SAML"
         },
         {
-          "id": "cdn",
-          "type": "cloud",
-          "label": "CloudFront",
-          "sublabel": "CDN",
+          "id": "portal",
+          "type": "frontend",
+          "label": "社内ポータル",
+          "sublabel": "受付チャット",
           "row": 1,
           "col": 1
         },
         {
-          "id": "lb",
-          "type": "cloud",
-          "label": "ロードバランサ",
-          "sublabel": "HTTPS :443",
+          "id": "gw",
+          "type": "backend",
+          "label": "API ゲートウェイ",
+          "sublabel": "個人情報を除去",
           "row": 1,
           "col": 2
         },
         {
-          "id": "api",
+          "id": "ai",
           "type": "backend",
-          "label": "API サーバ",
-          "sublabel": "FastAPI",
+          "label": "AI 回答エンジン",
+          "sublabel": "確信度を計算",
           "row": 1,
           "col": 3,
           "variant": "emphasis"
         },
         {
-          "id": "cache",
+          "id": "kb",
           "type": "database",
-          "label": "Redis",
-          "sublabel": "キャッシュ",
+          "label": "手順書",
+          "sublabel": "検索インデックス",
           "row": 0,
           "col": 3
         },
         {
-          "id": "db",
+          "id": "log",
           "type": "database",
-          "label": "PostgreSQL",
-          "sublabel": "primary",
+          "label": "対応履歴",
+          "sublabel": "匿名化して保存",
           "row": 1,
           "col": 4
         },
         {
-          "id": "s3",
-          "type": "cloud",
-          "label": "S3",
-          "sublabel": "静的アセット",
-          "row": 2,
-          "col": 1
-        },
-        {
           "id": "queue",
           "type": "messagebus",
-          "label": "SQS",
-          "sublabel": "ジョブキュー",
+          "label": "引き継ぎ",
+          "sublabel": "キュー",
           "row": 2,
           "col": 3
         },
         {
-          "id": "worker",
-          "type": "backend",
-          "label": "Worker",
-          "sublabel": "非同期処理",
+          "id": "desk",
+          "type": "frontend",
+          "label": "担当者の画面",
+          "sublabel": "チケット管理",
           "row": 2,
           "col": 4
         }
       ],
       "groups": [
         {
-          "label": "AWS ap-northeast-1",
+          "label": "社内クラウド（国内リージョン）",
           "kind": "region",
           "nodes": [
-            "cdn",
-            "lb",
-            "api",
-            "cache",
-            "db",
-            "s3",
+            "portal",
+            "gw",
+            "ai",
+            "kb",
+            "log",
             "queue",
-            "worker"
-          ]
-        },
-        {
-          "label": "sg-api",
-          "kind": "security",
-          "nodes": [
-            "lb",
-            "api"
+            "desk"
           ]
         }
       ],
       "edges": [
         {
-          "from": "users",
-          "to": "cdn",
+          "from": "user",
+          "to": "portal",
           "label": "HTTPS",
           "variant": "emphasis"
         },
         {
-          "from": "auth",
-          "to": "api",
-          "label": "JWT 検証",
+          "from": "sso",
+          "to": "gw",
+          "label": "トークン検証",
           "variant": "security"
         },
         {
-          "from": "cdn",
-          "to": "lb"
+          "from": "portal",
+          "to": "gw"
         },
         {
-          "from": "cdn",
-          "to": "s3",
-          "label": "静的",
-          "variant": "dashed"
+          "from": "gw",
+          "to": "ai"
         },
         {
-          "from": "lb",
-          "to": "api"
+          "from": "ai",
+          "to": "kb",
+          "arrow": "both",
+          "label": "検索",
+          "label_back": "根拠"
         },
         {
-          "from": "api",
-          "to": "cache",
-          "label": "read-through"
+          "from": "ai",
+          "to": "log",
+          "label": "保存"
         },
         {
-          "from": "api",
-          "to": "db",
-          "label": "SQL"
-        },
-        {
-          "from": "api",
+          "from": "ai",
           "to": "queue",
-          "label": "enqueue",
+          "label": "確信度 低",
           "variant": "dashed"
         },
         {
           "from": "queue",
-          "to": "worker"
-        },
-        {
-          "from": "worker",
-          "to": "db",
-          "label": "書込"
+          "to": "desk"
         }
       ],
-      "notes": "TYPE 15 / architecture — nodes に type（アイコン）と variant、groups で境界を囲む。via/label_at は診断が求めたときだけ足す。"
+      "notes": "type: architecture — nodes の type はアイコンの形、variant は強調。groups で本当の境界だけを囲む。凡例ページが直前に 1 枚入る。"
     },
     {
       "type": "dataflow",
-      "eyebrow": "TYPE 16 / dataflow",
-      "title": "データフロー（dataflow）",
-      "lead": "stages で工程を、row で並行する流れを表す。ラベルに classification を添えられる。",
-      "legend_page": true,
-      "legend_lead": "アイコンはデータを扱う要素の役割、矢印の線種はデータの流れ方を表す。",
+      "eyebrow": "3 実現方法",
+      "title": "個人情報を除いてから AI に渡し、履歴は匿名化する",
       "stages": [
-        "収集",
-        "取込",
+        "受付",
         "加工",
+        "回答",
         "保存",
-        "利用"
+        "改善"
       ],
       "nodes": [
         {
-          "id": "web",
+          "id": "chat",
           "type": "frontend",
-          "label": "Web アプリ",
-          "sublabel": "ブラウザ SDK",
+          "label": "受付チャット",
+          "sublabel": "社員の質問",
           "col": 0,
           "row": 0
         },
         {
-          "id": "mobile",
-          "type": "frontend",
-          "label": "モバイル",
-          "sublabel": "iOS / Android",
-          "col": 0,
-          "row": 2
+          "id": "mask",
+          "type": "security",
+          "label": "個人情報の除去",
+          "sublabel": "氏名・社員番号",
+          "col": 1,
+          "row": 0
         },
         {
-          "id": "edge",
-          "type": "cloud",
-          "label": "収集 API",
-          "sublabel": "collector",
-          "col": 1,
+          "id": "ai",
+          "type": "backend",
+          "label": "AI 回答",
+          "sublabel": "確信度を計算",
+          "col": 2,
+          "row": 0,
+          "variant": "emphasis"
+        },
+        {
+          "id": "kb",
+          "type": "database",
+          "label": "手順書",
+          "sublabel": "検索の対象",
+          "col": 2,
           "row": 1
         },
         {
-          "id": "consent",
-          "type": "security",
-          "label": "同意ゲート",
-          "sublabel": "ポリシー適用",
-          "col": 2,
-          "row": 0
-        },
-        {
-          "id": "stream",
-          "type": "messagebus",
-          "label": "イベント基盤",
-          "sublabel": "Kafka",
-          "col": 2,
-          "row": 2
-        },
-        {
-          "id": "pii",
-          "type": "security",
-          "label": "PII 保管庫",
-          "sublabel": "暗号化",
-          "col": 3,
-          "row": 0
-        },
-        {
-          "id": "dwh",
+          "id": "hist",
           "type": "database",
-          "label": "DWH",
-          "sublabel": "分析テーブル",
+          "label": "対応履歴",
+          "sublabel": "匿名化済み",
           "col": 3,
-          "row": 2
+          "row": 0
         },
         {
-          "id": "dash",
-          "type": "backend",
-          "label": "ダッシュボード",
-          "sublabel": "KPI",
+          "id": "review",
+          "type": "frontend",
+          "label": "週次レビュー",
+          "sublabel": "誤回答の確認",
           "col": 4,
           "row": 1
         }
       ],
       "edges": [
         {
-          "from": "web",
-          "to": "edge",
-          "label": "クリック",
-          "variant": "emphasis"
+          "from": "chat",
+          "to": "mask",
+          "label": "質問"
         },
         {
-          "from": "mobile",
-          "to": "edge",
-          "label": "アプリ操作"
-        },
-        {
-          "from": "edge",
-          "to": "consent",
-          "label": "同意確認",
-          "classification": "個人データ",
+          "from": "mask",
+          "to": "ai",
+          "label": "除去後",
           "variant": "security"
         },
         {
-          "from": "edge",
-          "to": "stream",
-          "label": "承認済み",
+          "from": "kb",
+          "to": "ai",
+          "label": "手順"
+        },
+        {
+          "from": "ai",
+          "to": "hist",
+          "label": "保存",
+          "classification": "匿名化"
+        },
+        {
+          "from": "hist",
+          "to": "review",
+          "label": "報告",
           "variant": "emphasis"
         },
         {
-          "from": "consent",
-          "to": "pii",
-          "label": "ID連携",
-          "variant": "security"
-        },
-        {
-          "from": "stream",
-          "to": "dwh",
-          "label": "正規化"
-        },
-        {
-          "from": "dwh",
-          "to": "dash",
-          "label": "集計 SQL"
-        },
-        {
-          "from": "pii",
-          "to": "dash",
-          "label": "制限付き結合",
+          "from": "review",
+          "to": "kb",
+          "label": "手順書を更新",
           "variant": "dashed"
         }
       ],
-      "notes": "TYPE 16 / dataflow — stages＝列見出し、classification はラベル2行目。隣接列の短いラベルは意味を保って詰める。"
+      "legend_page": false,
+      "notes": "type: dataflow — stages が列見出し、classification がラベルの 2 行目。"
     },
     {
       "type": "lifecycle",
-      "eyebrow": "TYPE 17 / lifecycle",
-      "title": "ライフサイクル（lifecycle）",
-      "lead": "状態は kind（開始/進行中/待機/分岐/成功/失敗）ごとに形と色を変える。",
-      "legend_page": true,
-      "legend_lead": "箱の形と色（kind）は状態の性質、矢印の線種は遷移の性質を表す。",
+      "eyebrow": "3 実現方法",
+      "title": "問い合わせは 5 つの状態を移り、解決まで追跡できる",
       "lanes": [
         {
-          "name": "主要フェーズ"
+          "name": "主な流れ"
         },
         {
-          "name": "中断"
+          "name": "人の対応"
         },
         {
-          "name": "終了"
+          "name": "やり直し"
         }
       ],
       "states": [
@@ -873,140 +1287,110 @@
           "id": "queued",
           "kind": "start",
           "label": "受付",
-          "sublabel": "リクエスト受理",
+          "sublabel": "質問を受理",
           "lane": 0,
           "col": 0,
           "step": "01"
         },
         {
-          "id": "plan",
+          "id": "ai",
           "kind": "active",
-          "label": "計画",
-          "sublabel": "タスク分解",
+          "label": "AI 回答中",
+          "sublabel": "手順書を検索",
           "lane": 0,
           "col": 1,
           "step": "02"
         },
         {
-          "id": "run",
-          "kind": "active",
-          "label": "実行中",
-          "sublabel": "ツール呼び出し",
+          "id": "judge",
+          "kind": "decision",
+          "label": "確信度の判定",
           "lane": 0,
           "col": 2,
           "step": "03"
         },
         {
-          "id": "review",
-          "kind": "decision",
-          "label": "レビュー",
+          "id": "done",
+          "kind": "success",
+          "label": "解決",
+          "sublabel": "回答を確認",
           "lane": 0,
           "col": 3,
           "step": "04"
         },
         {
-          "id": "done",
-          "kind": "success",
-          "label": "完了",
-          "sublabel": "最終応答",
-          "lane": 0,
-          "col": 4,
-          "step": "05"
-        },
-        {
           "id": "wait",
           "kind": "waiting",
-          "label": "承認待ち",
-          "sublabel": "人の判断",
+          "label": "担当者待ち",
+          "sublabel": "経緯つき",
           "lane": 1,
           "col": 2
         },
         {
-          "id": "blocked",
-          "kind": "waiting",
-          "label": "入力待ち",
+          "id": "handle",
+          "kind": "active",
+          "label": "担当者が対応",
           "lane": 1,
           "col": 3
         },
         {
-          "id": "failed",
+          "id": "reopen",
           "kind": "failure",
-          "label": "失敗",
-          "sublabel": "再試行可",
+          "label": "再質問",
+          "sublabel": "解決せず",
           "lane": 2,
           "col": 1
-        },
-        {
-          "id": "cancel",
-          "kind": "failure",
-          "label": "中止",
-          "sublabel": "利用者が停止",
-          "lane": 2,
-          "col": 3
         }
       ],
       "transitions": [
         {
           "from": "queued",
-          "to": "plan"
+          "to": "ai"
         },
         {
-          "from": "plan",
-          "to": "run"
+          "from": "ai",
+          "to": "judge"
         },
         {
-          "from": "run",
-          "to": "review"
-        },
-        {
-          "from": "review",
+          "from": "judge",
           "to": "done",
-          "label": "OK",
+          "label": "80% 以上",
           "variant": "emphasis"
         },
         {
-          "from": "run",
+          "from": "judge",
           "to": "wait",
-          "label": "要承認",
-          "variant": "security"
+          "label": "未満"
         },
         {
           "from": "wait",
-          "to": "run",
-          "label": "承認",
+          "to": "handle"
+        },
+        {
+          "from": "handle",
+          "to": "done",
+          "label": "回答"
+        },
+        {
+          "from": "ai",
+          "to": "reopen",
+          "label": "解決せず",
           "variant": "dashed"
         },
         {
-          "from": "review",
-          "to": "blocked",
-          "label": "NG"
-        },
-        {
-          "from": "run",
-          "to": "failed",
-          "label": "エラー"
-        },
-        {
-          "from": "failed",
-          "to": "plan",
-          "label": "再試行",
+          "from": "reopen",
+          "to": "wait",
+          "label": "引き継ぎ",
           "variant": "dashed"
-        },
-        {
-          "from": "wait",
-          "to": "cancel",
-          "label": "却下"
         }
       ],
-      "notes": "TYPE 17 / lifecycle — states/transitions は nodes/edges の別名。kind でピル/ひし形/破線などの形が決まる。"
+      "legend_page": false,
+      "notes": "type: lifecycle — 状態は kind ごとに形と色が変わる。"
     },
     {
       "type": "sequence",
-      "eyebrow": "TYPE 18 / sequence",
-      "title": "シーケンス図（sequence）",
-      "lead": "参加者を横に並べ、messages の順にやり取りを上から描く。return は破線の戻り。",
-      "legend_page": true,
-      "legend_lead": "参加者カードのアイコンは役割、矢印の線種はメッセージの種類を表す。",
+      "eyebrow": "3 実現方法",
+      "title": "AI は手順書を検索して答え、解決しなければ人につなぐ",
       "participants": [
         {
           "id": "user",
@@ -1014,543 +1398,381 @@
           "label": "利用者"
         },
         {
-          "id": "web",
+          "id": "chat",
           "type": "frontend",
-          "label": "Web",
-          "sublabel": "React"
+          "label": "チャット"
         },
         {
-          "id": "api",
+          "id": "ai",
           "type": "backend",
-          "label": "API",
-          "sublabel": "FastAPI"
+          "label": "AI 回答"
         },
         {
-          "id": "auth",
-          "type": "security",
-          "label": "認証"
-        },
-        {
-          "id": "cache",
+          "id": "kb",
           "type": "database",
-          "label": "Redis"
+          "label": "手順書"
         },
         {
-          "id": "db",
-          "type": "database",
-          "label": "DB",
-          "sublabel": "PostgreSQL"
+          "id": "desk",
+          "type": "frontend",
+          "label": "担当者"
         }
       ],
       "messages": [
         {
           "from": "user",
-          "to": "web",
-          "label": "ページを開く"
+          "to": "chat",
+          "label": "質問を送る"
         },
         {
-          "from": "web",
-          "to": "api",
-          "label": "GET /dashboard",
+          "from": "chat",
+          "to": "ai",
+          "label": "質問を渡す",
           "variant": "emphasis"
         },
         {
-          "from": "api",
-          "to": "auth",
-          "label": "JWT 検証",
-          "variant": "security"
+          "from": "ai",
+          "to": "kb",
+          "label": "手順を検索"
         },
         {
-          "from": "auth",
-          "to": "api",
-          "label": "OK",
+          "from": "kb",
+          "to": "ai",
+          "label": "該当の手順",
           "variant": "return"
         },
         {
-          "from": "api",
-          "to": "cache",
-          "label": "キャッシュ参照"
-        },
-        {
-          "from": "cache",
-          "to": "api",
-          "label": "miss",
+          "from": "ai",
+          "to": "chat",
+          "label": "回答と根拠",
           "variant": "return"
         },
         {
-          "from": "api",
-          "to": "db",
-          "label": "SELECT profile",
-          "variant": "emphasis"
-        },
-        {
-          "from": "db",
-          "to": "api",
-          "label": "rows",
-          "variant": "return"
-        },
-        {
-          "from": "api",
-          "to": "api",
-          "label": "キャッシュ更新",
-          "variant": "dashed"
-        },
-        {
-          "from": "api",
-          "to": "web",
-          "label": "200 JSON",
-          "variant": "return"
-        },
-        {
-          "from": "web",
+          "from": "chat",
           "to": "user",
-          "label": "描画",
+          "label": "回答を表示",
           "variant": "return"
-        }
-      ],
-      "activations": [
-        {
-          "participant": "web",
-          "from": 1,
-          "to": 9
         },
         {
-          "participant": "api",
-          "from": 1,
-          "to": 9
+          "from": "user",
+          "to": "chat",
+          "label": "解決しない"
         },
         {
-          "participant": "db",
-          "from": 6,
-          "to": 7
+          "from": "chat",
+          "to": "desk",
+          "label": "経緯つきで引き継ぐ",
+          "variant": "emphasis"
+        },
+        {
+          "from": "desk",
+          "to": "user",
+          "label": "回答する",
+          "variant": "return"
         }
       ],
       "segments": [
         {
           "from": 0,
-          "to": 3,
-          "label": "リクエストと認証"
+          "to": 5,
+          "label": "一次回答"
         },
         {
-          "from": 4,
-          "to": 7,
-          "label": "キャッシュ → DB"
-        },
-        {
-          "from": 8,
-          "to": 10,
-          "label": "応答"
+          "from": 6,
+          "to": 8,
+          "label": "引き継ぎ"
         }
       ],
-      "notes": "TYPE 18 / sequence — participants を横並び、messages は配列順に上から等間隔。activations/segments は任意。"
+      "legend_page": false,
+      "notes": "type: sequence — participants を横に、messages を上から順に。segments で区間に名前を付ける。"
+    },
+    {
+      "type": "code",
+      "eyebrow": "3 実現方法",
+      "title": "手順書は、質問と答えの組で 1 件ずつ登録する",
+      "language": "yaml",
+      "lead": "登録した内容が、AI の回答の根拠になる",
+      "code": "- id: vpn-001\n  質問例:\n    - VPN に接続できません\n    - 在宅から社内に入れない\n  回答: |\n    設定画面で VPN を開き、認証アプリのコードを入力します。\n  確認先: ネットワーク管理者\n  更新日: 2026-10-02\n  公開範囲: 全社員\n\n- id: pc-014\n  質問例:\n    - 共有フォルダに入れません\n  回答: |\n    アクセス権の申請フォームから、部署名と理由を送ります。\n  確認先: 情報システム部\n  更新日: 2026-10-05\n  公開範囲: 全社員",
+      "notes": "type: code — 等幅フォントで設定例・コードを見せる。"
+    },
+    {
+      "type": "image_text",
+      "eyebrow": "3 実現方法",
+      "title": "確信度が低い質問は、人に回して手順書を学び直す",
+      "punch": "質問の 7 割は、AI の一次回答で終わる",
+      "bullets": [
+        "質問ごとに、手順書から答えを探す",
+        "答えの確信度を、0〜100% で測る",
+        "80% 以上は、根拠つきで回答する",
+        "80% 未満は、経緯を添えて担当者へ回す"
+      ],
+      "path": "assets/answer-flow.svg",
+      "caption": "AI 受付の判断のしくみ",
+      "image_side": "right",
+      "notes": "type: image_text — 図と本文を 1 枚に。図は自作の SVG（assets/answer-flow.svg。色は中立のグレーでどのテーマでも合う）。"
+    },
+    {
+      "type": "image",
+      "eyebrow": "3 実現方法",
+      "title": "利用者と担当者の画面は、1 つの経緯でつながる",
+      "path": "assets/screens.svg",
+      "caption": "画面のイメージ（図。実際の画面とは異なる）",
+      "notes": "type: image — 図版を大きく見せる。SVG はビルド時に PNG 化される。"
+    },
+    {
+      "type": "section",
+      "title": "進め方と効果",
+      "subtitle": "3 か月の試験運用で、効果を数字で確かめる"
     },
     {
       "type": "schedule",
-      "eyebrow": "TYPE 19 / schedule",
-      "title": "矢羽根スケジュール（schedule）",
-      "lead": "期間を日付で書くだけで、矢羽根・節目・現在線を時間軸に合わせて自動配置します。",
+      "eyebrow": "4 進め方と効果",
+      "title": "試験運用は 1〜3 月の 3 か月。3 月末に拡大を判断する",
       "timeline": {
-        "start": "2026-10",
-        "end": "2027-09",
+        "start": "2026-11",
+        "end": "2027-06",
         "unit": "month"
       },
       "periods": [
         {
-          "label": "FY27 上期",
-          "span": 6
+          "label": "2026 年",
+          "span": 2
         },
         {
-          "label": "FY27 下期",
+          "label": "2027 年",
           "span": 6
         }
       ],
-      "today": "2026-11-16",
+      "today": "2026-11-11",
       "rows": [
         {
           "group": "節目",
-          "label": "マイルストーン",
+          "label": "節目",
           "milestones": [
             {
               "at": "2026-12-25",
-              "label": "12/25 要件確定"
+              "label": "12/25 整理完了"
             },
             {
               "at": "2027-03-31",
-              "label": "3月末 開発完了"
+              "label": "3/31 判断"
             },
             {
               "at": "2027-06-30",
-              "label": "6月末 本番稼働"
+              "label": "6/30 全社へ"
             }
           ]
         },
         {
-          "group": "開発",
-          "label": "要件定義",
-          "sub": "業務チーム",
+          "group": "導入",
+          "label": "手順書",
           "bars": [
             {
-              "start": "2026-10",
-              "end": "2026-12-25",
-              "label": "要件定義"
+              "start": "2026-11",
+              "end": "2026-12",
+              "label": "整理"
             }
           ]
         },
         {
-          "group": "開発",
-          "label": "設計・開発",
-          "sub": "開発チーム",
-          "bars": [
-            {
-              "start": "2026-12",
-              "end": "2027-01",
-              "label": "設計"
-            },
-            {
-              "start": "2027-02",
-              "end": "2027-03",
-              "label": "開発",
-              "shape": "chevron"
-            }
-          ]
-        },
-        {
-          "group": "開発",
-          "label": "テスト・移行",
-          "sub": "品質チーム",
-          "bars": [
-            {
-              "start": "2027-04",
-              "end": "2027-05",
-              "label": "総合テスト",
-              "variant": "muted"
-            },
-            {
-              "start": "2027-06",
-              "end": "2027-06",
-              "label": "移行"
-            }
-          ]
-        },
-        {
-          "group": "展開",
-          "label": "利用者トレーニング",
-          "sub": "推進チーム",
+          "group": "導入",
+          "label": "試験運用",
           "bars": [
             {
               "start": "2027-01",
-              "end": "2027-01",
-              "label": "教材",
-              "variant": "prep"
-            },
-            {
-              "start": "2027-05",
-              "end": "2027-06",
-              "label": "トレーニング",
+              "end": "2027-03",
+              "label": "試験運用（3 か月）",
               "variant": "accent"
             }
           ]
         },
         {
           "group": "展開",
-          "label": "運用・定着化",
-          "sub": "運用チーム",
+          "label": "範囲の拡大",
           "bars": [
             {
-              "start": "2027-07",
-              "end": "2027-09",
-              "label": "運用・モニタリング",
-              "variant": "ongoing"
+              "start": "2027-04",
+              "end": "2027-04",
+              "label": "研修",
+              "variant": "prep"
+            },
+            {
+              "start": "2027-05",
+              "end": "2027-06",
+              "label": "総務・人事へ",
+              "shape": "chevron"
             }
           ]
         },
         {
           "group": "展開",
-          "label": "次期計画",
-          "sub": "PMO",
+          "label": "全社展開",
           "bars": [
             {
-              "start": "2027-04",
-              "end": "2027-09",
-              "label": "次期の範囲は別途計画",
+              "start": "2027-05",
+              "end": "2027-06",
+              "label": "判断後に計画",
               "variant": "tbd"
             }
           ]
         }
       ],
-      "notes": "TYPE 19 / schedule — timeline と rows（bars / milestones）を書くと矢羽根の位置はエンジンが計算する。PPTX はネイティブ図形なので後から編集できる。"
+      "notes": "type: schedule — 期間を日付で書くだけで、矢羽根・節目・現在線を時間軸に合わせて自動配置する。"
     },
     {
       "type": "status_table",
-      "eyebrow": "TYPE 20 / status_table",
-      "title": "進捗ステータス表（status_table）",
-      "lead": "信号（赤・黄・緑）と、実績・計画の階層箇条書きを1枚の表にまとめます。",
+      "eyebrow": "4 進め方と効果",
+      "title": "準備は順調。遅れは権限連携だけだ",
       "columns": [
-        "チーム",
-        "進捗状況",
+        "項目",
+        "状況",
         "実績（今週）",
         "計画（来週）"
       ],
       "rows": [
         {
-          "label": "PMO",
+          "label": "手順書",
           "status": "green",
           "cells": [
             [
               {
-                "text": "進捗・課題管理",
+                "text": "文書の統合",
                 "children": [
-                  "週次の進捗レビューを実施",
-                  "課題一覧を更新（新規2件）"
+                  "3 か所のうち 2 か所が完了"
                 ]
               }
             ],
             [
               {
-                "text": "進捗・課題管理",
+                "text": "文書の統合",
                 "children": [
-                  "月次報告資料の作成"
+                  "残り 1 か所を統合する"
                 ]
               }
             ]
           ]
         },
         {
-          "label": "開発",
+          "label": "AI 回答",
           "status": "yellow",
           "cells": [
             [
               {
-                "text": "機能開発",
+                "text": "回答の調整",
                 "children": [
-                  {
-                    "text": "画面A・Bを実装",
-                    "children": [
-                      "Bは仕様確認待ちで2日遅延"
-                    ]
-                  }
+                  "認証の誤案内 2 件を修正"
                 ]
               }
             ],
             [
               {
-                "text": "機能開発",
+                "text": "回答の調整",
                 "children": [
-                  "画面Bを完了し遅延をリカバリ"
+                  "確信度の基準を 80% に固定"
                 ]
               }
             ]
           ]
         },
         {
-          "label": "移行",
+          "label": "窓口の案内",
+          "status": "green",
+          "cells": [
+            [
+              {
+                "text": "案内文の準備",
+                "children": [
+                  "利用者向けの案内文が完成"
+                ]
+              }
+            ],
+            [
+              {
+                "text": "案内文の準備",
+                "children": [
+                  "社内ポータルに掲載する"
+                ]
+              }
+            ]
+          ]
+        },
+        {
+          "label": "権限連携",
           "status": "red",
           "cells": [
             [
               {
-                "text": "データ移行",
+                "text": "システム連携",
                 "children": [
-                  "移行元データの品質問題が判明"
+                  "連携 API の仕様が未確定"
                 ]
               }
             ],
             [
               {
-                "text": "データ移行",
+                "text": "システム連携",
                 "children": [
-                  "移行リハーサル日程を再調整"
+                  "仕様の確認会を設定する"
                 ]
               }
             ]
           ]
         }
       ],
-      "notes": "TYPE 20 / status_table — 行ごとに label / status / cells を書く。PPTX はネイティブ表なので文字や信号の色を後から編集できる。"
-    },
-    {
-      "type": "summary",
-      "eyebrow": "TYPE 21 / summary",
-      "title": "要旨（summary）",
-      "lead": "番号の箱＋要点＋説明の行で、提案書の冒頭に結論と骨子をまとめる。行の高さはそろい、文字は枠に合わせて自動で縮む。",
-      "items": [
-        {
-          "lead": "背景｜新しい仕組みが標準で有効になった",
-          "text": "何が変わり、なぜ今判断が必要かを1行で書く",
-          "icon": "rocket"
-        },
-        {
-          "lead": "課題｜機会とリスクが同時に届く",
-          "text": "放置したときの損失を数字で書く（例: 対象620名の端末）",
-          "icon": "リスク"
-        },
-        {
-          "lead": "提案｜統制・構築・定着の3本柱",
-          "text": "打ち手を3つ以内にまとめる",
-          "icon": "q:統制 セキュリティ"
-        },
-        {
-          "lead": "ご判断｜範囲と体制のご承認",
-          "text": "いつまでに何を決めてほしいかを書く",
-          "icon": "承認"
-        }
-      ],
-      "source": "出典: 出典や試算の前提は source に書くと本文の下に小さく出る",
-      "notes": "TYPE 21 / summary — items は {lead, text} の配列（3〜6行）。lead は要点（太字）、text は説明。 icon に同梱アイコンの名前か概念語を書くと帯の左に入る。"
-    },
-    {
-      "type": "reasons",
-      "eyebrow": "TYPE 22 / reasons",
-      "title": "選ばれる理由（reasons）",
-      "lead": "左に相手の課題（番号）、右に自社の強み（a/b/c）を同じ行に並べ、課題と強みの対応を一目で見せる。",
-      "issues": [
-        {
-          "title": "判断材料が少ない",
-          "text": "新機能で事例がない"
-        },
-        {
-          "title": "統制と使いやすさの両立",
-          "text": "止めすぎると使われない"
-        },
-        {
-          "title": "運用する人がいない",
-          "text": "CoE が未整備"
-        }
-      ],
-      "strengths": [
-        {
-          "title": "一次情報を読み解き、危険な操作を先に洗い出す",
-          "items": [
-            "公式ドキュメントとサンプルを精査"
-          ]
-        },
-        {
-          "title": "管理設定と方針の二段構えで、使える統制にする",
-          "items": [
-            "止める仕組みと確認の仕組みを分ける"
-          ]
-        },
-        {
-          "title": "CoE の立ち上げまで伴走して引き渡す",
-          "items": [
-            "審査・配布・計測の型を移管"
-          ]
-        }
-      ],
-      "conclusion": "conclusion を書くと、下端に結論の帯が付く（全タイプ共通のパーツ）",
-      "notes": "TYPE 22 / reasons — issues と strengths は同じ行に並ぶ。left_heading / right_heading で見出しを変えられる。"
-    },
-    {
-      "type": "statement",
-      "kicker": "TYPE 23 / statement",
-      "message": "言い切りページは、物語の転換点にだけ置く",
-      "support": "濃色の面に大きな一文（message）。kicker と support は任意。デッキに2〜3枚までが目安。",
-      "notes": "TYPE 23 / statement — タイトル・罫線・フッターの無い全面レイアウト。"
-    },
-    {
-      "type": "row_matrix",
-      "eyebrow": "TYPE 24 / row_matrix",
-      "title": "行見出し×列の整理表（row_matrix）",
-      "lead": "行見出しの帯と列見出しで、観点×対象を整理する。header_style: \"arrow\" で列見出しを工程の矢印にできる。",
-      "header_style": "arrow",
-      "columns": [
-        "Phase 0｜土台（11〜12月）",
-        "Phase 1｜パイロット（1〜2月）",
-        "Phase 2｜拡大（3〜4月）"
-      ],
-      "rows": [
-        {
-          "label": "統制",
-          "cells": [
-            [
-              "現状の棚卸し",
-              "管理設定の設計"
-            ],
-            [
-              "パイロット端末へ適用"
-            ],
-            [
-              "全社へ展開"
-            ]
-          ]
-        },
-        {
-          "label": "構築",
-          "cells": [
-            [
-              "要件定義"
-            ],
-            [
-              "2本を60名で利用"
-            ],
-            [
-              "残り3本を実装"
-            ]
-          ]
-        },
-        {
-          "label": "定着",
-          "cells": [
-            [
-              "CoE の設計"
-            ],
-            [
-              "ガイド・研修"
-            ],
-            [
-              "CoE へ移管"
-            ]
-          ]
-        }
-      ],
-      "notes": "TYPE 24 / row_matrix — セルは文字列か箇条書きの配列。emph_col で強調する列、corner で左上の見出し、col_ratios で列幅の比を指定できる。"
+      "notes": "type: status_table — 信号（green / yellow / red）と、実績・計画の階層箇条書き。"
     },
     {
       "type": "org",
-      "eyebrow": "TYPE 25 / org",
-      "title": "体制図（org）",
-      "lead": "左右に組織のツリーを描き、提案範囲を破線の枠で囲む。組織をまたぐ連携は links で点線にする。",
+      "eyebrow": "4 進め方と効果",
+      "title": "部長が責任を持ち、専任 2 名と兼任 1 名で進める",
       "left": {
-        "title": "貴社",
+        "title": "情報システム部",
         "nodes": [
           {
             "id": "po",
             "title": "プロジェクトオーナー",
-            "name": "開発本部長"
+            "name": "情報システム部長"
           },
           {
             "id": "pm",
             "parent": "po",
-            "title": "貴社PM",
-            "name": "開発基盤部"
+            "title": "推進責任者",
+            "name": "ヘルプデスク課長"
           },
           {
             "id": "sec",
             "parent": "po",
-            "title": "セキュリティ責任者",
-            "name": "情報セキュリティ部"
+            "title": "セキュリティ",
+            "name": "情報セキュリティ担当"
+          },
+          {
+            "id": "desk",
+            "parent": "pm",
+            "title": "ヘルプデスク担当",
+            "name": "8 名"
           }
         ]
       },
       "right": {
-        "title": "支援チーム",
-        "scope": "ご支援範囲",
+        "title": "導入チーム",
+        "scope": "本提案の範囲",
         "nodes": [
           {
             "id": "apm",
             "title": "プロジェクトマネージャー",
-            "name": "1名 (F)"
+            "name": "1 名（専任）"
           },
           {
             "id": "lead",
             "parent": "apm",
             "title": "開発リード",
-            "name": "1名 (F)"
+            "name": "1 名（専任）"
           },
           {
             "id": "ops",
             "parent": "apm",
-            "title": "定着・教育担当",
-            "name": "1名 (P)"
+            "title": "定着担当",
+            "name": "1 名（兼任）"
           }
         ]
       },
@@ -1558,155 +1780,265 @@
         {
           "from": "po",
           "to": "apm",
-          "label": "ステアリング"
+          "label": "月次報告"
         }
       ],
-      "legend": "(F) フルタイム　(P) パートタイム",
-      "notes": "TYPE 25 / org — nodes は id と parent で親子を表す。scope に文字列を書くと枠の札になる。"
+      "legend": "専任 = 週 5 日　兼任 = 週 2 日",
+      "notes": "type: org — nodes は id と parent で親子を表す。scope が破線の枠の札になる。"
     },
     {
       "type": "house",
-      "eyebrow": "TYPE 26 / house",
-      "title": "全体像（house）",
-      "lead": "屋根（目指す姿）を柱（取り組み）が支え、土台（基盤）が下から支える構図で、提案の全体像を1枚で見せる。",
+      "eyebrow": "4 進め方と効果",
+      "title": "手順書、AI 受付、運用の 3 本柱で、目指す姿を支える",
       "roof": {
-        "title": "目指す姿｜安全に増やせる仕組み",
-        "text": "roof の title と text（任意）"
+        "title": "目指す姿｜質問した人が、その場で答えを得られる",
+        "text": "答えは手順書に 1 つだけ。迷わず、待たせない"
       },
       "pillars": [
         {
-          "title": "① 統制",
+          "title": "① 手順書",
           "items": [
-            "入口と実行時を統制する",
-            "成果物: 方針書・管理設定"
+            "3 か所の文書を 1 つに統合する",
+            "更新の担当と期限を決める",
+            "成果物：手順書 220 件"
           ],
-          "icon": "shield-check"
+          "icon": "file-text"
         },
         {
-          "title": "② 構築",
+          "title": "② AI 受付",
           "items": [
-            "優先5本を設計・実装する",
-            "成果物: mod・評価結果"
+            "質問に根拠つきで答える",
+            "確信度 80% 未満は人に回す",
+            "成果物：受付チャット"
           ],
-          "icon": "開発"
+          "icon": "robot"
         },
         {
-          "title": "③ 定着",
+          "title": "③ 運用",
           "items": [
-            "CoE と審査フローを作る",
-            "成果物: ガイド・手順書"
+            "毎週、誤回答を手順書に反映する",
+            "分類別の解決率を測る",
+            "成果物：週次レポート"
           ],
-          "icon": "研修"
+          "icon": "refresh"
         }
       ],
       "foundations": [
         {
           "title": "土台",
-          "text": "管理設定の配布"
+          "text": "認証基盤（SSO）との連携"
         },
         {
           "title": "土台",
-          "text": "審査基準と計測基盤"
+          "text": "個人情報の取り扱い規程と監査"
         }
       ],
-      "notes": "TYPE 26 / house — pillars は3〜4本が目安。foundations は下から積む帯（最後が一番下）。"
+      "notes": "type: house — 屋根（目指す姿）を柱が支え、土台が下から支える。"
     },
     {
       "type": "cycle",
-      "eyebrow": "TYPE 27 / cycle",
-      "title": "循環（cycle）",
-      "lead": "中央の円と円弧の矢印で、繰り返す運用（計測→改善→審査→配布）を見せる。段のパネルは時計回りに読める位置に並ぶ。",
-      "center": "毎月",
+      "eyebrow": "4 進め方と効果",
+      "title": "毎週の改善サイクルで、解決率を上げ続ける",
+      "center": "毎週",
       "stages": [
         {
           "title": "計測",
           "items": [
-            "使用状況・失敗・効果"
+            "分類別の件数",
+            "AI の解決率",
+            "人が答えた件数"
           ]
         },
         {
-          "title": "改善",
+          "title": "分析",
           "items": [
-            "誤検知の調整",
-            "利用者の声"
+            "誤回答の内容",
+            "未解決の理由",
+            "答えの根拠の有無"
           ]
         },
         {
-          "title": "審査",
+          "title": "更新",
           "items": [
-            "validate で再確認",
-            "四半期の棚卸し"
+            "手順書の追記",
+            "古い手順の修正",
+            "質問例の追加"
           ]
         },
         {
-          "title": "配布",
+          "title": "反映",
           "items": [
-            "段階配布",
-            "切り戻し手順"
+            "AI の回答に反映",
+            "回答を再確認",
+            "翌週の結果を比べる"
           ]
         }
       ],
-      "notes": "TYPE 27 / cycle — stages は3〜6段。右列が前半（上から）、左列が後半（下から）。"
+      "notes": "type: cycle — 円弧の矢印でつなぐ 3〜6 段の循環。"
     },
     {
       "type": "kpi_tree",
-      "eyebrow": "TYPE 28 / kpi_tree",
-      "title": "KPI ツリー（kpi_tree）",
-      "lead": "目標 → 施策の方向性 → KPI と目標値 → 測り方を左から右へつなぎ、効果の測り方を1枚で示す。",
+      "eyebrow": "4 進め方と効果",
+      "title": "効果は 3 つの KPI で測り、毎月確認する",
       "headers": [
         "目標",
         "施策の方向性",
-        "KPIと目標値",
+        "KPI と目標値",
         "",
         "測り方・具体例"
       ],
-      "root": "基盤の価値",
+      "root": "対応の質",
       "branches": [
         {
-          "title": "止める（統制）",
+          "title": "早く答える",
           "kpis": [
             {
-              "title": "未承認の稼働を無くす",
-              "value": "0台",
-              "note": "月次で端末を棚卸しする"
+              "title": "初回の回答までの時間",
+              "value": "2 分",
+              "note": "受付ログから毎日集計する"
             }
           ]
         },
         {
-          "title": "見える（可視化）",
+          "title": "人の時間を空ける",
           "kpis": [
             {
-              "title": "全チームが使用量を見られる",
-              "value": "100%",
-              "note": "導入率を週次で集計する"
+              "title": "1 件あたりの人の対応時間",
+              "value": "8 分",
+              "note": "18 分から 56% 減らす（予備検証の値）"
             }
           ]
         },
         {
-          "title": "速くなる（開発体験）",
+          "title": "満足してもらう",
           "kpis": [
             {
-              "title": "レビューの差し戻しを減らす",
-              "value": "−20%",
-              "note": "利用チームと非利用チームを比べる"
+              "title": "回答後の満足度",
+              "value": "4.4",
+              "note": "5 段階のアンケートを毎月実施"
             }
           ]
         }
       ],
-      "conclusion": "目標値は最初のフェーズの実測で見直す",
-      "notes": "TYPE 28 / kpi_tree — branches の各要素に kpis（title / value / note）。KPI は合計6行以内が目安。"
+      "conclusion": "目標値は、試験運用の最初の 1 か月の実測で見直す",
+      "notes": "type: kpi_tree — 目標 → 施策 → KPI → 測り方を左から右へ。"
+    },
+    {
+      "type": "reasons",
+      "eyebrow": "4 進め方と効果",
+      "title": "現場の 3 つの課題に、この進め方で答える",
+      "left_heading": "現場の課題",
+      "right_heading": "この進め方の答え",
+      "issues": [
+        {
+          "title": "答えが散らばっている",
+          "text": "手順書が 3 か所にある"
+        },
+        {
+          "title": "待たされる",
+          "text": "返事まで平均 95 分"
+        },
+        {
+          "title": "人の時間が足りない",
+          "text": "定型の質問に月 780 時間"
+        }
+      ],
+      "strengths": [
+        {
+          "title": "手順書を 1 つにまとめ、更新の担当を決める",
+          "items": [
+            "答えの置き場を 1 か所に"
+          ]
+        },
+        {
+          "title": "AI が根拠つきで一次回答し、2 分で返す",
+          "items": [
+            "確信度が低い質問は人へ"
+          ]
+        },
+        {
+          "title": "定型は AI に任せ、人は難しい相談に集中する",
+          "items": [
+            "年間約 6,900 時間が空く"
+          ]
+        }
+      ],
+      "conclusion": "課題と答えを 1 対 1 で対応させ、3 か月で効果を確かめる",
+      "notes": "type: reasons — 左に課題、右に答えを同じ行で対応させる。"
+    },
+    {
+      "type": "split",
+      "side": "right",
+      "ratio": 0.4,
+      "panel": {
+        "image": "assets/panel-slate.jpg",
+        "kpi": {
+          "value": "6,900",
+          "unit": "時間",
+          "label": "年間で空く、人の対応時間（試算）"
+        }
+      },
+      "title": "空いた時間は、難しい相談と手順書の改善に回す",
+      "blocks": [
+        {
+          "type": "bullets",
+          "heading": "空いた時間の使い道",
+          "bullets": [
+            "新しい不具合の原因を調べる",
+            "利用者の事情に合わせて支援する",
+            "AI の誤回答を確認して手順書に反映する"
+          ]
+        },
+        {
+          "type": "callout",
+          "text": "人が受ける件数は、月 2,300 件に減る",
+          "note": "いまの 4,200 件から、1 件ずつ手順書を厚くして減らす"
+        }
+      ],
+      "source": "試算の前提：定型 2,604 件／月 × 18 分 × 自動解決率 74% × 12 か月",
+      "notes": "type: split（panel に image）。画像の上の文字は、覆いの濃さを自動で選んで読めるようにする。",
+      "eyebrow": "4 進め方と効果"
+    },
+    {
+      "type": "pattern",
+      "pattern": "conclusion-evidence",
+      "slots": {
+        "eyebrow": "4 進め方と効果",
+        "title": "小さく始めて、効果を確かめてから広げる",
+        "label": "結論",
+        "conclusion": "まず情報システム部で 3 か月。成果が出たら全社へ広げる",
+        "evidence": [
+          {
+            "head": "失敗しても影響が小さい",
+            "body": "対象を 1 部署に絞るので、うまくいかなくても影響は限られる"
+          },
+          {
+            "head": "効果を数字で比べられる",
+            "body": "導入前後の対応時間を同じ方法で測り、広げるかを決められる"
+          },
+          {
+            "head": "現場の納得を得やすい",
+            "body": "使った人の声を、次の部署への説明にそのまま使える"
+          }
+        ],
+        "note": "出典：予備検証の実測（2026 年 8〜9 月・架空）"
+      },
+      "notes": "type: pattern（conclusion-evidence）。結論が主役の全面型。"
     },
     {
       "type": "closing",
-      "title": "29タイプで社内資料の大半を作れる",
+      "title": "まず 3 か月、試験運用を始めたい",
+      "message": "承認いただければ、12 月に整理を始めます",
       "bullets": [
-        "表・箇条書き・比較から図解まで、29タイプをネイティブに描画する",
-        "業務フローは swimlane、構成・データの流れ・状態遷移・やり取りは図解4タイプ",
-        "工程表は schedule、自由作図・グラフは image で拡張する",
-        "微修正は deck.json の style（差分）だけで完結する"
+        "判断：3 か月の試験運用の実施",
+        "12 月：手順書の整理を開始",
+        "1 月：試験運用を開始",
+        "3 月末：判断会議で拡大を決める"
       ],
-      "message": "テンプレートはテーマ・レイアウト・オーバーライドの3層で管理する",
-      "notes": "まとめ（closing）— primary 塗りの締め。eyebrow は無し。"
+      "background": {
+        "image": "assets/bg-dark.jpg"
+      },
+      "notes": "type: closing（variant: contact）。次のアクションと、判断してほしいことを明示して終える。"
     }
   ]
 }

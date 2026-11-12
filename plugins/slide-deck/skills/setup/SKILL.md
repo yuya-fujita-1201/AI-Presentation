@@ -14,9 +14,9 @@ allowed-tools: Bash(python:*), Bash(python3:*), Bash(py:*)
 | パッケージ | 要否 | 用途 |
 |---|---|---|
 | `python-pptx` | 必須 | PPTX 生成 |
-| `playwright`（+ chromium） | 任意 | `preview_deck.py` / `check_layout.py` / `contact_sheet.py` のプレビューPNG生成 |
+| `playwright`（+ chromium） | 検査には実質必須 | `preview_deck.py` / `check_layout.py` / `contact_sheet.py` のプレビューPNG生成。**SVG の画像を含むデッキ（同梱の見本も該当）の PPTX 化にも必要**（無いと「PPTX 化に playwright が必要です」で止まる。HTML だけなら `build_deck.py --html`） |
 | `pillow` | 任意 | `contact_sheet.py` の一覧シート生成、画像からのテーマ抽出（`theme_from_sample.py`） |
-| `pymupdf` | 任意 | PDF からのテーマ抽出（`theme_from_sample.py --pdf`） |
+| `pymupdf` | 任意 | PDF からのテーマ抽出（`theme_from_sample.py <ファイル.pdf>`。導入は `setup_deps.py --pdf`） |
 
 ## 実行
 
@@ -27,7 +27,7 @@ python "${CLAUDE_PLUGIN_ROOT}/tools/setup_deps.py" $ARGUMENTS
 
 | フラグ | 効果 |
 |---|---|
-| （なし） | 必須（python-pptx）を確認・導入 |
+| （なし） | 必須（python-pptx）だけを確認・導入。playwright は入らない（検査と SVG デッキの PPTX 化には `--all` か `--playwright`） |
 | `--playwright` | playwright + chromium も導入（プレビューPNG用） |
 | `--pillow` | pillow も導入（画像からのテーマ抽出用） |
 | `--pdf` | pymupdf も導入（PDF からのテーマ抽出用） |

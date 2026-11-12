@@ -1,6 +1,6 @@
 # 図解タイプ作図ガイド（`architecture` / `dataflow` / `lifecycle` / `sequence`）
 
-各タイプの JSON フィールド・トークンの一覧は `references/deck-schema.md`（「図解タイプ共通」節と各タイプ節）を見る。このガイドは**どのタイプを選ぶか**と**どう作図するか**（Archify 由来の規約・診断への対処・修理ループの回し方）専用。内容そのものの質（構成・タイトルの付け方）は `references/content-guide.md` を参照。
+各タイプの JSON フィールド・トークンの一覧は [schema/diagram.md](schema/diagram.md)（「図解タイプ共通」節と各タイプ節）と、`swimlane` は [schema/swimlane.md](schema/swimlane.md)、`schedule` は [schema/schedule.md](schema/schedule.md) を見る。このガイドは**どのタイプを選ぶか**と**どう作図するか**（Archify 由来の規約・診断への対処・修理ループの回し方）専用。内容そのものの質（構成・タイトルの付け方）は [content-guide.md](content-guide.md) を参照。HTML と PPTX の見え方の違い、Archify との違い・由来、Archify JSON の取り込みは [diagram-appendix.md](diagram-appendix.md)。
 
 ## 1. 図解タイプの選び方
 
@@ -14,6 +14,9 @@
 | API 呼び出し・メッセージのやり取りの時系列（時間軸が主役） | `sequence` |
 | 誰が何をするかの業務フロー（役割・部署が主役） | `swimlane` |
 | 部署をまたがない単純な一直線の手順 | `steps` |
+| 日程・工程表（時間軸が主役） | `schedule` |
+
+図の隣に要点・数字を置きたいときは、図解を `composite` のブロックに入れる（[schema/composite.md](schema/composite.md)）。小さい矩形ほど配線ラベルが重なりやすいので、ノードとラベルは少なく短く・凡例は `legend: false` にし、診断が残るなら図解だけを単独のスライドにする。
 
 ### `swimlane` / `lifecycle` / `steps` の使い分け
 
@@ -31,11 +34,12 @@
 
 ## 2. Archify 由来の作図規約
 
-このプラグインの図解エンジンは Archify（1章参照）の作図規約を踏襲している。AI（この文書を読んでいるあなた）が deck.json を書くときに守ると、診断の警告が出にくく見やすい図になる。
+このプラグインの図解エンジンは Archify（[diagram-appendix.md](diagram-appendix.md) の「Archify との違いと由来」）の作図規約を踏襲している。AI（この文書を読んでいるあなた）が deck.json を書くときに守ると、診断の警告が出にくく見やすい図になる。
 
 - **主経路は1本**の左→右（または上→下）になるよう `row`/`col` を揃える。行き来する矢印が多いと交差だらけになる。
 - **ノードは12個以下、列は6以下**。超えそうなら補助的なノードを `sublabel` にまとめるか、全体像＋詳細の2枚に分ける。
 - **意味のあるラベルは削らない**。プロトコル（HTTPS等）、動作（検証・書込等）、向き、同期/非同期、境界を越えるかどうかは省略しない。省いてよいのは両端のノード名から自明な情報だけ（例: `web`→`api` の矢印に「web から api へ」とは書かない）。
+- **行き来する 2 つの矢印は 1 本の双方向にまとめ、`label_back` で戻りの名前を付ける**（`{"arrow": "both", "label": "受注確定", "label_back": "在庫引当"}`）。逆向きは線の反対側に置かれる。`arrow` が `both` でないと表示されない。
 - **`via` / `label_at` / `from_side` / `to_side` は最初から書かない**。自動配線・自動ラベル配置に任せ、`check_diagram.py` が具体的な座標を提示してから、指摘された1箇所にだけ加える。先回りして全エッジに `via` を敷き詰めると、ノードを動かすたびに手で座標を直す羽目になる。
 - **`groups` は本当の所有・信頼・配備の境界だけ**に使う（VPC、セキュリティグループ、チームの持ち物 等）。「なんとなく近いノードをまとめる」目的では使わない（見た目のグルーピングがしたいだけなら groups を使わず row/col を近づけるだけでよい）。
 - 修理は次の順序で進める: **スキーマ（id・重複・範囲）→ 配置（衝突・範囲外）→ 横切り・辺の向き → 交差・重なり・短い線 → ラベル**。上流を直すと下流の警告が連鎖的に消えることが多い。
@@ -44,7 +48,7 @@
 
 診断は一度に全部直そうとしない。
 
-1. `python "$TOOLS/check_diagram.py" <deck_dir>` を実行する。
+1. `python "${CLAUDE_PLUGIN_ROOT}/tools/check_diagram.py" <deck_dir>` を実行する。報告のスライド番号は **PNG の番号**（`preview_deck.py` / `check_layout.py` と同じ。凡例ページの自動挿入込み）。deck.json の何枚目かは「deck.json N枚目」と併記される。
 2. 報告された診断から **1件**を選ぶ（error があれば error を優先）。
 3. その `fixes` のうち **1点だけ** を deck.json に反映する（複数の fixes 候補は「どれか1つ」の代替案であって、全部やるものではない）。
 4. 再度 `check_diagram.py` を実行し、件数が減っていれば次の診断に進む。
@@ -54,7 +58,7 @@
 
 ### 診断コード別の直し方の例
 
-`code` の一覧・意味は `deck-schema.md` の「図解タイプの診断」を参照。ここでは典型的な直し方を deck.json の差分で示す。
+`code` の一覧・意味は [schema/diagram.md](schema/diagram.md) の「図解タイプの診断」を参照。ここでは典型的な直し方を deck.json の差分で示す。
 
 **`edge-through-node`**（エッジが無関係なノードを横切る）: 経由ノードを避ける経路を1点だけ追加する。
 
@@ -65,7 +69,7 @@
 ```
 （座標は診断が提示したものをそのまま使う。自分で計算しない。）
 
-**`label-collision`**（ラベルが他要素と重なる）: 提示された `label_at` をそのまま置くか、文言を短くする。
+**`label-collision`**（ラベルが他要素と重なる）: まず、**往復する 2 本（A→B と B→A）を 1 本の `arrow: "both"` + `label_back` にまとめる**（差し戻しの矢印が隣に重なるのは、たいていこれ。ラベルは 2〜4 字）。それでも出るなら、提示された `label_at` をそのまま置くか、文言を短くする。ノードを動かしたあとに古い `label_at` が文字に重なると、無視して自動配置に戻り `label-at-ignored` の警告が出る。そのときは `label_at` を消す（座標を足し直さない）。
 
 ```jsonc
 // 診断: → edges の該当要素に "label_at": [420, 210] のように位置を指定する
@@ -104,68 +108,3 @@
 // After: 要点だけ label に残し、詳細は sublabel へ
 { "id": "api", "label": "決済API", "sublabel": "リトライ・冪等性制御" }
 ```
-
-## 4. HTML / PPTX の見た目の違い
-
-座標・トークン解決は共通ソース（テーマ＋レイアウト＋deck.json）から行うため大枠のレイアウトは一致するが、レンダラ由来の細部差が残る（`deck-schema.md` の座標系の節と同じ考え方）。
-
-- **`return`（戻り）のエッジ**: HTML は開いた矢印（`◁` 型）の SVG マーカー、PPTX は `sysDash`（細かい破線）＋開いた矢印ヘッド（`type="arrow"`）のコネクタで近似する。実線の矢印（三角形の塗り矢印）とは見分けが付くが、線の太さの見え方は HTML よりわずかに細くなる。
-- **type アイコン**: HTML は 16×16 の stroke ベースの SVG（`frontend`/`backend`/`database`/`cloud`/`security`/`messagebus`/`external`）をそのまま描くが、PPTX には同じ描画方法が無いため、**プリセット図形の組み合わせで近似**する（例: `database`→ CAN 図形、`cloud`→ CLOUD 図形、`security`→ FLOWCHART_OFFPAGE_CONNECTOR 図形、`messagebus`→ 3本の矢印線）。輪郭の細部は HTML と完全には一致しない。
-- **lifecycle の kind グリフ**（成功のチェック・失敗の×・待機の砂時計）も同様に、HTML は SVG パス、PPTX はプリセット図形／線分の組み合わせで近似する。
-- **Keynote で PPTX を開く場合**: 本プラグインは PowerPoint（python-pptx が生成する OOXML）を正としており、Keynote での見え方は未検証（推測）。特にコネクタの矢印ヘッド（`headEnd`/`tailEnd` の `type="arrow"` による開いた矢印）や `prstDash`（`dashDot`/`sysDash` 等の破線パターン）は Keynote が独自に解釈し直すことがあるため、Keynote 配布が前提のデッキでは `preview_deck.py`（HTML/PNG）に加えて実際に Keynote で開いて確認することを推奨する。
-
-## 5. Archify との違いと由来
-
-このプラグインの図解タイプは Archify（<https://github.com/tt-a1i/archify> , MIT）の方式「AI は型付き JSON（構造・意味・配置）だけを書き、決定論的なコードが検証して描く。検証に落ちたら座標付きの修理指示が返る」を Python ネイティブに取り込んだもの（Node.js・Archify 本体は不要）。参考動画: 「ArchifyでAIに図を描かせる新しいやり方」（クロノITチャンネル, <https://www.youtube.com/watch?v=L2KPenldwdo>）。
-
-意図的に変えている点:
-
-- **配置はグリッド（`row`/`col`）指定のみ**で px 座標は書かない（Archify は自由配置の pos/size）。
-- **配色はテーマトークンのみ**で `type` ごとの色相は使わない。`type` は**アイコンの形**で表し、色は `variant`/`kind` が担う（テーマを切り替えても図解の配色が破綻しない設計）。
-- **`lifecycle` のレーンは自由な N 本**（Archify は main/terminal の3帯固定）。
-- **診断は常時有効**で、Archify にあるような品質プロファイルの切替は無い。
-- **ブランドロゴの自動検出などネットワークを使う機能は非対応**。
-- **`sequence` の自己メッセージ**（右側のコの字型の描画）は本プラグイン独自の拡張。
-
-## 6. Archify JSON の取り込み
-
-既存の Archify JSON（`archify.json`）があれば、`tools/archify_import.py` で 1 スライド分の JSON に変換できる（Node.js・Archify 本体は不要。純 Python）。
-
-```bash
-python "$TOOLS/archify_import.py" <archify.json>                   # 変換結果を stdout に JSON 出力
-python "$TOOLS/archify_import.py" <archify.json> --eyebrow "TYPE / architecture"
-python "$TOOLS/archify_import.py" <archify.json> --tolerance 70    # architecture の座標量子化の距離閾値(px)（既定70）
-python "$TOOLS/archify_import.py" <archify.json> --out slide.json  # 変換結果をファイルに保存
-python "$TOOLS/archify_import.py" <archify.json> --into <deck_dir> # 追記内容を表示するだけ（既存 deck.json は書き換えない）
-python "$TOOLS/archify_import.py" <archify.json> --into <deck_dir> --confirm  # 承認後に実際に追記して保存
-```
-
-### `--into` の承認ゲート（既存 deck.json の上書き前に必ず確認する）
-
-`--into` は既存の `deck.json` を読み込み、`slides` の末尾に 1 枚追記して**同じパスへ上書き保存**する。利用者が手で書いたデッキを壊しうるため、次の順で進める:
-
-1. まず `--confirm` を**付けずに**実行する。既存 `deck.json` があると書き込まずに終了し（exit 1）、追記される内容が stdout に、書き込み先と追記後の枚数が stderr に出る
-2. その内容（どのファイルに・何枚目として・どんなスライドが追加されるか）を**利用者に提示し、明示的な承認を得る**（エージェントが実行する場合は `AskUserQuestion` で確認する）
-3. 承認が得られたときだけ `--confirm` を付けて再実行する
-4. 承認が得られない場合は上書きせず、`--out <file>` で別ファイルに書き出して渡す
-
-`deck.json` が無い（新規作成）場合は上書きにならないため `--confirm` は不要。
-
-Archify の `diagram_type` は次のように対応するタイプへ変換される（`workflow` だけ `swimlane` に変わる点に注意）:
-
-| Archify | このプラグイン |
-|---|---|
-| `architecture` | `architecture` |
-| `workflow` | `swimlane` |
-| `dataflow` | `dataflow` |
-| `sequence` | `sequence` |
-| `lifecycle` | `lifecycle` |
-
-主な変換ルール:
-
-- `architecture` は Archify 側が絶対座標（`pos`/`size`）しか持たないことが多いため、ノード中心座標を x/y それぞれでクラスタリングして `row`/`col`（グリッド位置）に量子化する（`--tolerance` で距離のしきい値を調整。既定 70px）。
-- Archify 固有の絶対座標・幾何指定（`pos`/`size`/`via`/`labelAt`/`labelDx`/`labelDy`/`channelX`/`channelY`/`route`/`width`/`bias`/`cornerRadius` 等）は、このプラグインが自動配線・自動配置するため**捨てる**。何を捨てたかは変換時に stderr へ `note:` として要約表示される。
-- Archify の `cards`（結論カードのテキスト）は、このプラグインの `notes`（スピーカーノート）に変換される。**`notes` は HTML でのみ表示され PPTX には出力されない**ため、PPTX 配布が前提のデッキでは内容を `lead` 等の可視領域へ改めて転記する。
-- `workflow` の `groups`（Archify 側のグルーピング）や `mainPath`（主経路強調）は swimlane が対応する概念を持たないため捨てられる。
-
-変換結果は必ずこのプラグインの診断（`validate_grid_diagram` / `layout_sequence` / swimlane の検証）にかけられ、診断は stderr に表示される。**error が1件でもあれば exit code 1** になるが、そのときも stdout には変換結果の JSON がそのまま出力される（壊れた状態を確認しながら deck.json 側で直せるようにするため）。変換後は本ガイドの「修理ループ」に従って deck.json を整える。

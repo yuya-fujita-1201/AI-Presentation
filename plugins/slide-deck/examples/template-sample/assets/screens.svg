@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1136" height="492" viewBox="0 0 1136 492" font-family="Hiragino Sans, Meiryo UI, Yu Gothic, sans-serif">
+  <rect width="1136" height="492" fill="#FFFFFF"/>
+  <!-- 利用者の画面 -->
+  <rect x="8" y="8" width="540" height="476" rx="14" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="2"/>
+  <rect x="8" y="8" width="540" height="48" rx="14" fill="#EEF1F5"/><rect x="8" y="40" width="540" height="16" fill="#EEF1F5"/>
+  <circle cx="34" cy="32" r="6" fill="#9CA3AF"/><circle cx="54" cy="32" r="6" fill="#9CA3AF"/><circle cx="74" cy="32" r="6" fill="#9CA3AF"/>
+  <text x="100" y="40" font-size="20" fill="#4B5563">利用者の画面：問い合わせチャット</text>
+  <rect x="150" y="84" width="376" height="60" rx="14" fill="#1F2937"/>
+  <text x="172" y="122" font-size="24" fill="#FFFFFF">VPN に接続できません</text>
+  <rect x="30" y="168" width="470" height="196" rx="14" fill="#EEF1F5"/>
+  <text x="50" y="206" font-size="24" fill="#1F2937">接続手順を確認しましょう。</text>
+  <text x="50" y="242" font-size="24" fill="#1F2937">① 社内ネットワークの設定を開く</text>
+  <text x="50" y="278" font-size="24" fill="#1F2937">② 認証アプリのコードを入力する</text>
+  <rect x="50" y="304" width="360" height="40" rx="20" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="2"/>
+  <text x="70" y="332" font-size="20" fill="#4B5563">根拠：VPN 接続手順（10/02 更新）</text>
+  <rect x="30" y="396" width="196" height="56" rx="28" fill="#1F2937"/>
+  <text x="128" y="432" text-anchor="middle" font-size="22" fill="#FFFFFF">解決した</text>
+  <rect x="244" y="396" width="256" height="56" rx="28" fill="#FFFFFF" stroke="#1F2937" stroke-width="2"/>
+  <text x="372" y="432" text-anchor="middle" font-size="22" fill="#1F2937">担当者に相談する</text>
+  <!-- 矢印 -->
+  <path d="M556 246 L584 246" stroke="#1F2937" stroke-width="4" fill="none"/>
+  <path d="M584 232 L604 246 L584 260 z" fill="#1F2937"/>
+  <!-- 担当者の画面 -->
+  <rect x="612" y="8" width="516" height="476" rx="14" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="2"/>
+  <rect x="612" y="8" width="516" height="48" rx="14" fill="#EEF1F5"/><rect x="612" y="40" width="516" height="16" fill="#EEF1F5"/>
+  <circle cx="638" cy="32" r="6" fill="#9CA3AF"/><circle cx="658" cy="32" r="6" fill="#9CA3AF"/><circle cx="678" cy="32" r="6" fill="#9CA3AF"/>
+  <text x="704" y="40" font-size="20" fill="#4B5563">担当者の画面：引き継ぎ</text>
+  <rect x="632" y="76" width="476" height="72" rx="12" fill="#EEF1F5"/>
+  <text x="652" y="108" font-size="22" fill="#4B5563">質問</text><text x="720" y="108" font-size="24" fill="#1F2937">VPN に接続できません</text>
+  <text x="652" y="136" font-size="22" fill="#4B5563">AI の確信度</text><text x="800" y="136" font-size="24" font-weight="bold" fill="#1F2937">62%（基準 80% 未満）</text>
+  <text x="632" y="190" font-size="22" font-weight="bold" fill="#1F2937">ここまでのやり取り</text>
+  <rect x="632" y="204" width="476" height="108" rx="12" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="2"/>
+  <text x="652" y="238" font-size="22" fill="#1F2937">・手順 ①② を案内済み</text>
+  <text x="652" y="270" font-size="22" fill="#1F2937">・認証コードの入力でエラーと回答</text>
+  <text x="652" y="302" font-size="22" fill="#1F2937">・端末は社給 PC（資産番号 あり）</text>
+  <text x="632" y="350" font-size="22" font-weight="bold" fill="#1F2937">担当者がやること</text>
+  <rect x="632" y="364" width="476" height="56" rx="12" fill="#EEF1F5"/>
+  <text x="652" y="400" font-size="24" fill="#1F2937">認証アプリの再登録を案内する</text>
+  <rect x="632" y="432" width="236" height="40" rx="20" fill="#1F2937"/>
+  <text x="750" y="460" text-anchor="middle" font-size="20" fill="#FFFFFF">回答を送る</text>
+  <rect x="880" y="432" width="228" height="40" rx="20" fill="#FFFFFF" stroke="#1F2937" stroke-width="2"/>
+  <text x="994" y="460" text-anchor="middle" font-size="20" fill="#1F2937">手順書に追記する</text>
+</svg>

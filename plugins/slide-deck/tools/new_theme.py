@@ -7,9 +7,11 @@
     python tools/new_theme.py <name> --from acn-slide-master   # 別テーマを写して作成
     python tools/new_theme.py <name> --extends acn-slide-master # 差分だけ書く最小テーマを作成
     python tools/new_theme.py <name> --dir ./themes    # 出力先を明示
+    python tools/new_theme.py <name> --shape soft      # 形のプリセット（角丸・罫線・見出しの組み方）も指定する
 
 出力先の優先順:
-    --dir 指定 → 環境変数 SLIDE_DECK_THEMES の先頭 → カレントディレクトリの ./themes/
+    --dir 指定 → --deck 指定（<deck>/themes/）→ 環境変数 SLIDE_DECK_THEMES の先頭 → カレントディレクトリの ./themes/
+    作成後に「書き込み先」と「どのデッキから見つかるか」を表示する（探索規則は deck_paths.py）。
     （同梱の templates/themes/ には --dir で明示したときだけ書く。プラグイン更新で
       ユーザーの独自テーマが無警告で失われないようにするため）
 
@@ -37,6 +39,8 @@ try:
     import build_deck  # type: ignore
 except Exception:
     build_deck = None
+import deck_paths  # noqa: E402
+import shape_engine  # noqa: E402
 
 
 def _fallback_setup_console():
@@ -73,15 +77,8 @@ def load_theme_file(name: str) -> dict:
     return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
-def resolve_out_dir(arg_dir):
-    if arg_dir:
-        return Path(arg_dir)
-    env = os.environ.get("SLIDE_DECK_THEMES")
-    if env:
-        first = next((p for p in env.split(os.pathsep) if p.strip()), None)
-        if first:
-            return Path(first)
-    return Path.cwd() / "themes"
+def resolve_out_dir(arg_dir, deck=None):
+    return deck_paths.default_out_dir("themes", deck, arg_dir)
 
 
 def main() -> int:
@@ -91,6 +88,8 @@ def main() -> int:
     ap.add_argument("--from", dest="seed", default="default", help="トークン値の写し元テーマ（既定: default）")
     ap.add_argument("--extends", help="差分だけ書く最小テーマにする（このテーマを親にする）")
     ap.add_argument("--dir", help="出力先ディレクトリ（既定: SLIDE_DECK_THEMES / ./themes/）")
+    ap.add_argument("--deck", help="このデッキのフォルダの themes/ に作る（--dir より弱い）")
+    ap.add_argument("--shape", help="形のプリセット名（classic / sharp / soft / editorial、または登録した shape）。テーマ JSON に \"shape\" を書く")
     ap.add_argument("--force", action="store_true", help="既存ファイルを上書き")
     args = ap.parse_args()
 
@@ -99,7 +98,10 @@ def main() -> int:
     if args.name == "default":
         fail("'default' は予約名です。別名にしてください。")
 
-    out_dir = resolve_out_dir(args.dir)
+    if args.shape:
+        shape_engine.load_shape(args.shape, args.deck, "--shape", fail=fail)    # 無い名前・不正な名前は候補つきで fail
+
+    out_dir = resolve_out_dir(args.dir, args.deck)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"{args.name}.json"
     if out_path.exists() and not args.force:
@@ -125,6 +127,9 @@ def main() -> int:
         theme = {"name": args.name, "colors": dict(seed["colors"]), "fonts": dict(seed["fonts"])}
         made_note = f"{args.seed} の全トークンを複製。色・フォントを編集して使う（不要な行は消せば default から継承）"
 
+    if args.shape:
+        theme["shape"] = args.shape
+        made_note += f"。shape: {args.shape}（deck.json の meta.shape があればそちらが優先）"
     try:
         out_path.write_text(json.dumps(theme, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     except PermissionError:
@@ -135,8 +140,8 @@ def main() -> int:
     if out_dir == BUNDLED_THEMES:
         note("同梱テーマ置き場に作成しました。プラグイン更新で消えないようにするには")
         note("環境変数 SLIDE_DECK_THEMES にユーザー用ディレクトリを設定するか、--dir で明示してください。")
-    print("書き込み先: " + str(out_dir))
-    print("ビルダーのテーマ探索順: 環境変数 SLIDE_DECK_THEMES / <deck_dir>/themes/ / 同梱 templates/themes/")
+    for line in deck_paths.visibility_lines("themes", out_dir):
+        print(line)
     print(f'次の手順: 色を編集 -> deck.json の meta.theme に "{args.name}" を指定 -> build_deck.py で再ビルド')
     print("トークンの意味は references/themes.md を参照。作成後は check_theme.py でコントラストを確認してください。")
     return 0

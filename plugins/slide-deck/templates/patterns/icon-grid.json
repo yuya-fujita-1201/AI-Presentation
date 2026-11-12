@@ -1,0 +1,3022 @@
+{
+ "name": "icon-grid",
+ "label": "印つきの格子（3〜6 個）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "特長・理由など順位のない 3〜6 個を格子に並べる（柱と土台の全面は pillars）",
+ "description": "丸の中の印（1〜2 文字、または番号）＋見出し＋一言の面を、格子状に同じ重さで並べる。サービスの特長・選ばれる理由・機能の一覧など、順位をつけない 3〜6 個の要素に使う本文向け（見出し・リード・フッターはスライド側の title / lead が描く）。個数に合わせて 1 行（3 個）・2×2（4 個）・2 行（5〜6 個）に組み替わり、全項目の文字の大きさがそろう（文が短いほど大きく、長い項目が 1 つあれば全体がそれに合わせて縮む）。幅 700px 未満の矩形（合成スライドの半幅など）では丸と文字を横に並べた 1 列の横長カード、700〜1000px 未満では 2 列（3 個のときは 1 列）に組み替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。高さ 340px 未満の矩形（上下 2 段のブロックなど）では、行や列の詰め方を変えた短い構図に切り替わる。shape: soft のとき面に影が付く。（本文の領域の縦中央に置く）",
+ "block_alt": "代わりに numbered-list（縦の番号つき）か箇条書きを使う",
+ "background": "background",
+ "slots": {
+  "items": {
+   "kind": "records",
+   "label": "項目",
+   "min": 3,
+   "max": 6,
+   "fields": {
+    "head": {
+     "kind": "text",
+     "label": "項目の見出し（1 行に収まる長さ）",
+     "max_chars": 12
+    },
+    "body": {
+     "kind": "text",
+     "label": "項目の一言（2〜3 行まで）",
+     "max_chars": 32
+    },
+    "mark": {
+     "kind": "text",
+     "label": "丸の中の印（空なら番号）",
+     "max_chars": 2,
+     "description": "1〜2 文字（漢字・記号・番号）。空なら 01 02 … の番号になる"
+    }
+   },
+   "example": [
+    {
+     "head": "朝採れの野菜",
+     "body": "毎朝、県内の農家から直接仕入れて店頭に並べる",
+     "mark": "鮮"
+    },
+    {
+     "head": "対面の接客",
+     "body": "魚と肉は、その場で切り方や食べ方を相談できる",
+     "mark": "声"
+    },
+    {
+     "head": "宅配に対応",
+     "body": "70 歳以上の方は、送料無料で週 2 回お届けする",
+     "mark": "届"
+    },
+    {
+     "head": "地域の催しに協力",
+     "body": "学校や町内会の行事へ、食材を割引で提供する",
+     "mark": "和"
+    },
+    {
+     "head": "ポイントがたまる",
+     "body": "買い物のたびにたまり、レジで 1 ポイント 1 円で使える",
+     "mark": "得"
+    },
+    {
+     "head": "困ったらすぐ相談",
+     "body": "店長が直接、電話とメールで要望を受け付ける",
+     "mark": "助"
+    }
+   ],
+   "required": true,
+   "description": "3〜6 個の特長・理由・機能を同じ重さで並べる。丸の中に 1〜2 文字の印（空なら番号）を出す。個数に合わせて 1 行（3 個）・2×2（4 個）・2 行（5〜6 個）に組み替わる。見出しは 1 行、一言は 2〜3 行に収まる長さで書く。全項目の文字の大きさがそろい、文が短いほど大きい"
+  }
+ },
+ "elements": [],
+ "variants_by": "items",
+ "variants": {
+  "3": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 30.0,
+      "w": 1136,
+      "h": 340,
+      "cols": 3,
+      "gap": 28
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "surface",
+       "radius": "$radius.card",
+       "shadow": "$shadow.card"
+      },
+      {
+       "name": "項目{{index}}の丸",
+       "x": 30,
+       "y": 30,
+       "w": 88,
+       "h": 88,
+       "fill": "primary",
+       "geom": "ellipse"
+      },
+      {
+       "name": "項目{{index}}の印",
+       "x": 30,
+       "y": 30,
+       "if": "mark",
+       "w": 88,
+       "h": 88,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{mark}}",
+            "size": 38,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         38,
+         34,
+         30
+        ],
+        "group": "mark"
+       }
+      },
+      {
+       "name": "項目{{index}}の番号",
+       "x": 30,
+       "y": 30,
+       "if": "!mark",
+       "w": 88,
+       "h": 88,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "0{{index}}",
+            "size": 34,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         34,
+         30
+        ],
+        "group": "num"
+       }
+      },
+      {
+       "name": "項目{{index}}の見出し",
+       "x": 30,
+       "y": 138,
+       "h": 44,
+       "r": 30,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24
+        ],
+        "group": "head"
+       }
+      },
+      {
+       "name": "項目{{index}}の一言",
+       "x": 30,
+       "y": 192,
+       "r": 30,
+       "b": 24,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.4,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 24,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         21,
+         20,
+         19,
+         18
+        ],
+        "group": "body"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "4": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0,
+      "w": 1136,
+      "h": 400,
+      "cols": 2,
+      "gap": 24
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "surface",
+       "radius": "$radius.card",
+       "shadow": "$shadow.card"
+      },
+      {
+       "name": "項目{{index}}の丸",
+       "x": 24,
+       "y": 24,
+       "w": 64,
+       "h": 64,
+       "fill": "primary",
+       "geom": "ellipse"
+      },
+      {
+       "name": "項目{{index}}の印",
+       "x": 24,
+       "y": 24,
+       "if": "mark",
+       "w": 64,
+       "h": 64,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{mark}}",
+            "size": 28,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         28,
+         24,
+         20
+        ],
+        "group": "mark"
+       }
+      },
+      {
+       "name": "項目{{index}}の番号",
+       "x": 24,
+       "y": 24,
+       "if": "!mark",
+       "w": 64,
+       "h": 64,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "0{{index}}",
+            "size": 24,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         20
+        ],
+        "group": "num"
+       }
+      },
+      {
+       "name": "項目{{index}}の見出し",
+       "x": 104,
+       "y": 24,
+       "h": 64,
+       "r": 24,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 30,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         30,
+         28,
+         26,
+         24,
+         22
+        ],
+        "group": "head"
+       }
+      },
+      {
+       "name": "項目{{index}}の一言",
+       "x": 24,
+       "y": 98,
+       "r": 24,
+       "b": 18,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 24,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         21,
+         20,
+         19,
+         18
+        ],
+        "group": "body"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "5": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0,
+      "w": 1136,
+      "h": 400,
+      "cols": 3,
+      "gap": {
+       "x": 22,
+       "y": 24
+      },
+      "last_row": "center"
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "surface",
+       "radius": "$radius.card",
+       "shadow": "$shadow.card"
+      },
+      {
+       "name": "項目{{index}}の丸",
+       "x": 22,
+       "y": 22,
+       "w": 56,
+       "h": 56,
+       "fill": "primary",
+       "geom": "ellipse"
+      },
+      {
+       "name": "項目{{index}}の印",
+       "x": 22,
+       "y": 22,
+       "if": "mark",
+       "w": 56,
+       "h": 56,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{mark}}",
+            "size": 24,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         20,
+         16
+        ],
+        "group": "mark"
+       }
+      },
+      {
+       "name": "項目{{index}}の番号",
+       "x": 22,
+       "y": 22,
+       "if": "!mark",
+       "w": 56,
+       "h": 56,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "0{{index}}",
+            "size": 20,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         20,
+         16
+        ],
+        "group": "num"
+       }
+      },
+      {
+       "name": "項目{{index}}の見出し",
+       "x": 94,
+       "y": 22,
+       "h": 56,
+       "r": 22,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 26,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         21,
+         20
+        ],
+        "group": "head"
+       }
+      },
+      {
+       "name": "項目{{index}}の一言",
+       "x": 22,
+       "y": 88,
+       "r": 22,
+       "b": 16,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 21,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "body"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "6": {
+   "elements": [
+    {
+     "repeat": "items",
+     "grid": {
+      "x": 0,
+      "y": 0,
+      "w": 1136,
+      "h": 400,
+      "cols": 3,
+      "gap": {
+       "x": 22,
+       "y": 24
+      }
+     },
+     "template": [
+      {
+       "name": "項目{{index}}の面",
+       "x": 0,
+       "y": 0,
+       "fill": "surface",
+       "radius": "$radius.card",
+       "shadow": "$shadow.card"
+      },
+      {
+       "name": "項目{{index}}の丸",
+       "x": 22,
+       "y": 22,
+       "w": 56,
+       "h": 56,
+       "fill": "primary",
+       "geom": "ellipse"
+      },
+      {
+       "name": "項目{{index}}の印",
+       "x": 22,
+       "y": 22,
+       "if": "mark",
+       "w": 56,
+       "h": 56,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{mark}}",
+            "size": 24,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         20,
+         16
+        ],
+        "group": "mark"
+       }
+      },
+      {
+       "name": "項目{{index}}の番号",
+       "x": 22,
+       "y": 22,
+       "if": "!mark",
+       "w": 56,
+       "h": 56,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "0{{index}}",
+            "size": 20,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         20,
+         16
+        ],
+        "group": "num"
+       }
+      },
+      {
+       "name": "項目{{index}}の見出し",
+       "x": 94,
+       "y": 22,
+       "h": 56,
+       "r": 22,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 26,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         21,
+         20
+        ],
+        "group": "head"
+       }
+      },
+      {
+       "name": "項目{{index}}の一言",
+       "x": 22,
+       "y": 88,
+       "r": 22,
+       "b": 16,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 21,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         21,
+         20,
+         19,
+         18,
+         17,
+         16
+        ],
+        "group": "body"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    400
+   ],
+   "elements": [],
+   "min_width": 380,
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": {
+         "x": 0,
+         "y": 14
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 20,
+         "y": 28.0,
+         "w": 68,
+         "h": 68,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 20,
+         "y": 28.0,
+         "if": "mark",
+         "w": 68,
+         "h": 68,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 30,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           26,
+           22
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 20,
+         "y": 28.0,
+         "if": "!mark",
+         "w": 68,
+         "h": 68,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 26,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           22
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 102,
+         "y": 20,
+         "r": 22,
+         "b": 20,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 22.8,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 6
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": {
+         "x": 0,
+         "y": 10
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 14,
+         "y": 16.25,
+         "w": 60,
+         "h": 60,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 14,
+         "y": 16.25,
+         "if": "mark",
+         "w": 60,
+         "h": 60,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 28,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           24,
+           20
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 14,
+         "y": 16.25,
+         "if": "!mark",
+         "w": 60,
+         "h": 60,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 24,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           20
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 88,
+         "y": 14,
+         "r": 16,
+         "b": 14,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 21.28,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": {
+         "x": 0,
+         "y": 8
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 10,
+         "y": 10.799999999999997,
+         "w": 52,
+         "h": 52,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 10,
+         "y": 10.799999999999997,
+         "if": "mark",
+         "w": 52,
+         "h": 52,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 24,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           20,
+           16
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 10,
+         "y": 10.799999999999997,
+         "if": "!mark",
+         "w": 52,
+         "h": 52,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 20,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           16
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 76,
+         "y": 10,
+         "r": 12,
+         "b": 10,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 17.76,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": {
+         "x": 0,
+         "y": 6
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 6,
+         "y": 7.833333333333332,
+         "w": 46,
+         "h": 46,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 6,
+         "y": 7.833333333333332,
+         "if": "mark",
+         "w": 46,
+         "h": 46,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 22,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           18,
+           14
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 6,
+         "y": 7.833333333333332,
+         "if": "!mark",
+         "w": 46,
+         "h": 46,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 18,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           14
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 66,
+         "y": 6,
+         "r": 8,
+         "b": 6,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 22,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 16.06,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 2
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "min_width_by_count": {
+    "4": 390,
+    "5": 440,
+    "6": 470
+   }
+  },
+  {
+   "below": 700,
+   "below_h": 340,
+   "size": [
+    540,
+    300
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": {
+         "x": 0,
+         "y": 10
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 14,
+         "y": 15.666666666666664,
+         "w": 62,
+         "h": 62,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 14,
+         "y": 15.666666666666664,
+         "if": "mark",
+         "w": 62,
+         "h": 62,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 28,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           24,
+           20
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 14,
+         "y": 15.666666666666664,
+         "if": "!mark",
+         "w": 62,
+         "h": 62,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 24,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           20
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 90,
+         "y": 14,
+         "r": 16,
+         "b": 14,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 21.28,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 5
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": {
+         "x": 0,
+         "y": 8
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 10,
+         "y": 7.5,
+         "w": 54,
+         "h": 54,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 10,
+         "y": 7.5,
+         "if": "mark",
+         "w": 54,
+         "h": 54,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 24,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           20,
+           16
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 10,
+         "y": 7.5,
+         "if": "!mark",
+         "w": 54,
+         "h": 54,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 20,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           16
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 78,
+         "y": 10,
+         "r": 12,
+         "b": 10,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 18.24,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 2,
+        "gap": {
+         "x": 12,
+         "y": 10
+        },
+        "last_row": "center"
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 10,
+         "y": 21.666666666666664,
+         "w": 50,
+         "h": 50,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 10,
+         "y": 21.666666666666664,
+         "if": "mark",
+         "w": 50,
+         "h": 50,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 24,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           20,
+           16
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 10,
+         "y": 21.666666666666664,
+         "if": "!mark",
+         "w": 50,
+         "h": 50,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 20,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           16
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 74,
+         "y": 10,
+         "r": 12,
+         "b": 10,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 22,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 17.6,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 2,
+        "gap": {
+         "x": 12,
+         "y": 10
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 10,
+         "y": 21.666666666666664,
+         "w": 50,
+         "h": 50,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 10,
+         "y": 21.666666666666664,
+         "if": "mark",
+         "w": 50,
+         "h": 50,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 24,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           20,
+           16
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 10,
+         "y": 21.666666666666664,
+         "if": "!mark",
+         "w": 50,
+         "h": 50,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 20,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           16
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 74,
+         "y": 10,
+         "r": 12,
+         "b": 10,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 22,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 17.6,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 1,
+        "gap": {
+         "x": 0,
+         "y": 14
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 22,
+         "y": 26.0,
+         "w": 72,
+         "h": 72,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 22,
+         "y": 26.0,
+         "if": "mark",
+         "w": 72,
+         "h": 72,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 32,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           32,
+           28,
+           24
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 22,
+         "y": 26.0,
+         "if": "!mark",
+         "w": 72,
+         "h": 72,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 28,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           24
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 108,
+         "y": 22,
+         "r": 24,
+         "b": 22,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 34,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 25.84,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 6
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           34,
+           32,
+           30,
+           28,
+           26,
+           24,
+           22,
+           20
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 2,
+        "gap": {
+         "x": 20,
+         "y": 20
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 18,
+         "y": 63.0,
+         "w": 64,
+         "h": 64,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 18,
+         "y": 63.0,
+         "if": "mark",
+         "w": 64,
+         "h": 64,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 28,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           24,
+           20
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 18,
+         "y": 63.0,
+         "if": "!mark",
+         "w": 64,
+         "h": 64,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 24,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           20
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 96,
+         "y": 18,
+         "r": 20,
+         "b": 18,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 22.8,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 2,
+        "gap": {
+         "x": 20,
+         "y": 14
+        },
+        "last_row": "center"
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 14,
+         "y": 34.0,
+         "w": 56,
+         "h": 56,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 14,
+         "y": 34.0,
+         "if": "mark",
+         "w": 56,
+         "h": 56,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 26,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           22,
+           18
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 14,
+         "y": 34.0,
+         "if": "!mark",
+         "w": 56,
+         "h": 56,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 22,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           18
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 84,
+         "y": 14,
+         "r": 16,
+         "b": 14,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 21.0,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "6": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 2,
+        "gap": {
+         "x": 20,
+         "y": 14
+        }
+       },
+       "template": [
+        {
+         "name": "項目{{index}}の面",
+         "x": 0,
+         "y": 0,
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "項目{{index}}の丸",
+         "x": 14,
+         "y": 34.0,
+         "w": 56,
+         "h": 56,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の印",
+         "x": 14,
+         "y": 34.0,
+         "if": "mark",
+         "w": 56,
+         "h": 56,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{mark}}",
+              "size": 26,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           22,
+           18
+          ],
+          "group": "mark"
+         }
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 14,
+         "y": 34.0,
+         "if": "!mark",
+         "w": 56,
+         "h": 56,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "0{{index}}",
+              "size": 22,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           18
+          ],
+          "group": "num"
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 84,
+         "y": 14,
+         "r": 16,
+         "b": 14,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 21.0,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

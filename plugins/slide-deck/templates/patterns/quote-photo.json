@@ -1,0 +1,732 @@
+{
+ "name": "quote-photo",
+ "label": "人の言葉（引用＋顔写真）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "人の言葉に顔写真と名前を添えて見せ、主張を第三者の声で裏づける",
+ "description": "人の言葉（お客様の声・社員のコメント・登壇者の一言）を大きく見せ、名前と肩書き、任意で顔写真を添える。主張を第三者の声で裏づけたい本文向け（見出し・リード・フッターはスライド側の title / lead が描く）。写真を渡すと左に写真・右に引用、渡さなければ文章だけの構図になる。言葉が長いと文字サイズが縮む。幅 700px 未満の矩形（合成スライドの半幅など）では、引用を上に大きく・下に丸い顔写真と名前を置く構図、700〜1000px 未満では、写真の幅を 240px にした左右の構図に切り替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。（本文の領域の縦中央に置く）",
+ "block_alt": "言葉を短くする・代わりに quote-block（写真なしの引用）を使う",
+ "background": "background",
+ "slots": {
+  "quote": {
+   "kind": "text",
+   "label": "引用する言葉",
+   "max_chars": 90,
+   "required": true,
+   "description": "人の言葉そのまま。「」は付けない。90 字まで",
+   "example": "導入前は不安でしたが、最初の 1 か月で、毎週の集計に使っていた 4 時間がほぼ無くなりました。"
+  },
+  "name": {
+   "kind": "text",
+   "label": "名前",
+   "max_chars": 14,
+   "required": true,
+   "example": "山本 健一"
+  },
+  "role": {
+   "kind": "text",
+   "label": "肩書き・所属",
+   "max_chars": 26,
+   "example": "経理部 マネージャー"
+  },
+  "photo": {
+   "kind": "image",
+   "label": "顔写真（省略可）",
+   "description": "縦長か正方形の写真（assets/ からの相対パス）。無ければ文章だけの構図になる。代替テキストは slots に photo_alt で渡せる",
+   "example": "assets/sample-portrait.png"
+  }
+ },
+ "elements": [
+  {
+   "kind": "image",
+   "name": "写真",
+   "x": 0,
+   "y": 0,
+   "w": 360,
+   "h": 400,
+   "path": "{{photo}}",
+   "fit": "cover",
+   "alt": "{{name}}",
+   "radius": "$radius.image",
+   "if": "photo"
+  },
+  {
+   "name": "引用の帯（写真あり）",
+   "x": 400,
+   "y": 40,
+   "if": "photo",
+   "w": 8,
+   "h": 320,
+   "fill": "accent"
+  },
+  {
+   "name": "引用（写真あり）",
+   "x": 436,
+   "y": 0,
+   "if": "photo",
+   "w": 700,
+   "h": 400,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.45,
+      "runs": [
+       {
+        "text": "{{quote}}",
+        "size": 44,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 24
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{name}}",
+        "size": 28,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       },
+       {
+        "text": "　{{role}}",
+        "size": 20,
+        "color": "muted",
+        "if": "role"
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     44,
+     42,
+     40,
+     38,
+     36,
+     34,
+     32,
+     30,
+     28,
+     26,
+     24,
+     22
+    ]
+   }
+  },
+  {
+   "name": "引用の帯（写真なし）",
+   "x": 0,
+   "y": 40,
+   "if": "!photo",
+   "w": 8,
+   "h": 320,
+   "fill": "accent"
+  },
+  {
+   "name": "引用（写真なし）",
+   "x": 36,
+   "y": 0,
+   "if": "!photo",
+   "w": 1100,
+   "h": 400,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.45,
+      "runs": [
+       {
+        "text": "{{quote}}",
+        "size": 60,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 24
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{name}}",
+        "size": 28,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       },
+       {
+        "text": "　{{role}}",
+        "size": 20,
+        "color": "muted",
+        "if": "role"
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     60,
+     56,
+     52,
+     48,
+     44,
+     42,
+     40,
+     38,
+     36,
+     34,
+     32,
+     30,
+     28,
+     26,
+     24,
+     22
+    ]
+   }
+  }
+ ],
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    420
+   ],
+   "elements": [
+    {
+     "name": "引用の帯（写真あり）",
+     "x": 0,
+     "y": 8,
+     "if": "photo",
+     "w": 7,
+     "h": 296,
+     "fill": "accent"
+    },
+    {
+     "name": "引用（写真あり）",
+     "x": 28,
+     "y": 0,
+     "if": "photo",
+     "w": 512,
+     "h": 312,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.45,
+        "runs": [
+         {
+          "text": "{{quote}}",
+          "size": 40,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       40,
+       38,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ]
+     }
+    },
+    {
+     "kind": "image",
+     "name": "写真",
+     "x": 28,
+     "y": 336,
+     "w": 84,
+     "h": 84,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{name}}",
+     "radius": 42.0,
+     "if": "photo"
+    },
+    {
+     "name": "名前と肩書き（写真あり）",
+     "x": 128,
+     "y": 336,
+     "if": "photo",
+     "w": 412,
+     "h": 84,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{name}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{role}}",
+          "size": 18.72,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 2,
+        "if": "role"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17
+      ]
+     }
+    },
+    {
+     "name": "引用の帯（写真なし）",
+     "x": 0,
+     "y": 30,
+     "if": "!photo",
+     "w": 7,
+     "h": 308,
+     "fill": "accent"
+    },
+    {
+     "name": "引用（写真なし）",
+     "x": 30,
+     "y": 0,
+     "if": "!photo",
+     "w": 510,
+     "h": 344,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.45,
+        "runs": [
+         {
+          "text": "{{quote}}",
+          "size": 56,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       56,
+       52,
+       48,
+       44,
+       42,
+       40,
+       38,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22
+      ]
+     }
+    },
+    {
+     "name": "名前と肩書き（写真なし）",
+     "x": 30,
+     "y": 356,
+     "if": "!photo",
+     "w": 510,
+     "h": 64,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{name}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{role}}",
+          "size": 18.72,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 2,
+        "if": "role"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17
+      ]
+     }
+    }
+   ],
+   "min_width": 380
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [
+    {
+     "kind": "image",
+     "name": "写真",
+     "x": 0,
+     "y": 0,
+     "w": 240,
+     "h": 400,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{name}}",
+     "radius": "$radius.image",
+     "if": "photo"
+    },
+    {
+     "name": "引用の帯（写真あり）",
+     "x": 272,
+     "y": 40,
+     "if": "photo",
+     "w": 7,
+     "h": 268,
+     "fill": "accent"
+    },
+    {
+     "name": "引用（写真あり）",
+     "x": 302,
+     "y": 0,
+     "if": "photo",
+     "w": 498,
+     "h": 324,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.45,
+        "runs": [
+         {
+          "text": "{{quote}}",
+          "size": 40,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       40,
+       38,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ]
+     }
+    },
+    {
+     "name": "名前と肩書き（写真あり）",
+     "x": 302,
+     "y": 336,
+     "if": "photo",
+     "w": 498,
+     "h": 64,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{name}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{role}}",
+          "size": 18.72,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 2,
+        "if": "role"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17
+      ]
+     }
+    },
+    {
+     "name": "引用の帯（写真なし）",
+     "x": 0,
+     "y": 40,
+     "if": "!photo",
+     "w": 7,
+     "h": 268,
+     "fill": "accent"
+    },
+    {
+     "name": "引用（写真なし）",
+     "x": 34,
+     "y": 0,
+     "if": "!photo",
+     "w": 766,
+     "h": 324,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.45,
+        "runs": [
+         {
+          "text": "{{quote}}",
+          "size": 56,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       56,
+       52,
+       48,
+       44,
+       42,
+       40,
+       38,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22
+      ]
+     }
+    },
+    {
+     "name": "名前と肩書き（写真なし）",
+     "x": 34,
+     "y": 336,
+     "if": "!photo",
+     "w": 766,
+     "h": 64,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{name}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{role}}",
+          "size": 18.72,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 2,
+        "if": "role"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18,
+       17
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

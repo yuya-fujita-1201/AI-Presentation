@@ -19,19 +19,36 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TOOLS_DIR = Path(__file__).resolve().parent
 
 sys.path.insert(0, str(TOOLS_DIR))
+import lo_profile  # noqa: E402
 try:
     import build_deck  # type: ignore
 except Exception:
     build_deck = None
+
+
+# meta.id に使えない文字（build_deck.py の _ID_FORBIDDEN_RE と同じ。build_deck を読み込めたらそちらを使う）
+_ID_FORBIDDEN_RE = getattr(build_deck, "_ID_FORBIDDEN_RE", None) or re.compile(r'[\\/:*?"<>|\x00-\x1f]')
+
+
+def deck_id_problem(deck_id):
+    """meta.id がパスとして危険なら理由の文を、問題なければ None を返す（--no-build は build_deck の検査を通らないため、ここでも見る）"""
+    text = str(deck_id)
+    if _ID_FORBIDDEN_RE.search(text):
+        return f"meta.id に使用できない文字が含まれています: '{text}'（\\ / : * ? \" < > | と制御文字は使用できません）"
+    if text.strip() in (".", ".."):      # / と \\ は上で弾くので、パスをさかのぼれるのはこの 2 つだけ
+        return f"meta.id に '{text}' は使えません（build/ の外のファイルを指してしまいます）"
+    return None
 
 
 def _fallback_setup_console():
@@ -107,7 +124,11 @@ def main() -> int:
     if not deck_json.exists():
         fail(f"{deck_json} が見つかりません")
     deck = json.loads(deck_json.read_text(encoding="utf-8-sig"))
-    deck_id = deck.get("meta", {}).get("id") or deck_dir.name
+    meta = deck.get("meta") if isinstance(deck, dict) else None
+    deck_id = (meta.get("id") if isinstance(meta, dict) else None) or deck_dir.name
+    problem = deck_id_problem(deck_id)
+    if problem:
+        fail(problem)
     pptx_path = deck_dir / "build" / f"{deck_id}.pptx"
 
     if args.no_build:
@@ -127,15 +148,21 @@ def main() -> int:
 
     out_dir = Path(args.out) if args.out else deck_dir / "build"
     out_dir.mkdir(parents=True, exist_ok=True)
-    cmd = [soffice, "--headless", "--norestore", "--convert-to", "pdf", "--outdir", str(out_dir), str(pptx_path)]
-    print(f"  $ {' '.join(cmd)}")
-    try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
-    except FileNotFoundError:
-        print(MANUAL_STEPS, file=sys.stderr)
-        fail(f"soffice の起動に失敗しました: {soffice}")
-    except subprocess.TimeoutExpired:
-        fail("soffice の変換がタイムアウトしました（180秒）。PPTX が壊れていないか確認してください")
+    # テーマのフォントがこの機械に無いとき、LibreOffice は変換のたびに別の代替フォントを選ぶことがある。
+    # 一時プロファイルでフォントの置き換えを固定して、同じ PPTX から毎回同じ PDF が出るようにする（lo_profile.py）
+    with tempfile.TemporaryDirectory(prefix="slide-deck-lo-") as tmp:
+        prof = lo_profile.prepare(Path(tmp) / "profile", pptx_path)
+        cmd = [soffice, prof["env"], "--headless", "--norestore", "--convert-to", "pdf", "--outdir", str(out_dir), str(pptx_path)]
+        print(f"  $ {' '.join(cmd)}")
+        for src, dst in prof["pairs"]:
+            note(f"フォント '{src}' がこの環境に無いため、PDF では '{dst}' に置き換えて書き出します")
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
+        except FileNotFoundError:
+            print(MANUAL_STEPS, file=sys.stderr)
+            fail(f"soffice の起動に失敗しました: {soffice}")
+        except subprocess.TimeoutExpired:
+            fail("soffice の変換がタイムアウトしました（180秒）。PPTX が壊れていないか確認してください")
 
     pdf_path = out_dir / f"{pptx_path.stem}.pdf"
     if proc.returncode != 0 or not pdf_path.exists():

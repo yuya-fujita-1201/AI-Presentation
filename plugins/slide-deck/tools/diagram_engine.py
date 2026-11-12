@@ -23,6 +23,7 @@ Python で取り込んだもの。build_deck.py（HTML / PPTX）と check_diagra
 from __future__ import annotations
 
 import heapq
+import re
 import unicodedata
 from typing import Dict, List, Optional, Sequence, Tuple
 
@@ -34,7 +35,6 @@ Point = Tuple[float, float]
 
 CLEARANCE = 2.0          # ノードを横切る判定のクリアランス（px）
 MIN_SEGMENT = 8.0        # これ未満のセグメントは「リズム」違反（info）
-MIN_INTERIOR = 16.0      # 内側の折れセグメントの最小長
 CORRIDOR_STEP = 7.0      # 同一回廊で複数線をずらす間隔（px）
 MAX_SPREAD = 24.0        # 同一回廊での広がりの上限（px。レーン/列のマージンに収める）
 LABEL_PAD_X = 5.0        # ラベルピルの左右パディング
@@ -87,20 +87,32 @@ def text_width(text, size: float) -> float:
 BREAK_AFTER = "・、。／/をのはがにとで"   # 日本語の自然な折り返し位置（この文字の直後で切ってよい）
 
 
+_TODO_MARK = re.compile(r"【要確認(?:\s*[:：]\s*([^】]*))?】")
+
+
 def _tokens(line: str) -> List[str]:
-    """英数字の連なり（単語）は 1 トークン、空白は 1 トークン、それ以外（CJK 等）は 1 文字 1 トークン。"""
+    """英数字の連なり（単語）は 1 トークン、空白は 1 トークン、それ以外（CJK 等）は 1 文字 1 トークン。
+    【要確認】/【要確認: …】のマーカーも 1 トークン（行をまたぐと強調が付かなくなるため。収まらない長いマーカーは wrap_text が文字単位で切る）。"""
     out: List[str] = []
     cur = ""
-    for ch in line:
-        if ch.isascii() and not ch.isspace():
-            cur += ch
-            continue
+    spans = [m.span() for m in _TODO_MARK.finditer(line)] if "【要確認" in line else []
+    spans.append((len(line), len(line)))
+    pos = 0
+    for a, b in spans:
+        for ch in line[pos:a]:
+            if ch.isascii() and not ch.isspace():
+                cur += ch
+                continue
+            if cur:
+                out.append(cur)
+                cur = ""
+            out.append(ch)
         if cur:
             out.append(cur)
             cur = ""
-        out.append(ch)
-    if cur:
-        out.append(cur)
+        if b > a:
+            out.append(line[a:b])
+        pos = b
     return out
 
 
@@ -115,7 +127,13 @@ def wrap_text(text, size: float, width: float) -> List[str]:
             out.append("")
             continue
         line = ""
+        toks = []
         for tok in _tokens(raw):
+            if len(tok) > 1 and tok.startswith("【") and text_width(tok, size) > width:
+                toks.extend(tok)          # 幅に収まらない長いマーカーは文字単位で折る
+            else:
+                toks.append(tok)
+        for tok in toks:
             if not line and tok.isspace():
                 continue
             cand = line + tok
@@ -156,13 +174,17 @@ def fit_font_size(text, size: float, width: float, height: float, line_h: float 
                 and "\n" not in str(text or ""):
             return s1, [str(text or "")]
     s = float(size)
-    while True:
+    if s != s:       # NaN
+        s = float(min_size)
+    s = min(s, max(2000.0, float(min_size)))     # 極端に大きい値（1e6〜1e308）でも 1px ずつの縮小が必ず終わるよう、出発点に上限を置く（通常の 1〜200px には影響しない）
+    for _ in range(2200):
         lines = wrap_text(text, s, width)
         ok_h = len(lines) * s * line_h <= height + 0.5
         ok_n = max_lines is None or len(lines) <= max_lines
         if (ok_h and ok_n) or s <= min_size:
             return s, lines
         s -= 1
+    return s, lines
 
 
 # ---------------------------------------------------------------------------
@@ -307,14 +329,26 @@ def format_diagnostic(d: dict, prefix: str = "") -> str:
 # グリッド
 # ---------------------------------------------------------------------------
 
+def _grid_count(n) -> int:
+    """行数・列数を 1〜GRID_HARD_MAX の整数にする（NaN・inf・巨大な値も安全に丸める）"""
+    try:
+        return min(max(1, int(n)), GRID_HARD_MAX)
+    except (OverflowError, ValueError, TypeError):
+        return 1 if not (isinstance(n, float) and n == float("inf")) else GRID_HARD_MAX
+
+
+GRID_HARD_MAX = 400    # Grid が実際に作る行・列の絶対上限（検証を通っていない入力で、格子の構築がメモリを使い切らないための最後の防御）
+
+
 class Grid:
-    """rows×cols のセル格子。h_tracks / v_tracks は配線に使えるガター（行間・列間・外周）の座標。"""
+    """rows×cols のセル格子。h_tracks / v_tracks は配線に使えるガター（行間・列間・外周）の座標。
+    行・列が GRID_HARD_MAX を超える指定は GRID_HARD_MAX に丸める（通常は呼び出し側が GRID_MAX_CELLS で先に止める）。"""
 
     def __init__(self, x: float, y: float, w: float, h: float, rows: int, cols: int,
                  node_wr: float = 0.78, node_hr: float = 0.62,
                  v_tracks: Optional[List[float]] = None, h_tracks: Optional[List[float]] = None):
         self.x, self.y, self.w, self.h = float(x), float(y), float(w), float(h)
-        self.rows, self.cols = max(1, int(rows)), max(1, int(cols))
+        self.rows, self.cols = (_grid_count(rows), _grid_count(cols))
         self.cell_w = self.w / self.cols
         self.cell_h = self.h / self.rows
         self.node_wr, self.node_hr = node_wr, node_hr
@@ -737,23 +771,38 @@ def place_labels(routed: List[dict], boxes: Dict[str, dict], label_size: float,
         else:
             obstacles.append(b)
     obstacles.extend(extra_obstacles or [])  # tag ピルなど、ノード箱の外にはみ出す小要素
-    for e in routed:
-        text = e.get("label")
+    # 双方向の矢印（arrow: both）の逆向きのラベル（label_back）は、順方向のラベルを全部置いたあとで、同じ線の反対側（水平なら下・垂直なら左）を優先して置く
+    tasks = [(e, e.get("label"), False) for e in routed] + \
+            [(e, e.get("label_back"), True) for e in routed if e.get("label_back") and e.get("arrow") == "both"]
+    for e, text, back in tasks:
+        key = "label_back_box" if back else "label_box"
         if not text:
-            e["label_box"] = None
+            e[key] = None
             continue
         lw, lh = label_box_size(text, label_size)
         # classification（dataflow のデータ区分。2 行目に小さく表示）があればその分だけピルを高くする
-        if e.get("classification"):
+        if e.get("classification") and not back:
             cls_size = label_size * 0.85
             lw = max(lw, text_width(e["classification"], cls_size) + 2 * LABEL_PAD_X)
             lh += cls_size * 1.2
             e["class_h"] = cls_size * 1.2
-        if e.get("label_at"):
+        if e.get("label_at") and not back:
             cx, cy = float(e["label_at"][0]), float(e["label_at"][1])
-            e["label_box"] = {"cx": cx, "cy": cy, "w": lw, "h": lh, "x": cx - lw / 2, "y": cy - lh / 2}
-            placed.append(e["label_box"])
-            continue
+            at_box = {"cx": cx, "cy": cy, "w": lw, "h": lh, "x": cx - lw / 2, "y": cy - lh / 2}
+            # label_at が図形の文字の上に載るとき（レイアウトの変更で古い座標が残った等）は、座標を無視して自動配置に戻す。
+            # ひし形は外接矩形ではなく中央 60%（文字のある所）だけを見る。
+            blocked = [b for b in boxes.values()
+                       if penetration(at_box, rect_of(b["x"] + b["w"] * 0.2, b["y"] + b["h"] * 0.2, b["w"] * 0.6, b["h"] * 0.6)
+                                      if b.get("shape") in ("diamond", "decision") else b) > TOUCH_TOL]
+            if not blocked:
+                e["label_box"] = at_box
+                placed.append(at_box)
+                continue
+            diags.append(diag_warn(
+                "label-at-ignored", f"{subject_prefix}{e.get('from')}→{e.get('to')}",
+                f"エッジ {e.get('from')}→{e.get('to')} の label_at [{round(cx)}, {round(cy)}] はノードの文字の上に重なるため、無視して自動で置きました",
+                {"label": text, "label_at": [round(cx), round(cy)]},
+                ["label_at を消す（自動配置に任せる）", "ノードに重ならない座標を label_at に書く"]))
         pts = e["points"]
         segs = []
         for i in range(len(pts) - 1):
@@ -770,11 +819,10 @@ def place_labels(routed: List[dict], boxes: Dict[str, dict], label_size: float,
         for _, i, horiz, p, q in segs:
             mx, my = (p[0] + q[0]) / 2, (p[1] + q[1]) / 2
             if horiz:
-                candidates.append((mx, my - LABEL_GAP - lh / 2))
-                candidates.append((mx, my + LABEL_GAP + lh / 2))
+                pair = [(mx, my - LABEL_GAP - lh / 2), (mx, my + LABEL_GAP + lh / 2)]
             else:
-                candidates.append((mx + LABEL_GAP + lw / 2, my))
-                candidates.append((mx - LABEL_GAP - lw / 2, my))
+                pair = [(mx + LABEL_GAP + lw / 2, my), (mx - LABEL_GAP - lw / 2, my)]
+            candidates.extend(pair[::-1] if back else pair)
         best = None
         best_pen = float("inf")
         for cx, cy in candidates:
@@ -801,7 +849,7 @@ def place_labels(routed: List[dict], boxes: Dict[str, dict], label_size: float,
                 best = box
             if pen == 0.0:
                 break
-        e["label_box"] = best
+        e[key] = best
         if best is not None:
             placed.append(best)
             if best_pen > 0.0:
@@ -818,7 +866,7 @@ def place_labels(routed: List[dict], boxes: Dict[str, dict], label_size: float,
                     fixes.append("列数（cols）を減らす、または style.diagram.node_wr を 0.7 程度に下げてノード間の隙間を広げる")
                 diags.append(diag_warn(
                     "label-collision", subj,
-                    f"エッジ {e.get('from')}→{e.get('to')} のラベル「{text}」が他の要素と重なります",
+                    f"エッジ {e.get('from')}→{e.get('to')} の{'逆向きの' if back else ''}ラベル「{text}」が他の要素と重なります",
                     {"label": text, "at": [round(best['cx']), round(best['cy'])], "overlap": round(best_pen)},
                     fixes))
 
@@ -1107,8 +1155,8 @@ def layout_sequence(slide: dict, d: dict, diags: Optional[List[dict]] = None, su
             continue
         if ti < fi:
             fi, ti = ti, fi
-        sy = ys[fi] - pitch * 0.62
-        ey = ys[ti] + pitch * 0.26
+        sy = ys[fi] - pitch * d.get("segment_pad_top", 0.62)
+        ey = ys[ti] + pitch * d.get("segment_pad_bottom", 0.12)   # 隣の枠との間に隙間を残す（枠の線が 2 重に見えない）
         segs.append({"label": sg.get("label", ""), "x": x0 + 2, "y": sy, "w": w - 4, "h": ey - sy})
     lifeline_bottom = bottom
     return {"participants": pboxes, "order": ids, "col_w": col_w, "box_w": box_w, "box_h": box_h,
@@ -1152,7 +1200,10 @@ def _norm_edges(slide: dict, kind: str) -> List[dict]:
     return [dict(e) for e in (edges or []) if isinstance(e, dict)]
 
 
-COMMON_SLIDE_KEYS = {"type", "title", "eyebrow", "lead", "notes", "style", "legend", "cols", "rows",
+# 全タイプ共通のキー（relation / line_balance / conclusion / source など）は deck_schema に集約している
+from deck_schema import UNIVERSAL_SLIDE_KEYS as _UNIVERSAL_SLIDE_KEYS  # noqa: E402
+
+COMMON_SLIDE_KEYS = set(_UNIVERSAL_SLIDE_KEYS) | {"type", "title", "eyebrow", "lead", "notes", "style", "legend", "cols", "rows",
                      "col_headers", "row_headers", "groups",
                      "legend_page", "legend_title", "legend_eyebrow", "legend_lead", "legend_items"}
 ALLOWED_KEYS = {
@@ -1163,7 +1214,7 @@ ALLOWED_KEYS = {
 }
 NODE_KEYS = {"id", "label", "text", "sublabel", "tag", "type", "variant", "row", "col", "lane", "stage", "kind", "step"}
 EDGE_KEYS = {"from", "to", "label", "variant", "style", "arrow", "from_side", "to_side", "via", "label_at", "route",
-             "classification", "id"}
+             "classification", "id", "label_back"}
 
 
 def check_unknown_keys(slide: dict, kind: str, subject_prefix: str = "") -> List[dict]:
@@ -1180,10 +1231,10 @@ def check_unknown_keys(slide: dict, kind: str, subject_prefix: str = "") -> List
         return f"（候補: {m[0]}）" if m else ""
 
     for key in slide.keys():
-        if key not in allowed:
+        if key not in allowed and not str(key).startswith("_"):
             diags.append(diag_warn("unknown-key", f"{subject_prefix}{key}",
                                    f"'{key}' は {kind} のフィールド名ではありません{hint(key, allowed)}", {},
-                                   ["deck-schema.md の該当タイプの節にあるキー名に直す"]))
+                                   ["該当タイプのファイル（索引の「タイプ一覧表」から開く references/schema/*.md）のキー名に直す"]))
     if kind != "sequence":
         for i, nd in enumerate(_norm_nodes(slide, kind)):
             for key in nd.keys():
@@ -1198,6 +1249,9 @@ def check_unknown_keys(slide: dict, kind: str, subject_prefix: str = "") -> List
     return diags
 
 
+GRID_MAX_CELLS = 40   # row / col の上限（これを超えると読めず、配置・配線の計算が終わらなくなる）
+
+
 def validate_grid_diagram(slide: dict, kind: str, subject_prefix: str = "") -> List[dict]:
     """ビルド前のスキーマ的検証（id 重複・未知 id・型・範囲）。error は fail 相当。"""
     diags: List[dict] = check_unknown_keys(slide, kind, subject_prefix)
@@ -1208,6 +1262,12 @@ def validate_grid_diagram(slide: dict, kind: str, subject_prefix: str = "") -> L
     if not nodes:
         diags.append(diag_error("empty", f"{subject_prefix}{coll}", f"{coll} が空です", {}, [f"{coll} に 1 個以上のノードを書く"]))
         return diags
+    for key, label_ja in (("cols", "列"), ("rows", "行")):
+        v = slide.get(key)
+        if isinstance(v, int) and not isinstance(v, bool) and v > GRID_MAX_CELLS:
+            diags.append(diag_error("invalid-position", f"{subject_prefix}{key}",
+                                    f"{key} が {v} です。{label_ja}は {GRID_MAX_CELLS} {label_ja}までです", {},
+                                    [f"{key} を減らす（多すぎるときはスライドを分ける）"]))
     ids = set()
     cells: Dict[Tuple[int, int], str] = {}
     for i, nd in enumerate(nodes):
@@ -1226,6 +1286,11 @@ def validate_grid_diagram(slide: dict, kind: str, subject_prefix: str = "") -> L
                 diags.append(diag_error("invalid-position", f"{subject_prefix}{nid}",
                                         f"ノード '{nid}' の {key} は 0 以上の整数で指定してください（現在: {v!r}）", {},
                                         [f"{key} を 0 始まりの整数にする"]))
+            elif v >= GRID_MAX_CELLS:
+                label_ja = "行" if key == "row" else "列"
+                diags.append(diag_error("invalid-position", f"{subject_prefix}{nid}",
+                                        f"ノード '{nid}' の {key} が {v} です。{label_ja}は {GRID_MAX_CELLS} {label_ja}までです", {},
+                                        [f"{key} は 0 始まりで、飛ばさずに詰めて指定する（多すぎるときはスライドを分ける）"]))
         t = nd.get("type")
         if t is not None and t not in COMPONENT_TYPES:
             diags.append(diag_warn("unknown-type", f"{subject_prefix}{nid}",
@@ -1270,6 +1335,10 @@ def validate_grid_diagram(slide: dict, kind: str, subject_prefix: str = "") -> L
         if v is not None and v not in EDGE_VARIANTS:
             diags.append(diag_warn("unknown-variant", f"{subject_prefix}{ecoll}[{i}]",
                                    f"{ecoll}[{i}] の variant '{v}' は未対応です（{', '.join(EDGE_VARIANTS)}）", {}, ["default / emphasis / security / dashed のいずれかにする"]))
+        if e.get("label_back") and e.get("arrow") != "both":
+            diags.append(diag_warn("label-back-ignored", f"{subject_prefix}{ecoll}[{i}]",
+                                   f"{ecoll}[{i}] の label_back は arrow が both のときだけ表示されます（今は表示されません）",
+                                   {}, ["arrow を \"both\" にする（行きと戻りに別のラベルを付ける）", "戻りのラベルが要らないなら label_back を消す"]))
     groups = slide.get("groups") or []
     for gi, g in enumerate(groups):
         if not isinstance(g, dict):
@@ -1331,8 +1400,24 @@ def layout_grid_diagram(slide: dict, kind: str, d: dict, diags: Optional[List[di
 
     maxcol = max([nd.get("col", 0) for nd in nodes if isinstance(nd.get("col"), int)] + [0])
     maxrow = max([nd.get("row", 0) for nd in nodes if isinstance(nd.get("row"), int)] + [0])
-    cols = slide.get("cols") or (len(col_headers) if col_headers else 0) or (maxcol + 1)
-    rows = slide.get("rows") or (len(row_headers) if row_headers else 0) or (maxrow + 1)
+    # 行・列の上限（合成スライドのブロックは autofit が検証より先にここへ来るので、巨大な値で格子を作る前に止める）。
+    # 超えた分は error の診断にして、格子は上限に丸める（上限を超えたノードは置かない）
+    for key, label_ja, mx in (("cols", "列", maxcol), ("rows", "行", maxrow)):
+        want = slide.get(key)
+        want = want if isinstance(want, int) and not isinstance(want, bool) else 0
+        if max(want, mx + 1) > GRID_MAX_CELLS:
+            diags.append(diag_error("invalid-position", f"{subject_prefix}{key}",
+                                    f"{label_ja}が {max(want, mx + 1)} 必要です。{label_ja}は {GRID_MAX_CELLS} {label_ja}までです", {},
+                                    [f"{key} は 0 始まりで、飛ばさずに詰めて指定する（多すぎるときはスライドを分ける）"]))
+    maxcol, maxrow = min(maxcol, GRID_MAX_CELLS - 1), min(maxrow, GRID_MAX_CELLS - 1)
+    col_headers, row_headers = col_headers[:GRID_HARD_MAX], row_headers[:GRID_HARD_MAX]
+    cols_in, rows_in = slide.get("cols"), slide.get("rows")
+    if isinstance(cols_in, int) and not isinstance(cols_in, bool):
+        cols_in = min(cols_in, GRID_MAX_CELLS)
+    if isinstance(rows_in, int) and not isinstance(rows_in, bool):
+        rows_in = min(rows_in, GRID_MAX_CELLS)
+    cols = cols_in or (len(col_headers) if col_headers else 0) or (maxcol + 1)
+    rows = rows_in or (len(row_headers) if row_headers else 0) or (maxrow + 1)
     if maxcol >= cols:
         diags.append(diag_warn("out-of-grid", f"{subject_prefix}cols",
                                f"cols（{cols}）を超える col={maxcol} のノードがあるため cols を {maxcol + 1} に自動拡張しました",
@@ -1366,6 +1451,8 @@ def layout_grid_diagram(slide: dict, kind: str, d: dict, diags: Optional[List[di
             continue
         r, c = nd.get("row", 0), nd.get("col", 0)
         if not isinstance(r, int) or not isinstance(c, int) or r < 0 or c < 0:
+            continue
+        if r >= GRID_MAX_CELLS or c >= GRID_MAX_CELLS:      # 上限の外（診断は上で出した）。置かない
             continue
         shape = "rect"
         wr, hr = None, None

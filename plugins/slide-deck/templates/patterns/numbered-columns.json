@@ -1,0 +1,1762 @@
+{
+ "name": "numbered-columns",
+ "label": "番号つきの横並び（3〜5 項目）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "description": "番号を付けた 3〜5 項目を横一列の線の上に並べる。手順・段階・施策の束を、順番つきで見せる本文向け（見出し・リード・フッターはスライド側の title / lead が描く）。項目の数に合わせて列の幅が自動で決まり、文が長いと文字サイズが縮む。幅 1000px 未満の矩形（合成スライドの半幅・3 分の 2 など）では、円の番号を縦に並べて線でつなぎ、見出しの下に説明を置く縦のリストに組み替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。高さ 340px 未満の矩形（上下 2 段のブロックなど）では、行や列の詰め方を変えた短い構図に切り替わる。（本文の領域の縦中央に置く）",
+ "block_alt": "代わりに numbered-list（縦の番号つき）を使う",
+ "background": "background",
+ "slots": {
+  "items": {
+   "kind": "records",
+   "required": true,
+   "label": "項目",
+   "min": 3,
+   "max": 5,
+   "fields": {
+    "head": {
+     "kind": "text",
+     "label": "項目の名前",
+     "max_chars": 14
+    },
+    "body": {
+     "kind": "text",
+     "label": "項目の説明",
+     "max_chars": 70
+    }
+   },
+   "example": [
+    {
+     "head": "現状の把握",
+     "body": "今の手順と所要時間を一覧にして、時間のかかる箇所を数字で示す"
+    },
+    {
+     "head": "試す範囲を決める",
+     "body": "効果が大きく、失敗しても影響が小さい 1 業務から始める"
+    },
+    {
+     "head": "小さく動かす",
+     "body": "1 か月だけ現場で使い、毎週の振り返りで直す"
+    },
+    {
+     "head": "広げる",
+     "body": "うまくいった手順を、隣の部署へ型として渡す"
+    }
+   ]
+  }
+ },
+ "elements": [
+  {
+   "repeat": "items",
+   "grid": {
+    "x": 0,
+    "y": 0,
+    "w": 1136,
+    "h": 400,
+    "cols": "row",
+    "gap": 24
+   },
+   "template": [
+    {
+     "if": "!@last",
+     "name": "項目{{index}}から次へつなぐ線",
+     "x": 84,
+     "y": 37,
+     "r": -16,
+     "h": 2,
+     "fill": "border"
+    },
+    {
+     "name": "項目{{index}}の番号",
+     "x": 0,
+     "y": 0,
+     "w": 76,
+     "h": 76,
+     "geom": "ellipse",
+     "fill": "primary",
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{index}}",
+          "size": 36,
+          "bold": true,
+          "color": "on_primary",
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "align": "ctr"
+       }
+      ]
+     }
+    },
+    {
+     "name": "項目{{index}}の名前",
+     "x": 0,
+     "y": 100,
+     "r": 8,
+     "h": 100,
+     "fit": {
+      "sizes": [
+       44,
+       40,
+       38,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20,
+       18
+      ],
+      "group": true
+     },
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.1,
+        "runs": [
+         {
+          "text": "{{head}}",
+          "size": 44,
+          "bold": true,
+          "color": "heading_text",
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "name": "項目{{index}}のしるし",
+     "x": 0,
+     "y": 214,
+     "w": 48,
+     "h": 4,
+     "fill": "accent"
+    },
+    {
+     "name": "項目{{index}}の説明",
+     "x": 0,
+     "y": 240,
+     "r": 8,
+     "b": 4,
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20,
+       19,
+       18,
+       17,
+       16,
+       15,
+       14
+      ],
+      "group": true
+     },
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 34,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "valign": "middle",
+ "summary": "順に読ませる 3〜5 項目を横一列に（縦は numbered-list、日付つきは timeline）",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    400
+   ],
+   "elements": [],
+   "min_width": 380,
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 29.0,
+         "y": 101.66666666666667,
+         "if": "!@last",
+         "w": 2,
+         "h": 63.33333333333334,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 36.66666666666667,
+         "w": 60,
+         "h": 60,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 36.66666666666667,
+         "w": 60,
+         "h": 60,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 30,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 78,
+         "y": 8,
+         "r": 4,
+         "b": 8,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 34,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 25.5,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 6
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           34,
+           32,
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 25.0,
+         "y": 81.0,
+         "if": "!@last",
+         "w": 2,
+         "h": 38.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 24.0,
+         "w": 52,
+         "h": 52,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 24.0,
+         "w": 52,
+         "h": 52,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 26,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 70,
+         "y": 8,
+         "r": 4,
+         "b": 8,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 22.5,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 21.0,
+         "y": 67.0,
+         "if": "!@last",
+         "w": 2,
+         "h": 26.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 18.0,
+         "w": 44,
+         "h": 44,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 18.0,
+         "w": 44,
+         "h": 44,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 22,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 62,
+         "y": 8,
+         "r": 4,
+         "b": 8,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 19.5,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "min_width_by_count": {
+    "4": 400
+   }
+  },
+  {
+   "below": 700,
+   "below_h": 340,
+   "size": [
+    540,
+    300
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 26.0,
+         "y": 82.0,
+         "if": "!@last",
+         "w": 2,
+         "h": 36.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 23.0,
+         "w": 54,
+         "h": 54,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 23.0,
+         "w": 54,
+         "h": 54,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 26,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 72,
+         "y": 6,
+         "r": 4,
+         "b": 6,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 21.0,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 21.0,
+         "y": 64.5,
+         "if": "!@last",
+         "w": 2,
+         "h": 21.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 15.5,
+         "w": 44,
+         "h": 44,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 15.5,
+         "w": 44,
+         "h": 44,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 22,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 62,
+         "y": 4,
+         "r": 4,
+         "b": 4,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 18.0,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 540,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 17.0,
+         "y": 53.0,
+         "if": "!@last",
+         "w": 2,
+         "h": 14.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 12.0,
+         "w": 36,
+         "h": 36,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 12.0,
+         "w": 36,
+         "h": 36,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 18,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 54,
+         "y": 3,
+         "r": 4,
+         "b": 3,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 20,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 15.0,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 2
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 35.0,
+         "y": 107.66666666666667,
+         "if": "!@last",
+         "w": 2,
+         "h": 51.33333333333334,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 30.66666666666667,
+         "w": 72,
+         "h": 72,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 30.66666666666667,
+         "w": 72,
+         "h": 72,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 34,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 90,
+         "y": 8,
+         "r": 4,
+         "b": 8,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 38,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 28.5,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 6
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           38,
+           36,
+           34,
+           32,
+           30,
+           28,
+           26,
+           24,
+           22,
+           20
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 29.0,
+         "y": 85.0,
+         "if": "!@last",
+         "w": 2,
+         "h": 30.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 20.0,
+         "w": 60,
+         "h": 60,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 20.0,
+         "w": 60,
+         "h": 60,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 30,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 78,
+         "y": 8,
+         "r": 4,
+         "b": 8,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 34,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 25.5,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 4
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           34,
+           32,
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 400,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 25.0,
+         "y": 71.0,
+         "if": "!@last",
+         "w": 2,
+         "h": 18.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 14.0,
+         "w": 52,
+         "h": 52,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 14.0,
+         "w": 52,
+         "h": 52,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 26,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 70,
+         "y": 8,
+         "r": 4,
+         "b": 8,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 22.5,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "below_h": 340,
+   "size": [
+    800,
+    300
+   ],
+   "elements": [],
+   "variants_by": "items",
+   "variants": {
+    "3": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 29.0,
+         "y": 85.0,
+         "if": "!@last",
+         "w": 2,
+         "h": 30.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 20.0,
+         "w": 60,
+         "h": 60,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 20.0,
+         "w": 60,
+         "h": 60,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 28,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 78,
+         "y": 6,
+         "r": 4,
+         "b": 6,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 32,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 23.68,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 5
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           32,
+           30,
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 23.0,
+         "y": 66.5,
+         "if": "!@last",
+         "w": 2,
+         "h": 17.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 13.5,
+         "w": 48,
+         "h": 48,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 13.5,
+         "w": 48,
+         "h": 48,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 24,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 66,
+         "y": 4,
+         "r": 4,
+         "b": 4,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 20.72,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "5": {
+     "elements": [
+      {
+       "repeat": "items",
+       "grid": {
+        "x": 0,
+        "y": 0,
+        "w": 800,
+        "h": 300,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "項目{{index}}から次へつなぐ線",
+         "x": 19.0,
+         "y": 55.0,
+         "if": "!@last",
+         "w": 2,
+         "h": 10.0,
+         "fill": "border"
+        },
+        {
+         "name": "項目{{index}}の円",
+         "x": 0,
+         "y": 10.0,
+         "w": 40,
+         "h": 40,
+         "fill": "primary",
+         "geom": "ellipse"
+        },
+        {
+         "name": "項目{{index}}の番号",
+         "x": 0,
+         "y": 10.0,
+         "w": 40,
+         "h": 40,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{index}}",
+              "size": 20,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         }
+        },
+        {
+         "name": "項目{{index}}の文",
+         "x": 58,
+         "y": 3,
+         "r": 4,
+         "b": 3,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 17.76,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 2
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

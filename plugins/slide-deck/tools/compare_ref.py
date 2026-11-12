@@ -15,6 +15,40 @@ import sys
 from pathlib import Path
 
 
+def diff_score(a, b) -> float:
+    """2 枚の画像（PIL.Image）の差分スコア（0〜255。320x180 のグレースケール＋ブラー 1.2 の絶対差の平均）。
+    大きいほど見た目が違う。細かい文字の位置ずれより、面・文字ブロックの有無の違いを拾う粗い指標。"""
+    from PIL import ImageChops, ImageFilter, ImageOps
+    ga = ImageOps.grayscale(a.convert("RGB").resize((1280, 720))).resize((320, 180)).filter(ImageFilter.GaussianBlur(1.2))
+    gb = ImageOps.grayscale(b.convert("RGB").resize((1280, 720))).resize((320, 180)).filter(ImageFilter.GaussianBlur(1.2))
+    hist = ImageChops.difference(ga, gb).histogram()
+    return sum(i * c for i, c in enumerate(hist)) / (320 * 180)
+
+
+def stack_images(a, b, horizontal: bool = False, labels=None):
+    """2 枚を並べた 1 枚を返す（既定は上下。horizontal=True で左右）。labels=(左/上, 右/下) を ASCII で書き込む。"""
+    from PIL import Image, ImageDraw
+    a = a.convert("RGB").resize((1280, 720))
+    b = b.convert("RGB").resize((1280, 720))
+    head = 22 if labels else 0
+    gap = 10
+    if horizontal:
+        side = Image.new("RGB", (1280 * 2 + gap, 720 + head), "white")
+        side.paste(a, (0, head))
+        side.paste(b, (1280 + gap, head))
+        pos = [(6, 4), (1280 + gap + 6, 4)]
+    else:
+        side = Image.new("RGB", (1280, 720 * 2 + gap + head * 2), "white")
+        side.paste(a, (0, head))
+        side.paste(b, (0, head * 2 + 720 + gap))
+        pos = [(6, 4), (6, head + 720 + gap + 4)]
+    if labels:
+        d = ImageDraw.Draw(side)
+        for (x, y), text in zip(pos, labels):
+            d.text((x, y), text, fill=(90, 90, 90))
+    return side
+
+
 def main():
     for s in (sys.stdout, sys.stderr):
         try:
@@ -27,7 +61,7 @@ def main():
     ap.add_argument("slides", nargs="*", type=int)
     args = ap.parse_args()
     try:
-        from PIL import Image, ImageChops, ImageFilter, ImageOps
+        from PIL import Image
     except ImportError:
         print("error: Pillow が必要です（/slide-deck:setup --pillow）", file=sys.stderr)
         return 1
@@ -49,11 +83,7 @@ def main():
         side.paste(a, (0, 0))
         side.paste(b, (0, 730))
         side.save(out / f"cmp-{n:02d}.png")
-        ga = ImageOps.grayscale(a).resize((320, 180)).filter(ImageFilter.GaussianBlur(1.2))
-        gb = ImageOps.grayscale(b).resize((320, 180)).filter(ImageFilter.GaussianBlur(1.2))
-        d = ImageChops.difference(ga, gb)
-        hist = d.histogram()
-        scores.append((sum(i * c for i, c in enumerate(hist)) / (320 * 180), n))
+        scores.append((diff_score(a, b), n))
     scores.sort(reverse=True)
     (out / "scores.txt").write_text("\n".join(f"{n:3d} {s:6.2f}" for s, n in scores), encoding="utf-8")
     print("差分の大きい順:", " ".join(f"{n}:{s:.1f}" for s, n in scores[:20]))

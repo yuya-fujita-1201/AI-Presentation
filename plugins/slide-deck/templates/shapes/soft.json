@@ -1,0 +1,12 @@
+{
+  "name": "soft",
+  "label": "ソフト",
+  "description": "大きめの角丸と淡い影でやわらかく見せる。タイトル下は短い丸い帯、箱の枠線はなし。研修・社内共有・サービス紹介向けの親しみやすい印象",
+  "tokens": {
+    "radius": { "card": 20, "panel": 24, "box": 14, "node": 16, "node_sm": 14, "small": 10, "tiny": 6, "pill": 999, "image": 20, "rule": 3, "cell": 20 },
+    "line": { "rule": 6, "rule_lg": 6, "border": 0 },
+    "rule": { "style": "short", "length": 72 },
+    "shadow": { "card": "soft", "dy": 6, "blur": 18, "alpha": 0.10 }
+  },
+  "layout": {}
+}

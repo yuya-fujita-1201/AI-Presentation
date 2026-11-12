@@ -318,8 +318,16 @@ def chart_region(slide: dict, c: dict) -> dict:
             "h": c.get("h_no_lead", c["h"])}
 
 
+_FIT_SIZE_CAP = 2000.0     # 探索の出発点の上限（極端に大きい値でも 0.5px ずつの縮小が必ず終わる。通常の 1〜200px には影響しない）
+
+
 def _fit_size(text: str, avail: float, size: float, min_size: float) -> float:
     s = size
+    min_size = max(min_size, 0.5)
+    if s != s:
+        return min_size
+    if s > max(_FIT_SIZE_CAP, min_size):
+        s = max(_FIT_SIZE_CAP, min_size)
     while s > min_size and de.text_width(text, s) > avail:
         s -= 0.5
     return s
@@ -487,16 +495,44 @@ def layout_schedule(slide: dict, c: dict) -> dict:
     for ri, (items, levels) in ms_layout.items():
         if items:
             need[ri] = 8 + ms_d + 4 + levels * ms_line + 6
-    plain = [ri for ri in range(len(rows)) if ri not in need]
-    rest = area - sum(need.values())
-    base = rest / len(plain) if plain else max_h
+    # 節目のある行は、必要な高さが他の行の高さ（残りの等分）を超えるときだけその高さにし、そうでなければ他の行と同じ高さにする
+    # （以前は節目の行を必ず「必要な高さ以上」として別に数えたので、行の高さの上限を上げると合計が枠を超えた）
+    flex = list(range(len(rows)))
+    fixed_h: dict = {}
+    base = max_h
+    while flex:
+        base = (area - sum(fixed_h.values())) / len(flex)
+        over = [ri for ri in flex if need.get(ri, 0) > base]
+        if not over:
+            break
+        for ri in over:
+            fixed_h[ri] = need[ri]
+            flex.remove(ri)
+    if not flex:
+        base = max_h
     if base < min_h:
         diags.append(de.diag_warn("too-dense", "rows",
                                   f"行が多く1行の高さが {base:.0f}px になります（目安 {min_h}px 以上）",
                                   {"row_h": round(base, 1)},
                                   ["スライドを分ける", "lead を削って縦を広げる", "style.chart.min_row_h を下げる"]))
     base = max(min_h, min(max_h, base))
-    heights = [max(need.get(ri, 0), base) if ri in need else base for ri in range(len(rows))]
+    heights = [fixed_h[ri] if ri in fixed_h else max(need.get(ri, 0), base) for ri in range(len(rows))]
+    # 行の高さを下限（min_row_h）で止めた結果、図が枠の下端を越えるなら、はみ出しの量と収まる行数を伝える（A2-11）
+    over = sum(heights) - area
+    if rows and over > 2:
+        fit_rows, acc = 0, 0.0
+        for hh in heights:
+            if acc + hh > area + 0.5:
+                break
+            acc += hh
+            fit_rows += 1
+        fixes = [f"行を {fit_rows} 行以下にして、スライドを分ける"]
+        if slide.get("lead"):
+            fixes.append("lead を削って縦を広げる（図の枠が約 %dpx 広がる）" % int(c.get("h_no_lead", rg["h"]) - c.get("h", rg["h"])))
+        fixes.append("style.chart.min_row_h を下げる")
+        diags.append(de.diag_warn("chart-overflow", "rows",
+                                  f"図が枠の下端を約{int(over)}px はみ出します（{len(rows)}行・1行 {int(min(heights))}px 以上）",
+                                  {"over": round(over, 1), "rows_fit": fit_rows}, fixes))
 
     geo = {"region": rg, "tx0": tx0, "tw": tw, "col_w": col_w, "n": n,
            "periods": [], "columns": [], "groups": [], "rows": [], "vlines": [], "hlines": [],
@@ -557,26 +593,60 @@ def layout_schedule(slide: dict, c: dict) -> dict:
             label = str(b.get("label", "") or "")
             pos = b.get("label_pos", "inside")
             size = c.get("bar_size", 13)
-            if label and pos != "after":
+            if label and pos not in ("after", "before"):
                 size = _fit_size(label, g["tw"] - 8, size, c.get("bar_min_size", 10))
-                if de.text_width(label, size) > g["tw"] - 8:
+                auto_min = c.get("auto_after_min_size", 12)       # これより小さくしないと入らないラベルも、右が空いていれば外に出す
+                if (de.text_width(label, size) > g["tw"] - 8 or size < min(auto_min, c.get("bar_size", 13))) and "label_pos" not in b and c.get("auto_after", True):
+                    # 矢羽根の中に収まらない（縮めても）→ 右が空いていれば矢羽根の外（右）に出す。隣の矢羽根・時間軸の端にぶつかるときは中のまま（縮める。入らなければ警告）
+                    aw = de.text_width(label, c.get("bar_size", 13)) + 6 + 8
+                    others = []
+                    for k2, o in enumerate(r.get("bars", []) or []):
+                        sp2 = axis.pos(o.get("start"), "start") if isinstance(o, dict) and k2 != j else None
+                        if sp2 is not None and sp2 >= z - 1e-9:
+                            others.append(X(sp2))
+                    limit = min([tx0 + tw] + others)
+                    # 左隣の矢羽根の右端（無ければ時間軸の左端）。右に出せないときは左に出す（S4: 12px 未満まで縮めない）
+                    lefts = [tx0]
+                    for k2, o in enumerate(r.get("bars", []) or []):
+                        ep2 = axis.pos(o.get("end"), "end") if isinstance(o, dict) and k2 != j else None
+                        if ep2 is not None and ep2 <= a + 1e-9:
+                            lefts.append(X(ep2))
+                    if x1 + aw > limit and x0 - aw >= max(lefts) and c.get("auto_before", True):
+                        pos = "before"
+                        size = c.get("bar_size", 13)
+                        diags.append(de.diag_info(
+                            "bar-label-moved", f"{_row_name(r, ri)}.bars[{j}]",
+                            f"{_row_name(r, ri)}.bars[{j}] のラベル「{label}」が矢羽根の中に収まらないため、矢羽根の左に出しました",
+                            {"bar_w": round(x1 - x0, 1)},
+                            ["矢羽根の中に入れたいときはラベルを短くする", "\"label_pos\": \"inside\" を書くと中のままにする（縮める）"]))
+                    elif x1 + aw <= limit:
+                        pos = "after"
+                        size = c.get("bar_size", 13)
+                        diags.append(de.diag_info(
+                            "bar-label-moved", f"{_row_name(r, ri)}.bars[{j}]",
+                            f"{_row_name(r, ri)}.bars[{j}] のラベル「{label}」が矢羽根の中に収まらないため、矢羽根の右に出しました",
+                            {"bar_w": round(x1 - x0, 1)},
+                            ["矢羽根の中に入れたいときはラベルを短くする", "\"label_pos\": \"inside\" を書くと中のままにする（縮める）"]))
+                if pos not in ("after", "before") and de.text_width(label, size) > g["tw"] - 8:
                     diags.append(de.diag_warn(
                         "bar-label-overflow", f"{_row_name(r, ri)}.bars[{j}]",
                         f"{_row_name(r, ri)}.bars[{j}] のラベル「{label}」が矢羽根の中に収まりません",
                         {"bar_w": round(x1 - x0, 1), "need_w": round(de.text_width(label, size) + 8, 1)},
                         ["ラベルを短くする", "\"label_pos\": \"after\" で矢羽根の右に出す",
                          "style.chart.label_w を小さくして時間軸を広げる"]))
-            geo["bars"].append({"x": x0, "y": by, "w": x1 - x0, "h": bar_h, "shape": shape,
+            lbl_w = de.text_width(label, size) + 8 if label else 0
+            lbl_x = (x1 + 4) if pos == "after" else ((x0 - 4 - lbl_w) if pos == "before" else None)      # 矢羽根の外に出したラベルの左端
+            geo["bars"].append({"x": x0, "y": by, "w": x1 - x0, "h": bar_h, "shape": shape, "lbl_x": lbl_x, "lbl_w": lbl_w,
                                 "variant": variant, "label": label, "size": size, "label_pos": pos,
                                 "points": g["points"], "head": g["head"], "tx": g["tx"], "tw": g["tw"],
-                                "row": ri})
+                                "row": ri, "alt": ri % 2 == 1})
         # 節目
         items, _levels = ms_layout.get(ri, ([], 0))
         dy = y + 8
         for it in items:
             geo["milestones"].append({"cx": it["cx"], "cy": dy + ms_d / 2, "d": ms_d, "label": it["label"],
                                       "lx": it["lx"], "ly": dy + ms_d + 4 + it["level"] * ms_line,
-                                      "lw": it["lw"], "lh": ms_line, "size": ms_size, "row": ri})
+                                      "lw": it["lw"], "lh": ms_line, "size": ms_size, "row": ri, "alt": ri % 2 == 1})
         y += h
     body_bottom = y
 

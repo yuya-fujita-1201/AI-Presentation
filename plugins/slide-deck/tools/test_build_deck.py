@@ -29,6 +29,7 @@ expand_slides・resolve_style は、シグネチャ維持が約束されてい�
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -51,6 +52,13 @@ def run_build(deck_dir, *extra_args):
     # build_deck.py は UTF-8 で出力するため、実行環境のロケール（Windows 日本語は cp932）に
     # 依存せず UTF-8 で復号する。指定しないと 0xEF 等でデコード失敗・文字化けする。
     return subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
+
+
+def copy_deck(src: Path) -> Path:
+    """同梱のデッキ（見本・manual）を一時フォルダへ写して返す。テストが配布物のフォルダの中に build/ を作らないようにする。"""
+    dst = Path(tempfile.mkdtemp(prefix="sd_build_")) / src.name
+    shutil.copytree(src, dst, ignore=shutil.ignore_patterns("build", "__pycache__", ".DS_Store"))
+    return dst
 
 
 def write_deck(tmp_path, deck, deck_id="t", bom=False):
@@ -78,9 +86,10 @@ class SampleDeckBuildTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.result = run_build(SAMPLE_DECK)
-        cls.html_path = SAMPLE_DECK / "build" / "template-sample.html"
-        cls.pptx_path = SAMPLE_DECK / "build" / "template-sample.pptx"
+        cls.deck_dir = copy_deck(SAMPLE_DECK)          # 見本のフォルダには書かない（一時フォルダの写しをビルドする）
+        cls.result = run_build(cls.deck_dir)
+        cls.html_path = cls.deck_dir / "build" / "template-sample.html"
+        cls.pptx_path = cls.deck_dir / "build" / "template-sample.pptx"
 
     def test_build_succeeds(self):
         self.assertEqual(self.result.returncode, 0, msg=self.result.stderr)
@@ -105,15 +114,16 @@ class SampleDeckBuildTests(unittest.TestCase):
         flags = [slide.has_notes_slide for slide in prs.slides]
         self.assertTrue(all(f is False for f in flags), msg=f"has_notes_slide: {flags}")
 
-    def test_slide_count_matches_expand_slides_and_is_26(self):
-        """deck.json は29枚。swimlane の凡例(+1)と、図解4タイプの legend_page 自動挿入(+4)で
-        PPTX は34枚になる想定（schedule / status_table / 提案書向けタイプは凡例ページを挿入しない）。"""
+    def test_slide_count_matches_expand_slides_and_is_46(self):
+        """deck.json は44枚。swimlane の凡例(+1)と、architecture の legend_page 自動挿入(+1)で
+        PPTX は46枚になる想定（dataflow / lifecycle / sequence は legend_page: false で凡例ページを挿入しない。
+        schedule / status_table / 提案書向けタイプも凡例ページを挿入しない）。"""
         from pptx import Presentation
         prs = Presentation(str(self.pptx_path))
         deck, _theme, layout = build_deck.load_deck(SAMPLE_DECK)
         expanded = build_deck.expand_slides(deck, layout)
         self.assertEqual(len(expanded["slides"]), len(prs.slides))
-        self.assertEqual(len(expanded["slides"]), 34)
+        self.assertEqual(len(expanded["slides"]), 46)
 
 
 class ManualDeckBuildTests(unittest.TestCase):
@@ -122,7 +132,7 @@ class ManualDeckBuildTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.manual_dir = ROOT / "manual"
-        cls.result = run_build(cls.manual_dir)
+        cls.result = run_build(copy_deck(cls.manual_dir)) if (cls.manual_dir / "deck.json").exists() else None
 
     def test_build_succeeds(self):
         if not (self.manual_dir / "deck.json").exists():
@@ -276,36 +286,66 @@ class ThemeExtendsAndDerivationTests(unittest.TestCase):
         for key, val in raw["colors"].items():
             self.assertEqual(theme["colors"][key], val, msg=f"default.colors.{key} が変化しています")
 
-    def test_extends_non_default_theme_still_derives_unspecified_tokens(self):
-        """extends 先が default 以外（acn-slide-master）でも、そのテーマが全トークンを明示して
-        いる場合に子テーマの primary/accent 変更だけで派生トークンが追随すること（P0 回帰）。
-        acn-slide-master.json は18トークン全てを明示しているため、旧実装では子テーマの
-        table_header_bg 等が acn-slide-master の固定値（#460073 系）のまま変化しなかった。"""
-        purple = build_deck.load_theme("acn-slide-master", build_deck.theme_dirs(None))
-        new_primary = "#123456"
-        new_accent = "#00AACC"
-        theme = self._load_child_extending("acn-slide-master", "child-of-purple",
-                                            {"primary": new_primary, "accent": new_accent})
-        self.assertEqual(theme["colors"]["primary"], new_primary)
-        # table_header_bg は primary の固定値。親(acn-slide-master)の値のまま固まってはいけない。
-        self.assertNotEqual(theme["colors"]["table_header_bg"], purple["colors"]["table_header_bg"])
-        self.assertEqual(theme["colors"]["table_header_bg"], new_primary)
-        # surface / muted / highlight_fill / border / code_bg / accent_on_primary も同様に
-        # 親の固定値からではなく、新しい基本色から再導出されること。
-        bg = theme["colors"]["background"]
-        text = theme["colors"]["text"]
-        self.assertNotEqual(theme["colors"]["surface"], purple["colors"]["surface"])
-        _assert_close_rgb(self, theme["colors"]["surface"], _mix_hex(new_primary, bg, 0.88),
-                           "surface(未指定) = mix(新primary, background, 0.88)")
-        self.assertNotEqual(theme["colors"]["highlight_fill"], purple["colors"]["highlight_fill"])
-        _assert_close_rgb(self, theme["colors"]["highlight_fill"], _mix_hex(new_accent, bg, 0.75),
-                           "highlight_fill(未指定) = mix(新accent, background, 0.75)")
-        self.assertNotEqual(theme["colors"]["code_bg"], purple["colors"]["code_bg"])
-        _assert_close_rgb(self, theme["colors"]["code_bg"], _mix_hex(new_primary, "#000000", 0.55),
-                           "code_bg(未指定) = mix(新primary, black, 0.55)")
-        # 親テーマ(acn-slide-master)自身の値は変化しない。
-        self.assertEqual(purple["colors"]["table_header_bg"], "#460073")
-
+    def test_extends_non_default_theme_still_derives_unspecified_tokens(self):
+
+        """extends 先が default 以外（acn-slide-master）でも、そのテーマが全トークンを明示して
+
+        いる場合に子テーマの primary/accent 変更だけで派生トークンが追随すること（P0 回帰）。
+
+        acn-slide-master.json は18トークン全てを明示しているため、旧実装では子テーマの
+
+        table_header_bg 等が acn-slide-master の固定値（#460073 系）のまま変化しなかった。"""
+
+        purple = build_deck.load_theme("acn-slide-master", build_deck.theme_dirs(None))
+
+        new_primary = "#123456"
+
+        new_accent = "#00AACC"
+
+        theme = self._load_child_extending("acn-slide-master", "child-of-purple",
+
+                                            {"primary": new_primary, "accent": new_accent})
+
+        self.assertEqual(theme["colors"]["primary"], new_primary)
+
+        # table_header_bg は primary の固定値。親(acn-slide-master)の値のまま固まってはいけない。
+
+        self.assertNotEqual(theme["colors"]["table_header_bg"], purple["colors"]["table_header_bg"])
+
+        self.assertEqual(theme["colors"]["table_header_bg"], new_primary)
+
+        # surface / muted / highlight_fill / border / code_bg / accent_on_primary も同様に
+
+        # 親の固定値からではなく、新しい基本色から再導出されること。
+
+        bg = theme["colors"]["background"]
+
+        text = theme["colors"]["text"]
+
+        self.assertNotEqual(theme["colors"]["surface"], purple["colors"]["surface"])
+
+        _assert_close_rgb(self, theme["colors"]["surface"], _mix_hex(new_primary, bg, 0.88),
+
+                           "surface(未指定) = mix(新primary, background, 0.88)")
+
+        self.assertNotEqual(theme["colors"]["highlight_fill"], purple["colors"]["highlight_fill"])
+
+        _assert_close_rgb(self, theme["colors"]["highlight_fill"], _mix_hex(new_accent, bg, 0.75),
+
+                           "highlight_fill(未指定) = mix(新accent, background, 0.75)")
+
+        self.assertNotEqual(theme["colors"]["code_bg"], purple["colors"]["code_bg"])
+
+        _assert_close_rgb(self, theme["colors"]["code_bg"], _mix_hex(new_primary, "#000000", 0.55),
+
+                           "code_bg(未指定) = mix(新primary, black, 0.55)")
+
+        # 親テーマ(acn-slide-master)自身の値は変化しない。
+
+        self.assertEqual(purple["colors"]["table_header_bg"], "#460073")
+
+
+
     def test_bundled_themes_and_alias(self):
         """同梱テーマは default と acnpptx の3テンプレートに寄せた3種。旧名 accenture-purple は
         acn-slide-master の別名（alias_of）で、派生トークンを再計算せず本体と同じ配色になる。"""

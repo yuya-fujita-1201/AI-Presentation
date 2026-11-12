@@ -1,0 +1,453 @@
+{
+ "name": "conclusion-evidence",
+ "label": "結論と根拠",
+ "summary": "左に大きな結論文、右に根拠を 2〜4 点。結論が主役のページ（全面）",
+ "version": 1,
+ "description": "左に大きな結論文、右に根拠を 2〜4 点。結論が主役のページ（提案の核心・判断のお願い）向け。根拠の個数（2〜4 点）に合わせてカードの高さが自動で変わり、文が長いと文字サイズが自動で縮む。",
+ "background": "background",
+ "slots": {
+  "eyebrow": {
+   "kind": "text",
+   "label": "見出し上の小見出し",
+   "max_chars": 16,
+   "example": "提案の要点"
+  },
+  "title": {
+   "kind": "text",
+   "required": true,
+   "label": "見出し",
+   "max_chars": 34,
+   "example": "小さく始めて、効果を確かめてから広げる"
+  },
+  "label": {
+   "kind": "text",
+   "label": "結論の見出しラベル",
+   "default": "結論",
+   "max_chars": 6,
+   "example": "結論"
+  },
+  "conclusion": {
+   "kind": "text",
+   "required": true,
+   "label": "結論の文",
+   "max_chars": 60,
+   "example": "まず 1 部署で 3 か月試し、成果が出た業務から全社へ広げる"
+  },
+  "evidence": {
+   "kind": "records",
+   "required": true,
+   "label": "根拠",
+   "min": 2,
+   "max": 4,
+   "fields": {
+    "head": {
+     "kind": "text",
+     "label": "根拠の見出し",
+     "max_chars": 18
+    },
+    "body": {
+     "kind": "text",
+     "label": "根拠の説明",
+     "max_chars": 60
+    }
+   },
+   "example": [
+    {
+     "head": "失敗しても損失が小さい",
+     "body": "対象を 1 部署に絞るので、うまくいかなくても影響は限られる"
+    },
+    {
+     "head": "効果を数字で比べられる",
+     "body": "導入前後の作業時間を同じ方法で測り、広げるかを判断できる"
+    },
+    {
+     "head": "現場の納得を得やすい",
+     "body": "使った人の声をそのまま次の部署への説明に使える"
+    },
+    {
+     "head": "投資を段階に分けられる",
+     "body": "各段階の結果を見てから次の予算を決められる"
+    }
+   ]
+  },
+  "note": {
+   "kind": "text",
+   "label": "出典・補足",
+   "max_chars": 80,
+   "example": "出典: 社内パイロット試算（2026 年 10 月）"
+  }
+ },
+ "elements": [
+  {
+   "name": "背景",
+   "x": 0,
+   "y": 0,
+   "w": 1280,
+   "h": 720,
+   "fill": "background"
+  },
+  {
+   "if": "eyebrow",
+   "role": "eyebrow",
+   "name": "見出し上の小見出し",
+   "x": 72,
+   "y": 16,
+   "w": 1136,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{eyebrow}}",
+        "size": 15,
+        "bold": true,
+        "color": "accent",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "role": "title",
+   "name": "見出し",
+   "x": 72,
+   "y": 42,
+   "w": 1136,
+   "h": 64,
+   "fit": {
+    "sizes": [
+     36,
+     32,
+     28
+    ]
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{title}}",
+        "size": 36,
+        "bold": true,
+        "color": "heading_text",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "role": "rule",
+   "name": "見出しの罫線",
+   "x": 72,
+   "y": 106,
+   "w": 1136,
+   "h": 5,
+   "fill": "accent"
+  },
+  {
+   "name": "結論の面",
+   "x": 72,
+   "y": 142,
+   "w": 500,
+   "h": 476,
+   "fill": "primary",
+   "radius": "$radius.card"
+  },
+  {
+   "name": "結論のラベル",
+   "x": 104,
+   "y": 172,
+   "w": 436,
+   "h": 34,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{label}}",
+        "size": 20,
+        "bold": true,
+        "color": "accent_on_primary",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "結論のしるし",
+   "x": 104,
+   "y": 212,
+   "w": 56,
+   "h": 5,
+   "fill": "accent_on_primary"
+  },
+  {
+   "name": "結論の文",
+   "x": 104,
+   "y": 236,
+   "w": 436,
+   "h": 350,
+   "fit": {
+    "sizes": [
+     40,
+     36,
+     32,
+     28,
+     24
+    ]
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.2,
+      "runs": [
+       {
+        "text": "{{conclusion}}",
+        "size": 40,
+        "bold": true,
+        "color": "on_primary",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "repeat": "evidence",
+   "grid": {
+    "x": 612,
+    "y": 142,
+    "w": 596,
+    "h": 476,
+    "cols": 1,
+    "gap": 14
+   },
+   "template": [
+    {
+     "name": "根拠{{index}}の面",
+     "x": 0,
+     "y": 0,
+     "fill": "surface",
+     "radius": "$radius.card"
+    },
+    {
+     "name": "根拠{{index}}の番号",
+     "x": 16,
+     "y": 0,
+     "w": 48,
+     "b": 0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "align": "ctr",
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{index}}",
+          "size": 34,
+          "bold": true,
+          "color": "accent",
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "name": "根拠{{index}}の文",
+     "x": 76,
+     "y": 10,
+     "r": 20,
+     "b": 10,
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       20,
+       18,
+       16,
+       14
+      ],
+      "group": true
+     },
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "spaceAfter": 4,
+        "runs": [
+         {
+          "text": "{{head}}",
+          "size": 30,
+          "bold": true,
+          "color": "heading_text",
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       },
+       {
+        "if": "body",
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 23,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "if": "note",
+   "name": "補足",
+   "x": 72,
+   "y": 634,
+   "w": 1136,
+   "h": 32,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{note}}",
+        "size": 14,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "フッター左",
+   "x": 72,
+   "y": 678,
+   "w": 700,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "runs": [
+       {
+        "text": "{{deck.title}}",
+        "size": 13,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "ページ番号",
+   "x": 1088,
+   "y": 678,
+   "w": 120,
+   "h": 24,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "align": "r",
+      "runs": [
+       {
+        "text": "{{page}} / {{total}}",
+        "size": 13,
+        "color": "muted"
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

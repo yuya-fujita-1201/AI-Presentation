@@ -1,0 +1,48 @@
+{
+  "name": "sharp",
+  "label": "シャープ",
+  "description": "角丸なしの直線的な組み。タイトル下は細い全幅の罫線、見出しは太く字間をやや詰めて締める。コンサル・監査・経営向けの硬い印象",
+  "tokens": {
+    "radius": {
+      "card": 0,
+      "panel": 0,
+      "box": 0,
+      "node": 0,
+      "node_sm": 0,
+      "small": 0,
+      "tiny": 0,
+      "pill": 0,
+      "image": 0,
+      "rule": 0,
+      "cell": 0
+    },
+    "line": {
+      "rule": 2,
+      "rule_lg": 3,
+      "border": 1,
+      "node": 1.5,
+      "node_strong": 2.5
+    },
+    "rule": {
+      "style": "line"
+    },
+    "weight": {
+      "heading": 800,
+      "label": 700,
+      "eyebrow": 700
+    },
+    "tracking": {
+      "heading": -0.01,
+      "eyebrow": 0.04
+    }
+  },
+  "layout": {
+    "types": {
+      "title": {
+        "bar": {
+          "w": 10
+        }
+      }
+    }
+  }
+}

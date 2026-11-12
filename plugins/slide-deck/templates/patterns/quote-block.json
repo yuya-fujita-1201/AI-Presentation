@@ -1,0 +1,399 @@
+{
+ "name": "quote-block",
+ "label": "人の言葉（引用ブロック）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "お客様・社員の言葉を大きく見せ、名前と肩書きを添えて主張を裏づける",
+ "description": "人の言葉（お客様の声・社員のコメント・登壇者の一言）を大きく見せ、名前と肩書きを直下に添える本文向けのブロック。主張を第三者の声で裏づけたいときに使う（見出し・リード・フッターはスライド側の title / lead が描く）。deck.json の type:\"quote\"（スライド全面の引用）とは別物で、pattern: \"quote-block\" と書く。言葉が短いと大きく、長いと小さく自動で収まる。引用符は自動で付く。幅 1000px 未満の矩形（合成スライドの半幅・3 分の 2 など）では、言葉を上、名前と肩書きを下の 2 行にした構図で、枠の幅に合わせて文字の大きさが決まる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。（本文の領域の縦中央に置く）",
+ "block_alt": "言葉を短くする",
+ "background": "background",
+ "slots": {
+  "quote": {
+   "kind": "text",
+   "label": "引用する言葉",
+   "max_chars": 100,
+   "required": true,
+   "description": "人の言葉そのまま。「」や“ ”は付けない（自動で付く）。100 字まで。短い言葉は特に大きく（最大 72px）、長い言葉は小さく自動で収まる",
+   "example": "予約の電話が減って、受付が患者さんの顔を見て話せるようになりました。以前は電話に追われていた昼どきも、いまは待合室を見渡す余裕があります。"
+  },
+  "name": {
+   "kind": "text",
+   "label": "名前",
+   "max_chars": 14,
+   "required": true,
+   "example": "高橋 美咲"
+  },
+  "role": {
+   "kind": "text",
+   "label": "肩書き・所属",
+   "max_chars": 26,
+   "example": "たかはし歯科医院 院長"
+  }
+ },
+ "elements": [
+  {
+   "name": "言葉と名前",
+   "x": 0,
+   "y": 0,
+   "w": 1136,
+   "h": 400,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.5,
+      "runs": [
+       {
+        "text": "“",
+        "size": "@fit",
+        "color": "accent",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       },
+       {
+        "text": "{{quote}}",
+        "size": "@fit",
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       },
+       {
+        "text": "”",
+        "size": "@fit",
+        "color": "accent",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 28
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "―  {{name}}",
+        "size": "$type.h2",
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       },
+       {
+        "text": "　{{role}}",
+        "size": "$type.body",
+        "color": "muted",
+        "if": "role"
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     72,
+     66,
+     60,
+     54,
+     50,
+     46,
+     42,
+     38,
+     34,
+     30,
+     28,
+     26,
+     24,
+     22,
+     20
+    ]
+   }
+  }
+ ],
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    556,
+    400
+   ],
+   "elements": [
+    {
+     "name": "言葉",
+     "x": 0,
+     "y": 0,
+     "w": 556,
+     "h": 316,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "“",
+          "size": "@fit",
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         },
+         {
+          "text": "{{quote}}",
+          "size": "@fit",
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         },
+         {
+          "text": "”",
+          "size": "@fit",
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       72,
+       66,
+       60,
+       54,
+       50,
+       46,
+       42,
+       38,
+       34,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ]
+     }
+    },
+    {
+     "name": "名前と肩書き",
+     "x": 0,
+     "y": 324,
+     "w": 556,
+     "h": 76,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "―  {{name}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{role}}",
+          "size": 18.72,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 2,
+        "if": "role"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    }
+   ],
+   "min_width": 390
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [
+    {
+     "name": "言葉",
+     "x": 0,
+     "y": 0,
+     "w": 800,
+     "h": 316,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "“",
+          "size": "@fit",
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         },
+         {
+          "text": "{{quote}}",
+          "size": "@fit",
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         },
+         {
+          "text": "”",
+          "size": "@fit",
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       72,
+       66,
+       60,
+       54,
+       50,
+       46,
+       42,
+       38,
+       34,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ]
+     }
+    },
+    {
+     "name": "名前と肩書き",
+     "x": 0,
+     "y": 324,
+     "w": 800,
+     "h": 76,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "―  {{name}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{role}}",
+          "size": 18.72,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 2,
+        "if": "role"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

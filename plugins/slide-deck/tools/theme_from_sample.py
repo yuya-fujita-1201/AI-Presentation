@@ -38,6 +38,7 @@ try:
     import build_deck  # type: ignore
 except Exception:
     build_deck = None
+import deck_paths  # noqa: E402
 
 
 def _fallback_setup_console():
@@ -125,28 +126,33 @@ def dist(a, b):
 # ---------------------------------------------------------------------------
 
 def derive_theme(name, bg, text, primary, accent, fonts):
+    """4 キー + フォントからテーマ JSON を作る。書くのは基本色（background / text / primary / accent / on_primary）だけで、
+    surface・muted・table_header_bg などの残りは build_deck の読み込み時に build_deck._derive_colors が導出する
+    （ここで別の式を持たない。式のずれで基準未満のテーマができた不具合の対策）。"""
+    if build_deck is None:
+        fail("build_deck.py を読み込めないため、色の導出ができません（tools/ の構成を確認してください）")
     on_primary = (255, 255, 255) if lum(primary) < 0.55 else (27, 27, 36)
-    colors = {
-        "background": bg,
-        "surface": lighten(primary, 0.92),
-        "text": text,
-        "muted": mix(text, bg, 0.45),
-        "primary": primary,
-        "accent": accent,
-        "on_primary": on_primary,
-        "on_primary_soft": lighten(primary, 0.90),
-        "on_primary_muted": lighten(primary, 0.72),
-        "code_bg": darken(primary, 0.62),
-        "code_text": lighten(primary, 0.88),
-        "table_header_bg": primary,
-        "table_header_text": on_primary,
-        "table_row_alt": lighten(primary, 0.92),
+    base = {
+        "background": rgb2hex(bg),
+        "text": rgb2hex(text),
+        "primary": rgb2hex(primary),
+        "accent": rgb2hex(accent),
+        "on_primary": rgb2hex(on_primary),
     }
     return {
         "name": name,
-        "colors": {k: rgb2hex(v) for k, v in colors.items()},
+        "colors": base,
         "fonts": fonts,
     }
+
+
+def derived_colors(theme: dict) -> dict:
+    """theme（derive_theme の戻り値）を build_deck と同じ式で全トークンに展開した colors（確認表示用）。"""
+    default = load_default()["colors"]
+    colors = dict(default)
+    colors.update(theme["colors"])
+    build_deck._derive_colors(colors, set(theme["colors"]))
+    return colors
 
 
 # ---------------------------------------------------------------------------
@@ -477,15 +483,8 @@ def load_default():
 DEFAULT_ACCENT = (0, 168, 204)  # default.json の accent（フォールバック用）。main で上書き
 
 
-def resolve_out_dir(arg_dir):
-    if arg_dir:
-        return Path(arg_dir)
-    env = os.environ.get("SLIDE_DECK_THEMES")
-    if env:
-        first = next((p for p in env.split(os.pathsep) if p.strip()), None)
-        if first:
-            return Path(first)
-    return Path.cwd() / "themes"
+def resolve_out_dir(arg_dir, deck=None):
+    return deck_paths.default_out_dir("themes", deck, arg_dir)
 
 
 DISPATCH = {
@@ -503,6 +502,7 @@ def main():
     ap.add_argument("file", help="サンプル(.pptx/.png/.jpg/.pdf/.html)")
     ap.add_argument("--name", required=True, help="作成するテーマ名（kebab-case）")
     ap.add_argument("--dir", help="出力先ディレクトリ（既定: SLIDE_DECK_THEMES / ./themes/）")
+    ap.add_argument("--deck", help="このデッキのフォルダの themes/ に作る（--dir より弱い）")
     ap.add_argument("--pages", type=int, default=2, help="PDFで走査するページ数（既定2）")
     ap.add_argument("--colors", type=int, default=12,
                      help="量子化する色数（既定12。小さすぎると本文文字のような面積の小さい"
@@ -523,7 +523,13 @@ def main():
     DEFAULT_ACCENT = hex2rgb(default_theme["colors"]["accent"])
 
     if kind == "pptx":
-        bg, text, primary, accent, fonts, report = extract_pptx(src)
+        import pptx_import  # PPTX のときだけ読む（lxml が要る）。HTML / PDF / 画像には使わない
+        try:
+            pptx_import.check_pptx_archive(src)
+            with pptx_import.pptx_errors():
+                bg, text, primary, accent, fonts, report = extract_pptx(src)
+        except pptx_import.PptxError as e:
+            fail(str(e))
     elif kind == "image":
         bg, text, primary, accent, fonts, report = extract_image(src, args.colors)
     elif kind == "pdf":
@@ -536,7 +542,7 @@ def main():
     merged_fonts.update({k: v for k, v in fonts.items() if v})
     theme = derive_theme(args.name, bg, text, primary, accent, merged_fonts)
 
-    out_dir = resolve_out_dir(args.dir)
+    out_dir = resolve_out_dir(args.dir, args.deck)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"{args.name}.json"
     if out_path.exists() and not args.force:
@@ -561,12 +567,13 @@ def main():
     print("  -> マッピング:")
     for k in ("background", "text", "primary", "accent"):
         print(f"      {k:10} = {theme['colors'][k]}")
+    print("  残りの色（surface / muted / table_header_bg など）は build_deck.py の読み込み時に同じ式で自動導出されます。")
     print(f"  フォント: heading={theme['fonts']['heading']} / body={theme['fonts']['body']} / code={theme['fonts']['code']}")
     print(f"\n作成しました: {out_path}")
     if out_dir == BUNDLED_THEMES:
         note("同梱テーマ置き場に作成しました。更新で消したくない場合は SLIDE_DECK_THEMES を設定するか --dir で明示してください。")
-    print("書き込み先: " + str(out_dir))
-    print("ビルダーのテーマ探索順: 環境変数 SLIDE_DECK_THEMES / <deck_dir>/themes/ / 同梱 templates/themes/")
+    for line in deck_paths.visibility_lines("themes", out_dir):
+        print(line)
     print("自動推定なので colors/fonts を目視で微調整してください（トークンの意味は references/themes.md）。")
     print(f"使い方: deck.json の meta.theme に \"{args.name}\" を指定して build_deck.py で再ビルド。作成後は check_theme.py でコントラストも確認してください。")
     return 0

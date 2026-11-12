@@ -1,0 +1,229 @@
+{
+  "meta": {
+    "id": "shape-gallery-soft",
+    "title": "形の比較（soft）",
+    "subtitle": "同じ 7 枚を meta.shape だけ変えてビルドする",
+    "author": "slide-deck 見本",
+    "date": "2026-11-11",
+    "theme": "acn-slide-master",
+    "density": "talk",
+    "shape": "soft"
+  },
+  "slides": [
+    {
+      "type": "title",
+      "title": "同じ中身を、4 つの形で見る",
+      "subtitle": "meta.shape を変えるだけで、角丸・罫線・影・字間が変わる",
+      "meta": "2026-11-11 ／ slide-deck 見本（形の比較）"
+    },
+    {
+      "type": "kpi",
+      "eyebrow": "数字",
+      "title": "問い合わせ対応の時間は、18 分から 8 分に減った",
+      "items": [
+        {
+          "value": "8",
+          "unit": "分",
+          "label": "1 件あたりの対応時間",
+          "from": "18",
+          "delta": "−56%",
+          "good": "down"
+        },
+        {
+          "value": "74",
+          "unit": "%",
+          "label": "AI が解決した割合"
+        },
+        {
+          "value": "4.4",
+          "unit": "/ 5",
+          "label": "回答後の満足度",
+          "from": "3.8",
+          "delta": "+0.6",
+          "good": "up"
+        }
+      ],
+      "source": "出典：予備検証の実測（架空）"
+    },
+    {
+      "type": "cards",
+      "eyebrow": "箱",
+      "title": "AI 受付は 3 つの機能で、一次回答を支える",
+      "columns": 3,
+      "cards": [
+        {
+          "heading": "手順書から一次回答",
+          "body": "質問の意味を読み取り、根拠つきで答える",
+          "emphasis": true,
+          "span": 2
+        },
+        {
+          "heading": "人への引き継ぎ",
+          "body": "確信度が低い質問は人に回す"
+        },
+        {
+          "heading": "根拠の表示",
+          "body": "手順書と更新日を付ける"
+        },
+        {
+          "heading": "履歴からの改善",
+          "body": "誤回答を毎週の更新に反映する",
+          "emphasis": "soft"
+        },
+        {
+          "heading": "見える化",
+          "body": "件数と解決率を週次で確認する"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "eyebrow": "表",
+      "title": "チャットは速く解決でき、電話は時間がかかる",
+      "columns": [
+        "チャネル",
+        "月間の件数",
+        "平均の対応時間",
+        "一次解決率"
+      ],
+      "rows": [
+        [
+          "電話",
+          "1,500 件",
+          {
+            "text": "24 分",
+            "tone": "bad"
+          },
+          {
+            "text": "71%",
+            "tone": "warn"
+          }
+        ],
+        [
+          "メール",
+          "1,400 件",
+          {
+            "text": "19 分",
+            "tone": "warn"
+          },
+          {
+            "text": "64%",
+            "tone": "bad"
+          }
+        ],
+        [
+          "チャット",
+          "1,300 件",
+          {
+            "text": "11 分",
+            "tone": "good"
+          },
+          {
+            "text": "83%",
+            "tone": "good"
+          }
+        ],
+        {
+          "cells": [
+            "全体",
+            "4,200 件",
+            "18 分",
+            "72%"
+          ],
+          "emphasis": true
+        }
+      ]
+    },
+    {
+      "type": "matrix",
+      "eyebrow": "象限",
+      "title": "最初に自動化するのは、件数が多く手順が決まっている質問",
+      "x_axis": {
+        "label": "手順の決まりやすさ",
+        "low": "低",
+        "high": "高"
+      },
+      "y_axis": {
+        "label": "件数",
+        "low": "少",
+        "high": "多"
+      },
+      "quadrants": [
+        {
+          "heading": "機器・ソフトの不具合",
+          "body": "原因がさまざまで、診断の手順が先に必要"
+        },
+        {
+          "heading": "パスワード・申請・権限",
+          "body": "件数が多く手順も決まっている。最初に自動化",
+          "highlight": true
+        },
+        {
+          "heading": "個別の相談",
+          "body": "件数が少なく手順も定まらない。人が対応"
+        },
+        {
+          "heading": "契約・請求の確認",
+          "body": "手順は決まっているが件数が少ない。余力で"
+        }
+      ]
+    },
+    {
+      "type": "composite",
+      "eyebrow": "合成",
+      "title": "自動解決率は 8 週で 74% まで上がった",
+      "arrange": "main-side",
+      "blocks": [
+        {
+          "type": "chart",
+          "heading": "週ごとの自動解決率",
+          "chart": "line",
+          "unit": "%",
+          "categories": [
+            "1 週",
+            "2 週",
+            "3 週",
+            "4 週",
+            "5 週",
+            "6 週",
+            "7 週",
+            "8 週"
+          ],
+          "series": [
+            {
+              "name": "自動解決率",
+              "values": [
+                48,
+                56,
+                61,
+                66,
+                70,
+                72,
+                74,
+                74
+              ]
+            }
+          ],
+          "values": "ends"
+        },
+        {
+          "type": "callout",
+          "emphasis": true,
+          "text": "毎週、少しずつ上がった",
+          "note": "誤回答の報告を、毎週の更新に反映した"
+        }
+      ],
+      "source": "出典：予備検証の実測（架空）"
+    },
+    {
+      "type": "closing",
+      "title": "まず 3 か月、試験運用を始めたい",
+      "message": "ご承認いただければ、12 月に手順書の整理を始めます",
+      "bullets": [
+        "判断：3 か月の試験運用の実施",
+        "12 月：手順書の整理を開始",
+        "3 月末：判断会議で拡大を決める"
+      ]
+    }
+  ]
+}

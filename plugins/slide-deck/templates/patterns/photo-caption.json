@@ -1,0 +1,2230 @@
+{
+ "name": "photo-caption",
+ "label": "大きな写真と説明",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "現場・製品の大きな写真を半分に置き、見出しと説明を添える",
+ "description": "大きな写真を半分に置き、見出しと説明（と出典）を添える。現場・製品・場所の「実物」を見せて話を進めたいページ向け（見出し・リード・フッターはスライド側の title / lead が描く）。写真は左が標準で、photo_right を true にすると右に置く。写真を渡さないと、文章だけを大きく置く構図になる。文が長いと文字サイズが縮む。幅 700px 未満の矩形（合成スライドの半幅など）では、写真を上（帯状に切り抜く）・文章を下に置く構図、700〜1000px 未満では、写真の幅を 330px にした左右の構図に切り替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。高さ 340px 未満の矩形（上下 2 段のブロックなど）では、行や列の詰め方を変えた短い構図に切り替わる。（本文の領域の縦中央に置く）",
+ "block_alt": "説明を短くする・代わりに image ブロックと text ブロックを並べた合成スライドにする",
+ "background": "background",
+ "slots": {
+  "photo": {
+   "kind": "image",
+   "label": "写真（省略可）",
+   "description": "横長の写真（assets/ からの相対パス。縦横比が違うときは枠いっぱいに切り抜く。代替テキストは slots に photo_alt で渡せる）。省略すると、文章だけを大きく置く構図になる",
+   "example": "assets/sample-landscape.png"
+  },
+  "label": {
+   "kind": "text",
+   "label": "見出しの上の小さな言葉",
+   "max_chars": 14,
+   "example": "現場の様子"
+  },
+  "headline": {
+   "kind": "text",
+   "label": "見出し",
+   "max_chars": 24,
+   "required": true,
+   "example": "紙の台帳を、タブレット 1 台に置き換えた"
+  },
+  "body": {
+   "kind": "text",
+   "label": "説明",
+   "max_chars": 90,
+   "required": true,
+   "example": "倉庫の棚卸しは、2 人 1 組で紙に書き写す作業でした。いまは棚のコードを読み取るだけで、在庫数がその場で更新されます。"
+  },
+  "credit": {
+   "kind": "text",
+   "label": "写真の出典・撮影日",
+   "max_chars": 30,
+   "example": "第 2 倉庫（2026 年 9 月撮影）"
+  },
+  "photo_right": {
+   "kind": "flag",
+   "label": "写真を右に置く",
+   "description": "true（または「右」など何か書く）で写真が右、false・空で左（既定）。写真が無いときは使われない"
+  }
+ },
+ "elements": [
+  {
+   "kind": "image",
+   "name": "写真（写真が左）",
+   "x": 0,
+   "y": 0,
+   "w": 600,
+   "h": 400,
+   "path": "{{photo}}",
+   "fit": "cover",
+   "alt": "{{headline}}",
+   "radius": "$radius.image",
+   "if": [
+    "photo",
+    "!photo_right"
+   ]
+  },
+  {
+   "name": "説明（写真が左）",
+   "x": 656,
+   "y": 0,
+   "if": [
+    "photo",
+    "!photo_right"
+   ],
+   "w": 480,
+   "h": 400,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.2,
+      "runs": [
+       {
+        "text": "{{label}}",
+        "size": 20,
+        "color": "accent",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 12,
+      "if": "label"
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{headline}}",
+        "size": 36,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 16
+     },
+     {
+      "lineHeight": 1.55,
+      "runs": [
+       {
+        "text": "{{body}}",
+        "size": 22.32,
+        "color": "text"
+       }
+      ],
+      "spaceAfter": 14
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{credit}}",
+        "size": 16,
+        "color": "muted"
+       }
+      ],
+      "if": "credit"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     36,
+     34,
+     32,
+     30,
+     28,
+     26,
+     24,
+     22
+    ]
+   }
+  },
+  {
+   "kind": "image",
+   "name": "写真（写真が右）",
+   "x": 536,
+   "y": 0,
+   "w": 600,
+   "h": 400,
+   "path": "{{photo}}",
+   "fit": "cover",
+   "alt": "{{headline}}",
+   "radius": "$radius.image",
+   "if": [
+    "photo",
+    "photo_right"
+   ]
+  },
+  {
+   "name": "説明（写真が右）",
+   "x": 0,
+   "y": 0,
+   "if": [
+    "photo",
+    "photo_right"
+   ],
+   "w": 480,
+   "h": 400,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.2,
+      "runs": [
+       {
+        "text": "{{label}}",
+        "size": 20,
+        "color": "accent",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 12,
+      "if": "label"
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{headline}}",
+        "size": 36,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 16
+     },
+     {
+      "lineHeight": 1.55,
+      "runs": [
+       {
+        "text": "{{body}}",
+        "size": 22.32,
+        "color": "text"
+       }
+      ],
+      "spaceAfter": 14
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{credit}}",
+        "size": 16,
+        "color": "muted"
+       }
+      ],
+      "if": "credit"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     36,
+     34,
+     32,
+     30,
+     28,
+     26,
+     24,
+     22
+    ]
+   }
+  },
+  {
+   "name": "帯（写真なし）",
+   "x": 0,
+   "y": 60,
+   "if": "!photo",
+   "w": 8,
+   "h": 280,
+   "fill": "accent"
+  },
+  {
+   "name": "説明（写真なし）",
+   "x": 44,
+   "y": 0,
+   "if": "!photo",
+   "w": 1000,
+   "h": 400,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.2,
+      "runs": [
+       {
+        "text": "{{label}}",
+        "size": 20,
+        "color": "accent",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 12,
+      "if": "label"
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{headline}}",
+        "size": 52,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ],
+      "spaceAfter": 16
+     },
+     {
+      "lineHeight": 1.55,
+      "runs": [
+       {
+        "text": "{{body}}",
+        "size": 32.24,
+        "color": "text"
+       }
+      ],
+      "spaceAfter": 14
+     },
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{credit}}",
+        "size": 16,
+        "color": "muted"
+       }
+      ],
+      "if": "credit"
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     52,
+     48,
+     44,
+     40,
+     38,
+     36,
+     34,
+     32,
+     30,
+     28,
+     26,
+     24,
+     22
+    ]
+   }
+  }
+ ],
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    460
+   ],
+   "elements": [
+    {
+     "kind": "image",
+     "name": "写真",
+     "x": 0,
+     "y": 0,
+     "w": 540,
+     "h": 180,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{headline}}",
+     "radius": "$radius.image",
+     "if": "photo"
+    },
+    {
+     "name": "説明（写真あり）（出典あり）",
+     "x": 0,
+     "y": 194,
+     "if": [
+      "photo",
+      "credit"
+     ],
+     "w": 540,
+     "h": 236,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 30,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 19.8,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "説明（写真あり）（出典なし）",
+     "x": 0,
+     "y": 194,
+     "if": [
+      "photo",
+      "!credit"
+     ],
+     "w": 540,
+     "h": 266,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 30,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 19.8,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "出典",
+     "x": 0,
+     "y": 434,
+     "if": [
+      "photo",
+      "credit"
+     ],
+     "w": 540,
+     "h": 26,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 14,
+          "color": "muted"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       14
+      ]
+     }
+    },
+    {
+     "name": "帯（写真なし）",
+     "x": 0,
+     "y": 30,
+     "if": "!photo",
+     "w": 7,
+     "h": 400,
+     "fill": "accent"
+    },
+    {
+     "name": "説明（写真なし）",
+     "x": 30,
+     "y": 0,
+     "if": "!photo",
+     "w": 510,
+     "h": 460,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 20,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 48,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 28.8,
+          "color": "text"
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 16,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 10,
+        "if": "credit"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       48,
+       44,
+       40,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ]
+     }
+    }
+   ],
+   "min_width": 470
+  },
+  {
+   "below": 700,
+   "below_h": 340,
+   "size": [
+    540,
+    300
+   ],
+   "elements": [
+    {
+     "kind": "image",
+     "name": "写真（写真が左）",
+     "x": 0,
+     "y": 0,
+     "w": 190,
+     "h": 300,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{headline}}",
+     "radius": "$radius.image",
+     "if": [
+      "photo",
+      "!photo_right"
+     ]
+    },
+    {
+     "name": "説明（写真が左）（出典あり）",
+     "x": 222,
+     "y": 0,
+     "if": [
+      "photo",
+      "!photo_right",
+      "credit"
+     ],
+     "w": 318,
+     "h": 270,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 15.6,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "説明（写真が左）（出典なし）",
+     "x": 222,
+     "y": 0,
+     "if": [
+      "photo",
+      "!photo_right",
+      "!credit"
+     ],
+     "w": 318,
+     "h": 300,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 15.6,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "出典",
+     "x": 222,
+     "y": 274,
+     "if": [
+      "photo",
+      "!photo_right",
+      "credit"
+     ],
+     "w": 318,
+     "h": 26,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 14,
+          "color": "muted"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       14
+      ]
+     }
+    },
+    {
+     "kind": "image",
+     "name": "写真（写真が右）",
+     "x": 350,
+     "y": 0,
+     "w": 190,
+     "h": 300,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{headline}}",
+     "radius": "$radius.image",
+     "if": [
+      "photo",
+      "photo_right"
+     ]
+    },
+    {
+     "name": "説明（写真が右）（出典あり）",
+     "x": 0,
+     "y": 0,
+     "if": [
+      "photo",
+      "photo_right",
+      "credit"
+     ],
+     "w": 318,
+     "h": 270,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 15.6,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "説明（写真が右）（出典なし）",
+     "x": 0,
+     "y": 0,
+     "if": [
+      "photo",
+      "photo_right",
+      "!credit"
+     ],
+     "w": 318,
+     "h": 300,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 26,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 15.6,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "出典",
+     "x": 0,
+     "y": 274,
+     "if": [
+      "photo",
+      "photo_right",
+      "credit"
+     ],
+     "w": 318,
+     "h": 26,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 14,
+          "color": "muted"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       14
+      ]
+     }
+    },
+    {
+     "name": "帯（写真なし）",
+     "x": 0,
+     "y": 30.0,
+     "if": "!photo",
+     "w": 7,
+     "h": 240.0,
+     "fill": "accent"
+    },
+    {
+     "name": "説明（写真なし）",
+     "x": 34,
+     "y": 0,
+     "if": "!photo",
+     "w": 506,
+     "h": 300,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 20,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 40,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 24.0,
+          "color": "text"
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 16,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 10,
+        "if": "credit"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       40,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20,
+       18
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [
+    {
+     "kind": "image",
+     "name": "写真（写真が左）",
+     "x": 0,
+     "y": 0,
+     "w": 330,
+     "h": 400,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{headline}}",
+     "radius": "$radius.image",
+     "if": [
+      "photo",
+      "!photo_right"
+     ]
+    },
+    {
+     "name": "説明（写真が左）（出典あり）",
+     "x": 362,
+     "y": 0,
+     "if": [
+      "photo",
+      "!photo_right",
+      "credit"
+     ],
+     "w": 438,
+     "h": 370,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 34,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 20.4,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20
+      ]
+     }
+    },
+    {
+     "name": "説明（写真が左）（出典なし）",
+     "x": 362,
+     "y": 0,
+     "if": [
+      "photo",
+      "!photo_right",
+      "!credit"
+     ],
+     "w": 438,
+     "h": 400,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 34,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 20.4,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20
+      ]
+     }
+    },
+    {
+     "name": "出典",
+     "x": 362,
+     "y": 374,
+     "if": [
+      "photo",
+      "!photo_right",
+      "credit"
+     ],
+     "w": 438,
+     "h": 26,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 14,
+          "color": "muted"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       14
+      ]
+     }
+    },
+    {
+     "kind": "image",
+     "name": "写真（写真が右）",
+     "x": 470,
+     "y": 0,
+     "w": 330,
+     "h": 400,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{headline}}",
+     "radius": "$radius.image",
+     "if": [
+      "photo",
+      "photo_right"
+     ]
+    },
+    {
+     "name": "説明（写真が右）（出典あり）",
+     "x": 0,
+     "y": 0,
+     "if": [
+      "photo",
+      "photo_right",
+      "credit"
+     ],
+     "w": 438,
+     "h": 370,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 34,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 20.4,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20
+      ]
+     }
+    },
+    {
+     "name": "説明（写真が右）（出典なし）",
+     "x": 0,
+     "y": 0,
+     "if": [
+      "photo",
+      "photo_right",
+      "!credit"
+     ],
+     "w": 438,
+     "h": 400,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 34,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 20.4,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20
+      ]
+     }
+    },
+    {
+     "name": "出典",
+     "x": 0,
+     "y": 374,
+     "if": [
+      "photo",
+      "photo_right",
+      "credit"
+     ],
+     "w": 438,
+     "h": 26,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 14,
+          "color": "muted"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       14
+      ]
+     }
+    },
+    {
+     "name": "帯（写真なし）",
+     "x": 0,
+     "y": 40.0,
+     "if": "!photo",
+     "w": 7,
+     "h": 320.0,
+     "fill": "accent"
+    },
+    {
+     "name": "説明（写真なし）",
+     "x": 34,
+     "y": 0,
+     "if": "!photo",
+     "w": 766,
+     "h": 400,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 20,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 48,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 28.8,
+          "color": "text"
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 16,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 10,
+        "if": "credit"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       48,
+       44,
+       40,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "below": 1000,
+   "below_h": 340,
+   "size": [
+    800,
+    300
+   ],
+   "elements": [
+    {
+     "kind": "image",
+     "name": "写真（写真が左）",
+     "x": 0,
+     "y": 0,
+     "w": 290,
+     "h": 300,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{headline}}",
+     "radius": "$radius.image",
+     "if": [
+      "photo",
+      "!photo_right"
+     ]
+    },
+    {
+     "name": "説明（写真が左）（出典あり）",
+     "x": 322,
+     "y": 0,
+     "if": [
+      "photo",
+      "!photo_right",
+      "credit"
+     ],
+     "w": 478,
+     "h": 270,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 30,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 18.0,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "説明（写真が左）（出典なし）",
+     "x": 322,
+     "y": 0,
+     "if": [
+      "photo",
+      "!photo_right",
+      "!credit"
+     ],
+     "w": 478,
+     "h": 300,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 30,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 18.0,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "出典",
+     "x": 322,
+     "y": 274,
+     "if": [
+      "photo",
+      "!photo_right",
+      "credit"
+     ],
+     "w": 478,
+     "h": 26,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 14,
+          "color": "muted"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       14
+      ]
+     }
+    },
+    {
+     "kind": "image",
+     "name": "写真（写真が右）",
+     "x": 510,
+     "y": 0,
+     "w": 290,
+     "h": 300,
+     "path": "{{photo}}",
+     "fit": "cover",
+     "alt": "{{headline}}",
+     "radius": "$radius.image",
+     "if": [
+      "photo",
+      "photo_right"
+     ]
+    },
+    {
+     "name": "説明（写真が右）（出典あり）",
+     "x": 0,
+     "y": 0,
+     "if": [
+      "photo",
+      "photo_right",
+      "credit"
+     ],
+     "w": 478,
+     "h": 270,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 30,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 18.0,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "説明（写真が右）（出典なし）",
+     "x": 0,
+     "y": 0,
+     "if": [
+      "photo",
+      "photo_right",
+      "!credit"
+     ],
+     "w": 478,
+     "h": 300,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 30,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 18.0,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       21,
+       20,
+       19,
+       18
+      ]
+     }
+    },
+    {
+     "name": "出典",
+     "x": 0,
+     "y": 274,
+     "if": [
+      "photo",
+      "photo_right",
+      "credit"
+     ],
+     "w": 478,
+     "h": 26,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 14,
+          "color": "muted"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       14
+      ]
+     }
+    },
+    {
+     "name": "帯（写真なし）",
+     "x": 0,
+     "y": 30.0,
+     "if": "!photo",
+     "w": 7,
+     "h": 240.0,
+     "fill": "accent"
+    },
+    {
+     "name": "説明（写真なし）",
+     "x": 34,
+     "y": 0,
+     "if": "!photo",
+     "w": 766,
+     "h": 300,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 20,
+          "color": "accent",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 8,
+        "if": "label"
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{headline}}",
+          "size": 48,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ],
+        "spaceAfter": 10
+       },
+       {
+        "lineHeight": 1.5,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 28.8,
+          "color": "text"
+         }
+        ]
+       },
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{credit}}",
+          "size": 16,
+          "color": "muted"
+         }
+        ],
+        "spaceBefore": 10,
+        "if": "credit"
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       48,
+       44,
+       40,
+       36,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

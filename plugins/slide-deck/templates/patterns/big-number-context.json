@@ -1,0 +1,1029 @@
+{
+ "name": "big-number-context",
+ "label": "大きな数字とその意味",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "成果・実績の大きな数字を主役に、意味を 2〜3 点添える（言葉・方針は keyword-explain）",
+ "description": "左に大きな数字（と単位・比べた結果）、右にその数字が何を意味するかを 2〜3 点。成果・実績・現状の数字が主役で、解釈を横に添えたいページ向け（見出し・リード・フッターはスライド側の title / lead が描く）。数字は桁数に応じて縮み、意味の行は全行が同じ大きさにそろう（見出しは 1 行、説明は 2 行に収まる長さ）。幅 700px 未満の矩形（合成スライドの半幅など）では、数字を上、意味を下に置く狭い構図、700〜1000px 未満では、左に数字・右に意味を置く小さめの構図に切り替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。（本文の領域の縦中央に置く）",
+ "block_alt": "代わりに kpi タイプを使う",
+ "background": "background",
+ "slots": {
+  "label": {
+   "kind": "text",
+   "label": "数字の名前（任意）",
+   "max_chars": 16,
+   "description": "数字の上に小さく添える。何の数字かを言う",
+   "example": "年間来場者数"
+  },
+  "value": {
+   "kind": "text",
+   "label": "大きな数字",
+   "max_chars": 7,
+   "required": true,
+   "description": "数字そのもの（桁区切りの , や小数点は可）。文字列で渡す",
+   "example": "48,200"
+  },
+  "unit": {
+   "kind": "text",
+   "label": "単位（任意）",
+   "max_chars": 4,
+   "description": "数字の右に小さく付く単位（%・件・万円 など）",
+   "example": "人"
+  },
+  "delta": {
+   "kind": "text",
+   "label": "比べた結果（任意）",
+   "max_chars": 18,
+   "description": "数字の下の帯。前年比・目標との差など。空なら出ない",
+   "example": "前年から 12% 増えた"
+  },
+  "points": {
+   "kind": "records",
+   "label": "数字の意味",
+   "min": 2,
+   "max": 3,
+   "fields": {
+    "head": {
+     "kind": "text",
+     "label": "意味の見出し",
+     "max_chars": 16
+    },
+    "body": {
+     "kind": "text",
+     "label": "意味の説明",
+     "max_chars": 50
+    }
+   },
+   "example": [
+    {
+     "head": "県外からの来場が増えた",
+     "body": "県外客が全体の 4 割を超え、宿泊を伴う来場も伸びた"
+    },
+    {
+     "head": "平日の来場も安定",
+     "body": "団体の予約を増やしたことで、平日の稼働率が上がった"
+    },
+    {
+     "head": "次の目標は 5 万人",
+     "body": "夜間の特別開館を月 1 回から 2 回に増やして届ける"
+    }
+   ],
+   "required": true,
+   "description": "右に並べる、その数字が何を意味するか 2〜3 点。見出しは 1 行、説明は 2 行に収まる長さで書く"
+  }
+ },
+ "elements": [
+  {
+   "name": "数字の名前",
+   "x": 0,
+   "y": 86,
+   "if": "label",
+   "w": 480,
+   "h": 40,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "b",
+    "paragraphs": [
+     {
+      "lineHeight": 1.2,
+      "runs": [
+       {
+        "text": "{{label}}",
+        "size": 26,
+        "color": "muted",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     26,
+     24,
+     22,
+     20
+    ]
+   }
+  },
+  {
+   "name": "大きな数字と単位",
+   "x": 0,
+   "y": 130,
+   "w": 480,
+   "h": 170,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "b",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{value}}",
+        "size": 160,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       },
+       {
+        "text": "{{unit}}",
+        "size": 64,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     160,
+     144,
+     128,
+     112,
+     96,
+     84,
+     72,
+     60
+    ]
+   }
+  },
+  {
+   "name": "比べた結果の帯",
+   "x": 0,
+   "y": 312,
+   "if": "delta",
+   "w": 480,
+   "h": 56,
+   "fill": "surface",
+   "radius": "$radius.pill"
+  },
+  {
+   "name": "比べた結果",
+   "x": 24,
+   "y": 312,
+   "if": "delta",
+   "w": 432,
+   "h": 56,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{delta}}",
+        "size": 26,
+        "color": "heading_text",
+        "bold": true,
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "fit": {
+    "sizes": [
+     26,
+     24,
+     22,
+     20,
+     18
+    ]
+   }
+  }
+ ],
+ "variants_by": "points",
+ "variants": {
+  "2": {
+   "elements": [
+    {
+     "repeat": "points",
+     "grid": {
+      "x": 540,
+      "y": 0,
+      "w": 596,
+      "h": 400,
+      "cols": 1,
+      "gap": 12
+     },
+     "template": [
+      {
+       "name": "意味{{index}}の帯",
+       "x": 0,
+       "y": 4,
+       "w": 6,
+       "b": 4,
+       "fill": "accent"
+      },
+      {
+       "name": "意味{{index}}",
+       "x": 28,
+       "y": 4,
+       "r": 0,
+       "b": 4,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": "@fit",
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "spaceAfter": 6
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 20,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "3": {
+   "elements": [
+    {
+     "repeat": "points",
+     "grid": {
+      "x": 540,
+      "y": 0,
+      "w": 596,
+      "h": 400,
+      "cols": 1,
+      "gap": 12
+     },
+     "template": [
+      {
+       "name": "意味{{index}}の帯",
+       "x": 0,
+       "y": 4,
+       "w": 6,
+       "b": 4,
+       "fill": "accent"
+      },
+      {
+       "name": "意味{{index}}",
+       "x": 28,
+       "y": 4,
+       "r": 0,
+       "b": 4,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": "@fit",
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "spaceAfter": 6
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 20,
+            "color": "text"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         28,
+         26,
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": true
+       }
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    556,
+    400
+   ],
+   "elements": [
+    {
+     "name": "数字の名前",
+     "x": 0,
+     "y": 0,
+     "if": "label",
+     "w": 556,
+     "h": 30,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 22,
+          "color": "muted",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       20,
+       18
+      ]
+     }
+    },
+    {
+     "name": "大きな数字と単位",
+     "x": 0,
+     "y": 30,
+     "w": 556,
+     "h": 124,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{value}}",
+          "size": 112,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         },
+         {
+          "text": "{{unit}}",
+          "size": 44,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       112,
+       100,
+       90,
+       80,
+       70,
+       60,
+       50
+      ]
+     }
+    },
+    {
+     "name": "比べた結果の帯",
+     "x": 0,
+     "y": 158,
+     "if": "delta",
+     "w": 556,
+     "h": 40,
+     "fill": "surface",
+     "radius": "$radius.pill"
+    },
+    {
+     "name": "比べた結果",
+     "x": 18,
+     "y": 158,
+     "if": "delta",
+     "w": 520,
+     "h": 40,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{delta}}",
+          "size": 20,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       20,
+       18,
+       17,
+       16
+      ]
+     }
+    }
+   ],
+   "variants_by": "points",
+   "variants": {
+    "2": {
+     "elements": [
+      {
+       "repeat": "points",
+       "grid": {
+        "x": 0,
+        "y": 214,
+        "w": 556,
+        "h": 186,
+        "cols": 1,
+        "gap": 8
+       },
+       "template": [
+        {
+         "name": "意味{{index}}の帯",
+         "x": 0,
+         "y": 2,
+         "w": 5,
+         "b": 2,
+         "fill": "accent"
+        },
+        {
+         "name": "意味{{index}}",
+         "x": 20,
+         "y": 2,
+         "r": 0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": "@fit",
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "spaceAfter": 3
+           },
+           {
+            "lineHeight": 1.25,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 16,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "3": {
+     "elements": [
+      {
+       "repeat": "points",
+       "grid": {
+        "x": 0,
+        "y": 214,
+        "w": 556,
+        "h": 186,
+        "cols": 1,
+        "gap": 8
+       },
+       "template": [
+        {
+         "name": "意味{{index}}の帯",
+         "x": 0,
+         "y": 2,
+         "w": 5,
+         "b": 2,
+         "fill": "accent"
+        },
+        {
+         "name": "意味{{index}}",
+         "x": 20,
+         "y": 2,
+         "r": 0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": "@fit",
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "spaceAfter": 3
+           },
+           {
+            "lineHeight": 1.25,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 16,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "min_width": 420
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [
+    {
+     "name": "数字の名前",
+     "x": 0,
+     "y": 70,
+     "if": "label",
+     "w": 346,
+     "h": 36,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 24,
+          "color": "muted",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       24,
+       22,
+       20,
+       18
+      ]
+     }
+    },
+    {
+     "name": "大きな数字と単位",
+     "x": 0,
+     "y": 110,
+     "w": 346,
+     "h": 170,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "b",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{value}}",
+          "size": 130,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         },
+         {
+          "text": "{{unit}}",
+          "size": 40,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       130,
+       120,
+       108,
+       96,
+       84,
+       72,
+       64,
+       56,
+       48,
+       40,
+       36
+      ]
+     }
+    },
+    {
+     "name": "比べた結果の帯",
+     "x": 0,
+     "y": 296,
+     "if": "delta",
+     "w": 346,
+     "h": 52,
+     "fill": "surface",
+     "radius": "$radius.pill"
+    },
+    {
+     "name": "比べた結果",
+     "x": 20,
+     "y": 296,
+     "if": "delta",
+     "w": 306,
+     "h": 52,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{delta}}",
+          "size": 22,
+          "color": "heading_text",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       20,
+       19,
+       18,
+       17,
+       16
+      ]
+     }
+    }
+   ],
+   "variants_by": "points",
+   "variants": {
+    "2": {
+     "elements": [
+      {
+       "repeat": "points",
+       "grid": {
+        "x": 392,
+        "y": 0,
+        "w": 408,
+        "h": 400,
+        "cols": 1,
+        "gap": 10
+       },
+       "template": [
+        {
+         "name": "意味{{index}}の帯",
+         "x": 0,
+         "y": 4,
+         "w": 6,
+         "b": 4,
+         "fill": "accent"
+        },
+        {
+         "name": "意味{{index}}",
+         "x": 24,
+         "y": 4,
+         "r": 0,
+         "b": 4,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": "@fit",
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "spaceAfter": 4
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 18.72,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "3": {
+     "elements": [
+      {
+       "repeat": "points",
+       "grid": {
+        "x": 392,
+        "y": 0,
+        "w": 408,
+        "h": 400,
+        "cols": 1,
+        "gap": 10
+       },
+       "template": [
+        {
+         "name": "意味{{index}}の帯",
+         "x": 0,
+         "y": 4,
+         "w": 6,
+         "b": 4,
+         "fill": "accent"
+        },
+        {
+         "name": "意味{{index}}",
+         "x": 24,
+         "y": 4,
+         "r": 0,
+         "b": 4,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": "@fit",
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "spaceAfter": 4
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 18.72,
+              "color": "text"
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

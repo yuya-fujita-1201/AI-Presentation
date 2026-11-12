@@ -1,0 +1,5321 @@
+{
+ "name": "compare-options",
+ "label": "案の比較表（2〜4 案）",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "summary": "2〜4 つの案を同じ観点（費用・期間など）で比べ、おすすめの案を強調する",
+ "description": "2〜4 つの案を列に、比べる観点（2〜4 個）を行に並べる比較表。選択肢の検討・見積比較・製品選定など、案ごとの違いを同じ観点で見せたいときに使う本文向け。おすすめの案だけ面と色つきの帯で強調できる（見出し・リード・フッターはスライド側の title / lead が描く）。各観点の values に、案の数と同じ個数・同じ並び順で内容を書く（個数が合わないと警告）。全セルの文字の大きさがそろい、文が短いほど大きい（内容は 1 セル 18 字まで）。幅 1000px 未満の矩形（合成スライドの半幅・3 分の 2 など）では、行ラベルの列を詰めて文字を大きくした表に組み替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。高さ 340px 未満の矩形（上下 2 段のブロックなど）では、行や列の詰め方を変えた短い構図に切り替わる。（本文の領域の縦中央に置く）",
+ "block_alt": "観点を 3 つまでにして文を短くする",
+ "background": "background",
+ "slots": {
+  "options": {
+   "kind": "records",
+   "label": "比べる案",
+   "min": 2,
+   "max": 4,
+   "fields": {
+    "name": {
+     "kind": "text",
+     "label": "案の名前",
+     "max_chars": 9
+    },
+    "tag": {
+     "at_most": 1,
+     "kind": "text",
+     "label": "推奨の印（おすすめの案だけ「おすすめ」と書く）",
+     "max_chars": 5,
+     "description": "おすすめの案だけ「おすすめ」など短い言葉を書く。書いた案の列が面と色つきの帯で強調される（1 案だけに書く。2 案以上に書くと警告）"
+    }
+   },
+   "example": [
+    {
+     "name": "自社で建設",
+     "tag": ""
+    },
+    {
+     "name": "賃貸倉庫",
+     "tag": "おすすめ"
+    },
+    {
+     "name": "共同利用",
+     "tag": ""
+    }
+   ],
+   "required": true,
+   "description": "左から順に案を並べる（各観点の values がこの順に対応する）。案は 2〜4 つ。推奨の印は 1 案だけにする"
+  },
+  "rows": {
+   "kind": "records",
+   "label": "比べる観点",
+   "min": 2,
+   "max": 4,
+   "fields": {
+    "label": {
+     "kind": "text",
+     "label": "観点の名前",
+     "max_chars": 12
+    },
+    "values": {
+     "kind": "list",
+     "label": "案ごとの内容",
+     "max_chars": 18,
+     "count_of": "options",
+     "description": "「比べる案」と同じ数・同じ並び順で、案ごとの内容を書く（例: 案が 3 つなら 3 つ）。足りない列は「―」と出る"
+    }
+   },
+   "example": [
+    {
+     "label": "初期費用",
+     "values": [
+      "約 8 億円",
+      "約 6,000 万円",
+      "約 1 億円"
+     ]
+    },
+    {
+     "label": "稼働まで",
+     "values": [
+      "約 2 年",
+      "約 4 か月",
+      "約 8 か月"
+     ]
+    },
+    {
+     "label": "将来の拡張",
+     "values": [
+      "土地の範囲内",
+      "契約更新で見直し",
+      "他社と調整"
+     ]
+    }
+   ],
+   "required": true,
+   "description": "1 行 = 1 つの観点（2〜4 行）。values は「比べる案」の並び順（案の数と同じ個数）。個数が合わないと警告が出る"
+  }
+ },
+ "elements": [],
+ "variants_by": "options",
+ "variants": {
+  "2": {
+   "elements": [
+    {
+     "repeat": "options",
+     "grid": {
+      "x": 236,
+      "y": 0,
+      "w": 900,
+      "h": 400,
+      "cols": "row",
+      "gap": 16
+     },
+     "template": [
+      {
+       "name": "案{{index}}の強調面",
+       "x": 0,
+       "y": 0,
+       "if": "tag",
+       "fill": "surface",
+       "radius": "$radius.card",
+       "shadow": "$shadow.card"
+      },
+      {
+       "name": "案{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "if": "tag",
+       "h": 6,
+       "fill": "accent"
+      },
+      {
+       "name": "案{{index}}の推奨タグ",
+       "x": 16,
+       "y": 16,
+       "if": "tag",
+       "w": 104,
+       "h": 32,
+       "fill": "primary",
+       "radius": "$radius.pill",
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{tag}}",
+            "size": 16,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         16
+        ]
+       }
+      },
+      {
+       "name": "案{{index}}の名前",
+       "x": 16,
+       "y": 52,
+       "h": 44,
+       "r": 16,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.1,
+          "runs": [
+           {
+            "text": "{{name}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20
+        ],
+        "group": "name"
+       }
+      }
+     ]
+    },
+    {
+     "repeat": "rows",
+     "grid": {
+      "x": 0,
+      "y": 100,
+      "w": 1136,
+      "h": 300,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "観点{{index}}の区切り線",
+       "x": 0,
+       "y": 0,
+       "w": 1136,
+       "h": 1,
+       "fill": "border"
+      },
+      {
+       "name": "観点{{index}}の名前",
+       "x": 0,
+       "y": 2,
+       "w": 208,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{label}}",
+            "size": 24,
+            "color": "muted",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "label"
+       }
+      },
+      {
+       "name": "観点{{index}}の案1",
+       "x": 252.0,
+       "y": 2,
+       "w": 410.0,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.1}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.1",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      },
+      {
+       "name": "観点{{index}}の案2",
+       "x": 710.0,
+       "y": 2,
+       "w": 410.0,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.2}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.2",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "3": {
+   "elements": [
+    {
+     "repeat": "options",
+     "grid": {
+      "x": 236,
+      "y": 0,
+      "w": 900,
+      "h": 400,
+      "cols": "row",
+      "gap": 16
+     },
+     "template": [
+      {
+       "name": "案{{index}}の強調面",
+       "x": 0,
+       "y": 0,
+       "if": "tag",
+       "fill": "surface",
+       "radius": "$radius.card",
+       "shadow": "$shadow.card"
+      },
+      {
+       "name": "案{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "if": "tag",
+       "h": 6,
+       "fill": "accent"
+      },
+      {
+       "name": "案{{index}}の推奨タグ",
+       "x": 16,
+       "y": 16,
+       "if": "tag",
+       "w": 104,
+       "h": 32,
+       "fill": "primary",
+       "radius": "$radius.pill",
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{tag}}",
+            "size": 16,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         16
+        ]
+       }
+      },
+      {
+       "name": "案{{index}}の名前",
+       "x": 16,
+       "y": 52,
+       "h": 44,
+       "r": 16,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.1,
+          "runs": [
+           {
+            "text": "{{name}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20
+        ],
+        "group": "name"
+       }
+      }
+     ]
+    },
+    {
+     "repeat": "rows",
+     "grid": {
+      "x": 0,
+      "y": 100,
+      "w": 1136,
+      "h": 300,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "観点{{index}}の区切り線",
+       "x": 0,
+       "y": 0,
+       "w": 1136,
+       "h": 1,
+       "fill": "border"
+      },
+      {
+       "name": "観点{{index}}の名前",
+       "x": 0,
+       "y": 2,
+       "w": 208,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{label}}",
+            "size": 24,
+            "color": "muted",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "label"
+       }
+      },
+      {
+       "name": "観点{{index}}の案1",
+       "x": 252.0,
+       "y": 2,
+       "w": 257.33,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.1}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.1",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      },
+      {
+       "name": "観点{{index}}の案2",
+       "x": 557.3333333333333,
+       "y": 2,
+       "w": 257.33,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.2}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.2",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      },
+      {
+       "name": "観点{{index}}の案3",
+       "x": 862.6666666666666,
+       "y": 2,
+       "w": 257.33,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.3}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.3",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "4": {
+   "elements": [
+    {
+     "repeat": "options",
+     "grid": {
+      "x": 236,
+      "y": 0,
+      "w": 900,
+      "h": 400,
+      "cols": "row",
+      "gap": 16
+     },
+     "template": [
+      {
+       "name": "案{{index}}の強調面",
+       "x": 0,
+       "y": 0,
+       "if": "tag",
+       "fill": "surface",
+       "radius": "$radius.card",
+       "shadow": "$shadow.card"
+      },
+      {
+       "name": "案{{index}}の帯",
+       "x": 0,
+       "y": 0,
+       "if": "tag",
+       "h": 6,
+       "fill": "accent"
+      },
+      {
+       "name": "案{{index}}の推奨タグ",
+       "x": 16,
+       "y": 16,
+       "if": "tag",
+       "w": 104,
+       "h": 32,
+       "fill": "primary",
+       "radius": "$radius.pill",
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{tag}}",
+            "size": 16,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ],
+          "align": "ctr"
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         16
+        ]
+       }
+      },
+      {
+       "name": "案{{index}}の名前",
+       "x": 16,
+       "y": 52,
+       "h": 44,
+       "r": 16,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.1,
+          "runs": [
+           {
+            "text": "{{name}}",
+            "size": 32,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         32,
+         30,
+         28,
+         26,
+         24,
+         22,
+         20
+        ],
+        "group": "name"
+       }
+      }
+     ]
+    },
+    {
+     "repeat": "rows",
+     "grid": {
+      "x": 0,
+      "y": 100,
+      "w": 1136,
+      "h": 300,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "観点{{index}}の区切り線",
+       "x": 0,
+       "y": 0,
+       "w": 1136,
+       "h": 1,
+       "fill": "border"
+      },
+      {
+       "name": "観点{{index}}の名前",
+       "x": 0,
+       "y": 2,
+       "w": 208,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.2,
+          "runs": [
+           {
+            "text": "{{label}}",
+            "size": 24,
+            "color": "muted",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         24,
+         22,
+         20,
+         18
+        ],
+        "group": "label"
+       }
+      },
+      {
+       "name": "観点{{index}}の案1",
+       "x": 252.0,
+       "y": 2,
+       "w": 181.0,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.1}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.1",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      },
+      {
+       "name": "観点{{index}}の案2",
+       "x": 481.0,
+       "y": 2,
+       "w": 181.0,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.2}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.2",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      },
+      {
+       "name": "観点{{index}}の案3",
+       "x": 710.0,
+       "y": 2,
+       "w": 181.0,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.3}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.3",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      },
+      {
+       "name": "観点{{index}}の案4",
+       "x": 939.0,
+       "y": 2,
+       "w": 181.0,
+       "b": 2,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{values.4}}",
+            "size": 26,
+            "color": "text"
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "―",
+            "size": 26,
+            "color": "muted"
+           }
+          ],
+          "if": {
+           "slot": "values.4",
+           "is": ""
+          },
+          "keep": true
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         20,
+         18,
+         17,
+         16
+        ],
+        "group": "cell"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "valign": "middle",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    400
+   ],
+   "elements": [],
+   "min_width": 440,
+   "variants_by": "options",
+   "variants": {
+    "2": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 106,
+        "y": 0,
+        "w": 434,
+        "h": 400,
+        "cols": "row",
+        "gap": 10
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 16,
+         "y": 12,
+         "if": "tag",
+         "w": 84,
+         "h": 26,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 15,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           15
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 16,
+         "y": 38,
+         "h": 32,
+         "r": 16,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           18
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 84,
+        "w": 540,
+        "h": 316,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 92,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 18,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 122.0,
+         "y": 2,
+         "w": 180.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 22,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 344.0,
+         "y": 2,
+         "w": 180.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 22,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "3": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 100,
+        "y": 0,
+        "w": 440,
+        "h": 400,
+        "cols": "row",
+        "gap": 8
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 10,
+         "y": 12,
+         "if": "tag",
+         "w": 76,
+         "h": 24,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 14,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           14
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 10,
+         "y": 38,
+         "h": 34,
+         "r": 10,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 22,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 84,
+        "w": 540,
+        "h": 316,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 88,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 17,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 110.0,
+         "y": 2,
+         "w": 121.33,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 17,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 17,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 259.33333333333337,
+         "y": 2,
+         "w": 121.33,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 17,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 17,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案3",
+         "x": 408.6666666666667,
+         "y": 2,
+         "w": 121.33,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.3}}",
+              "size": 17,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 17,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.3",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 86,
+        "y": 0,
+        "w": 454,
+        "h": 400,
+        "cols": "row",
+        "gap": 6
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 6,
+         "y": 12,
+         "if": "tag",
+         "w": 64,
+         "h": 22,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 13,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           13
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 6,
+         "y": 38,
+         "h": 34,
+         "r": 6,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 17,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 84,
+        "w": 540,
+        "h": 316,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 76,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 15,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13,
+           12
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 92.0,
+         "y": 2,
+         "w": 97.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 15,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 15,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13,
+           12
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 207.0,
+         "y": 2,
+         "w": 97.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 15,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 15,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13,
+           12
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案3",
+         "x": 322.0,
+         "y": 2,
+         "w": 97.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.3}}",
+              "size": 15,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 15,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.3",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13,
+           12
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案4",
+         "x": 437.0,
+         "y": 2,
+         "w": 97.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.4}}",
+              "size": 15,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 15,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.4",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13,
+           12
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "min_width_by_count": {
+    "3": 470,
+    "4": 500
+   }
+  },
+  {
+   "below": 700,
+   "below_h": 340,
+   "size": [
+    540,
+    300
+   ],
+   "elements": [],
+   "variants_by": "options",
+   "variants": {
+    "2": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 106,
+        "y": 0,
+        "w": 434,
+        "h": 300,
+        "cols": "row",
+        "gap": 10
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 16,
+         "y": 4,
+         "if": "tag",
+         "w": 84,
+         "h": 25,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 14,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           14
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 16,
+         "y": 31,
+         "h": 34,
+         "r": 16,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           18
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 70,
+        "w": 540,
+        "h": 230,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 92,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 18,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 122.0,
+         "y": 2,
+         "w": 180.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 22,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 344.0,
+         "y": 2,
+         "w": 180.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 22,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 22,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "3": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 100,
+        "y": 0,
+        "w": 440,
+        "h": 300,
+        "cols": "row",
+        "gap": 8
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 10,
+         "y": 4,
+         "if": "tag",
+         "w": 76,
+         "h": 24,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 13.5,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           13.5
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 10,
+         "y": 31,
+         "h": 34,
+         "r": 10,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 20,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 70,
+        "w": 540,
+        "h": 230,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 88,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 17,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 110.0,
+         "y": 2,
+         "w": 121.33,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 18,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 259.33333333333337,
+         "y": 2,
+         "w": 121.33,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 18,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案3",
+         "x": 408.6666666666667,
+         "y": 2,
+         "w": 121.33,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.3}}",
+              "size": 18,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.3",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 86,
+        "y": 0,
+        "w": 454,
+        "h": 300,
+        "cols": "row",
+        "gap": 6
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 6,
+         "y": 4,
+         "if": "tag",
+         "w": 64,
+         "h": 23,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 13,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           13
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 6,
+         "y": 31,
+         "h": 34,
+         "r": 6,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 16,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           16,
+           15,
+           14,
+           13
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 70,
+        "w": 540,
+        "h": 230,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 76,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 15,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 92.0,
+         "y": 2,
+         "w": 97.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 15,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 15,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 207.0,
+         "y": 2,
+         "w": 97.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 15,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 15,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案3",
+         "x": 322.0,
+         "y": 2,
+         "w": 97.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.3}}",
+              "size": 15,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 15,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.3",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案4",
+         "x": 437.0,
+         "y": 2,
+         "w": 97.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.4}}",
+              "size": 15,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 15,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.4",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           15,
+           14,
+           13
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [],
+   "variants_by": "options",
+   "variants": {
+    "2": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 186,
+        "y": 0,
+        "w": 614,
+        "h": 400,
+        "cols": "row",
+        "gap": 16
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 20,
+         "y": 12,
+         "if": "tag",
+         "w": 100,
+         "h": 30,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 16,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           16
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 20,
+         "y": 48,
+         "h": 40,
+         "r": 20,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 30,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           30,
+           28,
+           26,
+           24,
+           22
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 96,
+        "w": 800,
+        "h": 304,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 166,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 22,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 206.0,
+         "y": 2,
+         "w": 259.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 26,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 26,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 521.0,
+         "y": 2,
+         "w": 259.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 26,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 26,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "3": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 164,
+        "y": 0,
+        "w": 636,
+        "h": 400,
+        "cols": "row",
+        "gap": 14
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 16,
+         "y": 12,
+         "if": "tag",
+         "w": 96,
+         "h": 30,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 16,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           16
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 16,
+         "y": 48,
+         "h": 40,
+         "r": 16,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 96,
+        "w": 800,
+        "h": 304,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 146,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 20,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 180.0,
+         "y": 2,
+         "w": 170.67,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 23,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 23,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           23,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 396.66666666666663,
+         "y": 2,
+         "w": 170.67,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 23,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 23,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           23,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案3",
+         "x": 613.3333333333333,
+         "y": 2,
+         "w": 170.67,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.3}}",
+              "size": 23,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 23,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.3",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           23,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 142,
+        "y": 0,
+        "w": 658,
+        "h": 400,
+        "cols": "row",
+        "gap": 12
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 12,
+         "y": 12,
+         "if": "tag",
+         "w": 92,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 15,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           15
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 12,
+         "y": 48,
+         "h": 40,
+         "r": 12,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 96,
+        "w": 800,
+        "h": 304,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 126,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 18,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 154.0,
+         "y": 2,
+         "w": 131.5,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 19,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 19,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 321.5,
+         "y": 2,
+         "w": 131.5,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 19,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 19,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案3",
+         "x": 489.0,
+         "y": 2,
+         "w": 131.5,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.3}}",
+              "size": 19,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 19,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.3",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案4",
+         "x": 656.5,
+         "y": 2,
+         "w": 131.5,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.4}}",
+              "size": 19,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 19,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.4",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           19,
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "below": 1000,
+   "below_h": 340,
+   "size": [
+    800,
+    300
+   ],
+   "elements": [],
+   "variants_by": "options",
+   "variants": {
+    "2": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 186,
+        "y": 0,
+        "w": 614,
+        "h": 300,
+        "cols": "row",
+        "gap": 16
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 20,
+         "y": 6,
+         "if": "tag",
+         "w": 100,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 16,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           16
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 20,
+         "y": 38,
+         "h": 38,
+         "r": 20,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 28,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           28,
+           26,
+           24,
+           22,
+           20
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 80,
+        "w": 800,
+        "h": 220,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 166,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 22,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 206.0,
+         "y": 2,
+         "w": 259.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 24,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 521.0,
+         "y": 2,
+         "w": 259.0,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 24,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 24,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "3": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 164,
+        "y": 0,
+        "w": 636,
+        "h": 300,
+        "cols": "row",
+        "gap": 14
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 16,
+         "y": 6,
+         "if": "tag",
+         "w": 96,
+         "h": 28,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 16,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           16
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 16,
+         "y": 38,
+         "h": 38,
+         "r": 16,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 26,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           26,
+           24,
+           22,
+           20,
+           19,
+           18
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 80,
+        "w": 800,
+        "h": 220,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 146,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 20,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 180.0,
+         "y": 2,
+         "w": 170.67,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 21,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 21,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 396.66666666666663,
+         "y": 2,
+         "w": 170.67,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 21,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 21,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案3",
+         "x": 613.3333333333333,
+         "y": 2,
+         "w": 170.67,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.3}}",
+              "size": 21,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 21,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.3",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           21,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "repeat": "options",
+       "grid": {
+        "x": 142,
+        "y": 0,
+        "w": 658,
+        "h": 300,
+        "cols": "row",
+        "gap": 12
+       },
+       "template": [
+        {
+         "name": "案{{index}}の強調面",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "fill": "surface",
+         "radius": "$radius.card",
+         "shadow": "$shadow.card"
+        },
+        {
+         "name": "案{{index}}の帯",
+         "x": 0,
+         "y": 0,
+         "if": "tag",
+         "h": 5,
+         "fill": "accent"
+        },
+        {
+         "name": "案{{index}}の推奨タグ",
+         "x": 12,
+         "y": 6,
+         "if": "tag",
+         "w": 92,
+         "h": 26,
+         "fill": "primary",
+         "radius": "$radius.pill",
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.0,
+            "runs": [
+             {
+              "text": "{{tag}}",
+              "size": 15,
+              "color": "on_primary",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ],
+            "align": "ctr"
+           }
+          ],
+          "wrap": false
+         },
+         "fit": {
+          "sizes": [
+           15
+          ]
+         }
+        },
+        {
+         "name": "案{{index}}の名前",
+         "x": 12,
+         "y": 38,
+         "h": 38,
+         "r": 12,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.1,
+            "runs": [
+             {
+              "text": "{{name}}",
+              "size": 22,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           22,
+           20,
+           19,
+           18,
+           17,
+           16
+          ],
+          "group": "name"
+         }
+        }
+       ]
+      },
+      {
+       "repeat": "rows",
+       "grid": {
+        "x": 0,
+        "y": 80,
+        "w": 800,
+        "h": 220,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "観点{{index}}の区切り線",
+         "x": 0,
+         "y": 0,
+         "w": 800,
+         "h": 1,
+         "fill": "border"
+        },
+        {
+         "name": "観点{{index}}の名前",
+         "x": 0,
+         "y": 2,
+         "w": 126,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.2,
+            "runs": [
+             {
+              "text": "{{label}}",
+              "size": 18,
+              "color": "muted",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "label"
+         }
+        },
+        {
+         "name": "観点{{index}}の案1",
+         "x": 154.0,
+         "y": 2,
+         "w": 131.5,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.1}}",
+              "size": 18,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.1",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案2",
+         "x": 321.5,
+         "y": 2,
+         "w": 131.5,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.2}}",
+              "size": 18,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.2",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案3",
+         "x": 489.0,
+         "y": 2,
+         "w": 131.5,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.3}}",
+              "size": 18,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.3",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        },
+        {
+         "name": "観点{{index}}の案4",
+         "x": 656.5,
+         "y": 2,
+         "w": 131.5,
+         "b": 2,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{values.4}}",
+              "size": 18,
+              "color": "text"
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "―",
+              "size": 18,
+              "color": "muted"
+             }
+            ],
+            "if": {
+             "slot": "values.4",
+             "is": ""
+            },
+            "keep": true
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           18,
+           17,
+           16,
+           15,
+           14
+          ],
+          "group": "cell"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

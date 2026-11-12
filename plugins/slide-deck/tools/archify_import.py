@@ -500,7 +500,7 @@ def resolve_validation_style(slide: dict, deck_dir: Path = None) -> dict:
         deck, _theme, layout = build_deck.load_deck(deck_dir)
     else:
         deck = {}
-        layout = build_deck.load_json(ROOT / "templates" / "layouts" / "default.json")
+        layout = build_deck.load_layout("default", deck_dir)
     return build_deck.resolve_style(layout, deck, slide)
 
 

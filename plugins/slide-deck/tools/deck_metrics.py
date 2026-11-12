@@ -57,8 +57,23 @@ HEDGE = ["だと思います", "正直", "んです", "かなと", "かもしれ
 DESU = re.compile(r"(です|ます|ましょう|ません|でした|ますか|でしょうか|ですか)[。！？]?$")
 
 
+# 表示されない文字列（icon / variant / shape など）のキーは lint_deck_text と同じものを使う
+try:
+    from lint_deck_text import NON_DISPLAY_KEYS  # type: ignore
+except Exception:  # noqa: BLE001
+    NON_DISPLAY_KEYS = ("icon", "variant", "shape", "kind", "align", "valign", "relation", "tone", "mode", "direction",
+                        "orientation", "position", "lane", "from", "to", "color", "fill", "bg", "pattern",
+                    "background", "overlay", "side", "fit", "caption_position", "emphasis")
+
+
 def display_texts(slide):
     out = []
+    try:      # 登録表（kpi / chart など）で「本文として数えないキー」を宣言したタイプはそれも除く
+        import engine_registry
+        spec = engine_registry.get(slide.get("type")) if isinstance(slide, dict) else None
+    except Exception:  # noqa: BLE001
+        spec = None
+    extra_skip = tuple(spec.text_skip_keys) if spec else ()
     def walk(o):
         if isinstance(o, str):
             out.append(o)
@@ -67,7 +82,7 @@ def display_texts(slide):
                 walk(v)
         elif isinstance(o, dict):
             for k, v in o.items():
-                if k in ("notes", "style", "figure", "path", "src", "image", "type", "id", "layout", "theme", "code"):
+                if k in ("notes", "style", "figure", "path", "src", "image", "type", "id", "layout", "theme", "code") + tuple(NON_DISPLAY_KEYS) + extra_skip:
                     continue
                 walk(v)
     walk(slide)
@@ -103,6 +118,10 @@ def metrics(deck_dir):
     slides = deck["slides"]
     n = len(slides)
     types = [s.get("type") for s in slides]
+    # 合成スライド（composite）のブロックは、本文・表・コードなどの数え上げでは 1 枚のスライドとして扱う（枚数 n は実際の枚数のまま）
+    blocks = [b for s in slides if isinstance(s, dict) for b in (s.get("blocks") or []) if isinstance(b, dict) and s.get("type") in ("composite", "split")]
+    units = slides + blocks
+    btypes = [b.get("type") for b in blocks]
     m = {"deck": Path(deck_dir).name, "slides": n,
          "intro": ">".join(types[:4]), "sections": types.count("section"),
          "types": {t: types.count(t) for t in sorted(set(types))}}
@@ -110,8 +129,8 @@ def metrics(deck_dir):
     m["punch_n"] = len(punches)
     m["punch_med"] = int(st.median(len(p) for p in punches)) if punches else 0
     m["punch_desu"] = round(sum(1 for p in punches if DESU.search(p)) / len(punches), 2) if punches else None
-    bl = [b for s in slides for b in bullet_texts(s)]
-    bslides = [s for s in slides if bullet_texts(s)]
+    bl = [b for s in units for b in bullet_texts(s)]
+    bslides = [s for s in units if bullet_texts(s)]
     m["bullets_per_slide"] = round(len(bl) / len(bslides), 1) if bslides else 0
     m["bullet_chars"] = int(st.median(len(b) for b in bl)) if bl else 0
     m["bullet_end_maru"] = round(sum(1 for b in bl if b.rstrip().endswith("。")) / len(bl), 2) if bl else None
@@ -124,7 +143,7 @@ def metrics(deck_dir):
     m["notes_hedge"] = sum(x.count(h) for x in notes for h in HEDGE)
     ends = [re.sub(r"[。！？\s]+$", "", sent)[-3:] for x in notes for sent in re.split(r"[。！？]", x) if sent.strip()]
     m["notes_end_variety"] = round(len(set(ends)) / len(ends), 2) if ends else None
-    disp = [t for s in slides for t in display_texts(s)]
+    disp = [t for s in slides for t in display_texts(s)]      # composite は blocks の中の文字列も display_texts が数える
     alltext = "\n".join(disp)
     m["dewanaku"] = alltext.count("ではなく")
     m["dash"] = alltext.count("—")
@@ -143,12 +162,16 @@ def metrics(deck_dir):
     fig_slides = sum(1 for s in slides if json.dumps(s, ensure_ascii=False).find("assets/") >= 0)
     m["figure_slide_ratio"] = round(fig_slides / n, 2)
     m["image_text"] = types.count("image_text")
-    m["caption_n"] = sum(1 for s in slides if s.get("caption"))
-    m["table_n"] = types.count("table")
-    m["code_n"] = types.count("code")
+    m["caption_n"] = sum(1 for s in units if s.get("caption"))
+    m["table_n"] = types.count("table") + btypes.count("table")
+    m["code_n"] = types.count("code") + btypes.count("code")
     m["two_column_n"] = types.count("two_column")
     m["quote_n"] = types.count("quote")
     return m
+
+
+def _short(name: str, width: int = 24) -> str:
+    return name if len(name) <= width else name[: width - 1] + "…"
 
 
 def main():
@@ -158,11 +181,18 @@ def main():
     ap.add_argument("--json")
     args = ap.parse_args()
     rows = [metrics(d) for d in args.decks]
+    # フォルダ名が同じデッキ（…/a/deck と …/b/deck）を比べるときは親フォルダ名を足して見分ける
+    labels = [Path(d).resolve().name for d in args.decks]
+    if len(set(labels)) < len(labels):
+        labels = [f"{Path(d).resolve().parent.name}/{Path(d).resolve().name}" for d in args.decks]
+    for r, lab in zip(rows, labels):
+        r["deck"] = lab
     keys = ["slides", "sections", "intro", "punch_n", "punch_med", "punch_desu", "bullets_per_slide", "bullet_chars",
             "bullet_end_maru", "bullet_taigen", "notes_n", "notes_chars", "notes_hedge", "notes_end_variety",
             "dewanaku", "dash", "katakana_terms", "english_terms", "terms_explained_ratio", "chars_per_slide",
             "figure_slide_ratio", "image_text", "caption_n", "table_n", "code_n", "two_column_n", "quote_n"]
-    print("| 指標 | " + " | ".join(r["deck"][:2] for r in rows) + " |")
+    # 表の見出しはデッキ名そのまま（長いものだけ省略。以前は先頭 2 文字に切っていて見分けがつかなかった）
+    print("| 指標 | " + " | ".join(_short(r["deck"]) for r in rows) + " |")
     print("|---|" + "---|" * len(rows))
     for k in keys:
         print(f"| {k} | " + " | ".join(str(r.get(k)) for r in rows) + " |")

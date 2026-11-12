@@ -129,8 +129,9 @@ class LayoutTest(unittest.TestCase):
                          [it.get("variant", it["kind"]) for it in geo["legend"]["items"]])
 
     def test_long_label_in_short_bar_warns(self):
+        # label_pos: "inside" を明示したときは、矢羽根の外に出さず警告する（S3b: 指定が無いときは自動で外に出す。test_s3b_diagram）
         s = _slide(rows=[{"label": "A", "bars": [
-            {"start": "2026-09-01", "end": "2026-09-05", "label": "とても長いラベルが入っています"}]}])
+            {"start": "2026-09-01", "end": "2026-09-05", "label": "とても長いラベルが入っています", "label_pos": "inside"}]}])
         self.assertIn("bar-label-overflow", _codes(se.layout_schedule(s, CHART)["diagnostics"], "warning"))
 
     def test_label_pos_after_skips_overflow_warning(self):

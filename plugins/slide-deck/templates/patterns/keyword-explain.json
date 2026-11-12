@@ -1,0 +1,2512 @@
+{
+ "name": "keyword-explain",
+ "label": "大きな一言と説明",
+ "version": 1,
+ "frame": "body",
+ "size": [
+  1136,
+  400
+ ],
+ "description": "左の面に大きな一言（数字・合言葉・結論の核）、右に説明を 2〜4 点。一言が主役で、理由や中身を横に添えるページ向け（見出し・リード・フッターはスライド側の title / lead が描く）。一言が長いと文字サイズが縮み、説明の数に合わせて行の高さが決まる。幅 700px 未満の矩形（合成スライドの半幅など）では、上に一言の帯・下に説明を縦に積む構図、700〜1000px 未満では、一言の面を細くして左に置く構図に切り替わる（読める幅の下限は個数ごとに実測してあり、それより狭いと代わりの手つきの警告が出る。`show` で確認）。高さ 340px 未満の矩形（上下 2 段のブロックなど）では、行や列の詰め方を変えた短い構図に切り替わる。（本文の領域の縦中央に置く）",
+ "block_alt": "代わりに big-number-context か numbered-list を使う",
+ "background": "background",
+ "slots": {
+  "label": {
+   "kind": "text",
+   "label": "一言の上のラベル",
+   "max_chars": 14,
+   "example": "今期の合言葉"
+  },
+  "keyword": {
+   "kind": "text",
+   "required": true,
+   "label": "大きな一言",
+   "max_chars": 12,
+   "example": "まず 1 業務"
+  },
+  "caption": {
+   "kind": "text",
+   "label": "一言の下の補足",
+   "max_chars": 30,
+   "example": "広げる前に、1 つ終わらせる"
+  },
+  "points": {
+   "kind": "records",
+   "required": true,
+   "label": "説明",
+   "min": 2,
+   "max": 4,
+   "fields": {
+    "head": {
+     "kind": "text",
+     "label": "説明の見出し",
+     "max_chars": 16
+    },
+    "body": {
+     "kind": "text",
+     "label": "説明の文",
+     "max_chars": 44
+    }
+   },
+   "example": [
+    {
+     "head": "効果が測れる",
+     "body": "1 業務なら、前後の所要時間を同じ物差しで比べられる"
+    },
+    {
+     "head": "失敗しても小さい",
+     "body": "影響が限られるので、やり直しの費用が少ない"
+    },
+    {
+     "head": "次の型になる",
+     "body": "終わった手順がそのまま、他部署に渡せる見本になる"
+    }
+   ]
+  }
+ },
+ "elements": [
+  {
+   "name": "一言の面",
+   "x": 0,
+   "y": 0,
+   "w": 448,
+   "h": 400,
+   "fill": "primary",
+   "radius": "$radius.card"
+  },
+  {
+   "if": "label",
+   "name": "一言のラベル",
+   "x": 36,
+   "y": 36,
+   "w": 376,
+   "h": 32,
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.0,
+      "runs": [
+       {
+        "text": "{{label}}",
+        "size": 20,
+        "bold": true,
+        "color": "accent_on_primary",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "if": "label",
+   "name": "一言のしるし",
+   "x": 36,
+   "y": 80,
+   "w": 56,
+   "h": 5,
+   "fill": "accent_on_primary"
+  },
+  {
+   "name": "大きな一言",
+   "x": 36,
+   "y": 104,
+   "w": 376,
+   "h": 190,
+   "fit": {
+    "sizes": [
+     72,
+     64,
+     56,
+     48,
+     44,
+     40,
+     36,
+     32
+    ]
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "ctr",
+    "paragraphs": [
+     {
+      "lineHeight": 1.15,
+      "runs": [
+       {
+        "text": "{{keyword}}",
+        "size": 72,
+        "bold": true,
+        "color": "on_primary",
+        "font": [
+         "@heading"
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "if": "caption",
+   "name": "一言の補足",
+   "x": 36,
+   "y": 306,
+   "w": 376,
+   "h": 64,
+   "fit": {
+    "sizes": [
+     24,
+     22,
+     20,
+     18
+    ],
+    "group": false
+   },
+   "text": {
+    "insets": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "anchor": "t",
+    "paragraphs": [
+     {
+      "lineHeight": 1.3,
+      "runs": [
+       {
+        "text": "{{caption}}",
+        "size": 24,
+        "color": "on_primary_soft"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "repeat": "points",
+   "grid": {
+    "x": 488,
+    "y": 0,
+    "w": 648,
+    "h": 400,
+    "cols": 1,
+    "gap": 0
+   },
+   "template": [
+    {
+     "name": "説明{{index}}の罫線",
+     "x": 0,
+     "y": 0,
+     "w": 648,
+     "h": 2,
+     "fill": "border"
+    },
+    {
+     "name": "説明{{index}}の見出し",
+     "x": 0,
+     "y": 16,
+     "w": 210,
+     "b": 16,
+     "fit": {
+      "sizes": [
+       30,
+       28,
+       26,
+       24,
+       22,
+       20
+      ],
+      "group": true
+     },
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.2,
+        "runs": [
+         {
+          "text": "{{head}}",
+          "size": 30,
+          "bold": true,
+          "color": "heading_text",
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "name": "説明{{index}}の文",
+     "x": 234,
+     "y": 16,
+     "r": 0,
+     "b": 16,
+     "fit": {
+      "sizes": [
+       26,
+       24,
+       22,
+       20,
+       19,
+       18,
+       17,
+       16
+      ],
+      "group": true
+     },
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.35,
+        "runs": [
+         {
+          "text": "{{body}}",
+          "size": 26,
+          "color": "text"
+         }
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "valign": "middle",
+ "summary": "合言葉・方針の大きな一言を左に、理由を右に 2〜4 点（実績の数字は big-number-context）",
+ "narrow": [
+  {
+   "below": 700,
+   "size": [
+    540,
+    460
+   ],
+   "elements": [],
+   "min_width": 380,
+   "variants_by": "points",
+   "variants": {
+    "2": {
+     "elements": [
+      {
+       "name": "一言の面",
+       "x": 0,
+       "y": 0,
+       "w": 540,
+       "h": 168,
+       "fill": "primary",
+       "radius": "$radius.card"
+      },
+      {
+       "name": "一言のラベル",
+       "x": 26,
+       "y": 16,
+       "if": "label",
+       "w": 488,
+       "h": 22,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{label}}",
+            "size": 18,
+            "color": "accent_on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "name": "一言のしるし",
+       "x": 26,
+       "y": 44,
+       "if": "label",
+       "w": 44,
+       "h": 4,
+       "fill": "accent_on_primary"
+      },
+      {
+       "name": "大きな一言（ラベル・補足あり）",
+       "x": 26,
+       "y": 56,
+       "if": [
+        "label",
+        "caption"
+       ],
+       "w": 488,
+       "h": 58,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 56,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（ラベルのみ）",
+       "x": 26,
+       "y": 56,
+       "if": [
+        "label",
+        "!caption"
+       ],
+       "w": 488,
+       "h": 98,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 56,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（補足のみ）",
+       "x": 26,
+       "y": 12,
+       "if": [
+        "!label",
+        "caption"
+       ],
+       "w": 488,
+       "h": 102,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 56,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（一言だけ）",
+       "x": 26,
+       "y": 12,
+       "if": [
+        "!label",
+        "!caption"
+       ],
+       "w": 488,
+       "h": 144,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 64,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         64,
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "一言の補足",
+       "x": 26,
+       "y": 116,
+       "if": "caption",
+       "w": 488,
+       "h": 42,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{caption}}",
+            "size": 20,
+            "color": "on_primary_soft"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         20,
+         19,
+         18,
+         17,
+         16
+        ]
+       }
+      },
+      {
+       "repeat": "points",
+       "grid": {
+        "x": 0,
+        "y": 180,
+        "w": 540,
+        "h": 280,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "説明{{index}}の罫線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 2,
+         "fill": "border"
+        },
+        {
+         "name": "説明{{index}}の文",
+         "x": 0,
+         "y": 6,
+         "r": 0,
+         "b": 6,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 18.72,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "3": {
+     "elements": [
+      {
+       "name": "一言の面",
+       "x": 0,
+       "y": 0,
+       "w": 540,
+       "h": 160,
+       "fill": "primary",
+       "radius": "$radius.card"
+      },
+      {
+       "name": "一言のラベル",
+       "x": 26,
+       "y": 16,
+       "if": "label",
+       "w": 488,
+       "h": 22,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{label}}",
+            "size": 17,
+            "color": "accent_on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "name": "一言のしるし",
+       "x": 26,
+       "y": 44,
+       "if": "label",
+       "w": 44,
+       "h": 4,
+       "fill": "accent_on_primary"
+      },
+      {
+       "name": "大きな一言（ラベル・補足あり）",
+       "x": 26,
+       "y": 56,
+       "if": [
+        "label",
+        "caption"
+       ],
+       "w": 488,
+       "h": 50,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 56,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（ラベルのみ）",
+       "x": 26,
+       "y": 56,
+       "if": [
+        "label",
+        "!caption"
+       ],
+       "w": 488,
+       "h": 90,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 56,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（補足のみ）",
+       "x": 26,
+       "y": 12,
+       "if": [
+        "!label",
+        "caption"
+       ],
+       "w": 488,
+       "h": 94,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 56,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（一言だけ）",
+       "x": 26,
+       "y": 12,
+       "if": [
+        "!label",
+        "!caption"
+       ],
+       "w": 488,
+       "h": 136,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 64,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         64,
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "一言の補足",
+       "x": 26,
+       "y": 108,
+       "if": "caption",
+       "w": 488,
+       "h": 42,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{caption}}",
+            "size": 19,
+            "color": "on_primary_soft"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         19,
+         18,
+         17,
+         16,
+         16
+        ]
+       }
+      },
+      {
+       "repeat": "points",
+       "grid": {
+        "x": 0,
+        "y": 172,
+        "w": 540,
+        "h": 288,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "説明{{index}}の罫線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 2,
+         "fill": "border"
+        },
+        {
+         "name": "説明{{index}}の文",
+         "x": 0,
+         "y": 6,
+         "r": 0,
+         "b": 6,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 18.72,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "4": {
+     "elements": [
+      {
+       "name": "一言の面",
+       "x": 0,
+       "y": 0,
+       "w": 540,
+       "h": 152,
+       "fill": "primary",
+       "radius": "$radius.card"
+      },
+      {
+       "name": "一言のラベル",
+       "x": 26,
+       "y": 12,
+       "if": "label",
+       "w": 488,
+       "h": 20,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.0,
+          "runs": [
+           {
+            "text": "{{label}}",
+            "size": 16,
+            "color": "accent_on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "name": "一言のしるし",
+       "x": 26,
+       "y": 36,
+       "if": "label",
+       "w": 44,
+       "h": 3,
+       "fill": "accent_on_primary"
+      },
+      {
+       "name": "大きな一言（ラベル・補足あり）",
+       "x": 26,
+       "y": 44,
+       "if": [
+        "label",
+        "caption"
+       ],
+       "w": 488,
+       "h": 60,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 48,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（ラベルのみ）",
+       "x": 26,
+       "y": 44,
+       "if": [
+        "label",
+        "!caption"
+       ],
+       "w": 488,
+       "h": 94,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 48,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（補足のみ）",
+       "x": 26,
+       "y": 12,
+       "if": [
+        "!label",
+        "caption"
+       ],
+       "w": 488,
+       "h": 92,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 48,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "大きな一言（一言だけ）",
+       "x": 26,
+       "y": 12,
+       "if": [
+        "!label",
+        "!caption"
+       ],
+       "w": 488,
+       "h": 128,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.12,
+          "runs": [
+           {
+            "text": "{{keyword}}",
+            "size": 64,
+            "color": "on_primary",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         64,
+         56,
+         52,
+         48,
+         44,
+         40,
+         36,
+         32,
+         30,
+         28
+        ]
+       }
+      },
+      {
+       "name": "一言の補足",
+       "x": 26,
+       "y": 106,
+       "if": "caption",
+       "w": 488,
+       "h": 36,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "t",
+        "paragraphs": [
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{caption}}",
+            "size": 18,
+            "color": "on_primary_soft"
+           }
+          ]
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         18,
+         17,
+         16,
+         15,
+         16
+        ]
+       }
+      },
+      {
+       "repeat": "points",
+       "grid": {
+        "x": 0,
+        "y": 164,
+        "w": 540,
+        "h": 296,
+        "cols": 1,
+        "gap": 0
+       },
+       "template": [
+        {
+         "name": "説明{{index}}の罫線",
+         "x": 0,
+         "y": 0,
+         "w": 540,
+         "h": 2,
+         "fill": "border"
+        },
+        {
+         "name": "説明{{index}}の文",
+         "x": 0,
+         "y": 6,
+         "r": 0,
+         "b": 6,
+         "text": {
+          "insets": [
+           0,
+           0,
+           0,
+           0
+          ],
+          "anchor": "ctr",
+          "paragraphs": [
+           {
+            "lineHeight": 1.15,
+            "runs": [
+             {
+              "text": "{{head}}",
+              "size": 24,
+              "color": "heading_text",
+              "bold": true,
+              "font": [
+               "@heading"
+              ]
+             }
+            ]
+           },
+           {
+            "lineHeight": 1.3,
+            "runs": [
+             {
+              "text": "{{body}}",
+              "size": 18.72,
+              "color": "text"
+             }
+            ],
+            "spaceBefore": 3
+           }
+          ]
+         },
+         "fit": {
+          "sizes": [
+           24,
+           22,
+           20,
+           19,
+           18,
+           17
+          ],
+          "group": true
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   "min_width_by_count": {
+    "4": 410
+   }
+  },
+  {
+   "below": 700,
+   "below_h": 340,
+   "size": [
+    540,
+    300
+   ],
+   "elements": [
+    {
+     "name": "一言の面",
+     "x": 0,
+     "y": 0,
+     "w": 196,
+     "h": 300,
+     "fill": "primary",
+     "radius": "$radius.card"
+    },
+    {
+     "name": "一言のラベル",
+     "x": 16,
+     "y": 21.0,
+     "if": "label",
+     "w": 164,
+     "h": 19.5,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent_on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "name": "一言のしるし",
+     "x": 16,
+     "y": 48.0,
+     "if": "label",
+     "w": 48,
+     "h": 5,
+     "fill": "accent_on_primary"
+    },
+    {
+     "name": "大きな一言（ラベル・補足あり）",
+     "x": 16,
+     "y": 60.0,
+     "if": [
+      "label",
+      "caption"
+     ],
+     "w": 164,
+     "h": 142.5,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 38,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       38,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（ラベルのみ）",
+     "x": 16,
+     "y": 60.0,
+     "if": [
+      "label",
+      "!caption"
+     ],
+     "w": 164,
+     "h": 219.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 38,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       38,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（補足のみ）",
+     "x": 16,
+     "y": 21.0,
+     "if": [
+      "!label",
+      "caption"
+     ],
+     "w": 164,
+     "h": 181.5,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 38,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       38,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（一言だけ）",
+     "x": 16,
+     "y": 21.0,
+     "if": [
+      "!label",
+      "!caption"
+     ],
+     "w": 164,
+     "h": 258.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 38,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       38,
+       34,
+       32,
+       30,
+       28,
+       26,
+       24
+      ]
+     }
+    },
+    {
+     "name": "一言の補足",
+     "x": 16,
+     "y": 211.5,
+     "if": "caption",
+     "w": 164,
+     "h": 70.5,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{caption}}",
+          "size": 18,
+          "color": "on_primary_soft"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       18,
+       17,
+       16,
+       15,
+       14
+      ]
+     }
+    },
+    {
+     "repeat": "points",
+     "grid": {
+      "x": 228,
+      "y": 0,
+      "w": 312,
+      "h": 300,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "説明{{index}}の罫線",
+       "x": 0,
+       "y": 0,
+       "w": 312,
+       "h": 2,
+       "fill": "border"
+      },
+      {
+       "name": "説明{{index}}の文",
+       "x": 0,
+       "y": 3,
+       "r": 0,
+       "b": 3,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.15,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 22,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 16.72,
+            "color": "text"
+           }
+          ],
+          "spaceBefore": 3
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         22,
+         21,
+         20,
+         19,
+         18,
+         17
+        ],
+        "group": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "below": 1000,
+   "size": [
+    800,
+    400
+   ],
+   "elements": [
+    {
+     "name": "一言の面",
+     "x": 0,
+     "y": 0,
+     "w": 300,
+     "h": 400,
+     "fill": "primary",
+     "radius": "$radius.card"
+    },
+    {
+     "name": "一言のラベル",
+     "x": 26,
+     "y": 28.0,
+     "if": "label",
+     "w": 248,
+     "h": 26.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent_on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "name": "一言のしるし",
+     "x": 26,
+     "y": 64.0,
+     "if": "label",
+     "w": 48,
+     "h": 5,
+     "fill": "accent_on_primary"
+    },
+    {
+     "name": "大きな一言（ラベル・補足あり）",
+     "x": 26,
+     "y": 80.0,
+     "if": [
+      "label",
+      "caption"
+     ],
+     "w": 248,
+     "h": 190.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 52,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       52,
+       48,
+       44,
+       40,
+       36,
+       32,
+       30,
+       28
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（ラベルのみ）",
+     "x": 26,
+     "y": 80.0,
+     "if": [
+      "label",
+      "!caption"
+     ],
+     "w": 248,
+     "h": 292.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 52,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       52,
+       48,
+       44,
+       40,
+       36,
+       32,
+       30,
+       28
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（補足のみ）",
+     "x": 26,
+     "y": 28.0,
+     "if": [
+      "!label",
+      "caption"
+     ],
+     "w": 248,
+     "h": 242.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 52,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       52,
+       48,
+       44,
+       40,
+       36,
+       32,
+       30,
+       28
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（一言だけ）",
+     "x": 26,
+     "y": 28.0,
+     "if": [
+      "!label",
+      "!caption"
+     ],
+     "w": 248,
+     "h": 344.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 60,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       60,
+       56,
+       52,
+       48,
+       44,
+       40,
+       36,
+       32,
+       30,
+       28
+      ]
+     }
+    },
+    {
+     "name": "一言の補足",
+     "x": 26,
+     "y": 282.0,
+     "if": "caption",
+     "w": 248,
+     "h": 94.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{caption}}",
+          "size": 22,
+          "color": "on_primary_soft"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       22,
+       20,
+       19,
+       18,
+       17,
+       16
+      ]
+     }
+    },
+    {
+     "repeat": "points",
+     "grid": {
+      "x": 332,
+      "y": 0,
+      "w": 468,
+      "h": 400,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "説明{{index}}の罫線",
+       "x": 0,
+       "y": 0,
+       "w": 468,
+       "h": 2,
+       "fill": "border"
+      },
+      {
+       "name": "説明{{index}}の文",
+       "x": 0,
+       "y": 12.0,
+       "r": 0,
+       "b": 12.0,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.15,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 30,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 22.8,
+            "color": "text"
+           }
+          ],
+          "spaceBefore": 5
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         30,
+         28,
+         26,
+         24,
+         22,
+         21,
+         20,
+         19,
+         18
+        ],
+        "group": true
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "below": 1000,
+   "below_h": 340,
+   "size": [
+    800,
+    300
+   ],
+   "elements": [
+    {
+     "name": "一言の面",
+     "x": 0,
+     "y": 0,
+     "w": 260,
+     "h": 300,
+     "fill": "primary",
+     "radius": "$radius.card"
+    },
+    {
+     "name": "一言のラベル",
+     "x": 22,
+     "y": 21.0,
+     "if": "label",
+     "w": 216,
+     "h": 19.5,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.0,
+        "runs": [
+         {
+          "text": "{{label}}",
+          "size": 18,
+          "color": "accent_on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "name": "一言のしるし",
+     "x": 22,
+     "y": 48.0,
+     "if": "label",
+     "w": 48,
+     "h": 5,
+     "fill": "accent_on_primary"
+    },
+    {
+     "name": "大きな一言（ラベル・補足あり）",
+     "x": 22,
+     "y": 60.0,
+     "if": [
+      "label",
+      "caption"
+     ],
+     "w": 216,
+     "h": 142.5,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 46,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       46,
+       42,
+       38,
+       34,
+       32,
+       30,
+       28
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（ラベルのみ）",
+     "x": 22,
+     "y": 60.0,
+     "if": [
+      "label",
+      "!caption"
+     ],
+     "w": 216,
+     "h": 219.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 46,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       46,
+       42,
+       38,
+       34,
+       32,
+       30,
+       28
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（補足のみ）",
+     "x": 22,
+     "y": 21.0,
+     "if": [
+      "!label",
+      "caption"
+     ],
+     "w": 216,
+     "h": 181.5,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 46,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       46,
+       42,
+       38,
+       34,
+       32,
+       30,
+       28
+      ]
+     }
+    },
+    {
+     "name": "大きな一言（一言だけ）",
+     "x": 22,
+     "y": 21.0,
+     "if": [
+      "!label",
+      "!caption"
+     ],
+     "w": 216,
+     "h": 258.0,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "ctr",
+      "paragraphs": [
+       {
+        "lineHeight": 1.12,
+        "runs": [
+         {
+          "text": "{{keyword}}",
+          "size": 46,
+          "color": "on_primary",
+          "bold": true,
+          "font": [
+           "@heading"
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       46,
+       42,
+       38,
+       34,
+       32,
+       30,
+       28
+      ]
+     }
+    },
+    {
+     "name": "一言の補足",
+     "x": 22,
+     "y": 211.5,
+     "if": "caption",
+     "w": 216,
+     "h": 70.5,
+     "text": {
+      "insets": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "anchor": "t",
+      "paragraphs": [
+       {
+        "lineHeight": 1.3,
+        "runs": [
+         {
+          "text": "{{caption}}",
+          "size": 20,
+          "color": "on_primary_soft"
+         }
+        ]
+       }
+      ]
+     },
+     "fit": {
+      "sizes": [
+       20,
+       19,
+       18,
+       17,
+       16
+      ]
+     }
+    },
+    {
+     "repeat": "points",
+     "grid": {
+      "x": 292,
+      "y": 0,
+      "w": 508,
+      "h": 300,
+      "cols": 1,
+      "gap": 0
+     },
+     "template": [
+      {
+       "name": "説明{{index}}の罫線",
+       "x": 0,
+       "y": 0,
+       "w": 508,
+       "h": 2,
+       "fill": "border"
+      },
+      {
+       "name": "説明{{index}}の文",
+       "x": 0,
+       "y": 3,
+       "r": 0,
+       "b": 3,
+       "text": {
+        "insets": [
+         0,
+         0,
+         0,
+         0
+        ],
+        "anchor": "ctr",
+        "paragraphs": [
+         {
+          "lineHeight": 1.15,
+          "runs": [
+           {
+            "text": "{{head}}",
+            "size": 26,
+            "color": "heading_text",
+            "bold": true,
+            "font": [
+             "@heading"
+            ]
+           }
+          ]
+         },
+         {
+          "lineHeight": 1.3,
+          "runs": [
+           {
+            "text": "{{body}}",
+            "size": 19.76,
+            "color": "text"
+           }
+          ],
+          "spaceBefore": 3
+         }
+        ]
+       },
+       "fit": {
+        "sizes": [
+         26,
+         24,
+         22,
+         21,
+         20,
+         19,
+         18,
+         17
+        ],
+        "group": true
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

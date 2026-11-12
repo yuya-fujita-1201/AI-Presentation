@@ -20,10 +20,16 @@ import math
 import re
 import sys
 import zipfile
+from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
 
+import xml.etree.ElementTree as _ET
+
 from lxml import etree
+
+if str(Path(__file__).resolve().parent) not in sys.path:  # canvas_engine を同じフォルダから import できるように
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # 取り込み元の PPTX は信用しない: 外部実体・ネットワーク参照・巨大ツリーを解決しないパーサで読む
 _SAFE_PARSER = etree.XMLParser(resolve_entities=False, no_network=True, huge_tree=False, load_dtd=False)
@@ -31,6 +37,52 @@ _SAFE_PARSER = etree.XMLParser(resolve_entities=False, no_network=True, huge_tre
 
 def _xml(data):
     return etree.fromstring(data, _SAFE_PARSER)
+
+
+# ---------------------------------------------------------------- 入口の検査（取り込み系 3 ツール共通）
+MAX_PPTX_TOTAL = 500 * 1024 * 1024    # 展開後の合計（zip 爆弾でメモリを使い切らないための上限）
+MAX_PPTX_ENTRY = 100 * 1024 * 1024    # 展開後の 1 ファイル
+
+
+class PptxError(Exception):
+    """PPTX を読めない（壊れている・大きすぎる）。メッセージは利用者向けの 1 行"""
+
+
+def check_pptx_archive(path) -> None:
+    """PPTX（zip）を展開せずに、展開後のサイズの申告値だけを調べる。合計 500MB・1 ファイル 100MB を超えたら PptxError"""
+    try:
+        with zipfile.ZipFile(path) as zf:
+            infos = zf.infolist()
+    except zipfile.BadZipFile as e:
+        raise PptxError(f"PPTX が壊れているか大きすぎます（zip として開けません: {e}）") from None
+    total = 0
+    for i in infos:
+        if i.file_size > MAX_PPTX_ENTRY:
+            raise PptxError(f"PPTX が大きすぎます（{i.filename} が展開後 {i.file_size // (1024 * 1024)}MB。"
+                            f"1 ファイル {MAX_PPTX_ENTRY // (1024 * 1024)}MB まで）。不要な画像・埋め込みを減らして保存し直してください")
+        total += i.file_size
+    if total > MAX_PPTX_TOTAL:
+        raise PptxError(f"PPTX が大きすぎます（展開後の合計 {total // (1024 * 1024)}MB。{MAX_PPTX_TOTAL // (1024 * 1024)}MB まで）。"
+                        "不要な画像・埋め込みを減らして保存し直してください")
+
+
+@contextmanager
+def pptx_errors():
+    """PPTX を読む処理を包み、壊れた zip・不正な XML・必須パーツの欠落をトレースバックにせず PptxError（1 行）にする"""
+    try:
+        yield
+    except PptxError:
+        raise
+    except (zipfile.BadZipFile, etree.XMLSyntaxError, _ET.ParseError) as e:
+        raise PptxError(f"PPTX が壊れているか大きすぎます（{type(e).__name__}: {str(e)[:80]}）") from None
+    except KeyError as e:
+        if "There is no item named" in str(e):
+            raise PptxError(f"PPTX が壊れています（必須のパーツがありません: {str(e.args[0])[:80]}）") from None
+        raise
+    except Exception as e:  # noqa: BLE001
+        if type(e).__name__ == "PackageNotFoundError":     # python-pptx（zip ではない・開けないファイル）
+            raise PptxError(f"PPTX が壊れているか大きすぎます（PPTX として開けません: {str(e)[:80]}）") from None
+        raise
 
 NS = {
     "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
@@ -258,9 +310,17 @@ class Line:
 
 # ---------------------------------------------------------------- importer
 class Importer:
-    def __init__(self, src: Path):
+    def __init__(self, src: Path, tag: bool = False):
+        """tag=True のとき、要素に由来（src: master / layout / slide）とプレースホルダー種別
+        （ph: {type, idx}）を残す。型起こし（pattern_from_pptx.py）が使う。通常の取り込みでは付けない"""
+        check_pptx_archive(src)
+        with pptx_errors():
+            self._setup(src, tag)
+
+    def _setup(self, src, tag):
         from pptx import Presentation
         self.src = src
+        self.tag = tag
         self.prs = Presentation(str(src))
         self.zip = zipfile.ZipFile(src)
         master = self.prs.slide_masters[0]
@@ -464,7 +524,10 @@ class Importer:
             tx["anchorCtr"] = True
         if first_attr(bp, "wrap", "square") == "none":
             tx["wrap"] = False
-        if first_attr(bp, "vert", "horz") in ("eaVert", "vert", "wordArtVert", "mongolianVert"):
+        vert_attr = first_attr(bp, "vert", "horz")
+        if vert_attr == "vert270":
+            tx["vert"] = "270"  # 下から上へ読む縦書き（スイムレーンのレーン見出し等）
+        elif vert_attr in ("eaVert", "vert", "wordArtVert", "mongolianVert"):
             tx["vert"] = True
         if bp and bp[0] is not None and bp[0].get("rot"):
             tx["rot"] = int(bp[0].get("rot")) / 60000
@@ -637,6 +700,8 @@ class Importer:
         name = sp.find(f".//{P}cNvPr")
         if name is not None and name.get("name"):
             el["name"] = name.get("name")
+        if self.tag and info:
+            el["ph"] = {"type": info[0], "idx": info[1]} if info[1] is not None else {"type": info[0]}
         rot = int(x.get("rot", "0")) / 60000
         if rot:
             el["rot"] = round(rot, 2)
@@ -966,6 +1031,11 @@ class Importer:
         return "#FFFFFF"
 
     def convert(self, only=None):
+        """取り込む。壊れた zip・不正な XML は PptxError（1 行のメッセージ）にする"""
+        with pptx_errors():
+            return self._convert(only)
+
+    def _convert(self, only=None):
         slides = []
         total = len(self.prs.slides)
         for no, slide in enumerate(self.prs.slides, 1):
@@ -980,18 +1050,31 @@ class Importer:
                     cmap = dict(ov.attrib)
             self.theme.clrmap = cmap
             ctx = {"no": no, "layout": layout._element, "master": master._element, "rels": slide.part.rels}
-            elements = []
+            elements, origin = [], []
             show_master = layout._element.get("showMasterSp", "1") != "0" and slide._element.get("showMasterSp", "1") != "0"
             ident = (0, 0, 1, 1, 0, 0)
             if show_master:
-                elements += self.walk(master._element.find(f"{P}cSld/{P}spTree"), dict(ctx, rels=master.part.rels, skip_ph=True), ident)
+                part = self.walk(master._element.find(f"{P}cSld/{P}spTree"), dict(ctx, rels=master.part.rels, skip_ph=True), ident)
+                elements += part
+                origin += ["master"] * len(part)
             if slide._element.get("showMasterSp", "1") != "0":
-                elements += self.walk(layout._element.find(f"{P}cSld/{P}spTree"), dict(ctx, rels=layout.part.rels, skip_ph=True), ident)
-            elements += self.walk(slide._element.find(f"{P}cSld/{P}spTree"), ctx, ident)
+                part = self.walk(layout._element.find(f"{P}cSld/{P}spTree"), dict(ctx, rels=layout.part.rels, skip_ph=True), ident)
+                elements += part
+                origin += ["layout"] * len(part)
+            part = self.walk(slide._element.find(f"{P}cSld/{P}spTree"), ctx, ident)
+            elements += part
+            origin += ["slide"] * len(part)
+            if self.tag:
+                for el, o in zip(elements, origin):
+                    el["src"] = o
+            # 16:9（1280x720）以外のスライドは、縦横比を保って 1280x720 の中央に拡縮する（4:3 は左右に余白）
+            if abs(self.W - 1280) > 0.5 or abs(self.H - 720) > 0.5:
+                import canvas_engine as _ce  # type: ignore
+                elements = _ce.fit_elements(elements, (0, 0, 1280, 720), (self.W, self.H), "contain")
             title = ""
             if slide.shapes.title is not None and slide.shapes.title.has_text_frame:
                 title = re.sub(r"\s+", " ", slide.shapes.title.text_frame.text.replace("\v", " ")).strip()
-            s = {"type": "canvas", "title": title, "source_page": no,
+            s = {"type": "canvas", "title": title, "_source_page": no,
                  "background": self.background([slide._element, layout._element, master._element]),
                  "elements": elements}
             if slide.has_notes_slide and slide.notes_slide.notes_text_frame is not None:
@@ -1032,10 +1115,14 @@ def main():
     if not src.is_file():
         print(f"error: {src} が見つかりません", file=sys.stderr)
         sys.exit(1)
-    imp = Importer(src)
-    slides = imp.convert(set(args.slides) if args.slides else None)
+    try:
+        imp = Importer(src)
+        slides = imp.convert(set(args.slides) if args.slides else None)
+    except PptxError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(1)
     deck = {"meta": {"id": args.id or deck_dir.name, "title": args.title or src.stem,
-                     "source": src.name, "generator": "pptx_import.py"},
+                     "_source": src.name, "_generator": "pptx_import.py"},
             "slides": slides}
     deck_dir.mkdir(parents=True, exist_ok=True)
     if out.exists():

@@ -1,0 +1,55 @@
+{
+  "name": "editorial",
+  "label": "エディトリアル",
+  "description": "雑誌のような組み。見出しを大きく軽く、タイトル左に細い縦帯、eyebrow は小さな大文字で字間を広げる。箱は小さな角と細い枠。提案・ブランド・講演向けの落ち着いた印象",
+  "tokens": {
+    "radius": {
+      "card": 4,
+      "panel": 4,
+      "box": 2,
+      "node": 4,
+      "node_sm": 4,
+      "small": 3,
+      "tiny": 2,
+      "pill": 4,
+      "image": 4,
+      "rule": 0,
+      "cell": 4
+    },
+    "line": {
+      "rule": 6,
+      "rule_lg": 4,
+      "border": 1
+    },
+    "rule": {
+      "style": "bar-left",
+      "length": 64,
+      "gap": 16
+    },
+    "weight": {
+      "heading": 500,
+      "label": 600,
+      "eyebrow": 600
+    },
+    "tracking": {
+      "heading": 0,
+      "eyebrow": 0.14
+    },
+    "type": {
+      "h1": 40,
+      "eyebrow": 13
+    },
+    "case": {
+      "eyebrow": "upper"
+    }
+  },
+  "layout": {
+    "types": {
+      "title": {
+        "bar": {
+          "w": 6
+        }
+      }
+    }
+  }
+}
