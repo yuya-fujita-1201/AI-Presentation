@@ -4,7 +4,7 @@
     "title": "問い合わせ対応の改善提案（slide-deck 見本）",
     "subtitle": "AI 一次回答で問い合わせ対応を半分にする、社内ヘルプデスクの改善提案（架空の事例）",
     "author": "slide-deck 見本",
-    "date": "2026-11-12",
+    "date": "2026-11-25",
     "theme": "acn-slide-master",
     "section_numbers": true,
     "density": "talk",
@@ -1290,7 +1290,7 @@
           "sublabel": "質問を受理",
           "lane": 0,
           "col": 0,
-          "step": "01"
+          "step": "1"
         },
         {
           "id": "ai",
@@ -1299,7 +1299,7 @@
           "sublabel": "手順書を検索",
           "lane": 0,
           "col": 1,
-          "step": "02"
+          "step": "2"
         },
         {
           "id": "judge",
@@ -1307,7 +1307,7 @@
           "label": "確信度の判定",
           "lane": 0,
           "col": 2,
-          "step": "03"
+          "step": "3"
         },
         {
           "id": "done",
@@ -1316,7 +1316,7 @@
           "sublabel": "回答を確認",
           "lane": 0,
           "col": 3,
-          "step": "04"
+          "step": "4"
         },
         {
           "id": "wait",

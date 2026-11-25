@@ -14,6 +14,9 @@
   - 文字量の目安超え（密度で変わる。bullets の 1 項目の字数・項目数、1 枚の表示文字数）
   - 「AではなくB」型（「ではなく」）、全角ダッシュ「——」、丸数字①②③ の出現回数
   - 半角コロン「:」と全角コロン「：」の混在（日本語文中の半角コロン。出典 source は除く）
+  - AI 生成資料の定番パターン（references/content-guide.md 8章）: 0埋めの番号「01」／強調のためのカギカッコ・
+    行頭の【】ラベル（【要確認】は除く）／兄弟の項目で同じラベルの繰り返し／「論点」なのに問いでないタイトル・
+    共有と判断依頼の盛り合わせタイトル／定型の免責文・改行の無い長い注釈
 
 meta.density（"talk" / "standard" / "read"。未指定は standard）で文字量の目安を切り替える。
 talk は話す用で厳しめ、read は読ませる用で緩め。--punch-max を明示したときはそれを優先する。
@@ -241,6 +244,115 @@ def check_claims(sid: str, s: dict) -> list:
             if len(_bigrams(t)) >= 8 and overlap(t, lead) >= 0.6:
                 out.append(f"{sid} bullets がリードの言い直し（本文には根拠・事例を書く）: 「{t[:30]}」")
                 break
+    return out
+
+
+# --- AI 生成資料に見える定番パターン（references/content-guide.md 8章） ---------------------
+# 番号の 0 埋め（「01」「02」）。number / step などの番号フィールドと、見出しの先頭の番号
+ZERO_PAD_KEYS = ("number", "step", "num", "badge")
+ZERO_PAD = re.compile(r"^\s*0\d(?!\d)")
+# 強調のためだけのカギカッコ（短い語を「」で囲む）と、行頭の【】ラベル
+EMPH_BRACKET = re.compile(r"「([^「」]{1,12})」(?!\s*と(?:聞|言|い|頼|書|入力|伝|話|打))")   # 「〜」と聞く・と言う は引用なので対象外
+LABEL_BRACKET = re.compile(r"^\s*【(?!要確認)[^】]{1,12}】")   # 【要確認】マーカーは対象外
+EMPH_KEYS = CLAIM_KEYS + ("heading", "label", "kicker", "subtitle", "eyebrow")
+# 見出し・ラベルの区切り（「リスク：形骸化」「ご判断｜範囲」「リスク 形骸化」）
+LABEL_SEP = re.compile(r"[：:｜|／/　 ]")
+LABEL_KEYS = ("heading", "label", "title", "eyebrow", "kicker", "tag")
+# タイトルが「共有」と「判断依頼」を1枚に盛っている
+SHARE_WORDS = re.compile(r"方針|現状|状況|概要|報告|共有|結果|進捗|全体像|計画")
+ASK_WORDS = re.compile(r"判断|承認|決定|決裁|ご相談|お願い|依頼")
+# 読まれない定型の免責注釈
+DISCLAIMER_PHRASES = ["保証するものではありません", "保証するものではない", "前提としております", "一般的な傾向",
+                      "変更となる可能性", "個別の状況により", "貴社にて実施", "あくまで目安"]
+NOTE_KEYS = ("source", "caption", "note", "footnote", "disclaimer")
+NOTE_MAX = 100
+
+
+def _label_nodes(obj, path=""):
+    """slide 内の「辞書のリスト」（cards / steps / items 等）を (path, [辞書…]) で列挙する。"""
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k in ("notes", "style", "rows", "columns", "cells"):
+                continue
+            yield from _label_nodes(v, f"{path}.{k}" if path else k)
+    elif isinstance(obj, list):
+        dicts = [v for v in obj if isinstance(v, dict)]
+        if len(dicts) >= 2:
+            yield path, dicts
+        for i, v in enumerate(obj):
+            yield from _label_nodes(v, f"{path}[{i}]")
+
+
+def check_ai_look(sid: str, s: dict, texts: list) -> list:
+    """AI 生成資料の定番パターン（0 埋め番号・強調カギカッコ・同じラベルの繰り返し・
+    共有と判断の盛り合わせタイトル・読まれない長い注釈）。いずれも警告。"""
+    out = []
+    # 1. 0 埋めの番号
+    padded = []
+    for path, text in texts:
+        key = path.rsplit(".", 1)[-1].split("[")[0]
+        if (key in ZERO_PAD_KEYS and ZERO_PAD.match(text)) or (
+                key in ("heading", "label", "title") and re.match(r"^\s*0\d\s*[\s.．:：|｜]", text)):
+            padded.append((path, text.strip()[:2]))
+    if padded:
+        where = padded[0][0] + (f" など{len(padded)}箇所" if len(padded) > 1 else "")
+        out.append(f"{sid} {where} 0埋めの番号「{'」「'.join(n for _, n in padded[:3])}」"
+                   f"（AIの定番。「1」「2」と書く。順番に意味が無いなら番号ごと外す）")
+    # 2. 強調のためのカギカッコ・【】ラベル
+    for key in EMPH_KEYS:
+        text = s.get(key)
+        if not isinstance(text, str):
+            continue
+        hits = [h for h in EMPH_BRACKET.findall(text) if not re.search(r"[？?！!。]$", h)]   # 問い・文の引用は対象外
+        if hits:
+            out.append(f"{sid} {key} 強調のためのカギカッコ「{'」「'.join(hits[:3])}」（引用・固有名でなければ外す。"
+                       f"大事な語は文の組み立てで目立たせる）")
+        if LABEL_BRACKET.match(text):
+            out.append(f"{sid} {key} 行頭の【】ラベル「{LABEL_BRACKET.match(text).group(0).strip()}」"
+                       f"（ラベルを外して主張だけを書く）")
+    for path, items in _label_nodes(s):
+        for key in ("heading", "label"):
+            for k, it in enumerate(items):
+                v = it.get(key)
+                if isinstance(v, str) and EMPH_BRACKET.search(v):
+                    out.append(f"{sid} {path}[{k}].{key} 強調のためのカギカッコ「{EMPH_BRACKET.search(v).group(1)}」")
+                    break
+    # 3. 兄弟の項目で同じラベルを繰り返す（「リスク：…」「リスク：…」「リスク：…」）
+    for path, items in _label_nodes(s):
+        for key in LABEL_KEYS:
+            vals = [it.get(key) for it in items if isinstance(it.get(key), str) and it.get(key).strip()]
+            if len(vals) < 2 or len(vals) != len(items):
+                continue
+            heads = []
+            for v in vals:
+                parts = LABEL_SEP.split(v.strip(), maxsplit=1)
+                # 「Phase 1」「FY27 上期」のような番号・年度つきの見出しは繰り返しではない
+                numbered = len(parts) == 2 and bool(re.search(r"\d", parts[0]) or re.match(r"\s*[0-9０-９]", parts[1]))
+                heads.append(parts[0] if len(parts) == 2 and 1 <= len(parts[0]) <= 10 and not numbered else None)
+            if heads[0] and all(h == heads[0] for h in heads):
+                out.append(f"{sid} {path}[*].{key} 全項目が同じラベル「{heads[0]}」で始まる（繰り返さず行見出しに"
+                           f"括り出す: row_matrix の rows[].label、または lead に1回だけ書く）")
+            elif len(vals) >= 3 and len(set(vals)) == 1:
+                out.append(f"{sid} {path}[*].{key} 全項目が同じ「{vals[0]}」（1回だけ書いて左に括り出す）")
+    # 4. タイトル: 「論点」なのに問いになっていない／共有と判断依頼の盛り合わせ
+    title = s.get("title")
+    if isinstance(title, str) and title.strip():
+        t = title.strip()
+        if "論点" in t and not re.search(r"[か？?]$", t):
+            out.append(f"{sid} title 「論点」と書いているが問いの形になっていない（「〜をどこまで広げるか」のように"
+                       f"問いで書くか、言い切りの結論にして「論点」を外す）: 「{t[:30]}」")
+        if "と" in t and SHARE_WORDS.search(t) and ASK_WORDS.search(t):
+            out.append(f"{sid} title 共有（{SHARE_WORDS.search(t).group(0)}）と判断依頼（{ASK_WORDS.search(t).group(0)}）"
+                       f"を1枚に盛っている（1スライド1メッセージ。共有と判断依頼でスライドを分ける）: 「{t[:30]}」")
+    # 5. 読まれない定型の免責注釈
+    for path, text in texts:
+        key = path.rsplit(".", 1)[-1].split("[")[0]
+        hits = [p for p in DISCLAIMER_PHRASES if p in text]
+        if hits:
+            out.append(f"{sid} {path} 定型の免責文「{hits[0]}」（読まれない注釈はAI生成に見える。"
+                       f"このスライド固有の前提だけを1文で書く）")
+        elif key in NOTE_KEYS and len(text) > NOTE_MAX and "\n" not in text:
+            out.append(f"{sid} {path} 注釈が{len(text)}字で改行なし（{NOTE_MAX}字以内に削るか、前提ごとに改行する）")
     return out
 
 
@@ -489,7 +601,7 @@ def _lint(deck: dict, punch_max: int | None = None, closing_max: int = 22) -> di
     if density_warn:
         warns.append(density_warn)
     stats = {"punch_total": 0, "punch_over": 0, "dewanaku": 0, "dash": 0, "circled": 0, "ai_phrase": 0,
-             "ai_phrase_soft": 0, "half_colon": 0, "full_colon": 0, "ja_space": 0, "todo": 0}
+             "ai_phrase_soft": 0, "half_colon": 0, "full_colon": 0, "ja_space": 0, "todo": 0, "ai_look": 0}
     ja_space_examples = []
     for i, s in enumerate(slides, 1):
         sid = f"slide-{i:02d}"
@@ -507,6 +619,9 @@ def _lint(deck: dict, punch_max: int | None = None, closing_max: int = 22) -> di
         warns.extend(check_claims(sid, s))
         warns.extend(check_tables(sid, s, texts))
         warns.extend(check_relation(sid, s))
+        ai_look = check_ai_look(sid, s, texts)
+        stats["ai_look"] += len(ai_look)
+        warns.extend(ai_look)
         warns.extend(check_volume(sid, s, s.get("density") if isinstance(s.get("density"), str) and s.get("density") in DENSITY_LIMITS else density))     # スライドの density を優先（S5b）
         for path, text in texts:
             warns.extend(check_numbers(sid, path, text))
@@ -562,7 +677,7 @@ def _lint(deck: dict, punch_max: int | None = None, closing_max: int = 22) -> di
     # 「ではなく」等は件数を1行で
     todo_slides = sorted({td["slide"] for td in todos})
     summary = (f"[集計] 「ではなく」{stats['dewanaku']}回 / ダッシュ{stats['dash']}回 / 丸数字{stats['circled']}個 / "
-               f"AI定型句{stats['ai_phrase']}箇所 / 一般語{stats['ai_phrase_soft']}箇所 / "
+               f"AI定型句{stats['ai_phrase']}箇所 / AIの定番パターン{stats['ai_look']}件 / 一般語{stats['ai_phrase_soft']}箇所 / "
                f"punch {stats['punch_over']}/{stats['punch_total']}枚が{punch_max}字超 / "
                f"半角コロン混在{stats['half_colon']}箇所（全角：{stats['full_colon']}回） / "
                f"要確認マーカー{stats['todo']}箇所" + (f"（{', '.join(todo_slides[:8])}{'…' if len(todo_slides) > 8 else ''}）" if todos else "")

@@ -88,7 +88,7 @@
 | `brand` | | 全スライド右上に表示する短いブランド表記（例: `ACME`）。アクセント色・太字・右寄せ。右上の箱は既定で幅 140px・文字 23px なので、**目安は全角 6 字まで・半角は小文字なら 9 字ほど（大文字が多いと 7 字ほど）**。1 行に収まらないとビルドが 1 回警告する（直し方: 短くする／`layout_overrides.common.brand` で `w` を広げ `x` を同じだけ左へ／`size` を下げる）。brand を付けると、タイトルの右端を brand の文字の左端から 24px 手前（`common.brand.clear_gap`）までに狭める（長いタイトルはその幅で折れ、縮められる。PPTX のタイトル枠も同じ幅になる）。1 行に収まる下限まで縮めても入らない長さ（目安 44 字）は「タイトルを短くする」警告。`style.title.w` を書いたときは動かさない。status_table は凡例も同じだけ狭める。暗い地の章扉・結びでは brand の文字色が地に合わせて自動で変わる |
 | `as_of` | | 資料の基準日（`"YYYY-MM"` か `"YYYY-MM-DD"`）。`lint_deck_text.py` の日付チェック（基準日より後の「実績」・基準日より前に始まる計画）に使う。省略時は `date`、それも無ければ今日の日付 |
 | `shape` | | 形のプリセット（角丸・罫線・太さ・字間・箱の影）。`classic`（既定。従来の見た目）/ `sharp` / `soft` / `editorial`、または登録した shape。色の `theme` とは独立で、どの組み合わせでもよい。テーマ JSON の `"shape"` より `meta.shape` が優先。選び方・自作は [themes.md](themes.md) の「形（shape）とトークン」 |
-| `variants` / `section_numbers` | | 主役のページの既定。`variants` は `{"title": "left-band", "section": "number"}` のようにタイプ別の variant の既定、`section_numbers: true` は `number` を書いていない section に `01` `02` … を振る（[schema/hero.md](schema/hero.md)） |
+| `variants` / `section_numbers` | | 主役のページの既定。`variants` は `{"title": "left-band", "section": "number"}` のようにタイプ別の variant の既定、`section_numbers: true` は `number` を書いていない section に `1` `2` … を振る（[schema/hero.md](schema/hero.md)） |
 | `todo_marks` | | `false` で `【要確認】` の強調表示（HTML の下地・PPTX の色と太字）を止める。既定は `true`。一覧の note は出る。真偽値以外はビルドエラー（下記「根拠が無い箇所は…」） |
 | `line_balance` | | `false` で泣き別れ対策（最終行が1〜2文字になる文への自動改行）をデッキ全体で止める。既定は有効 |
 

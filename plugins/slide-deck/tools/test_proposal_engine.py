@@ -167,6 +167,11 @@ class ExtrasTests(unittest.TestCase):
         st = b.resolve_style(LAYOUT, {"meta": {}}, {"type": "agenda", "items": [{"text": "a", "desc": "d"}]})
         self.assertGreaterEqual(st["body"]["row_h"], 64)
 
+    def test_agenda_numbers_are_not_zero_padded(self):
+        st = b.resolve_style(LAYOUT, {"meta": {}}, {"type": "agenda", "items": ["a"]})
+        self.assertEqual(b.padded_number(1, st["body"]), "1")
+        self.assertEqual(b.padded_number(3, {**st["body"], "num_pad": 2}), "03")   # 旧表記に戻せる
+
 
 class ValidateTests(unittest.TestCase):
     def _errors(self, slide):

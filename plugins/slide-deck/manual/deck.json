@@ -4,7 +4,7 @@
     "title": "slide-deck プラグイン ユーザーガイド",
     "subtitle": "話した内容から、きれいなスライドを作る",
     "author": "slide-deck plugin",
-    "date": "2026-11-12",
+    "date": "2026-11-25",
     "theme": "acn-slide-master",
     "density": "talk",
     "section_numbers": true,
@@ -237,7 +237,7 @@
     {
       "type": "table",
       "eyebrow": "2 頼み方",
-      "title": "骨子では、1 枚ずつ「言いたいこと」と根拠が並ぶ",
+      "title": "骨子では、1 枚ずつ言いたいことと根拠が並ぶ",
       "lead": "承認の前に届く一覧の例です。確かめることがある行には、要確認が付きます。",
       "columns": [
         "スライド",

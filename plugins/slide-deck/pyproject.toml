@@ -1,6 +1,6 @@
 [project]
 name = "slide-deck"
-version = "3.0.0"
+version = "3.1.0"
 description = "JSON(deck.json)をソースにスライドを HTML / PowerPoint(16:9) にビルドする Claude Code プラグイン。"
 requires-python = ">=3.14"
 dependencies = [

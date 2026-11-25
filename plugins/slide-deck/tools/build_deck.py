@@ -3786,11 +3786,25 @@ def _warn_empty_body(slide: dict, i: int, t: str):
 HERO_BG_TYPES = hero.BG_TYPES
 
 
+def padded_number(n: int, region: dict) -> str:
+    """agenda の連番・章扉の自動採番の表記。既定は「1」「2」（0 埋めの「01」は AI 生成資料の定番の見た目なので
+    使わない。references/content-guide.md 8章）。以前の「01」表記に戻すなら、その領域に num_pad: 2。"""
+    try:
+        pad = int((region or {}).get("num_pad", 0) or 0)
+    except (TypeError, ValueError):
+        pad = 0
+    return str(n).zfill(pad) if pad > 1 else str(n)
+
+
 def _assign_section_numbers(deck: dict, layout: dict):
-    """meta.section_numbers: true のとき、number の無い section に章の順で 01, 02 … を振る。
+    """meta.section_numbers: true のとき、number の無い section に章の順で 1, 2 … を振る（0 埋めは number.num_pad: 2）。
     number / side の variant を使う section は、number が無ければ（meta の指定が無くても）同じ順で振る。"""
     slides = deck.get("slides") if isinstance(deck.get("slides"), list) else []
     on = (deck.get("meta") or {}).get("section_numbers") is True
+    num_region = dict(((layout.get("types") or {}).get("section") or {}).get("number") or {})
+    ov = (((deck.get("meta") or {}).get("layout_overrides") or {}).get("section") or {}).get("number")
+    if isinstance(ov, dict):
+        num_region.update(ov)     # meta.layout_overrides.section.number.num_pad: 2 で 0 埋めに戻せる
     n = 0
     for sl in slides:
         if not isinstance(sl, dict) or sl.get("type") != "section":
@@ -3799,7 +3813,7 @@ def _assign_section_numbers(deck: dict, layout: dict):
         if sl.get("number") in (None, ""):
             needs = hero.variant_of(layout, deck, sl) in ("number", "side")
             if on or needs:
-                sl["number"] = f"{n:02d}"
+                sl["number"] = padded_number(n, num_region)
 
 
 def _prepare_hero(deck, layout, theme, deck_dir, i, slide, t):
@@ -5082,7 +5096,7 @@ def html_slide_body(slide, st, deck, theme, deck_dir, page, total, pattern_resol
                              f'border-radius:{rtok(theme, "node_sm", 8):g}px;{a_border}"></div>')
             parts.append(div({"x": x, "y": y+noff, "w": num_w, "h": row_h, "size": b.get("num_size", 24),
                               "color": b.get("num_color", "accent"), "bold": True, "line_height": 1.1},
-                             theme, f"{num_start+i+1:02d}"))
+                             theme, padded_number(num_start+i+1, b)))
             inner = esc(it["text"])
             ty = y + toff
             if it.get("desc"):
@@ -6361,7 +6375,7 @@ def build_pptx(deck, theme, layout, deck_dir: Path, out_path: Path):
                 add_rect(slide, x-14, y-3, col_w+18, row_h+6, C(b.get("active_fill", "surface")), radius=rtok(theme, "node_sm", 8),
                          border=C(b["active_border"]) if b.get("active_border") else None)
             text_region(slide, {"x": x, "y": y+noff, "w": num_w, "h": row_h, "size": b.get("num_size", 24),
-                                "color": b.get("num_color", "accent"), "bold": True, "line_height": 1.1}, f"{num_start+i+1:02d}")
+                                "color": b.get("num_color", "accent"), "bold": True, "line_height": 1.1}, padded_number(num_start+i+1, b))
             ty = y + toff
             if it.get("desc"):
                 ty = y + (row_h - b.get("text_size", 20) * 1.2 - b.get("desc_size", 14) * 1.35) / 2

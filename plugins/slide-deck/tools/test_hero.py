@@ -432,18 +432,28 @@ class HeroBuildTests(unittest.TestCase):
                      {"type": "section", "title": "B"}, {"type": "section", "title": "C", "number": "X"}], section_numbers=True)
         self.ok(d)
         h = html_of(d)
-        self.assertIn(">01<", h)
-        self.assertIn(">02<", h)
+        self.assertIn(">1<", h)              # 0 埋めしない（content-guide.md 8章）
+        self.assertIn(">2<", h)
         self.assertIn(">X<", h)
-        self.assertNotIn(">03<", h)
+        self.assertNotIn(">3<", h)
+        self.assertNotIn(">01<", h)
 
     def test_section_without_option_has_no_number(self):
         d = self.mk([{"type": "section", "title": "A"}])
         self.ok(d)
-        self.assertNotIn(">01<", html_of(d))
+        self.assertNotIn(">1<", html_of(d))
 
     def test_number_variant_numbers_itself(self):
         d = self.mk([{"type": "section", "title": "A", "variant": "number"}])
+        self.ok(d)
+        self.assertIn(">1<", html_of(d))
+
+    def test_section_number_pad_restores_zero(self):
+        d = self.mk([{"type": "section", "title": "A", "variant": "number"}])
+        dj = d / "deck.json"
+        deck = json.loads(dj.read_text(encoding="utf-8"))
+        deck["meta"]["layout_overrides"] = {"section": {"number": {"num_pad": 2}}}
+        dj.write_text(json.dumps(deck, ensure_ascii=False), encoding="utf-8")
         self.ok(d)
         self.assertIn(">01<", html_of(d))
 

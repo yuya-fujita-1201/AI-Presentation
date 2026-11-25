@@ -16,7 +16,7 @@
 
 ## `section` — 章扉
 ```json
-{ "type": "section", "number": "01", "title": "...", "subtitle": "..." }
+{ "type": "section", "number": "1", "title": "...", "subtitle": "..." }
 ```
 領域: `bg`, `number`, `title`, `rule`, `subtitle`
 章扉の `variant`（`number` / `band` / `side`）と `background`、章番号の自動採番（`meta.section_numbers`）は [hero.md](hero.md)。
@@ -153,7 +153,7 @@ URLを見せず、資料名など別の文字列をリンクにする場合は�
 { "type": "agenda", "title": "Agenda", "lead": "（任意）",
   "items": [ "はじめに", { "text": "本日の議題", "active": true }, "まとめ" ] }
 ```
-領域: `title`, `rule`, `lead`, `body`, `footer_l/r`。各項目に自動で連番（`01`, `02`…）が付く。`active: true` の項目は面（`active_fill`）で強調され、文字色が `active_color` になる。項目のキーは `text`（項目名）/ `desc` / `active` だけ。`title` などと書くと「未知のキー」と「text（項目名）がありません」の警告が出て、番号だけの行になる。番号の色は通常行・強調行のどちらの地の上でも 4.5:1 になるよう自動で整う。`bullets` の代替ではなく「番号付き＋現在地ハイライト」が要るときに使う。
+領域: `title`, `rule`, `lead`, `body`, `footer_l/r`。各項目に自動で連番（`1`, `2`…）が付く（0 埋めの `01` は AI 生成資料の定番の見た目なので既定では使わない。戻すなら `style.body.num_pad: 2`）。`active: true` の項目は面（`active_fill`）で強調され、文字色が `active_color` になる。項目のキーは `text`（項目名）/ `desc` / `active` だけ。`title` などと書くと「未知のキー」と「text（項目名）がありません」の警告が出て、番号だけの行になる。番号の色は通常行・強調行のどちらの地の上でも 4.5:1 になるよう自動で整う。`bullets` の代替ではなく「番号付き＋現在地ハイライト」が要るときに使う。
 
 **自動2段組・ページ送り**（項目数に応じて自動。**deck.json に書いたスライド数より実際の出力枚数が増えることがある**）:
 - 1列あたりの最大行数 `R = floor(body.h / (row_h+gap))`（既定値で **R = 8 行**）。

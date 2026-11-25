@@ -57,6 +57,60 @@ class TableNumberTests(unittest.TestCase):
         self.assertEqual(L.check_numbers("s", "p", "2026年に12,000件、1024×768、ISO27001、v1234、port:8080"), [])
 
 
+class AiLookTests(unittest.TestCase):
+    """AI 生成資料の定番パターン（content-guide.md 8章）。"""
+
+    def look(self, s):
+        return L.check_ai_look("s", s, list(L.iter_texts(s)))
+
+    def test_zero_padded_numbers(self):
+        w = self.look({"type": "section", "number": "01", "title": "背景"})
+        self.assertTrue(any("0埋め" in x for x in w))
+        w = self.look({"type": "lifecycle", "states": [{"label": "受付", "step": "01"}, {"label": "完了", "step": "02"}]})
+        self.assertEqual(sum("0埋め" in x for x in w), 1)   # スライドごとに1行にまとめる
+        self.assertFalse(any("0埋め" in x for x in self.look({"type": "section", "number": "1", "title": "背景"})))
+        self.assertFalse(any("0埋め" in x for x in self.look({"type": "bullets", "title": "2026年の方針"})))
+
+    def test_emphasis_brackets_and_label(self):
+        w = self.look({"title": "AIは人の「代替」ではなく「伴走者」", "lead": "【基本方針】社員の可能性を引き出す"})
+        self.assertTrue(any("カギカッコ" in x and "代替" in x for x in w))
+        self.assertTrue(any("【】" in x for x in w))
+        self.assertFalse(any("カギカッコ" in x for x in self.look({"title": "問い合わせの一次回答を自動化する"})))
+
+    def test_repeated_labels_across_items(self):
+        s = {"type": "cards", "cards": [{"heading": "リスク：形骸化"}, {"heading": "リスク：期待値のズレ"},
+                                         {"heading": "リスク：属人化"}]}
+        self.assertTrue(any("同じラベル「リスク」" in x for x in self.look(s)))
+        s = {"type": "cards", "cards": [{"heading": "ご判断いただきたい点"}] * 3}
+        self.assertTrue(any("全項目が同じ" in x for x in self.look(s)))
+        # 番号・年度つきの見出しは繰り返しとみなさない
+        s = {"type": "row_matrix", "columns": [], "periods": [{"label": "FY27 上期"}, {"label": "FY27 下期"}],
+             "steps": [{"label": "Phase 1｜試行"}, {"label": "Phase 2｜展開"}]}
+        self.assertFalse(any("同じラベル" in x for x in self.look(s)))
+        s = {"type": "summary", "items": [{"title": "背景｜標準化"}, {"title": "課題｜リスク"}]}
+        self.assertFalse(any("同じラベル" in x for x in self.look(s)))
+
+    def test_title_mixes_share_and_ask(self):
+        w = self.look({"title": "論点4：生成AI活用の推進方針とご判断事項"})
+        self.assertTrue(any("問いの形" in x for x in w))
+        self.assertTrue(any("1スライド1メッセージ" in x for x in w))
+        w = self.look({"title": "論点：対象業務を全社に広げるか"})
+        self.assertFalse(any("問いの形" in x for x in w))
+        self.assertFalse(any("1スライド1メッセージ" in x for x in self.look({"title": "現状と課題を整理する"})))
+
+    def test_disclaimer_and_long_note(self):
+        w = self.look({"source": "本資料の内容は将来の成果を保証するものではありません。"})
+        self.assertTrue(any("免責" in x for x in w))
+        w = self.look({"source": "あ" * 120})
+        self.assertTrue(any("改行なし" in x for x in w))
+        self.assertEqual(self.look({"source": "出典: 社内調査（2026年9月、回答120名）"}), [])
+
+    def test_quotes_and_todo_marks_are_not_emphasis(self):
+        # 「〜」と聞く（引用）・問いの引用・【要確認】の印は強調カギカッコ／【】ラベルとみなさない
+        w = self.look({"message": "困ったら「どう頼めばいい？」と聞く", "lead": "【要確認】件数は月 120 件"})
+        self.assertFalse(any("カギカッコ" in x or "【】" in x for x in w))
+
+
 class RelationRhythmTests(unittest.TestCase):
     def test_relation_mismatch(self):
         self.assertTrue(L.check_relation("s", {"type": "cards", "relation": "sequence"}))

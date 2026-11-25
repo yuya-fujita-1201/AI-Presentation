@@ -46,7 +46,7 @@
 | title | `left-band` | 左に太い色の帯（日付・作成者は帯の中）、右にタイトル。帯の中に薄い円の飾り（`deco2`）が付く。`meta.shape` が `classic` / `soft` なら円、`sharp` なら四角、`editorial` なら小さな角丸の四角で描く（角丸の半径が小さい形では円にしない）。`style.deco2.geom: "rect"` で四角に固定できる。`deco` の `geom: "ellipse"` に 50 未満の `radius` を書くと円にならない。円を避けるなら別の variant | 報告書・提案書の表紙 |
 | title | `split` | 左半分が色面か画像（`background`）、右半分にタイトル | 写真・図が主役の表紙 |
 | title | `bottom` | 上 6 割が色面か画像、タイトルは下 | 写真が主役の表紙 |
-| section | `number` | 巨大な章番号（240px）が主役、右にタイトル | 章が多い長い資料 |
+| section | `number` | 巨大な章番号（240px・タイトル側に右寄せ）が主役、右にタイトル | 章が多い長い資料 |
 | section | `band` | 白い面の中央に全幅の色帯、その中にタイトル。`background` の画像は帯に敷く | 写真つきの章扉 |
 | section | `side` | 左に細い色帯（中に章番号）、右にタイトル | 報告書・マニュアル |
 | closing | `center` | タイトル・メッセージを中央に | 短い締めの一言 |
@@ -54,7 +54,7 @@
 | statement | `center` / `left-bar` / `mark` | 一文を中央／左に太い縦帯・左そろえ／左上に大きな引用符・左そろえ | 転換点の言い切り／力強い言い切り／顧客の声 |
 | quote | `left-bar` / `mark` | 左に太い縦帯／左上に大きな引用符（図形で描く） | 論文・調査の引用／名言 |
 
-- `number` / `side` の章扉は、`number` が無ければ章の順で `01` `02` … を自動で振る。`meta.section_numbers: true` なら variant に関わらず、`number` を書いていない section に振る。書いた `number` はそのまま。
+- `number` / `side` の章扉は、`number` が無ければ章の順で `1` `2` … を自動で振る（0 埋めの `01` に戻すなら `meta.layout_overrides.section.number.num_pad: 2`）。`meta.section_numbers: true` なら variant に関わらず、`number` を書いていない section に振る。書いた `number` はそのまま。
 - **表紙・章扉・statement の variant は、デッキの中で 1 種類にそろえる**（章扉を `number` と `side` で混ぜない）。`meta.variants` で決める。
 - 章扉（section）のタイトルが 2 行になると、枠を下へ伸ばして罫線と副題を下げる（`number` / `band` / `side`・背景画像つきでも重ならない。`autofit: false` では伸ばさず警告。[autofit.md](autofit.md)）。
 - 大きな文字（36px 以上）の改行は文節の切れ目に置く（語の途中で切らない。最終行を 2〜4 字だけにしない）。variant なしの `title` / `section` / `quote` / `statement` や、`background` つきのスライドも同じ。止めるなら `line_balance: false`（[autofit.md](autofit.md) の「折り返しの規則」）。
